@@ -1,0 +1,31 @@
+const testFileExtension = '[jt]s?(x)';
+module.exports = {
+    preset: 'jest-expo',
+    testMatch: [
+        `<rootDir>/tests/ui/**/*.${testFileExtension}`,
+        `<rootDir>/tests/unit/**/*.${testFileExtension}`,
+        `<rootDir>/tests/actions/**/*.${testFileExtension}`,
+        `<rootDir>/?(*.)+(spec|test).${testFileExtension}`,
+    ],
+    transform: {
+        '^.+\\.jsx?$': 'babel-jest',
+        '^.+\\.svg?$': 'jest-transformer-svg',
+    },
+    transformIgnorePatterns: ['<rootDir>/node_modules/(?!react-native)/'],
+    testPathIgnorePatterns: ['<rootDir>/node_modules'],
+    globals: {
+        __DEV__: true,
+        WebSocket: {},
+    },
+    fakeTimers: {
+        enableGlobally: true,
+        doNotFake: ['nextTick'],
+    },
+    testEnvironment: 'jsdom',
+    setupFiles: ['<rootDir>/jest/setup.js', './node_modules/@react-native-google-signin/google-signin/jest/build/setup.js'],
+    setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect', '<rootDir>/jest/setupAfterEnv.js', '<rootDir>/tests/perf-test/setupAfterEnv.js'],
+    cacheDirectory: '<rootDir>/.jest-cache',
+    moduleNameMapper: {
+        '\\.(lottie)$': '<rootDir>/__mocks__/fileMock.js',
+    },
+};
