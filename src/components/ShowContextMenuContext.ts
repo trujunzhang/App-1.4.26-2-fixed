@@ -4,7 +4,7 @@ import type {GestureResponderEvent, Text as RNText} from 'react-native';
 import type {OnyxEntry} from 'react-native-onyx';
 import * as DeviceCapabilities from '@libs/DeviceCapabilities';
 import * as ReportUtils from '@libs/ReportUtils';
-import * as ReportActionContextMenu from '@pages/home/report/ContextMenu/ReportActionContextMenu';
+import * as ReportActionContextMenu from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
 import CONST from '@src/CONST';
 import type {Report, ReportAction} from '@src/types/onyx';
 

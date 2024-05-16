@@ -33,7 +33,7 @@ export default function subscribeToReportCommentPushNotifications() {
                     }
 
                     Log.info('[PushNotification] onSelected() - Navigation is ready. Navigating...', false, {reportID, reportActionID});
-                    Navigation.navigate(ROUTES.REPORT_WITH_ID.getRoute(String(reportID)));
+                    // Navigation.navigate(ROUTES.REPORT_WITH_ID.getRoute(String(reportID)));
                 } catch (error) {
                     let errorMessage = String(error);
                     if (error instanceof Error) {

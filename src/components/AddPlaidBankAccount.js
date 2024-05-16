@@ -10,7 +10,7 @@ import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import KeyboardShortcut from '@libs/KeyboardShortcut';
 import Log from '@libs/Log';
-import {plaidDataPropTypes} from '@pages/ReimbursementAccount/plaidDataPropTypes';
+import {plaidDataPropTypes} from '@expPages/ReimbursementAccount/plaidDataPropTypes';
 import * as App from '@userActions/App';
 import * as BankAccounts from '@userActions/BankAccounts';
 import CONST from '@src/CONST';

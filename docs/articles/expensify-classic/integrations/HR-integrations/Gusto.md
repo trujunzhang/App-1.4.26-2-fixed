@@ -7,7 +7,7 @@ description: Automatically sync employees between Gusto and Expensify
 
 Expensify's direct integration with Gusto will automatically:
 
-- **Create new Expensify accounts** for full-time, active employees when they're hired
+- **Create New Ieatta accounts** for full-time, active employees when they're hired
 - **Update the approval workflow in Expensify** based on any changes in Gusto
 - **Deprovision an employee's Expensify account** upon Gusto termination date
 
@@ -51,7 +51,7 @@ Yes! You can change the Approval Workflow mode in two ways:
 
 If your employees are set up in Expensify with their company emails, but with their personal emails in Gusto, then they will end up with duplicate Expensify accounts after you connect the two systems. The Gusto integration imports users from Gusto using the emails entered in Gusto - if it's a different email from an existing account in Expensify, then a new, separate account will be created.
 
-To resolve this, you can ask each affected employee to merge their existing Expensify account with the new Expensify account by navigating to **Settings > Account > Account Details** and scrolling down to **Merge Accounts**.
+To resolve this, you can ask each affected employee to merge their existing Expensify account with the New Ieatta account by navigating to **Settings > Account > Account Details** and scrolling down to **Merge Accounts**.
 
 
 {% include faq-end.md %}

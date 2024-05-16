@@ -1,13 +1,13 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import type {PublicScreensParamList} from '@navigation/types';
-import LogInWithShortLivedAuthTokenPage from '@pages/LogInWithShortLivedAuthTokenPage';
-import AppleSignInDesktopPage from '@pages/signin/AppleSignInDesktopPage';
-import GoogleSignInDesktopPage from '@pages/signin/GoogleSignInDesktopPage';
-import SAMLSignInPage from '@pages/signin/SAMLSignInPage';
 import SignInPage from '@pages/signin/SignInPage';
-import UnlinkLoginPage from '@pages/UnlinkLoginPage';
-import ValidateLoginPage from '@pages/ValidateLoginPage';
+import LogInWithShortLivedAuthTokenPage from '@expPages/LogInWithShortLivedAuthTokenPage';
+import AppleSignInDesktopPage from '@expPages/signin/AppleSignInDesktopPage';
+import GoogleSignInDesktopPage from '@expPages/signin/GoogleSignInDesktopPage';
+import SAMLSignInPage from '@expPages/signin/SAMLSignInPage';
+import UnlinkLoginPage from '@expPages/UnlinkLoginPage';
+import ValidateLoginPage from '@expPages/ValidateLoginPage';
 import SCREENS from '@src/SCREENS';
 import defaultScreenOptions from './defaultScreenOptions';
 

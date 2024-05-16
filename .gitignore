@@ -38,7 +38,7 @@ android/app/src/main/java/com/expensify/chat/generated/
 .cxx/
 
 # Vscode
-.vscode
+.vscode/.react
 
 # node.js
 #
@@ -55,6 +55,7 @@ buck-out/
 \.buckd/
 *.keystore
 !debug.keystore
+!my-upload-key.keystore
 android/app/android-fastlane-json-key.json
 
 # fastlane
@@ -120,3 +121,11 @@ config/webpack/*.pem
 .expo
 dist/
 web-build/
+*.tar.gz
+
+# jest
+*.snap
+
+# neovim's files
+*-E
+.nx/

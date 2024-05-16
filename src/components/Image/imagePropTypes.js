@@ -8,7 +8,8 @@ const imagePropTypes = {
     style: stylePropTypes,
 
     /** The static asset or URI source of the image */
-    source: sourcePropTypes.isRequired,
+    // source: sourcePropTypes.isRequired,
+    source: PropTypes.object.isRequired,
 
     /** Should an auth token be included in the image request */
     isAuthTokenRequired: PropTypes.bool,
@@ -24,6 +25,8 @@ const imagePropTypes = {
 
     /** Event for when the image is fully loaded and returns the natural dimensions of the image */
     onLoad: PropTypes.func,
+
+    onError: PropTypes.func,
 
     /** Progress events while the image is downloading */
     onProgress: PropTypes.func,
@@ -46,6 +49,7 @@ const defaultProps = {
     onLoadStart: () => {},
     onLoadEnd: () => {},
     onLoad: () => {},
+    onError: () => {},
 };
 
 export {imagePropTypes, defaultProps};

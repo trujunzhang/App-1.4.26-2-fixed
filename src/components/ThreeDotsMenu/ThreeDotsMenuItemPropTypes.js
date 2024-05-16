@@ -6,6 +6,7 @@ const menuItemProps = PropTypes.arrayOf(
         icon: PropTypes.oneOfType([PropTypes.string, sourcePropTypes]),
         text: PropTypes.string,
         onPress: PropTypes.func,
+        onSelected: PropTypes.func,
     }),
 );
 

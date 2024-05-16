@@ -1,4 +1,4 @@
-const packageName = 'com.expensify.chat.dev';
+const packageName = 'com.ieatta.track.dev';
 const appPath = './android/app/build/outputs/apk/development/debug/app-development-debug.apk';
 
 module.exports = {

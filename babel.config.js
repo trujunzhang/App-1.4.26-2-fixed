@@ -13,6 +13,10 @@ const defaultPlugins = [
     'transform-class-properties',
 
     // Keep it last
+    // Reanimated for Web requires the following configuration steps.
+    // You need to add @babel/plugin-proposal-export-namespace-from as well as Reanimated Babel plugin to your babel.config.js.
+    // See https://docs.swmansion.com/react-native-reanimated/docs/guides/web-support
+    '@babel/plugin-proposal-export-namespace-from',
     'react-native-reanimated/plugin',
 ];
 
@@ -30,8 +34,11 @@ const metro = {
 
         ['@babel/plugin-proposal-class-properties', {loose: true}],
         ['@babel/plugin-proposal-private-methods', {loose: true}],
-        ['@babel/plugin-proposal-private-property-in-object', {loose: true}],
+        // ['@babel/plugin-proposal-private-property-in-object', {loose: true}],
+        // https://babeljs.io/docs/babel-plugin-transform-private-property-in-object
+        ['@babel/plugin-transform-private-property-in-object', {loose: true}],
         // The reanimated babel plugin needs to be last, as stated here: https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/installation
+        '@babel/plugin-proposal-export-namespace-from',
         'react-native-reanimated/plugin',
         // Import alias for native devices
         [
@@ -62,6 +69,7 @@ const metro = {
                     '@libs': './src/libs',
                     '@navigation': './src/libs/Navigation',
                     '@pages': './src/pages',
+                    '@expPages': './src/expPages',
                     '@styles': './src/styles',
                     // This path is provide alias for files like `ONYXKEYS` and `CONST`.
                     '@src': './src',
@@ -77,8 +85,15 @@ const metro = {
     },
 };
 
+if (process.env.CODING_GENERATE === 'true') {
+    console.debug('  - process.env.CODING_GENERATE:', 'push');
+    const plugin = ['babel-plugin-typescript-to-proptypes', {comments: true}];
+    metro.plugins.push(plugin);
+    webpack.plugins.push(plugin);
+}
+
 /*
- * <React.Profiler> and react-native-performance to capture/monitor stats
+ * We use <React.Profiler> and react-native-performance to capture/monitor stats
  * By default <React.Profiler> is disabled in production as it adds small overhead
  * When CAPTURE_METRICS is set we're explicitly saying that we want to capture metrics
  * To enable the <Profiler> for release builds we add these aliases */
@@ -105,6 +120,7 @@ module.exports = (api) => {
     console.debug('  - api.env:', api.env());
     console.debug('  - process.env.NODE_ENV:', process.env.NODE_ENV);
     console.debug('  - process.env.BABEL_ENV:', process.env.BABEL_ENV);
+    console.debug('  - process.env.CODING_GENERATE:', process.env.CODING_GENERATE);
 
     // For `react-native` (iOS/Android) caller will be "metro"
     // For `webpack` (Web) caller will be "@babel-loader"

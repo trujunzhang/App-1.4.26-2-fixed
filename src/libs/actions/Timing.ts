@@ -1,6 +1,6 @@
 import * as API from '@libs/API';
 import * as Environment from '@libs/Environment/Environment';
-import Firebase from '@libs/Firebase';
+import Firebase from '@libs/Firebase/trace';
 import getPlatform from '@libs/getPlatform';
 import Log from '@libs/Log';
 

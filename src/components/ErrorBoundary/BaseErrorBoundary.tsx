@@ -1,7 +1,7 @@
 import React from 'react';
 import {ErrorBoundary} from 'react-error-boundary';
 import BootSplash from '@libs/BootSplash';
-import GenericErrorPage from '@pages/ErrorPage/GenericErrorPage';
+import GenericErrorPage from '@expPages/ErrorPage/GenericErrorPage';
 import type {BaseErrorBoundaryProps, LogError} from './types';
 
 /**

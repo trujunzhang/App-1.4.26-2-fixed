@@ -15,7 +15,7 @@ let isReadyPromise = new Promise<void>((resolve) => {
     resolveIsReadyPromise = resolve;
 });
 
-let isFirstTimeNewExpensifyUser: boolean | undefined;
+let isFirstTimeNewIeattaUser: boolean | undefined;
 let isLoadingReportData = true;
 let currentUserAccountID: number | undefined;
 
@@ -33,12 +33,12 @@ type ShowParams = {
 /**
  * Check that a few requests have completed so that the welcome action can proceed:
  *
- * - Whether we are a first time new expensify user
+ * - Whether we are a first time New Ieatta user
  * - Whether we have loaded all policies the server knows about
  * - Whether we have loaded all reports the server knows about
  */
 function checkOnReady() {
-    if (isFirstTimeNewExpensifyUser === undefined || isLoadingReportData) {
+    if (isFirstTimeNewIeattaUser === undefined || isLoadingReportData) {
         return;
     }
 
@@ -49,10 +49,10 @@ Onyx.connect({
     key: ONYXKEYS.NVP_IS_FIRST_TIME_NEW_EXPENSIFY_USER,
     initWithStoredValues: false,
     callback: (value) => {
-        // If isFirstTimeNewExpensifyUser was true do not update it to false. We update it to false inside the Welcome.show logic
+        // If isFirstTimeNewIeattaUser was true do not update it to false. We update it to false inside the Welcome.show logic
         // More context here https://github.com/Expensify/App/pull/16962#discussion_r1167351359
 
-        isFirstTimeNewExpensifyUser = value ?? undefined;
+        isFirstTimeNewIeattaUser = value ?? undefined;
 
         checkOnReady();
     },
@@ -113,7 +113,7 @@ Onyx.connect({
  */
 function show({routes, showCreateMenu = () => {}, showPopoverMenu = () => false}: ShowParams) {
     isReadyPromise.then(() => {
-        if (!isFirstTimeNewExpensifyUser) {
+        if (!isFirstTimeNewIeattaUser) {
             return;
         }
 
@@ -147,10 +147,10 @@ function show({routes, showCreateMenu = () => {}, showPopoverMenu = () => false}
                 Navigation.navigate(ROUTES.REPORT_WITH_ID.getRoute(workspaceChatReport.reportID));
             }
 
-            // If showPopoverMenu exists and returns true then it opened the Popover Menu successfully, and we can update isFirstTimeNewExpensifyUser
+            // If showPopoverMenu exists and returns true then it opened the Popover Menu successfully, and we can update isFirstTimeNewIeattaUser
             // so the Welcome logic doesn't run again
             if (showPopoverMenu?.()) {
-                isFirstTimeNewExpensifyUser = false;
+                isFirstTimeNewIeattaUser = false;
             }
 
             return;
@@ -162,8 +162,8 @@ function show({routes, showCreateMenu = () => {}, showPopoverMenu = () => false}
             showCreateMenu();
         }
 
-        // Update isFirstTimeNewExpensifyUser so the Welcome logic doesn't run again
-        isFirstTimeNewExpensifyUser = false;
+        // Update isFirstTimeNewIeattaUser so the Welcome logic doesn't run again
+        isFirstTimeNewIeattaUser = false;
     });
 }
 
@@ -171,7 +171,7 @@ function resetReadyCheck() {
     isReadyPromise = new Promise((resolve) => {
         resolveIsReadyPromise = resolve;
     });
-    isFirstTimeNewExpensifyUser = undefined;
+    isFirstTimeNewIeattaUser = undefined;
     isLoadingReportData = true;
 }
 

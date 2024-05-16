@@ -1,10 +1,10 @@
 <div align="center">
     <a href="https://new.expensify.com">
-        <img src="https://raw.githubusercontent.com/Expensify/App/main/web/favicon.png" width="64" height="64" alt="New Expensify Icon">
+        <img src="https://raw.githubusercontent.com/Expensify/App/main/web/favicon.png" width="64" height="64" alt="New Ieatta Icon">
     </a>
     <h1>
         <a href="https://new.expensify.com">
-            New Expensify
+            New Ieatta
         </a>
     </h1>
 </div>
@@ -29,7 +29,7 @@
 ----
 
 # Local development
-These instructions should get you set up ready to work on New Expensify 🙌
+These instructions should get you set up ready to work on New Ieatta 🙌
 
 ## Getting Started
 1. Install `nvm` then `node` & `npm`: `brew install nvm && nvm install`
@@ -356,7 +356,7 @@ This application is built with the following principles.
     4. Brain pushes data into UI inputs (Device input -> React component).
     5. UI inputs push data to the server (React component -> Action -> XHR to server).
     6. Go to 1
-    ![New Expensify Data Flow Chart](/contributingGuides/data_flow.png)
+    ![New Ieatta Data Flow Chart](/contributingGuides/data_flow.png)
 1. **Offline first**
     - Be sure to read [OFFLINE_UX.md](contributingGuides/OFFLINE_UX.md)!
     - All data that is brought into the app and is necessary to display the app when offline should be stored on disk in persistent storage (eg. localStorage on browser platforms). [AsyncStorage](https://reactnative.dev/docs/asyncstorage) is a cross-platform abstraction layer that is used to access persistent storage.

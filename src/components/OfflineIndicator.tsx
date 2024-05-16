@@ -35,7 +35,7 @@ function OfflineIndicator({style, containerStyles}: OfflineIndicatorProps) {
     }, [containerStyles, isSmallScreenWidth, styles.offlineIndicatorMobile, styles.offlineIndicator]);
 
     if (!isOffline) {
-        return null;
+        // return null;
     }
 
     return (

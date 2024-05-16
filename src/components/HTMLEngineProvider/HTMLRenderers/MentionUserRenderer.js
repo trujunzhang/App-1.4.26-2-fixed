@@ -14,7 +14,7 @@ import * as LocalePhoneNumber from '@libs/LocalePhoneNumber';
 import Navigation from '@libs/Navigation/Navigation';
 import * as PersonalDetailsUtils from '@libs/PersonalDetailsUtils';
 import * as ReportUtils from '@libs/ReportUtils';
-import personalDetailsPropType from '@pages/personalDetailsPropType';
+import personalDetailsPropType from '@expPages/personalDetailsPropType';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';
 import htmlRendererPropTypes from './htmlRendererPropTypes';

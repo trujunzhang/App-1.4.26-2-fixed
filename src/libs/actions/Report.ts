@@ -3,9 +3,8 @@ import ExpensiMark from 'expensify-common/lib/ExpensiMark';
 import Str from 'expensify-common/lib/str';
 import isEmpty from 'lodash/isEmpty';
 import {DeviceEventEmitter, InteractionManager, Linking} from 'react-native';
-import type {OnyxCollection, OnyxEntry, OnyxUpdate} from 'react-native-onyx';
+import type {NullishDeep, OnyxCollection, OnyxEntry, OnyxUpdate} from 'react-native-onyx';
 import Onyx from 'react-native-onyx';
-import type {NullishDeep} from 'react-native-onyx/lib/types';
 import type {PartialDeep, ValueOf} from 'type-fest';
 import type {Emoji} from '@assets/emojis/types';
 import * as ActiveClientManager from '@libs/ActiveClientManager';
@@ -142,7 +141,7 @@ function getReportChannelName(reportID: string): string {
 
 /**
  * There are 2 possibilities that we can receive via pusher for a user's typing/leaving status:
- * 1. The "new" way from New Expensify is passed as {[login]: Boolean} (e.g. {yuwen@expensify.com: true}), where the value
+ * 1. The "new" way from New Ieatta is passed as {[login]: Boolean} (e.g. {yuwen@expensify.com: true}), where the value
  * is whether the user with that login is typing/leaving on the report or not.
  * 2. The "old" way from e.com which is passed as {userLogin: login} (e.g. {userLogin: bstites@expensify.com})
  *
@@ -2065,15 +2064,16 @@ function openReportFromDeepLink(url: string, isAuthenticated: boolean) {
                 // We don't want to navigate to the exitTo route when creating a new workspace from a deep link,
                 // because we already handle creating the optimistic policy and navigating to it in App.setUpPoliciesAndNavigate,
                 // which is already called when AuthScreens mounts.
-                if (new URL(url).searchParams.get('exitTo') === ROUTES.WORKSPACE_NEW) {
-                    return;
-                }
+                // if (new URL(url).searchParams.get('exitTo') === ROUTES.WORKSPACE_NEW) {
+                //     return;
+                // }
 
                 if (shouldSkipDeepLinkNavigation(route)) {
                     return;
                 }
 
-                Navigation.navigate(route as Route, CONST.NAVIGATION.ACTION_TYPE.PUSH);
+                // TODO: djzhang
+                // Navigation.navigate(route as Route, CONST.NAVIGATION.ACTION_TYPE.PUSH);
             });
         });
     });

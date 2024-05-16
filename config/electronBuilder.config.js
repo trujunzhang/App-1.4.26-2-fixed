@@ -31,7 +31,7 @@ if (!isCorrectElectronEnv) {
  */
 module.exports = {
     appId: 'com.expensifyreactnative.chat',
-    productName: 'New Expensify',
+    productName: 'New Ieatta',
     extraMetadata: {
         version,
     },
@@ -47,8 +47,8 @@ module.exports = {
         },
     },
     dmg: {
-        title: 'New Expensify',
-        artifactName: 'NewExpensify.dmg',
+        title: 'New Ieatta',
+        artifactName: 'NewIeatta.dmg',
         internetEnabled: true,
     },
     publish: [
@@ -65,7 +65,7 @@ module.exports = {
         output: 'desktop-build',
     },
     protocols: {
-        name: 'New Expensify',
+        name: 'New Ieatta',
         schemes: ['new-expensify'],
     },
 };

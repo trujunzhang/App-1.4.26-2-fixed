@@ -19,7 +19,7 @@ const {DESKTOP_SHORTCUT_ACCELERATOR, LOCALES} = CONST;
 // Source: https://github.com/electron/electron/blob/98cd16d336f512406eee3565be1cead86514db7b/docs/api/environment-variables.md#google_api_key
 process.env.GOOGLE_API_KEY = CONFIG.GOOGLE_GEOLOCATION_API_KEY;
 
-app.setName('New Expensify');
+app.setName('New Ieatta');
 
 /**
  * Electron main process that handles wrapping the web application.
@@ -76,12 +76,12 @@ function createContextMenu(preferredLocale = LOCALES.DEFAULT) {
 
 let disposeContextMenu = createContextMenu();
 
-// Send all autoUpdater logs to a log file: ~/Library/Logs/new.expensify.desktop/main.log
+// Send all autoUpdater logs to a log file: ~/Library/Logs/new.ieatta.desktop/main.log
 // See https://www.npmjs.com/package/electron-log
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 
-// Send all Console logs to a log file: ~/Library/Logs/new.expensify.desktop/main.log
+// Send all Console logs to a log file: ~/Library/Logs/new.ieatta.desktop/main.log
 // See https://www.npmjs.com/package/electron-log
 _.assign(console, log.functions);
 
@@ -90,7 +90,7 @@ _.assign(console, log.functions);
 // until it detects that it has been upgraded to the correct version.
 
 const EXPECTED_UPDATE_VERSION_FLAG = '--expected-update-version';
-const APP_DOMAIN = __DEV__ ? `https://dev.new.expensify.com:${port}` : 'app://-';
+const APP_DOMAIN = __DEV__ ? `https://dev.ieatta.com:${port}` : 'app://-';
 
 let expectedUpdateVersion;
 for (let i = 0; i < process.argv.length; i++) {
@@ -226,13 +226,13 @@ const mainWindow = () => {
     let deeplinkUrl;
     let browserWindow;
 
-    const loadURL = __DEV__ ? (win) => win.loadURL(`https://dev.new.expensify.com:${port}`) : serve({directory: `${__dirname}/www`});
+    const loadURL = __DEV__ ? (win) => win.loadURL(`https://dev.ieatta.com:${port}`) : serve({directory: `${__dirname}/www`});
 
     // Prod and staging set the icon in the electron-builder config, so only update it here for dev
     if (__DEV__) {
         console.debug('CONFIG: ', CONFIG);
         app.dock.setIcon(`${__dirname}/../icon-dev.png`);
-        app.setName('New Expensify Dev');
+        app.setName('New Ieatta Dev');
     }
 
     app.on('will-finish-launching', () => {
@@ -281,7 +281,7 @@ const mainWindow = () => {
                 ipcMain.handle(ELECTRON_EVENTS.REQUEST_DEVICE_ID, () => machineId());
 
                 /*
-                 * The default origin of our Electron app is app://- instead of https://new.expensify.com or https://staging.new.expensify.com
+                 * The default origin of our Electron app is app://- instead of https://new.ieatta.com or https://staging.new.ieatta.com
                  * This causes CORS errors because the referer and origin headers are wrong and the API responds with an Access-Control-Allow-Origin that doesn't match app://-
                  * The same issue happens when using the web proxy to communicate with the staging or production API on dev.
                  *
@@ -291,7 +291,7 @@ const mainWindow = () => {
                  *   2. Modify the Access-Control-Allow-Origin header of the response to match the "real" origin of our Electron app.
                  */
                 const webRequest = browserWindow.webContents.session.webRequest;
-                const validDestinationFilters = {urls: ['https://*.expensify.com/*']};
+                const validDestinationFilters = {urls: ['https://*.ieatta.com/*']};
                 /* eslint-disable no-param-reassign */
                 if (!__DEV__) {
                     // Modify the origin and referer for requests sent to our API
@@ -316,7 +316,7 @@ const mainWindow = () => {
 
                 // Prod and staging overwrite the app name in the electron-builder config, so only update it here for dev
                 if (__DEV__) {
-                    browserWindow.setTitle('New Expensify');
+                    browserWindow.setTitle('New Ieatta');
                 }
 
                 const initialMenuTemplate = [

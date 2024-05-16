@@ -38,6 +38,10 @@ function RightModalNavigator({navigation}: RightModalNavigatorProps) {
             <View style={styles.RHPNavigatorContainer(isSmallScreenWidth)}>
                 <Stack.Navigator screenOptions={screenOptions}>
                     <Stack.Screen
+                        name={SCREENS.RIGHT_MODAL.EDIT_IEATTA}
+                        component={ModalStackNavigators.EditIeattaStackNavigator}
+                    />
+                    <Stack.Screen
                         name={SCREENS.RIGHT_MODAL.SETTINGS}
                         component={ModalStackNavigators.SettingsModalStackNavigator}
                     />

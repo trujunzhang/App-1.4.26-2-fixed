@@ -7,6 +7,7 @@ const textUnderline: TextUnderlineStyles = {
     textDecorationSkipInkNone: {
         textDecorationSkipInk: 'none',
     },
+    textUnderline: {textDecorationLine: 'underline'},
 };
 
 export default textUnderline;

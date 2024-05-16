@@ -1,7 +1,9 @@
-import React, {memo, useEffect, useRef} from 'react';
+import React, {memo, useCallback, useEffect, useMemo, useRef} from 'react';
 import {View} from 'react-native';
 import type {OnyxEntry} from 'react-native-onyx';
 import Onyx, {withOnyx} from 'react-native-onyx';
+import DebugAndSwitchRouter from '@components/Debug/DebugAndSwitchRouter';
+import useEnvironment from '@hooks/useEnvironment';
 import useStyleUtils from '@hooks/useStyleUtils';
 import useThemeStyles from '@hooks/useThemeStyles';
 import useWindowDimensions from '@hooks/useWindowDimensions';
@@ -13,9 +15,9 @@ import * as Pusher from '@libs/Pusher/pusher';
 import PusherConnectionManager from '@libs/PusherConnectionManager';
 import * as SessionUtils from '@libs/SessionUtils';
 import type {AuthScreensParamList} from '@navigation/types';
-import NotFoundPage from '@pages/ErrorPage/NotFoundPage';
-import DesktopSignInRedirectPage from '@pages/signin/DesktopSignInRedirectPage';
-import SearchInputManager from '@pages/workspace/SearchInputManager';
+import NotFoundPage from '@expPages/ErrorPage/NotFoundPage';
+import DesktopSignInRedirectPage from '@expPages/signin/DesktopSignInRedirectPage';
+import SearchInputManager from '@expPages/workspace/SearchInputManager';
 import * as App from '@userActions/App';
 import * as Download from '@userActions/Download';
 import * as Modal from '@userActions/Modal';
@@ -36,6 +38,8 @@ import type {SelectedTimezone, Timezone} from '@src/types/onyx/PersonalDetails';
 import createCustomStackNavigator from './createCustomStackNavigator';
 import defaultScreenOptions from './defaultScreenOptions';
 import getRootNavigatorScreenOptions from './getRootNavigatorScreenOptions';
+import loadNativeHomeScreen from './home/nativeHomeScreen';
+import loadWebSidebarScreen from './home/webHomeScreen';
 import CentralPaneNavigator from './Navigators/CentralPaneNavigator';
 import LeftModalNavigator from './Navigators/LeftModalNavigator';
 import RightModalNavigator from './Navigators/RightModalNavigator';
@@ -54,11 +58,11 @@ type AuthScreensProps = {
     initialLastUpdateIDAppliedToClient: OnyxEntry<number>;
 };
 
-const loadReportAttachments = () => require('../../../pages/home/report/ReportAttachments').default as React.ComponentType;
-const loadSidebarScreen = () => require('../../../pages/home/sidebar/SidebarScreen').default as React.ComponentType;
-const loadValidateLoginPage = () => require('../../../pages/ValidateLoginPage').default as React.ComponentType;
-const loadLogOutPreviousUserPage = () => require('../../../pages/LogOutPreviousUserPage').default as React.ComponentType;
-const loadConciergePage = () => require('../../../pages/ConciergePage').default as React.ComponentType;
+const loadReportAttachments = () => require('../../../expPages/home/report/ReportAttachments').default as React.ComponentType;
+// const loadSidebarScreen = () => require('../../../pages/home/sidebar/SidebarScreen').default as React.ComponentType;
+const loadValidateLoginPage = () => require('../../../expPages/ValidateLoginPage').default as React.ComponentType;
+const loadLogOutPreviousUserPage = () => require('../../../expPages/LogOutPreviousUserPage').default as React.ComponentType;
+const loadConciergePage = () => require('../../../expPages/ConciergePage').default as React.ComponentType;
 
 let timezone: Timezone | null;
 let currentAccountID = -1;
@@ -148,6 +152,7 @@ const modalScreenListeners = {
 function AuthScreens({session, lastOpenedPublicRoomID, isUsingMemoryOnlyKeys = false, initialLastUpdateIDAppliedToClient}: AuthScreensProps) {
     const styles = useThemeStyles();
     const StyleUtils = useStyleUtils();
+    const {isDevelopment} = useEnvironment();
     const {isSmallScreenWidth} = useWindowDimensions();
     const screenOptions = getRootNavigatorScreenOptions(isSmallScreenWidth, styles, StyleUtils);
     const isInitialRender = useRef(true);
@@ -156,6 +161,10 @@ function AuthScreens({session, lastOpenedPublicRoomID, isUsingMemoryOnlyKeys = f
         Timing.start(CONST.TIMING.HOMEPAGE_INITIAL_RENDER);
         isInitialRender.current = false;
     }
+
+    const loadHomeScreen = useMemo(() => {
+        return isSmallScreenWidth ? loadNativeHomeScreen : loadWebSidebarScreen;
+    }, [isSmallScreenWidth]);
 
     useEffect(() => {
         const shortcutsOverviewShortcutConfig = CONST.KEYBOARD_SHORTCUTS.SHORTCUTS;
@@ -259,11 +268,13 @@ function AuthScreens({session, lastOpenedPublicRoomID, isUsingMemoryOnlyKeys = f
 
     return (
         <View style={styles.rootNavigatorContainerStyles(isSmallScreenWidth)}>
+            {isDevelopment && <DebugAndSwitchRouter />}
             <RootStack.Navigator isSmallScreenWidth={isSmallScreenWidth}>
                 <RootStack.Screen
                     name={SCREENS.HOME}
                     options={screenOptions.homeScreen}
-                    getComponent={loadSidebarScreen}
+                    // getComponent={loadNativeHomeScreen}
+                    getComponent={loadHomeScreen}
                 />
                 <RootStack.Screen
                     name={NAVIGATORS.CENTRAL_PANE_NAVIGATOR}
@@ -275,7 +286,7 @@ function AuthScreens({session, lastOpenedPublicRoomID, isUsingMemoryOnlyKeys = f
                     options={{
                         ...screenOptions.fullScreen,
                         headerShown: false,
-                        title: 'New Expensify',
+                        title: 'New Ieatta',
                     }}
                     getComponent={loadValidateLoginPage}
                 />

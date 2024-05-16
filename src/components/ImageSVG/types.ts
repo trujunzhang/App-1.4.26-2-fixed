@@ -1,10 +1,11 @@
 import type {ImageContentFit, ImageStyle} from 'expo-image';
 import type {StyleProp, ViewStyle} from 'react-native';
-import type IconAsset from '@src/types/utils/IconAsset';
+// import type IconAsset from '@src/types/utils/IconAsset';
+import type {AvatarSource} from '@libs/UserUtils';
 
 type ImageSVGProps = {
     /** The asset to render. */
-    src: IconAsset;
+    src: AvatarSource;
 
     /** The width of the image. */
     width?: number | `${number}%` | 'auto';

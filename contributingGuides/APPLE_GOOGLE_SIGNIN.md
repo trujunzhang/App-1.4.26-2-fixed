@@ -235,7 +235,7 @@ If developing on MacOS, the development desktop app can't handle deeplinks corre
 ```
 npm run desktop-build
 open desktop-build
-# Then double-click "NewExpensify.dmg" in Finder window
+# Then double-click "NewIeatta.dmg" in Finder window
 ```
 
 2. Even with this build, the deep link may not be handled by the correct app, as the development Electron config seems to intercept it sometimes. To manage this, install [SwiftDefaultApps](https://github.com/Lord-Kamina/SwiftDefaultApps), which adds a preference pane that can be used to configure which app should handle deep links.

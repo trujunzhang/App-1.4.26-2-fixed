@@ -377,14 +377,156 @@ export default {
         getStarted: 'Comience a continuación.',
         anotherLoginPageIsOpen: 'Otra página de inicio de sesión está abierta.',
         anotherLoginPageIsOpenExplanation: 'Ha abierto la página de inicio de sesión en una pestaña separada, inicie sesión desde esa pestaña específica.',
-        welcomeBack: '¡Bienvenido de nuevo!',
-        welcome: '¡Bienvenido!',
+        welcomeBack: 'Welcome to IEATTA',
+        welcome: 'New to IEATTA?',
         phrase2: 'El dinero habla. Y ahora que chat y pagos están en un mismo lugar, es también fácil.',
         phrase3: 'Tus pagos llegan tan rápido como tus mensajes.',
         enterPassword: 'Por favor, introduce tu contraseña',
         newFaceEnterMagicCode: ({login}: NewFaceEnterMagicCodeParams) =>
             `¡Siempre es genial ver una cara nueva por aquí! Por favor ingresa el código mágico enviado a ${login}. Debería llegar en un par de minutos.`,
         welcomeEnterMagicCode: ({login}: WelcomeEnterMagicCodeParams) => `Por favor, introduce el código mágico enviado a ${login}. Debería llegar en un par de minutos.`,
+    },
+    sections: {
+        titles: {
+            currentAddress: 'Current Address',
+            photos: 'Photos',
+            events: 'Events',
+            eventsRecorded: 'Events Recorded',
+            eventWhatWhy: 'what/why:',
+            eventPeopleOrdered: 'People Ordered',
+            eventWaiters: 'Waiters',
+            onTheMenu: 'On the Menu',
+            reviews: 'Reviews',
+            recommendedReviews: 'Recommended Reviews',
+        },
+        empty: {
+            noRecipes: 'no recipes',
+            noReviews: 'no reviews',
+            noEvents: 'no events',
+            noPeopleOrdered: 'no people ordered',
+        },
+    },
+    add: {
+        recipe: {
+            title: 'Add Recipes',
+            button: 'Add Recipes',
+            search: 'Search Recipes(by name)',
+            section: {
+                title: 'recipes',
+            },
+        },
+        waiter: {
+            title: 'Add Waiters',
+            button: 'Add Waiters',
+        },
+        orderedUser: {
+            title: 'Add Users Ordered',
+            button: 'Add users ordered',
+            search: 'Search Users(by name)',
+            section: {
+                orderedUsersTitle: 'ordered users',
+                title: 'users',
+            },
+        },
+    },
+    edit: {
+        reset: 'Reset Form Date',
+        restaurant: {
+            button: 'Edit Restaurant',
+            form: {
+                header: {
+                    new: 'New Restaurant',
+                    edit: 'Edit Restaurant',
+                },
+                displayName: {
+                    title: 'displayName',
+                    placeholder: 'restaurant name',
+                    error: 'name can not be empty',
+                },
+                note: {
+                    title: 'note',
+                    placeholder: 'restaurant note',
+                    error: 'note can be empty',
+                },
+            },
+        },
+        event: {
+            button: 'Edit Event',
+            form: {
+                header: {
+                    new: 'New Event',
+                    edit: 'Edit Event',
+                },
+                displayName: {
+                    title: 'displayName',
+                    placeholder: 'event name',
+                    error: 'name can not be empty',
+                },
+                want: {
+                    title: 'want',
+                    placeholder: 'want note',
+                    error: 'note can be empty',
+                },
+                start: {
+                    title: 'start time',
+                    placeholder: 'start time',
+                    error: 'time can be empty',
+                },
+                end: {
+                    title: 'end time',
+                    placeholder: 'end time',
+                    error: 'time can be empty',
+                },
+            },
+        },
+        recipe: {
+            button: 'Edit Recipe',
+            form: {
+                header: {
+                    new: 'New Recipe',
+                    edit: 'Edit Recipe',
+                },
+                displayName: {
+                    title: 'displayName',
+                    placeholder: 'recipe name',
+                    error: 'name can not be empty',
+                },
+                price: {
+                    title: 'price',
+                    placeholder: 'recipe note',
+                    error: {
+                        empty: 'price can be empty',
+                        number: 'price can only be number',
+                    },
+                },
+            },
+        },
+        review: {
+            button: 'Edit Review',
+            form: {
+                header: {
+                    new: 'New Review',
+                    edit: 'Edit Review',
+                },
+                note: {
+                    title: 'Notes',
+                    placeholder: 'review notes',
+                    error: 'notes can be empty',
+                },
+            },
+        },
+    },
+    sidebar: {
+        header: {
+            title: 'IEATTA',
+            subTitle: 'Eating Experience Track',
+        },
+        search: {
+            message: 'Search nearby restaurants ...',
+        },
+        syncDB: {
+            message: 'Syncing database ...',
+        },
     },
     login: {
         hero: {

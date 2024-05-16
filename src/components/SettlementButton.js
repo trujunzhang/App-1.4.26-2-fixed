@@ -6,7 +6,7 @@ import useLocalize from '@hooks/useLocalize';
 import useNetwork from '@hooks/useNetwork';
 import compose from '@libs/compose';
 import * as ReportUtils from '@libs/ReportUtils';
-import iouReportPropTypes from '@pages/iouReportPropTypes';
+import iouReportPropTypes from '@expPages/iouReportPropTypes';
 import * as BankAccounts from '@userActions/BankAccounts';
 import * as IOU from '@userActions/IOU';
 import * as PaymentMethods from '@userActions/PaymentMethods';

@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import type {GestureResponderEvent, View} from 'react-native';
 import useSingleExecution from '@hooks/useSingleExecution';
-import * as ReportActionContextMenu from '@pages/home/report/ContextMenu/ReportActionContextMenu';
+import * as ReportActionContextMenu from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
 import CONST from '@src/CONST';
 import type {MenuItemProps} from './MenuItem';
 import MenuItem from './MenuItem';

@@ -19,7 +19,7 @@ import * as ErrorUtils from '@libs/ErrorUtils';
 import * as IOUUtils from '@libs/IOUUtils';
 import Navigation from '@libs/Navigation/Navigation';
 import * as TransactionUtils from '@libs/TransactionUtils';
-import reportPropTypes from '@pages/reportPropTypes';
+import reportPropTypes from '@expPages/reportPropTypes';
 import variables from '@styles/variables';
 import * as MapboxToken from '@userActions/MapboxToken';
 import * as Transaction from '@userActions/Transaction';

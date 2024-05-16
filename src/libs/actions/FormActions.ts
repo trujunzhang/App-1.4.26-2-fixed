@@ -1,5 +1,6 @@
 import Onyx from 'react-native-onyx';
-import type {KeyValueMapping, NullishDeep} from 'react-native-onyx/lib/types';
+import type {KeyValueMapping, NullishDeep} from 'react-native-onyx';
+import {satisfies} from 'semver';
 import FormUtils from '@libs/FormUtils';
 import type {OnyxFormKey} from '@src/ONYXKEYS';
 import type {Form} from '@src/types/onyx';
@@ -31,4 +32,23 @@ function clearDraftValues(formID: OnyxFormKeyWithoutDraft) {
     Onyx.merge(FormUtils.getDraftKey(formID), undefined);
 }
 
-export {setDraftValues, setErrorFields, setErrors, setIsLoading, clearDraftValues};
+/**
+ * @param draftID
+ */
+function clearDraftValuesByDraftId(draftID: OnyxFormKey) {
+    Onyx.set(draftID, {});
+}
+
+type UpdateDraftValuesForEditModelIdParams = {draftID: OnyxFormKey; editFormUniqueId: string; lastEditFormUniqueId: string};
+
+/**
+ * @param draftID
+ */
+function updateDraftValuesForEditModelId({draftID, editFormUniqueId, lastEditFormUniqueId}: UpdateDraftValuesForEditModelIdParams) {
+    if (editFormUniqueId === lastEditFormUniqueId) {
+        return;
+    }
+    Onyx.set(draftID, {editFormUniqueId} satisfies Form);
+}
+
+export {setDraftValues, setErrorFields, setErrors, setIsLoading, clearDraftValues, clearDraftValuesByDraftId, updateDraftValuesForEditModelId};

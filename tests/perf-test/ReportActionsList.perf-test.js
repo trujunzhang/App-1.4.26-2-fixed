@@ -6,11 +6,11 @@ import {LocaleContextProvider} from '../../src/components/LocaleContextProvider'
 import OnyxProvider from '../../src/components/OnyxProvider';
 import {WindowDimensionsProvider} from '../../src/components/withWindowDimensions';
 import CONST from '../../src/CONST';
+import ReportActionsList from '../../src/expPages/home/report/ReportActionsList';
+import {ReportAttachmentsProvider} from '../../src/expPages/home/report/ReportAttachmentsContext';
+import {ActionListContext, ReactionListContext} from '../../src/expPages/home/ReportScreenContext';
 import * as Localize from '../../src/libs/Localize';
 import ONYXKEYS from '../../src/ONYXKEYS';
-import ReportActionsList from '../../src/pages/home/report/ReportActionsList';
-import {ReportAttachmentsProvider} from '../../src/pages/home/report/ReportAttachmentsContext';
-import {ActionListContext, ReactionListContext} from '../../src/pages/home/ReportScreenContext';
 import variables from '../../src/styles/variables';
 import * as LHNTestUtils from '../utils/LHNTestUtils';
 import PusherHelper from '../utils/PusherHelper';

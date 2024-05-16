@@ -15,7 +15,8 @@ import type {AnchorAlignment} from './Popover/types';
 import PopoverWithMeasuredContent from './PopoverWithMeasuredContent';
 import Text from './Text';
 
-type PopoverMenuItem = {
+// eslint-disable-next-line rulesdir/no-inline-named-export
+export type PopoverMenuItem = {
     /** An icon element displayed on the left side */
     icon: IconAsset;
 

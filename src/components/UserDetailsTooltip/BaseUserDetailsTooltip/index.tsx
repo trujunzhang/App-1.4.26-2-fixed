@@ -45,13 +45,13 @@ function BaseUserDetailsTooltip({accountID, fallbackUserDetails, icon, delegateA
         () => (
             <View style={[styles.alignItemsCenter, styles.ph2, styles.pv2]}>
                 <View style={styles.emptyAvatar}>
-                    <Avatar
-                        containerStyles={[styles.actionAvatar]}
-                        source={icon?.source ?? UserUtils.getAvatar(userAvatar, userAccountID)}
-                        type={icon?.type ?? CONST.ICON_TYPE_AVATAR}
-                        name={icon?.name ?? userLogin}
-                        fallbackIcon={icon?.fallbackIcon}
-                    />
+                    {/*<Avatar*/}
+                    {/*    containerStyles={[styles.actionAvatar]}*/}
+                    {/*    source={icon?.source ?? UserUtils.getAvatar(userAvatar, userAccountID)}*/}
+                    {/*    type={icon?.type ?? CONST.ICON_TYPE_AVATAR}*/}
+                    {/*    name={icon?.name ?? userLogin}*/}
+                    {/*    fallbackIcon={icon?.fallbackIcon}*/}
+                    {/*/>*/}
                 </View>
                 <Text style={[styles.mt2, styles.textMicroBold, styles.textReactionSenders, styles.textAlignCenter]}>{title}</Text>
                 <Text style={[styles.textMicro, styles.fontColorReactionLabel, styles.breakWord, styles.textAlignCenter]}>{subtitle}</Text>

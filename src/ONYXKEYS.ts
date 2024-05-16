@@ -1,4 +1,4 @@
-import type {OnyxEntry} from 'react-native-onyx/lib/types';
+import type {OnyxEntry} from 'react-native-onyx';
 import type {ValueOf} from 'type-fest';
 import type CONST from './CONST';
 import type * as OnyxTypes from './types/onyx';
@@ -8,6 +8,12 @@ import type DeepValueOf from './types/utils/DeepValueOf';
  * This is a file containing constants for all the top level keys in our store
  */
 const ONYXKEYS = {
+    RESTAURANT_ID_IN_SIDEBAR: 'restaurantIDInSidebar',
+
+    /** Holds the status of the firebase sync */
+    IS_FB_FIRST_SYNC: 'isFBFirstSync',
+    FIREBASE_SYNC_STATUS: 'firebaseSyncStatus',
+
     /** Holds information about the users account that is logging in */
     ACCOUNT: 'account',
 
@@ -15,7 +21,7 @@ const ONYXKEYS = {
     ACCOUNT_MANAGER_REPORT_ID: 'accountManagerReportID',
 
     /** Boolean flag only true when first set */
-    NVP_IS_FIRST_TIME_NEW_EXPENSIFY_USER: 'isFirstTimeNewExpensifyUser',
+    NVP_IS_FIRST_TIME_NEW_EXPENSIFY_USER: 'isFirstTimeNewIeattaUser',
 
     /** Holds an array of client IDs which is used for multi-tabs on web in order to know
      * which tab is the leader, and which ones are the followers */
@@ -95,7 +101,7 @@ const ONYXKEYS = {
     BETAS: 'betas',
 
     /** NVP keys
-    /** Contains the user preference for the LHN priority mode */
+     /** Contains the user preference for the LHN priority mode */
     NVP_PRIORITY_MODE: 'nvp_priorityMode',
 
     /** Contains the users's block expiration (if they have one) */
@@ -242,6 +248,15 @@ const ONYXKEYS = {
 
     /** Collection Keys */
     COLLECTION: {
+        // Models for Firebase
+        // FB_PROFILES: 'firebaseProfiles',
+        // FB_RESTAURANTS: 'firebaseRestaurants',
+        // FB_EVENTS: 'firebaseEvents',
+        // FB_PEOPLE_IN_EVENTS: 'firebasePeopleInEvents',
+        // FB_RECIPES: 'firebaseRecipes',
+        // FB_PHOTOS: 'firebasePhotos',
+        // FB_REVIEWS: 'firebaseReviews',
+
         DOWNLOAD: 'download_',
         POLICY: 'policy_',
         POLICY_MEMBERS: 'policyMembers_',
@@ -288,6 +303,15 @@ const ONYXKEYS = {
 
     /** List of Form ids */
     FORMS: {
+        /** Ieatta edit forms */
+        IEATTA_RESTAURANT: 'ieattaRestaurant',
+        IEATTA_RESTAURANT_DRAFT: 'ieattaRestaurantDraft',
+        IEATTA_EVENT: 'ieattaEvent',
+        IEATTA_EVENT_DRAFT: 'ieattaEventDraft',
+        IEATTA_RECIPE: 'ieattaRecipe',
+        IEATTA_RECIPE_DRAFT: 'ieattaRecipeDraft',
+        IEATTA_REVIEW: 'ieattaReview',
+        IEATTA_REVIEW_DRAFT: 'ieattaReviewDraft',
         ADD_DEBIT_CARD_FORM: 'addDebitCardForm',
         ADD_DEBIT_CARD_FORM_DRAFT: 'addDebitCardFormDraft',
         WORKSPACE_SETTINGS_FORM: 'workspaceSettingsForm',
@@ -359,6 +383,9 @@ type OnyxKey = DeepValueOf<Omit<OnyxKeysMap, 'COLLECTION'>>;
 type OnyxFormKey = ValueOf<OnyxKeysMap['FORMS']> | OnyxKeysMap['REIMBURSEMENT_ACCOUNT'] | OnyxKeysMap['REIMBURSEMENT_ACCOUNT_DRAFT'];
 
 type OnyxValues = {
+    [ONYXKEYS.RESTAURANT_ID_IN_SIDEBAR]: string;
+    [ONYXKEYS.IS_FB_FIRST_SYNC]: boolean;
+    [ONYXKEYS.FIREBASE_SYNC_STATUS]: OnyxTypes.FirebaseSyncStatus;
     [ONYXKEYS.ACCOUNT]: OnyxTypes.Account;
     [ONYXKEYS.ACCOUNT_MANAGER_REPORT_ID]: string;
     [ONYXKEYS.NVP_IS_FIRST_TIME_NEW_EXPENSIFY_USER]: boolean;
@@ -434,6 +461,15 @@ type OnyxValues = {
     [ONYXKEYS.MAX_CANVAS_WIDTH]: number;
 
     // Collections
+    // Models for Firebase
+    // [ONYXKEYS.COLLECTION.FB_PROFILES]: OnyxTypes.FBModels.FBUsers;
+    // [ONYXKEYS.COLLECTION.FB_RESTAURANTS]: OnyxTypes.FBModels.FBRestaurants;
+    // [ONYXKEYS.COLLECTION.FB_EVENTS]: OnyxTypes.FBModels.FBEvents;
+    // [ONYXKEYS.COLLECTION.FB_PEOPLE_IN_EVENTS]: OnyxTypes.FBModels.FBUPeopleInEvents;
+    // [ONYXKEYS.COLLECTION.FB_RECIPES]: OnyxTypes.FBModels.FBRecipes;
+    // [ONYXKEYS.COLLECTION.FB_PHOTOS]: OnyxTypes.FBModels.FBPhotos;
+    // [ONYXKEYS.COLLECTION.FB_REVIEWS]: OnyxTypes.FBModels.FBReviews;
+
     [ONYXKEYS.COLLECTION.DOWNLOAD]: OnyxTypes.Download;
     [ONYXKEYS.COLLECTION.POLICY]: OnyxTypes.Policy;
     [ONYXKEYS.COLLECTION.POLICY_DRAFTS]: OnyxTypes.Policy;
@@ -465,6 +501,15 @@ type OnyxValues = {
     [ONYXKEYS.COLLECTION.NEXT_STEP]: OnyxTypes.ReportNextStep;
 
     // Forms
+    /** Ieatta edit forms */
+    [ONYXKEYS.FORMS.IEATTA_RESTAURANT]: OnyxTypes.Form;
+    [ONYXKEYS.FORMS.IEATTA_RESTAURANT_DRAFT]: OnyxTypes.Form;
+    [ONYXKEYS.FORMS.IEATTA_EVENT]: OnyxTypes.Form;
+    [ONYXKEYS.FORMS.IEATTA_EVENT_DRAFT]: OnyxTypes.Form;
+    [ONYXKEYS.FORMS.IEATTA_RECIPE]: OnyxTypes.Form;
+    [ONYXKEYS.FORMS.IEATTA_RECIPE_DRAFT]: OnyxTypes.Form;
+    [ONYXKEYS.FORMS.IEATTA_REVIEW]: OnyxTypes.Form;
+    [ONYXKEYS.FORMS.IEATTA_REVIEW_DRAFT]: OnyxTypes.Form;
     [ONYXKEYS.FORMS.ADD_DEBIT_CARD_FORM]: OnyxTypes.AddDebitCardForm;
     [ONYXKEYS.FORMS.ADD_DEBIT_CARD_FORM_DRAFT]: OnyxTypes.AddDebitCardForm;
     [ONYXKEYS.FORMS.WORKSPACE_SETTINGS_FORM]: OnyxTypes.Form;

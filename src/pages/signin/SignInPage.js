@@ -6,6 +6,8 @@ import {withOnyx} from 'react-native-onyx';
 import _ from 'underscore';
 import ColorSchemeWrapper from '@components/ColorSchemeWrapper';
 import CustomStatusBarAndBackground from '@components/CustomStatusBarAndBackground';
+import GoogleSignInButton from '@components/SignInButtons/GoogleSignButton';
+import GoogleProvider from '@components/SignInButtons/GoogleSignButton/GoogleProvider';
 import ThemeProvider from '@components/ThemeProvider';
 import ThemeStylesProvider from '@components/ThemeStylesProvider';
 import useLocalize from '@hooks/useLocalize';
@@ -23,12 +25,7 @@ import * as Session from '@userActions/Session';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
-import ChooseSSOOrMagicCode from './ChooseSSOOrMagicCode';
-import EmailDeliveryFailurePage from './EmailDeliveryFailurePage';
-import LoginForm from './LoginForm';
 import SignInPageLayout from './SignInPageLayout';
-import UnlinkLoginForm from './UnlinkLoginForm';
-import ValidateCodeForm from './ValidateCodeForm';
 
 const propTypes = {
     /** The details about the account that the user is signing in with */
@@ -140,7 +137,6 @@ function SignInPageInner({credentials, account, isInModal, activeClients, prefer
     const shouldShowSmallScreen = isSmallScreenWidth || isInModal;
     const safeAreaInsets = useSafeAreaInsets();
     const signInPageLayoutRef = useRef();
-    const loginFormRef = useRef();
     /** This state is needed to keep track of if user is using recovery code instead of 2fa code,
      * and we need it here since welcome text(`welcomeText`) also depends on it */
     const [isUsingRecoveryCode, setIsUsingRecoveryCode] = useState(false);
@@ -243,50 +239,38 @@ function SignInPageInner({credentials, account, isInModal, activeClients, prefer
         Log.warn('SignInPage in unexpected state!');
     }
 
-    const navigateFocus = () => {
-        signInPageLayoutRef.current.scrollPageToTop();
-        loginFormRef.current.clearDataAndFocus();
-    };
-
     return (
         // Bottom SafeAreaView is removed so that login screen svg displays correctly on mobile.
         // The SVG should flow under the Home Indicator on iOS.
-        <View style={[styles.signInPage, StyleUtils.getSafeAreaPadding({...safeAreaInsets, bottom: 0, top: isInModal ? 0 : safeAreaInsets.top}, 1)]}>
-            <SignInPageLayout
-                welcomeHeader={welcomeHeader}
-                welcomeText={welcomeText}
-                shouldShowWelcomeHeader={shouldShowWelcomeHeader || !isSmallScreenWidth || !isInModal}
-                shouldShowWelcomeText={shouldShowWelcomeText}
-                ref={signInPageLayoutRef}
-                shouldShowSmallScreen={shouldShowSmallScreen}
-                navigateFocus={navigateFocus}
-            >
-                {/* LoginForm must use the isVisible prop. This keeps it mounted, but visually hidden
-             so that password managers can access the values. Conditionally rendering this component will break this feature. */}
-                <LoginForm
-                    ref={loginFormRef}
-                    isInModal={isInModal}
-                    isVisible={shouldShowLoginForm}
-                    blurOnSubmit={account.validated === false}
-                    scrollPageToTop={signInPageLayoutRef.current && signInPageLayoutRef.current.scrollPageToTop}
-                />
-                {isClientTheLeader && (
-                    <>
-                        {shouldShowValidateCodeForm && (
-                            <ValidateCodeForm
-                                isUsingRecoveryCode={isUsingRecoveryCode}
-                                setIsUsingRecoveryCode={setIsUsingRecoveryCode}
-                            />
-                        )}
-                        {shouldShowUnlinkLoginForm && <UnlinkLoginForm />}
-                        {shouldShowChooseSSOOrMagicCode && <ChooseSSOOrMagicCode setIsUsingMagicCode={setIsUsingMagicCode} />}
-                        {shouldShowEmailDeliveryFailurePage && <EmailDeliveryFailurePage />}
-                    </>
-                )}
-            </SignInPageLayout>
+        <View
+            style={[
+                styles.signInPage,
+                StyleUtils.getSafeAreaPadding(
+                    {
+                        ...safeAreaInsets,
+                        bottom: 0,
+                        top: isInModal ? 0 : safeAreaInsets.top,
+                    },
+                    1,
+                ),
+            ]}
+        >
+            <GoogleProvider>
+                <SignInPageLayout
+                    welcomeHeader={translate('welcomeText.welcomeBack')}
+                    welcomeText={translate('welcomeText.welcome')}
+                    shouldShowWelcomeHeader={shouldShowWelcomeHeader || !isSmallScreenWidth || !isInModal}
+                    shouldShowWelcomeText={shouldShowWelcomeText}
+                    ref={signInPageLayoutRef}
+                    shouldShowSmallScreen={shouldShowSmallScreen}
+                >
+                    <GoogleSignInButton isLoading={account.isLoading} />
+                </SignInPageLayout>
+            </GoogleProvider>
         </View>
     );
 }
+
 SignInPageInner.propTypes = propTypes;
 SignInPageInner.defaultProps = defaultProps;
 SignInPageInner.displayName = 'SignInPage';
@@ -311,12 +295,12 @@ export default withOnyx({
     account: {key: ONYXKEYS.ACCOUNT},
     credentials: {key: ONYXKEYS.CREDENTIALS},
     /**
-  This variable is only added to make sure the component is re-rendered
-  whenever the activeClients change, so that we call the
-  ActiveClientManager.isClientTheLeader function
-  everytime the leader client changes.
-  We use that function to prevent repeating code that checks which client is the leader.
-  */
+     This variable is only added to make sure the component is re-rendered
+     whenever the activeClients change, so that we call the
+     ActiveClientManager.isClientTheLeader function
+     everytime the leader client changes.
+     We use that function to prevent repeating code that checks which client is the leader.
+     */
     activeClients: {key: ONYXKEYS.ACTIVE_CLIENTS},
     preferredLocale: {
         key: ONYXKEYS.NVP_PREFERRED_LOCALE,

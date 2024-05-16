@@ -893,11 +893,11 @@ function findLastAccessedReport(
     reports: OnyxCollection<Report>,
     ignoreDomainRooms: boolean,
     policies: OnyxCollection<Policy>,
-    isFirstTimeNewExpensifyUser: boolean,
+    isFirstTimeNewIeattaUser: boolean,
     openOnAdminRoom = false,
     reportMetadata: OnyxCollection<ReportMetadata> = {},
 ): OnyxEntry<Report> {
-    // If it's the user's first time using New Expensify, then they could either have:
+    // If it's the user's first time using New Ieatta, then they could either have:
     //   - just a Concierge report, if so we'll return that
     //   - their Concierge report, and a separate report that must have deeplinked them to the app before they created their account.
     // If it's the latter, we'll use the deeplinked report over the Concierge report,
@@ -912,7 +912,7 @@ function findLastAccessedReport(
         });
     }
 
-    if (isFirstTimeNewExpensifyUser) {
+    if (isFirstTimeNewIeattaUser) {
         if (sortedReports.length === 1) {
             return sortedReports[0];
         }

@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import _ from 'underscore';
 import bankAccountPropTypes from '@components/bankAccountPropTypes';
 import cardPropTypes from '@components/cardPropTypes';
-import userWalletPropTypes from '@pages/EnablePayments/userWalletPropTypes';
-import walletTermsPropTypes from '@pages/EnablePayments/walletTermsPropTypes';
-import iouReportPropTypes from '@pages/iouReportPropTypes';
-import reimbursementAccountPropTypes from '@pages/ReimbursementAccount/ReimbursementAccountDraftPropTypes';
+import userWalletPropTypes from '@expPages/EnablePayments/userWalletPropTypes';
+import walletTermsPropTypes from '@expPages/EnablePayments/walletTermsPropTypes';
+import iouReportPropTypes from '@expPages/iouReportPropTypes';
+import reimbursementAccountPropTypes from '@expPages/ReimbursementAccount/ReimbursementAccountDraftPropTypes';
 import CONST from '@src/CONST';
 
 const propTypes = {

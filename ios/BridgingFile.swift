@@ -1,6 +1,6 @@
 //
 //  BridgingFile.swift
-//  NewExpensify
+//  NewIeatta
 //
 // Needed because iOS implementation is written in Swift.
 //

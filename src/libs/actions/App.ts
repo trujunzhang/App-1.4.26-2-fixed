@@ -243,7 +243,7 @@ function reconnectApp(updateIDFrom: OnyxEntry<number> = 0) {
             params.updateIDFrom = updateIDFrom;
         }
 
-        API.write('ReconnectApp', params, getOnyxDataForOpenOrReconnect());
+        // API.write('ReconnectApp', params, getOnyxDataForOpenOrReconnect());
     });
 }
 
@@ -273,7 +273,7 @@ function finalReconnectAppAfterActivatingReliableUpdates(): Promise<void | OnyxT
         // It was absolutely necessary in order to not break the app while migrating to the new reliable updates pattern. This method will be removed
         // as soon as we have everyone migrated to the reliableUpdate beta.
         // eslint-disable-next-line rulesdir/no-api-side-effects-method
-        return API.makeRequestWithSideEffects('ReconnectApp', params, getOnyxDataForOpenOrReconnect());
+        // return API.makeRequestWithSideEffects('ReconnectApp', params, getOnyxDataForOpenOrReconnect());
     });
 }
 

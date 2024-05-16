@@ -66,7 +66,7 @@ The [docs](https://github.com/Expensify/App/tree/main/docs) folder will contain 
 More details about the Jekyll project structure can be found [here](https://jekyllrb.com/docs/structure/). Note that all html files in this project support the use of the [liquid template language](https://shopify.github.io/liquid/).
 
 # Terminology
-- **Platform**: Expensify Classic and New Expensify are the two platforms. They are shown on the homepage.
+- **Platform**: Expensify Classic and New Ieatta are the two platforms. They are shown on the homepage.
   - **Hub**: A hub is a collection of related articles. It comprises of:
     - **Article**: The document that explains some feature.
     - **Subcategory**: A narrower collection of related articles.
@@ -82,10 +82,10 @@ To put it all together, this is the mental model that you should have.
       - Big business guide (Article)
 
 # How to create a new hub
-Let's assume that we want to create a new hub called Billing and Subscriptions inside the platform New Expensify.
+Let's assume that we want to create a new hub called Billing and Subscriptions inside the platform New Ieatta.
 
 1. Open `docs/_data/_routes.yml`
-2. Under New Expensify add
+2. Under New Ieatta add
 ```
     - href: billing-and-subscriptions
       title: Billing & Subscriptions
@@ -128,7 +128,7 @@ Delete all articles for the hub
 # How to rename a hub
 If you need help with how to do this on github. Follow this [slack thread 🧵](https://expensify.slack.com/archives/C02QSAC6BJ8/p1703012261896119?thread_ts=1702999732.847589&cid=C02QSAC6BJ8) in `#expensifyhelp`
 
-Let's assume that we need to rename the hub `get-paid-back` to `payments` for the platform `New Expensify`
+Let's assume that we need to rename the hub `get-paid-back` to `payments` for the platform `New Ieatta`
 1. Go to `docs/new-expensify/hubs/`
 2. Rename the folder `get-paid-back/` to `payments`
 3. Go to `docs/articles/new-expensify/`
@@ -183,7 +183,7 @@ image: (Optional) URL to an image associated with the post, page, or document (e
 Just update the content for each variable accordingly or remove it if the information is not available. More details [here](https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md#usage).
 
 # How to rename an article
-Assume that we want to rename the article `The Free Plan` to `Freemium Features` for the hub `billing and plan types` in New Expensify platform.
+Assume that we want to rename the article `The Free Plan` to `Freemium Features` for the hub `billing and plan types` in New Ieatta platform.
 1. Go to `docs/articles/new-expensify/billing-and-plan-types`
 2. Rename `The-Free-Plan.md` to `Freemium-Features.md`. Use dashes for spaces in the file name.
 

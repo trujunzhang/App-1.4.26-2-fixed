@@ -2,7 +2,7 @@ import Onyx from 'react-native-onyx';
 import * as API from '@libs/API';
 import * as ErrorUtils from '@libs/ErrorUtils';
 import Navigation from '@libs/Navigation/Navigation';
-import * as PlaidDataProps from '@pages/ReimbursementAccount/plaidDataPropTypes';
+import * as PlaidDataProps from '@expPages/ReimbursementAccount/plaidDataPropTypes';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';

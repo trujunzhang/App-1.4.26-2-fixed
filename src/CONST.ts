@@ -17,7 +17,7 @@ const ACTIVE_EXPENSIFY_URL = Url.addTrailingForwardSlash(Config?.NEW_EXPENSIFY_U
 const USE_EXPENSIFY_URL = 'https://use.expensify.com';
 const PLATFORM_OS_MACOS = 'Mac OS';
 const PLATFORM_IOS = 'iOS';
-const ANDROID_PACKAGE_NAME = 'com.expensify.chat';
+const ANDROID_PACKAGE_NAME = 'com.ieatta.track';
 const CURRENT_YEAR = new Date().getFullYear();
 const PULL_REQUEST_NUMBER = Config?.PULL_REQUEST_NUMBER ?? '';
 const MAX_DATE = dateAdd(new Date(), {years: 1});
@@ -38,6 +38,9 @@ const keyInputRightArrow = KeyCommand?.constants?.keyInputRightArrow ?? 'keyInpu
 const KEYBOARD_SHORTCUT_NAVIGATION_TYPE = 'NAVIGATION_SHORTCUT';
 
 const CONST = {
+    IEATTA_MODEL_ID_EMPTY: 'empty',
+    IEATTA_EDIT_MODEL_NEW: 'new',
+    IEATTA_URL_EMPTY: 'http://empty.jpg',
     ANDROID_PACKAGE_NAME,
     ANIMATED_TRANSITION: 300,
     ANIMATED_TRANSITION_FROM_VALUE: 100,
@@ -47,6 +50,8 @@ const CONST = {
         OUT: 'out',
     },
     ARROW_HIDE_DELAY: 3000,
+
+    DEFAULT_LOCATION: {longitude: 0, latitude: 0},
 
     API_ATTACHMENT_VALIDATIONS: {
         // 24 megabytes in bytes, this is limit set on servers, do not update without wider internal discussion
@@ -163,7 +168,7 @@ const CONST = {
     APP_DOWNLOAD_LINKS: {
         ANDROID: `https://play.google.com/store/apps/details?id=${ANDROID_PACKAGE_NAME}`,
         IOS: 'https://apps.apple.com/us/app/expensify-cash/id1530278510',
-        DESKTOP: `${ACTIVE_EXPENSIFY_URL}NewExpensify.dmg`,
+        DESKTOP: `${ACTIVE_EXPENSIFY_URL}NewIeatta.dmg`,
     },
     DATE: {
         SQL_DATE_TIME: 'YYYY-MM-DD HH:mm:ss',
@@ -732,7 +737,9 @@ const CONST = {
         DEFAULT: 'default',
     },
     THEME: {
-        DEFAULT: 'system',
+        // DEFAULT: 'system',
+        DEFAULT: 'light',
+        // DEFAULT: 'dark',
         FALLBACK: 'dark',
         DARK: 'dark',
         LIGHT: 'light',
@@ -1451,7 +1458,7 @@ const CONST = {
         SELF_SELECT: '__predefined_selfSelect',
     },
     GUIDES_CALL_TASK_IDS: {
-        CONCIERGE_DM: 'NewExpensifyConciergeDM',
+        CONCIERGE_DM: 'NewIeattaConciergeDM',
         WORKSPACE_INITIAL: 'WorkspaceHome',
         WORKSPACE_SETTINGS: 'WorkspaceGeneralSettings',
         WORKSPACE_CARD: 'WorkspaceCorporateCards',
@@ -2729,7 +2736,7 @@ const CONST = {
         EXPECTED_OUTPUT: 'FCFA 123,457',
     },
 
-    PATHS_TO_TREAT_AS_EXTERNAL: ['NewExpensify.dmg', 'docs/index.html'],
+    PATHS_TO_TREAT_AS_EXTERNAL: ['NewIeatta.dmg', 'docs/index.html'],
 
     // Test tool menu parameters
     TEST_TOOL: {
@@ -2967,8 +2974,10 @@ const CONST = {
         PADDING: 50,
         DEFAULT_ZOOM: 10,
         SINGLE_MARKER_ZOOM: 15,
-        DEFAULT_COORDINATE: [-122.4021, 37.7911],
-        STYLE_URL: 'mapbox://styles/expensify/cllcoiqds00cs01r80kp34tmq',
+        // DEFAULT_COORDINATE: [-122.4021, 37.7911],
+        DEFAULT_COORDINATE: {longitude: -122.4021, latitude: 37.7911},
+        // STYLE_URL: 'mapbox://styles/expensify/cllcoiqds00cs01r80kp34tmq',
+        STYLE_URL: 'mapbox://styles/trujunzhang/cimkcr0um00encem3weftsa3k',
     },
     ONYX_UPDATE_TYPES: {
         HTTPS: 'https',

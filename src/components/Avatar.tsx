@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import type {StyleProp, ViewStyle} from 'react-native';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+// eslint-disable-next-line no-restricted-imports
+import _ from 'underscore';
 import useNetwork from '@hooks/useNetwork';
 import useStyleUtils from '@hooks/useStyleUtils';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
+import Log from '@libs/Log';
 import * as ReportUtils from '@libs/ReportUtils';
 import type {AvatarSource} from '@libs/UserUtils';
 import type {AvatarSizeName} from '@styles/utils';
@@ -13,10 +16,15 @@ import type {AvatarType} from '@src/types/onyx/OnyxCommon';
 import Icon from './Icon';
 import * as Expensicons from './Icon/Expensicons';
 import Image from './Image';
+import ImagePlaceholder from './ImagePlaceholder';
+import Text from './Text';
 
-type AvatarProps = {
+// eslint-disable-next-line rulesdir/no-inline-named-export
+export type AvatarProps = {
     /** Source for the avatar. Can be a URL or an icon. */
     source?: AvatarSource;
+
+    avatarUrl?: string;
 
     /** Extra styles to pass to Image */
     imageStyles?: StyleProp<ViewStyle>;
@@ -53,7 +61,8 @@ type AvatarProps = {
 
 function Avatar({
     source,
-    imageStyles,
+    avatarUrl,
+    imageStyles = [],
     iconAdditionalStyles,
     containerStyles,
     size = CONST.AVATAR_SIZE.DEFAULT,
@@ -74,13 +83,14 @@ function Avatar({
         setImageError(false);
     }, [source]);
 
-    if (!source) {
-        return null;
-    }
+    // if (!source) {
+    //     return null;
+    // }
 
     const isWorkspace = type === CONST.ICON_TYPE_WORKSPACE;
     const iconSize = StyleUtils.getAvatarSize(size);
 
+    const avatarStyle = StyleUtils.getAvatarStyle(size);
     const imageStyle = [StyleUtils.getAvatarStyle(size), imageStyles, styles.noBorderRadius];
     const iconStyle = imageStyles ? [StyleUtils.getAvatarStyle(size), styles.bgTransparent, imageStyles] : undefined;
 
@@ -89,6 +99,13 @@ function Avatar({
     const fallbackAvatarTestID = isWorkspace ? ReportUtils.getDefaultWorkspaceAvatarTestID(name) : fallbackIconTestID || 'SvgFallbackAvatar Icon';
 
     const avatarSource = imageError ? fallbackAvatar : source;
+
+    // Log.info("")
+    // Log.info("================================")
+    // Log.info(`imageStyle: ${JSON.stringify(imageStyle)}`)
+    // Log.info(`avatarSource: ${JSON.stringify(avatarSource)}`)
+    // Log.info("================================")
+    // Log.info("")
 
     return (
         <View style={[containerStyles, styles.pointerEventsNone]}>
@@ -110,11 +127,27 @@ function Avatar({
                 </View>
             ) : (
                 <View style={[iconStyle, StyleUtils.getAvatarBorderStyle(size, type), iconAdditionalStyles]}>
-                    <Image
-                        source={{uri: avatarSource}}
-                        style={imageStyle}
-                        onError={() => setImageError(true)}
-                    />
+                    {_.isUndefined(avatarUrl) ? (
+                        <Image
+                            source={{
+                                uri: avatarSource,
+                            }}
+                            style={StyleSheet.flatten(imageStyle)}
+                            onError={() => setImageError(true)}
+                        />
+                    ) : (
+                        <View
+                            testID="AvatarWrapper"
+                            style={StyleSheet.flatten(imageStyle)}
+                        >
+                            <ImagePlaceholder
+                                sourceUri={avatarUrl}
+                                style={StyleSheet.flatten(imageStyle)}
+                                imageType="png"
+                                placeholder={Expensicons.User60Square}
+                            />
+                        </View>
+                    )}
                 </View>
             )}
         </View>

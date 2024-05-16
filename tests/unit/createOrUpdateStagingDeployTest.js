@@ -118,7 +118,7 @@ const timingDashboardVerification =
     'I checked the [App Timing Dashboard](https://graphs.expensify.com/grafana/d/yj2EobAGz/app-timing?orgId=1) and verified this release does not cause a noticeable performance regression.';
 // eslint-disable-next-line max-len
 const firebaseVerification =
-    'I checked [Firebase Crashlytics](https://console.firebase.google.com/u/0/project/expensify-chat/crashlytics/app/android:com.expensify.chat/issues?state=open&time=last-seven-days&tag=all) and verified that this release does not introduce any new crashes. More detailed instructions on this verification can be found [here](https://stackoverflowteams.com/c/expensify/questions/15095/15096).';
+    'I checked [Firebase Crashlytics](https://console.firebase.google.com/u/0/project/expensify-chat/crashlytics/app/android:com.ieatta.track/issues?state=open&time=last-seven-days&tag=all) and verified that this release does not introduce any new crashes. More detailed instructions on this verification can be found [here](https://stackoverflowteams.com/c/expensify/questions/15095/15096).';
 // eslint-disable-next-line max-len
 const ghVerification = 'I checked [GitHub Status](https://www.githubstatus.com/) and verified there is no reported incident with Actions.';
 const ccApplauseLeads = 'cc @Expensify/applauseleads\r\n';
@@ -179,7 +179,7 @@ describe('createOrUpdateStagingDeployCash', () => {
         expect(result).toStrictEqual({
             owner: CONST.GITHUB_OWNER,
             repo: CONST.APP_REPO,
-            title: `Deploy Checklist: New Expensify ${fns.format(new Date(), 'yyyy-MM-dd')}`,
+            title: `Deploy Checklist: New Ieatta ${fns.format(new Date(), 'yyyy-MM-dd')}`,
             labels: [CONST.LABELS.STAGING_DEPLOY],
             html_url: 'https://github.com/Expensify/App/issues/29',
             assignees: [CONST.APPLAUSE_BOT],

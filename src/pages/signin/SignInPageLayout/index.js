@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, {forwardRef, useEffect, useImperativeHandle, useMemo, useRef} from 'react';
-import {ScrollView, View} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
 import {withSafeAreaInsets} from 'react-native-safe-area-context';
 import SignInGradient from '@assets/images/home-fade-gradient.svg';
 import ImageSVG from '@components/ImageSVG';
@@ -65,8 +65,8 @@ function SignInPageLayout(props) {
     const scrollViewRef = useRef();
     const prevPreferredLocale = usePrevious(props.preferredLocale);
     let containerStyles = [styles.flex1, styles.signInPageInner];
-    let contentContainerStyles = [styles.flex1, styles.flexRow];
-    const {windowHeight} = useWindowDimensions();
+    let contentContainerStyles = [styles.flex1, styles.flexColumn];
+    const {windowWidth, windowHeight, isSmallScreenWidth, isMediumScreenWidth} = useWindowDimensions();
 
     // To scroll on both mobile and web, we need to set the container height manually
     const containerHeight = windowHeight - props.insets.top - props.insets.bottom;
@@ -96,97 +96,67 @@ function SignInPageLayout(props) {
     }, [props.welcomeHeader, props.welcomeText, prevPreferredLocale, props.preferredLocale]);
 
     const scrollViewStyles = useMemo(() => scrollViewContentContainerStyles(styles), [styles]);
+    const signFormContainerStyle = useMemo(
+        () => (isSmallScreenWidth ? [styles.flex1, styles.alignItemsCenter, styles.justifyContentCenter] : [styles.flex1, styles.alignItemsEnd, styles.justifyContentCenter, styles.pr25]),
+        [isSmallScreenWidth, styles],
+    );
 
-    return (
-        <View style={containerStyles}>
-            {!props.shouldShowSmallScreen ? (
-                <View style={contentContainerStyles}>
-                    <ScrollView
-                        keyboardShouldPersistTaps="handled"
-                        style={[styles.signInPageLeftContainerWide, styles.flex1]}
-                        contentContainerStyle={[styles.flex1]}
-                    >
-                        <SignInPageContent
-                            welcomeHeader={props.welcomeHeader}
-                            welcomeText={props.welcomeText}
-                            shouldShowWelcomeText={props.shouldShowWelcomeText}
-                            shouldShowWelcomeHeader={props.shouldShowWelcomeHeader}
-                            shouldShowSmallScreen={props.shouldShowSmallScreen}
-                        >
-                            {props.children}
-                        </SignInPageContent>
-                    </ScrollView>
-                    <ScrollView
-                        style={[styles.flex1, StyleUtils.getBackgroundColorStyle(theme.signInPage)]}
-                        contentContainerStyle={[styles.flex1]}
-                        ref={scrollViewRef}
-                    >
-                        <View style={[styles.flex1]}>
-                            <View style={styles.signInPageHeroCenter}>
-                                <BackgroundImage
-                                    isSmallScreen={false}
-                                    pointerEvents="none"
-                                    width={variables.signInHeroBackgroundWidth}
-                                />
-                            </View>
-                            <View>
-                                <View style={[styles.t0, styles.l0, styles.h100, styles.pAbsolute, styles.signInPageGradient]}>
-                                    <ImageSVG
-                                        src={SignInGradient}
-                                        height="100%"
-                                        preserveAspectRatio="none"
-                                    />
-                                </View>
-                                <View
-                                    style={[
-                                        styles.alignSelfCenter,
-                                        StyleUtils.getMaximumWidth(variables.signInContentMaxWidth),
-                                        props.isMediumScreenWidth ? styles.ph10 : {},
-                                        props.isLargeScreenWidth ? styles.ph25 : {},
-                                    ]}
-                                >
-                                    <SignInPageHero
-                                        customHeadline={props.customHeadline}
-                                        customHeroBody={props.customHeroBody}
-                                    />
-                                    <Footer navigateFocus={props.navigateFocus} />
-                                </View>
-                            </View>
-                        </View>
-                    </ScrollView>
-                </View>
-            ) : (
-                <ScrollView
-                    contentContainerStyle={scrollViewStyles}
-                    keyboardShouldPersistTaps="handled"
-                    ref={scrollViewRef}
-                >
-                    <View style={[styles.flex1, styles.flexColumn, styles.overflowHidden, StyleUtils.getMinimumHeight(Math.max(variables.signInContentMinHeight, containerHeight))]}>
-                        <BackgroundImage
-                            isSmallScreen
-                            pointerEvents="none"
-                            width={variables.signInHeroBackgroundWidthMobile}
-                        />
-                        <SignInPageContent
-                            welcomeHeader={props.welcomeHeader}
-                            welcomeText={props.welcomeText}
-                            shouldShowWelcomeText={props.shouldShowWelcomeText}
-                            shouldShowWelcomeHeader={props.shouldShowWelcomeHeader}
-                            shouldShowSmallScreen={props.shouldShowSmallScreen}
-                        >
-                            {props.children}
-                        </SignInPageContent>
-                    </View>
-                    <View style={[styles.flex0]}>
-                        <Footer
-                            navigateFocus={props.navigateFocus}
-                            shouldShowSmallScreen
-                        />
-                    </View>
-                </ScrollView>
-            )}
+    const signFormContent = (
+        <View style={signFormContainerStyle}>
+            <SignInPageContent
+                welcomeHeader={props.welcomeHeader}
+                welcomeText={props.welcomeText}
+                shouldShowWelcomeText={props.shouldShowWelcomeText}
+                shouldShowWelcomeHeader={props.shouldShowWelcomeHeader}
+                shouldShowSmallScreen={props.shouldShowSmallScreen}
+            >
+                {props.children}
+            </SignInPageContent>
         </View>
     );
+    let pageLayoutView = null;
+
+    if (isSmallScreenWidth) {
+        pageLayoutView = (
+            <View style={[styles.flex1]}>
+                {/* Top Section */}
+                <View style={[styles.flex1]}>
+                    {/* Left container */}
+                    {signFormContent}
+                </View>
+            </View>
+        );
+    } else {
+        pageLayoutView = (
+            <View style={[styles.flex1]}>
+                {/* Top Section */}
+                <View style={[styles.flex1, styles.flexRow]}>
+                    {/* Left container */}
+                    {signFormContent}
+                    {/* Right container */}
+                    <View style={[styles.flex1, styles.alignItemsCenter, styles.justifyContentCenter]}>
+                        <View
+                            style={[
+                                styles.alignSelfStart,
+                                StyleUtils.getMaximumWidth(variables.signInContentMaxWidth),
+                                props.isMediumScreenWidth ? styles.ph10 : {},
+                                props.isLargeScreenWidth ? styles.ph25 : {},
+                            ]}
+                        >
+                            <SignInPageHero
+                                customHeadline={props.customHeadline}
+                                customHeroBody={props.customHeroBody}
+                            />
+                        </View>
+                    </View>
+                </View>
+                {/*  Bottom footer section */}
+                <Footer scrollPageToTop={scrollPageToTop} />
+            </View>
+        );
+    }
+
+    return <View style={[styles.flex1]}>{pageLayoutView}</View>;
 }
 
 SignInPageLayout.propTypes = propTypes;

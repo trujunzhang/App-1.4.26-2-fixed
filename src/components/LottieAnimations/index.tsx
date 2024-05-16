@@ -1,6 +1,16 @@
 import type DotLottieAnimation from './types';
 
 const DotLottieAnimations: Record<string, DotLottieAnimation> = {
+    SyncFirebase: {
+        file: require('@assets/animations/Sync_Firebase.lottie'),
+        w: 375,
+        h: 240,
+    },
+    Radar: {
+        file: require('@assets/animations/Radar.lottie'),
+        w: 375,
+        h: 240,
+    },
     ExpensifyLounge: {
         file: require('@assets/animations/ExpensifyLounge.lottie'),
         w: 1920,

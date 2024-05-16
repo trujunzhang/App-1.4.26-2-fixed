@@ -88,7 +88,7 @@ function write(command: string, apiCommandParameters: Record<string, unknown> = 
     };
 
     // Write commands can be saved and retried, so push it to the SequentialQueue
-    SequentialQueue.push(request);
+    // SequentialQueue.push(request);
 }
 
 /**
@@ -141,7 +141,8 @@ function makeRequestWithSideEffects(
     };
 
     // Return a promise containing the response from HTTPS
-    return Request.processWithMiddleware(request);
+    // return Request.processWithMiddleware(request);
+    return Promise.resolve();
 }
 
 /**
@@ -161,7 +162,7 @@ function read(command: string, apiCommandParameters: Record<string, unknown>, on
     // Ensure all write requests on the sequential queue have finished responding before running read requests.
     // Responses from read requests can overwrite the optimistic data inserted by
     // write requests that use the same Onyx keys and haven't responded yet.
-    SequentialQueue.waitForIdle().then(() => makeRequestWithSideEffects(command, apiCommandParameters, onyxData, CONST.API_REQUEST_TYPE.READ));
+    // SequentialQueue.waitForIdle().then(() => makeRequestWithSideEffects(command, apiCommandParameters, onyxData, CONST.API_REQUEST_TYPE.READ));
 }
 
 export {write, makeRequestWithSideEffects, read};

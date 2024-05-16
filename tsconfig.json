@@ -19,7 +19,8 @@
             "es2022.array",
             "es2022.object",
             "es2022.string",
-            "ES2021.Intl"
+            "ES2021.Intl",
+            "dom.iterable"
         ],
         "allowJs": true,
         "checkJs": false,
@@ -40,6 +41,7 @@
             "@libs/*": ["./src/libs/*"],
             "@navigation/*": ["./src/libs/Navigation/*"],
             "@pages/*": ["./src/pages/*"],
+            "@expPages/*": ["./src/expPages/*"],
             "@styles/*": ["./src/styles/*"],
             "@src/*": ["./src/*"],
             "@userActions/*": ["./src/libs/actions/*"]

@@ -1,3 +1,4 @@
+import colors from '@styles/theme/colors';
 import type CONST from '@src/CONST';
 import type {ColorScheme, StatusBarStyle} from '..';
 
@@ -38,9 +39,12 @@ type ThemeColors = {
     transparent: Color;
     signInPage: Color;
     darkSupportingText: Color;
+    divideBG: Color;
+    textInverse: Color;
 
     // Additional keys
     overlay: Color;
+    backdropColor: Color;
     inverse: Color;
     shadow: Color;
     componentBG: Color;

@@ -1,6 +1,6 @@
 import {findFocusedRoute} from '@react-navigation/core';
 import type {EventArg, NavigationContainerEventMap, NavigationState, PartialState} from '@react-navigation/native';
-import {CommonActions, getPathFromState, StackActions} from '@react-navigation/native';
+import {CommonActions, DrawerActions, getPathFromState, StackActions} from '@react-navigation/native';
 import Log from '@libs/Log';
 import CONST from '@src/CONST';
 import NAVIGATORS from '@src/NAVIGATORS';
@@ -10,6 +10,7 @@ import {PROTECTED_SCREENS} from '@src/SCREENS';
 import originalDismissModal from './dismissModal';
 import originalGetTopmostReportActionId from './getTopmostReportActionID';
 import originalGetTopmostReportId from './getTopmostReportId';
+import originalGetTopmostRestaurantId from './getTopmostRestaurantId';
 import linkingConfig from './linkingConfig';
 import linkTo from './linkTo';
 import navigationRef from './navigationRef';
@@ -41,6 +42,9 @@ function canNavigate(methodName: string, params: Record<string, unknown> = {}): 
 
 // Re-exporting the getTopmostReportId here to fill in default value for state. The getTopmostReportId isn't defined in this file to avoid cyclic dependencies.
 const getTopmostReportId = (state = navigationRef.getState()) => originalGetTopmostReportId(state);
+
+// Re-exporting the getTopmostRestaurantId here to fill in default value for state. The getTopmostRestaurantId isn't defined in this file to avoid cyclic dependencies.
+const getTopmostRestaurantId = (state = navigationRef.getState()) => originalGetTopmostRestaurantId(state);
 
 // Re-exporting the getTopmostReportActionID here to fill in default value for state. The getTopmostReportActionID isn't defined in this file to avoid cyclic dependencies.
 const getTopmostReportActionId = (state = navigationRef.getState()) => originalGetTopmostReportActionId(state);
@@ -129,11 +133,16 @@ function isActiveRoute(routePath: Route): boolean {
     return activeRoute === routePath.replace(CONST.REGEX.ROUTES.REDUNDANT_SLASHES, (match, p1) => (p1 ? '/' : ''));
 }
 
+function openSideBarDrawer() {
+    navigationRef.current?.dispatch(DrawerActions.openDrawer());
+}
+
 /**
  * Main navigation method for redirecting to a route.
  * @param [type] - Type of action to perform. Currently UP is supported.
  */
 function navigate(route: Route = ROUTES.HOME, type?: string) {
+    // debugger
     if (!canNavigate('navigate', {route})) {
         // Store intended route if the navigator is not yet available,
         // we will try again after the NavigationContainer is ready
@@ -300,6 +309,7 @@ function waitForProtectedRoutes() {
 
 export default {
     setShouldPopAllStateOnUP,
+    openSideBarDrawer,
     navigate,
     setParams,
     dismissModal,
@@ -310,6 +320,7 @@ export default {
     isNavigationReady,
     setIsNavigationReady,
     getTopmostReportId,
+    getTopmostRestaurantId,
     getRouteNameFromStateEvent,
     getTopmostReportActionId,
     waitForProtectedRoutes,

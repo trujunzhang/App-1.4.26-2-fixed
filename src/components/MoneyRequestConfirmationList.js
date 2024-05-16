@@ -23,7 +23,7 @@ import * as PolicyUtils from '@libs/PolicyUtils';
 import * as ReceiptUtils from '@libs/ReceiptUtils';
 import * as ReportUtils from '@libs/ReportUtils';
 import * as TransactionUtils from '@libs/TransactionUtils';
-import {iouDefaultProps, iouPropTypes} from '@pages/iou/propTypes';
+import {iouDefaultProps, iouPropTypes} from '@expPages/iou/propTypes';
 import * as IOU from '@userActions/IOU';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';

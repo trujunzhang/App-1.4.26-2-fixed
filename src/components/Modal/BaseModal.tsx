@@ -17,6 +17,7 @@ import type BaseModalProps from './types';
 
 function BaseModal(
     {
+        headerContent,
         isVisible,
         onClose,
         shouldSetModalVisibility = true,
@@ -184,7 +185,7 @@ function BaseModal(
             onSwipeComplete={() => onClose?.()}
             swipeDirection={swipeDirection}
             isVisible={isVisible}
-            backdropColor={theme.overlay}
+            backdropColor={type === CONST.MODAL.MODAL_TYPE.CENTERED_SMALL ? theme.backdropColor : theme.overlay}
             backdropOpacity={hideBackdrop ? 0 : variables.overlayOpacity}
             backdropTransitionOutTiming={0}
             hasBackdrop={fullscreen}
@@ -202,6 +203,7 @@ function BaseModal(
             onLayout={onLayout}
             avoidKeyboard={avoidKeyboard}
         >
+            {headerContent}
             <View
                 style={[styles.defaultModalContainer, modalContainerStyle, modalPaddingStyles, !isVisible && styles.pointerEventsNone]}
                 ref={ref}

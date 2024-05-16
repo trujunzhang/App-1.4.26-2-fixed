@@ -7,7 +7,7 @@ import useLocalize from '@hooks/useLocalize';
 import compose from '@libs/compose';
 import * as ReportActionsUtils from '@libs/ReportActionsUtils';
 import * as ReportUtils from '@libs/ReportUtils';
-import iouReportPropTypes from '@pages/iouReportPropTypes';
+import iouReportPropTypes from '@expPages/iouReportPropTypes';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import * as Expensicons from './Icon/Expensicons';

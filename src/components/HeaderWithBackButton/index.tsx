@@ -22,6 +22,7 @@ import ROUTES from '@src/ROUTES';
 import type HeaderWithBackButtonProps from './types';
 
 function HeaderWithBackButton({
+    headerStyles = [],
     iconFill,
     guidesCallTaskID = '',
     onBackButtonPress = () => Navigation.goBack(ROUTES.HOME),
@@ -44,6 +45,7 @@ function HeaderWithBackButton({
     stepCounter,
     subtitle = '',
     title = '',
+    shouldShowTitle = true,
     titleColor,
     threeDotsAnchorPosition = {
         vertical: 0,
@@ -69,7 +71,7 @@ function HeaderWithBackButton({
             // Hover on some part of close icons will not work on Electron if dragArea is true
             // https://github.com/Expensify/App/issues/29598
             dataSet={{dragArea: false}}
-            style={[styles.headerBar, shouldShowBorderBottom && styles.borderBottom, shouldShowBackButton && styles.pl2]}
+            style={[styles.headerBar, headerStyles, shouldShowBorderBottom && styles.borderBottom, shouldShowBackButton && styles.pl2]}
         >
             <View style={[styles.dFlex, styles.flexRow, styles.alignItemsCenter, styles.flexGrow1, styles.justifyContentBetween, styles.overflowHidden]}>
                 {shouldShowBackButton && (
@@ -106,12 +108,15 @@ function HeaderWithBackButton({
                         shouldEnableDetailPageNavigation={shouldEnableDetailPageNavigation}
                     />
                 ) : (
-                    <Header
-                        title={title}
-                        subtitle={stepCounter ? translate('stepCounter', stepCounter) : subtitle}
-                        textStyles={titleColor ? [StyleUtils.getTextColorStyle(titleColor)] : []}
-                    />
+                    shouldShowTitle && (
+                        <Header
+                            title={title}
+                            subtitle={stepCounter ? translate('stepCounter', stepCounter) : subtitle}
+                            textStyles={titleColor ? [StyleUtils.getTextColorStyle(titleColor)] : []}
+                        />
+                    )
                 )}
+                {!shouldShowTitle && <View />}
                 <View style={[styles.reportOptions, styles.flexRow, styles.pr5, styles.alignItemsCenter]}>
                     {children}
                     {shouldShowDownloadButton && (
@@ -160,7 +165,8 @@ function HeaderWithBackButton({
                     {shouldShowThreeDotsButton && (
                         <ThreeDotsMenu
                             disabled={shouldDisableThreeDotsButton}
-                            menuItems={threeDotsMenuItems}
+                            // menuItems={threeDotsMenuItems}
+                            menuItems={[]}
                             onIconPress={onThreeDotsButtonPress}
                             anchorPosition={threeDotsAnchorPosition}
                             shouldOverlay={shouldOverlay}

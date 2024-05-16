@@ -2,34 +2,31 @@
 import PropTypes from 'prop-types';
 import React, {useCallback, useEffect, useRef} from 'react';
 import {InteractionManager, StyleSheet, View} from 'react-native';
+import {withOnyx} from 'react-native-onyx';
 import _ from 'underscore';
-import LogoComponent from '@assets/images/expensify-wordmark.svg';
-import Header from '@components/Header';
-import Icon from '@components/Icon';
-import * as Expensicons from '@components/Icon/Expensicons';
-import ImageSVG from '@components/ImageSVG';
-import LHNOptionsList from '@components/LHNOptionsList/LHNOptionsList';
+import NativeHeader from '@components/AppHeader/NativeHeader';
+import WebHeader from '@components/AppHeader/WebHeader';
+import LHNRestaurantsList from '@components/LHNRestaurantsList/LHNRestaurantsList';
+import Lottie from '@components/Lottie';
+import LottieAnimations from '@components/LottieAnimations';
 import OptionsListSkeletonView from '@components/OptionsListSkeletonView';
-import PressableWithoutFeedback from '@components/Pressable/PressableWithoutFeedback';
-import Tooltip from '@components/Tooltip';
+import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useStyleUtils from '@hooks/useStyleUtils';
-import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import useWindowDimensions from '@hooks/useWindowDimensions';
 import KeyboardShortcut from '@libs/KeyboardShortcut';
+import Log from '@libs/Log';
 import Navigation from '@libs/Navigation/Navigation';
 import onyxSubscribe from '@libs/onyxSubscribe';
 import SidebarUtils from '@libs/SidebarUtils';
-import * as ReportActionContextMenu from '@pages/home/report/ContextMenu/ReportActionContextMenu';
-import safeAreaInsetPropTypes from '@pages/safeAreaInsetPropTypes';
-import variables from '@styles/variables';
+import {restaurantPropTypes} from '@pages/proptypes';
+// import * as RestaurantActionContextMenu from '@expPages/home/report/ContextMenu/RestaurantActionContextMenu';
+import safeAreaInsetPropTypes from '@expPages/safeAreaInsetPropTypes';
 import * as App from '@userActions/App';
-import * as Session from '@userActions/Session';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
-import SignInOrAvatarWithOptionalStatus from './SignInOrAvatarWithOptionalStatus';
 
 const basePropTypes = {
     /** Toggles the navigation menu open and closed */
@@ -42,18 +39,38 @@ const basePropTypes = {
 const propTypes = {
     ...basePropTypes,
 
-    optionListItems: PropTypes.arrayOf(PropTypes.string).isRequired,
+    restaurantListItems: PropTypes.arrayOf(restaurantPropTypes).isRequired,
+
+    /** Callback to fire to load more restaurants */
+    fetchMoreRestaurants: PropTypes.func.isRequired,
 
     isLoading: PropTypes.bool.isRequired,
+    shouldShowRadar: PropTypes.bool,
+    shouldShowFBFirstSync: PropTypes.bool,
 
     // eslint-disable-next-line react/require-default-props
     priorityMode: PropTypes.oneOf(_.values(CONST.PRIORITY_MODE)),
 
-    isActiveReport: PropTypes.func.isRequired,
+    isActiveRestaurant: PropTypes.func.isRequired,
 };
 
-function SidebarLinks({onLinkClick, insets, optionListItems, isLoading, priorityMode = CONST.PRIORITY_MODE.DEFAULT, isActiveReport, isCreateMenuOpen}) {
-    const theme = useTheme();
+const defaultProps = {
+    shouldShowRadar: false,
+    shouldShowFBFirstSync: false,
+};
+
+function SidebarLinks({
+    onLinkClick,
+    insets,
+    restaurantListItems,
+    fetchMoreRestaurants,
+    isLoading,
+    shouldShowRadar,
+    shouldShowFBFirstSync,
+    priorityMode = CONST.PRIORITY_MODE.DEFAULT,
+    isActiveRestaurant,
+    isCreateMenuOpen,
+}) {
     const styles = useThemeStyles();
     const StyleUtils = useStyleUtils();
     const modal = useRef({});
@@ -103,7 +120,7 @@ function SidebarLinks({onLinkClick, insets, optionListItems, isLoading, priority
             true,
         );
 
-        ReportActionContextMenu.hideContextMenu(false);
+        // RestaurantActionContextMenu.hideContextMenu(false);
 
         return () => {
             SidebarUtils.resetIsSidebarLoadedReadyPromise();
@@ -127,75 +144,79 @@ function SidebarLinks({onLinkClick, insets, optionListItems, isLoading, priority
     }, [isCreateMenuOpen]);
 
     /**
-     * Show Report page with selected report id
+     * Show Restaurant page with selected report id
      *
      * @param {Object} option
      * @param {String} option.reportID
      */
-    const showReportPage = useCallback(
+    const showRestaurantPage = useCallback(
         (option) => {
-            // Prevent opening Report page when clicking LHN row quickly after clicking FAB icon
+            // Prevent opening Restaurant page when clicking LHN row quickly after clicking FAB icon
             // or when clicking the active LHN row on large screens
             // or when continuously clicking different LHNs, only apply to small screen
-            // since getTopmostReportId always returns on other devices
-            const reportActionID = Navigation.getTopmostReportActionId();
-            if (isCreateMenuOpen || (option.reportID === Navigation.getTopmostReportId() && !reportActionID) || (isSmallScreenWidth && isActiveReport(option.reportID) && !reportActionID)) {
+            // since getTopmostRestaurantId always returns on other devices
+            const reportActionID = Navigation.getTopmostRestaurantActionId();
+            if (
+                isCreateMenuOpen ||
+                (option.reportID === Navigation.getTopmostRestaurantId() && !reportActionID) ||
+                (isSmallScreenWidth && isActiveRestaurant(option.reportID) && !reportActionID)
+            ) {
                 return;
             }
-            Navigation.navigate(ROUTES.REPORT_WITH_ID.getRoute(option.reportID));
+            // Navigation.navigate(ROUTES.REPORT_WITH_ID.getRoute(option.reportID));
             onLinkClick();
         },
-        [isCreateMenuOpen, isSmallScreenWidth, isActiveReport, onLinkClick],
+        [isCreateMenuOpen, isSmallScreenWidth, isActiveRestaurant, onLinkClick],
     );
 
     const viewMode = priorityMode === CONST.PRIORITY_MODE.GSD ? CONST.OPTION_MODE.COMPACT : CONST.OPTION_MODE.DEFAULT;
 
+    // Log.info('restaurantListItems:' + restaurantListItems.length)
+
     return (
         <View style={[styles.flex1, styles.h100]}>
-            <View
-                style={[styles.flexRow, styles.ph5, styles.pv3, styles.justifyContentBetween, styles.alignItemsCenter]}
-                dataSet={{dragArea: true}}
-            >
-                <Header
-                    title={
-                        <ImageSVG
-                            src={LogoComponent}
-                            width={variables.lhnLogoWidth}
-                            height={variables.lhnLogoHeight}
-                            fill={theme.text}
-                            contentFit="contain"
-                        />
-                    }
-                    role={CONST.ROLE.PRESENTATION}
-                    shouldShowEnvironmentBadge
-                />
-                <Tooltip text={translate('common.search')}>
-                    <PressableWithoutFeedback
-                        accessibilityLabel={translate('sidebarScreen.buttonSearch')}
-                        role={CONST.ROLE.BUTTON}
-                        style={[styles.flexRow, styles.ph5]}
-                        onPress={Session.checkIfActionIsAllowed(showSearchPage)}
-                    >
-                        <Icon
-                            fill={theme.icon}
-                            src={Expensicons.MagnifyingGlass}
-                        />
-                    </PressableWithoutFeedback>
-                </Tooltip>
-                <SignInOrAvatarWithOptionalStatus isCreateMenuOpen={isCreateMenuOpen} />
-            </View>
+            {isSmallScreenWidth ? <NativeHeader /> : <WebHeader />}
             <View style={[styles.pRelative, styles.flex1]}>
-                <LHNOptionsList
+                {shouldShowFBFirstSync === false && isLoading && restaurantListItems.length === 0 && (
+                    <View style={[StyleSheet.absoluteFillObject, styles.highlightBG]}>
+                        <OptionsListSkeletonView shouldAnimate />
+                    </View>
+                )}
+                <LHNRestaurantsList
                     style={styles.flex1}
                     contentContainerStyles={StyleSheet.flatten([styles.sidebarListContainer, {paddingBottom: StyleUtils.getSafeAreaMargins(insets).marginBottom}])}
-                    data={optionListItems}
-                    onSelectRow={showReportPage}
+                    listItems={restaurantListItems}
+                    fetchMoreRestaurants={fetchMoreRestaurants}
+                    onSelectRow={showRestaurantPage}
                     shouldDisableFocusOptions={isSmallScreenWidth}
                     optionMode={viewMode}
                 />
-                {isLoading && optionListItems.length === 0 && (
-                    <View style={[StyleSheet.absoluteFillObject, styles.highlightBG]}>
-                        <OptionsListSkeletonView shouldAnimate />
+                {shouldShowFBFirstSync === false && shouldShowRadar && (
+                    <View style={[styles.flex1, styles.pAbsolute, styles.pInset]}>
+                        <View style={[styles.flex1, styles.pt20, {backgroundColor: '#2D7086'}]}>
+                            <Lottie
+                                source={LottieAnimations.Radar}
+                                loop
+                                autoPlay
+                                style={[styles.alignSelfCenter]}
+                                webStyle={{...styles.alignSelfCenter}}
+                            />
+                            <Text style={[styles.mt11, styles.textAlignCenter, styles.textLabel, styles.textWhite]}>{translate('sidebar.search.message')}</Text>
+                        </View>
+                    </View>
+                )}
+                {shouldShowFBFirstSync && (
+                    <View style={[styles.flex1, styles.pAbsolute, styles.pInset]}>
+                        <View style={[styles.flex1, styles.pt20, {backgroundColor: '#2D7086'}]}>
+                            <Lottie
+                                source={LottieAnimations.SyncFirebase}
+                                loop
+                                autoPlay
+                                style={[styles.alignSelfCenter]}
+                                webStyle={{...styles.alignSelfCenter}}
+                            />
+                            <Text style={[styles.mt11, styles.textAlignCenter, styles.textLabel, styles.textWhite]}>{translate('sidebar.syncDB.message')}</Text>
+                        </View>
                     </View>
                 )}
             </View>
@@ -204,7 +225,7 @@ function SidebarLinks({onLinkClick, insets, optionListItems, isLoading, priority
 }
 
 SidebarLinks.propTypes = propTypes;
+SidebarLinks.defaultProps = defaultProps;
 SidebarLinks.displayName = 'SidebarLinks';
-
 export default SidebarLinks;
 export {basePropTypes};

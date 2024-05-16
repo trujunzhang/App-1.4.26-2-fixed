@@ -7,7 +7,7 @@ import transactionPropTypes from '@components/transactionPropTypes';
 import * as ReportActionsUtils from '@libs/ReportActionsUtils';
 import SidebarUtils from '@libs/SidebarUtils';
 import * as TransactionUtils from '@libs/TransactionUtils';
-import reportActionPropTypes from '@pages/home/report/reportActionPropTypes';
+import reportActionPropTypes from '@expPages/home/report/reportActionPropTypes';
 import * as Report from '@userActions/Report';
 import CONST from '@src/CONST';
 import OptionRowLHN, {defaultProps as baseDefaultProps, propTypes as basePropTypes} from './OptionRowLHN';

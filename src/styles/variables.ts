@@ -13,6 +13,7 @@ function getValueUsingPixelRatio(defaultValue: number, maxValue: number): number
 
 export default {
     contentHeaderHeight: getValueUsingPixelRatio(65, 100),
+    popoverHeaderHeight: getValueUsingPixelRatio(35, 50),
     componentSizeSmall: getValueUsingPixelRatio(28, 32),
     componentSizeNormal: 40,
     componentSizeMedium: 48,
@@ -29,6 +30,8 @@ export default {
     componentBorderWidth: 8,
     appModalAppIconSize: 48,
     buttonBorderRadius: 100,
+    buttonBorderInPagedHeaderRadius: 12,
+    // buttonBorderRadius: 12,
     avatarSizeLargeBordered: 88,
     avatarSizeXLarge: 120,
     avatarSizeLarge: 80,
@@ -49,6 +52,8 @@ export default {
     fontSizeSmall: getValueUsingPixelRatio(11, 17),
     fontSizeExtraSmall: 9,
     fontSizeLabel: getValueUsingPixelRatio(13, 19),
+    fontSizeSectionMobileTitle: getValueUsingPixelRatio(17, 24),
+    fontSizeSectionWebTitle: getValueUsingPixelRatio(22, 27),
     fontSizeNormal: getValueUsingPixelRatio(15, 21),
     fontSizeMedium: getValueUsingPixelRatio(16, 22),
     fontSizeLarge: getValueUsingPixelRatio(17, 19),
@@ -58,13 +63,14 @@ export default {
     fontSizeXLarge: 22,
     fontSizeXXLarge: 28,
     fontSizeXXXLarge: 32,
+    fontSizeXXXXLarge: 48,
     fontSizeNormalHeight: getValueUsingPixelRatio(20, 28),
     fontSizeEReceiptLarge: 44,
     fontSizeSignInHeroLarge: 48,
     fontSizeSignInHeroMedium: 38,
     fontSizeSignInHeroXSmall: 26,
     fontSizeSignInHeroSmall: 28,
-    fontSizeSignInHeroBody: 20,
+    fontSizeSignInHeroBody: 18,
     lineHeightHero: 45,
     iconSizeXXXSmall: 4,
     iconSizeXXSmall: 8,
@@ -73,9 +79,13 @@ export default {
     iconSizeNormal: 20,
     iconSizeLarge: 24,
     iconSizeXLarge: 28,
+    iconMenuSizeWidth: 32,
+    iconMenuSizeHeight: 25,
     iconSizeExtraLarge: 40,
     iconSizeSuperLarge: 60,
     iconSizeUltraLarge: 120,
+    iconSizeYelpLogoWidth: 60,
+    iconSizeYelpLogoHeight: 30,
     emojiSize: 20,
     emojiLineHeight: 28,
     iouAmountTextSize: 40,
@@ -84,7 +94,8 @@ export default {
     mobileResponsiveWidthBreakpoint: 800,
     tabletResponsiveWidthBreakpoint: 1024,
     safeInsertPercentage: 0.7,
-    sideBarWidth: 375,
+    // sideBarWidth: 375,
+    sideBarWidth: 415,
     pdfPageMaxWidth: 992,
     tooltipzIndex: 10050,
     gutterWidth: 12,
@@ -126,11 +137,11 @@ export default {
     verticalLogoWidth: 111,
     badgeMaxWidth: 180,
     signInHeroImageMobileHeight: 240.08,
-    signInHeroImageMobileWidth: 303,
+    signInHeroImageMobileWidth: 240,
     signInHeroImageTabletHeight: 324.01,
     signInHeroImageTabletWidth: 346,
-    signInHeroImageDesktopHeight: 362.4,
-    signInHeroImageDesktopWidth: 386.99,
+    signInHeroImageDesktopHeight: 300,
+    signInHeroImageDesktopWidth: 300,
     signInHeroBackgroundWidth: 2000,
     signInHeroBackgroundWidthMobile: 800,
     signInContentMaxWidth: 1360,
@@ -142,7 +153,7 @@ export default {
     signInLogoWidthLargeScreen: 144,
     signInLogoHeightLargeScreen: 108,
     signInLogoWidthPill: 132,
-    tabSelectorButtonHeight: 42,
+    tabSelectorButtonHeight: 40,
     tabSelectorButtonPadding: 12,
     lhnLogoWidth: 95.09,
     lhnLogoHeight: 22.33,
@@ -182,6 +193,40 @@ export default {
     bankCardHeight: 26,
     workspaceTypeIconWidth: 34,
 
+    // page footers
+    footerImageDesktopWidth: 500,
+    footerImageDesktopHeight: 100,
+
+    // restaurant header panel
+    detailedHeaderPhotoCarouselItemWidth: 375,
+    detailedHeaderPhotoCarouselItemHeight: 300,
+
+    popoverPhotoCarouselItemWidth: 600,
+    popoverPhotoCarouselItemHeight: 500,
+    popoverPhotoUserInfoWidth: 400,
+
+    restaurantCardViewPhoneHeight: 400,
+    restaurantCardViewTableHeight: 600,
+    restaurantRowViewWidth: 120,
+
+    // menu items in the restaurant
+    menuInRestaurantMobileItemWidth: 150,
+    menuInRestaurantMobileItemHeight: 180,
+    menuInRestaurantWebItemWidth: 248,
+    menuInRestaurantWebItemHeight: 268,
+
+    // photo items in the detailed page
+    photoInRestaurantMobileItemWidth: 160,
+    photoInRestaurantMobileItemHeight: 180,
+
+    detailedHeaderArrowWidth: 36,
+    detailedHeaderArrowHeight: 36,
+
+    // pagination limit length
+    paginationLimitInSidebar: 20,
+    paginationLimitInDetailedReviews: 4,
+    // paginationLimitInDetailedReviews: 10,
+
     // The height of the empty list is 14px (2px for borders and 12px for vertical padding)
     // This is calculated based on the values specified in the 'getGoogleListViewStyle' function of the 'StyleUtils' utility
     googleEmptyListViewHeight: 14,
@@ -197,4 +242,9 @@ export default {
     cardPreviewWidth: 235,
     cardNameWidth: 156,
     holdMenuIconSize: 64,
+    /**
+     * Selections in app's vApp-1.4.64-6
+     */
+    sectionMargin: 16,
+    sectionIllustrationHeight: 220,
 } as const;

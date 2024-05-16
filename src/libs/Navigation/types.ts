@@ -10,9 +10,24 @@ type NavigationRef = NavigationContainerRefWithCurrent<RootStackParamList>;
 
 type NavigationRoot = NavigationHelpers<RootStackParamList>;
 
-type GoBackAction = Extract<CommonActions.Action, {type: 'GO_BACK'}>;
-type ResetAction = Extract<CommonActions.Action, {type: 'RESET'}>;
-type SetParamsAction = Extract<CommonActions.Action, {type: 'SET_PARAMS'}>;
+type GoBackAction = Extract<
+    CommonActions.Action,
+    {
+        type: 'GO_BACK';
+    }
+>;
+type ResetAction = Extract<
+    CommonActions.Action,
+    {
+        type: 'RESET';
+    }
+>;
+type SetParamsAction = Extract<
+    CommonActions.Action,
+    {
+        type: 'SET_PARAMS';
+    }
+>;
 
 type ActionNavigate = {
     type: ValueOf<typeof CONST.NAVIGATION.ACTION_TYPE>;
@@ -35,12 +50,50 @@ type NavigationPartialRoute = PartialRoute<Route<string>>;
 type StateOrRoute = NavigationState | NavigationStateRoute | NavigationPartialRoute;
 
 type CentralPaneNavigatorParamList = {
-    [SCREENS.REPORT]: {
-        reportActionID: string;
-        reportID: string;
+    [SCREENS.RESTAURANT]: {
+        restaurantId: string;
         openOnAdminRoom?: boolean;
     };
+    [SCREENS.EVENT]: {
+        eventId: string;
+    };
+    [SCREENS.RECIPE]: {
+        recipeId: string;
+    };
 };
+
+type EditIeattaNavigatorParamList = {
+    [SCREENS.RIGHT_IEATTA.RESTAURANT]: {
+        restaurantId: string;
+    };
+    [SCREENS.RIGHT_IEATTA.EVENT]: {
+        eventId: string;
+    };
+    [SCREENS.RIGHT_IEATTA.RECIPE]: {
+        recipeId: string;
+    };
+    [SCREENS.RIGHT_IEATTA.REVIEW]: {
+        reviewId: string;
+        relatedId: string;
+        reviewType: string;
+    };
+    [SCREENS.RIGHT_IEATTA.ADD_RECIPES_IN_EVENT]: {
+        restaurantId: string;
+        peopleInEventId: string;
+    };
+    [SCREENS.RIGHT_IEATTA.ADD_USERS_IN_EVENT]: {
+        restaurantId: string;
+        eventId: string;
+    };
+};
+
+// type CentralPaneNavigatorParamList = {
+//     [SCREENS.REPORT]: {
+//         reportActionID: string;
+//         reportID: string;
+//         openOnAdminRoom?: boolean;
+//     };
+// };
 
 type SettingsNavigatorParamList = {
     [SCREENS.SETTINGS.ROOT]: undefined;
@@ -163,11 +216,15 @@ type ReportSettingsNavigatorParamList = {
 };
 
 type ReportWelcomeMessageNavigatorParamList = {
-    [SCREENS.REPORT_WELCOME_MESSAGE_ROOT]: {reportID: string};
+    [SCREENS.REPORT_WELCOME_MESSAGE_ROOT]: {
+        reportID: string;
+    };
 };
 
 type ParticipantsNavigatorParamList = {
-    [SCREENS.REPORT_PARTICIPANTS_ROOT]: {reportID: string};
+    [SCREENS.REPORT_PARTICIPANTS_ROOT]: {
+        reportID: string;
+    };
 };
 
 type RoomMembersNavigatorParamList = {
@@ -350,6 +407,7 @@ type LeftModalNavigatorParamList = {
 };
 
 type RightModalNavigatorParamList = {
+    [SCREENS.RIGHT_MODAL.EDIT_IEATTA]: NavigatorScreenParams<EditIeattaNavigatorParamList>;
     [SCREENS.RIGHT_MODAL.SETTINGS]: NavigatorScreenParams<SettingsNavigatorParamList>;
     [SCREENS.RIGHT_MODAL.NEW_CHAT]: NavigatorScreenParams<NewChatNavigatorParamList>;
     [SCREENS.RIGHT_MODAL.DETAILS]: NavigatorScreenParams<DetailsNavigatorParamList>;
@@ -377,6 +435,7 @@ type RightModalNavigatorParamList = {
 };
 
 type PublicScreensParamList = {
+    [SCREENS.DRAWER_SIDEBAR_HOME]: undefined;
     [SCREENS.HOME]: undefined;
     [SCREENS.TRANSITION_BETWEEN_APPS]: {
         email?: string;
@@ -428,6 +487,7 @@ export type {
     NavigationRef,
     StackNavigationAction,
     CentralPaneNavigatorParamList,
+    EditIeattaNavigatorParamList,
     RootStackParamList,
     StateOrRoute,
     NavigationStateRoute,

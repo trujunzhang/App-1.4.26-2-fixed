@@ -1,0 +1,23 @@
+{
+  "packages": ["packages/*", "example"],
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "version": "independent",
+  "command": {
+    "publish": {
+      "graphType": "all",
+      "syncWorkspaceLock": true,
+      "allowBranch": "6.x",
+      "conventionalCommits": true,
+      "createRelease": "github",
+      "changelogIncludeCommitsClientLogin": " - by @%l",
+      "message": "chore: publish",
+      "ignoreChanges": [
+        "**/__fixtures__/**",
+        "**/__tests__/**",
+        "**/*.md",
+        "**/example/**"
+      ]
+    }
+  }
+}

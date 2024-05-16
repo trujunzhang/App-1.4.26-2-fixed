@@ -1,3 +1,4 @@
+import FooterCityscape from '@assets/images/footer/footer_cityscape.png';
 import Abracadabra from '@assets/images/product-illustrations/abracadabra.svg';
 import BankArrowPink from '@assets/images/product-illustrations/bank-arrow--pink.svg';
 import BankMouseGreen from '@assets/images/product-illustrations/bank-mouse--green.svg';
@@ -27,6 +28,7 @@ import TadaBlue from '@assets/images/product-illustrations/tada--blue.svg';
 import TadaYellow from '@assets/images/product-illustrations/tada--yellow.svg';
 import TeleScope from '@assets/images/product-illustrations/telescope.svg';
 import ToddBehindCloud from '@assets/images/product-illustrations/todd-behind-cloud.svg';
+import SignupIllustration from '@assets/images/signIn/signup_illustration.png';
 import BankArrow from '@assets/images/simple-illustrations/simple-illustration__bank-arrow.svg';
 import BigRocket from '@assets/images/simple-illustrations/simple-illustration__bigrocket.svg';
 import PinkBill from '@assets/images/simple-illustrations/simple-illustration__bill.svg';
@@ -118,4 +120,7 @@ export {
     CommentBubbles,
     TrashCan,
     TeleScope,
+    // Ieatta
+    SignupIllustration,
+    FooterCityscape,
 };

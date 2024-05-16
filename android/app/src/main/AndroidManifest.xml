@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.expensify.chat">
+    package="com.ieatta.track">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -95,7 +95,7 @@
 
         <meta-data
             android:name="com.urbanairship.reactnative.AIRSHIP_EXTENDER"
-            android:value="com.expensify.chat.customairshipextender.CustomAirshipExtender" />
+            android:value="com.ieatta.track.customairshipextender.CustomAirshipExtender" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"

@@ -1,7 +1,7 @@
 import Onyx from 'react-native-onyx';
 import * as API from '@libs/API';
 import getPlaidLinkTokenParameters from '@libs/getPlaidLinkTokenParameters';
-import * as PlaidDataProps from '@pages/ReimbursementAccount/plaidDataPropTypes';
+import * as PlaidDataProps from '@expPages/ReimbursementAccount/plaidDataPropTypes';
 import ONYXKEYS from '@src/ONYXKEYS';
 
 /**

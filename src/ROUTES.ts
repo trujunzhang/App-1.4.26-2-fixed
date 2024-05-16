@@ -1,5 +1,6 @@
 import type {IsEqual, ValueOf} from 'type-fest';
 import type CONST from './CONST';
+import type {PhotoType} from './libs/Firebase/constant';
 
 // This is a file containing constants for all the routes we want to be able to go to
 
@@ -13,6 +14,8 @@ function getUrlWithBackToParam<TUrl extends string>(url: TUrl, backTo?: string):
 
 const ROUTES = {
     HOME: '',
+
+    DRAWER_SIDEBAR_HOME: 'home',
 
     // This is a utility route used to go to the user's concierge chat, or the sign-in page if the user's not authenticated
     CONCIERGE: 'concierge',
@@ -150,13 +153,62 @@ const ROUTES = {
     NEW_CHAT: 'new/chat',
     NEW_ROOM: 'new/room',
 
-    REPORT: 'r',
+    RESTAURANT: 'r',
+    RESTAURANT_WITH_ID: {
+        route: 'r/:restaurantId?',
+        getRoute: (restaurantId: string) => `r/${restaurantId}` as const,
+    },
+
+    EVENT: 'e',
+    EVENT_WITH_ID: {
+        route: 'e/:eventId?',
+        getRoute: (eventId: string) => `e/${eventId}` as const,
+    },
+
+    RECIPE: 'm',
+    RECIPE_WITH_ID: {
+        route: 'm/:recipeId?',
+        getRoute: (recipeId: string) => `m/${recipeId}` as const,
+    },
+
+    EDIT_RESTAURANT: {
+        route: 'edit/r/:restaurantId',
+        getRoute: (restaurantId: string) => `edit/r/${restaurantId}` as const,
+    },
+    EDIT_EVENT: {
+        route: 'edit/e/:eventId',
+        getRoute: (eventId: string) => `edit/e/${eventId}` as const,
+    },
+    EDIT_RECIPE: {
+        route: 'edit/m/:recipeId',
+        getRoute: (recipeId: string) => `edit/m/${recipeId}` as const,
+    },
+    EDIT_REVIEW: {
+        route: 'edit/v/:reviewId/:relatedId/:reviewType',
+        getRoute: ({reviewId, relatedId, reviewType}: {reviewId: string; relatedId: string; reviewType: string}) => `edit/v/${reviewId}/${relatedId}/${reviewType}` as const,
+    },
+    ADD_RECIPES_IN_EVENT: {
+        route: 'add/m/:restaurantId/:peopleInEventId',
+        getRoute: ({restaurantId, peopleInEventId}: {restaurantId: string; peopleInEventId: string}) => `add/m/${restaurantId}/${peopleInEventId}` as const,
+    },
+    ADD_USERS_IN_EVENT: {
+        route: 'add/u/:restaurantId/:eventId',
+        getRoute: ({restaurantId, eventId}: {restaurantId: string; eventId: string}) => `add/u/${restaurantId}/${eventId}` as const,
+    },
+    PHOTOS_PAGE: {
+        route: 'photos/p/:relatedId/:photoType/:selected',
+        getRoute: ({relatedId, photoType, selected}: {relatedId: string; photoType: PhotoType; selected: string}) => `photos/p/${relatedId}/${photoType}/${selected}` as const,
+    },
+
+    REPORT: 'p',
     REPORT_WITH_ID: {
-        route: 'r/:reportID?/:reportActionID?',
-        getRoute: (reportID: string) => `r/${reportID}` as const,
+        route: 'p/:reportID?/:reportActionID?',
+        getRoute: (reportID: string) => {
+            return `r/${reportID}` as const;
+        },
     },
     EDIT_REQUEST: {
-        route: 'r/:threadReportID/edit/:field',
+        route: 'p/:threadReportID/edit/:field',
         getRoute: (threadReportID: string, field: ValueOf<typeof CONST.EDIT_REQUEST_FIELD>) => `r/${threadReportID}/edit/${field}` as const,
     },
     EDIT_CURRENCY_REQUEST: {

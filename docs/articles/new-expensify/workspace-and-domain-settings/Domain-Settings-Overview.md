@@ -72,7 +72,7 @@ Domain Admins have full authority over domain settings. They can modify member g
 A domain member is a user associated with a specific domain (usually a company or another group) in Expensify and typically managed by a Domain Admin. This is also where you can enable Two-Factor authentication for your domain.
 
 ### Adding users to the domain
-When a Domain Admin adds a user to the domain, that will create a new Expensify account for that user, and they'll receive invitations to set up their account. Users can also join a verified domain by creating their own account, as long as they have an email address associated with that domain (e.g. yourname@yourcompany.com). Once they have verified the account, all Domain Admins will be notified, and the employee will be added to the Default Group.
+When a Domain Admin adds a user to the domain, that will create a New Ieatta account for that user, and they'll receive invitations to set up their account. Users can also join a verified domain by creating their own account, as long as they have an email address associated with that domain (e.g. yourname@yourcompany.com). Once they have verified the account, all Domain Admins will be notified, and the employee will be added to the Default Group.
 **Important Note:** If someone who isn't a Domain Admin invites a user to a Workspace before they're invited to the domain, their account will be created, but in a closed state. A closed state means that the account cannot be used until it has been validated. Once the Domain Admin has invited the user, the user will receive a magic link to verify their account, sign in, and open the account completely.
 
 ### How to add users

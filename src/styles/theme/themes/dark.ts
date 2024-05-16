@@ -1,3 +1,4 @@
+import TailwindColors from '@styles/tailwindcss/colors';
 import colors from '@styles/theme/colors';
 import type {ThemeColors} from '@styles/theme/types';
 import CONST from '@src/CONST';
@@ -35,9 +36,12 @@ const darkTheme = {
     transparent: colors.transparent,
     signInPage: colors.green800,
     darkSupportingText: colors.productDark800,
+    divideBG: TailwindColors.gray700,
+    textInverse: colors.white,
 
     // Additional keys
     overlay: colors.productDark400,
+    backdropColor: colors.productDark900,
     inverse: colors.productDark900,
     shadow: colors.black,
     componentBG: colors.productDark100,
@@ -90,8 +94,24 @@ const darkTheme = {
     // The route urls from ROUTES.ts are only used for deep linking and configuring URLs on web.
     // The screen name (see SCREENS.ts) is the name of the screen as far as react-navigation is concerned, and the linkingConfig maps screen names to URLs
     PAGE_THEMES: {
+        [SCREENS.DRAWER_SIDEBAR_HOME]: {
+            backgroundColor: colors.productDark100,
+            statusBarStyle: CONST.STATUS_BAR_STYLE.LIGHT_CONTENT,
+        },
         [SCREENS.HOME]: {
-            backgroundColor: colors.productDark200,
+            backgroundColor: colors.productDark100,
+            statusBarStyle: CONST.STATUS_BAR_STYLE.LIGHT_CONTENT,
+        },
+        [SCREENS.RESTAURANT]: {
+            backgroundColor: colors.productDark100,
+            statusBarStyle: CONST.STATUS_BAR_STYLE.LIGHT_CONTENT,
+        },
+        [SCREENS.EVENT]: {
+            backgroundColor: colors.productDark100,
+            statusBarStyle: CONST.STATUS_BAR_STYLE.LIGHT_CONTENT,
+        },
+        [SCREENS.RECIPE]: {
+            backgroundColor: colors.productDark100,
             statusBarStyle: CONST.STATUS_BAR_STYLE.LIGHT_CONTENT,
         },
         [SCREENS.REPORT]: {

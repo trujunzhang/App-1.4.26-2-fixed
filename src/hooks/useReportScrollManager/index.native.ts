@@ -1,5 +1,5 @@
 import {useCallback, useContext} from 'react';
-import {ActionListContext} from '@pages/home/ReportScreenContext';
+import {ActionListContext} from '@expPages/home/ReportScreenContext';
 import type ReportScrollManagerData from './types';
 
 function useReportScrollManager(): ReportScrollManagerData {

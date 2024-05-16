@@ -9,6 +9,8 @@ import type Credentials from './Credentials';
 import type Currency from './Currency';
 import type CustomStatusDraft from './CustomStatusDraft';
 import type Download from './Download';
+import type * as FBModels from './FBModels';
+import type FirebaseSyncStatus from './FirebaseSyncStatus';
 import type {AddDebitCardForm, DateOfBirthForm} from './Form';
 import type Form from './Form';
 import type FrequentlyUsedEmoji from './FrequentlyUsedEmoji';
@@ -139,4 +141,6 @@ export type {
     ReportUserIsTyping,
     PolicyReportField,
     RecentlyUsedReportFields,
+    FBModels,
+    FirebaseSyncStatus,
 };

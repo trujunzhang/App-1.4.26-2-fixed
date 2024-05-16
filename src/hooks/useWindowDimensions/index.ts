@@ -14,6 +14,7 @@ export default function (): WindowDimensions {
     const isSmallScreenWidth = windowWidth <= variables.mobileResponsiveWidthBreakpoint;
     const isMediumScreenWidth = windowWidth > variables.mobileResponsiveWidthBreakpoint && windowWidth <= variables.tabletResponsiveWidthBreakpoint;
     const isLargeScreenWidth = windowWidth > variables.tabletResponsiveWidthBreakpoint;
+    const isTabletScreenWidth = false;
 
     return {
         windowWidth,
@@ -22,5 +23,6 @@ export default function (): WindowDimensions {
         isSmallScreenWidth,
         isMediumScreenWidth,
         isLargeScreenWidth,
+        isTabletScreenWidth,
     };
 }

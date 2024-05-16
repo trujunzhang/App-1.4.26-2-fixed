@@ -1,5 +1,5 @@
 import Geolocation from '@react-native-community/geolocation';
-import type {GetCurrentPosition} from './getCurrentPosition.types';
+import type {GetCurrentPosition, WatchCurrentPosition} from './getCurrentPosition.types';
 
 Geolocation.setRNConfiguration({
     skipPermissionRequests: false,
@@ -10,5 +10,9 @@ Geolocation.setRNConfiguration({
 const getCurrentPosition: GetCurrentPosition = (success, error, config) => {
     Geolocation.getCurrentPosition(success, error, config);
 };
+const watchCurrentPosition: WatchCurrentPosition = (success, error, config) => {
+    Geolocation.watchPosition(success, error, config);
+};
 
 export default getCurrentPosition;
+export {watchCurrentPosition};

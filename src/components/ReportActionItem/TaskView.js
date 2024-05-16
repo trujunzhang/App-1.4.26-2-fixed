@@ -26,7 +26,7 @@ import getButtonState from '@libs/getButtonState';
 import Navigation from '@libs/Navigation/Navigation';
 import * as OptionsListUtils from '@libs/OptionsListUtils';
 import * as ReportUtils from '@libs/ReportUtils';
-import reportPropTypes from '@pages/reportPropTypes';
+import reportPropTypes from '@expPages/reportPropTypes';
 import * as Session from '@userActions/Session';
 import * as Task from '@userActions/Task';
 import CONST from '@src/CONST';

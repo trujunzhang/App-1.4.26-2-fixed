@@ -194,8 +194,8 @@ const assertIOSJobExecuted = (workflowResult, didExecute = true, isProduction = 
     if (!isProduction) {
         steps.push(
             utils.createStepAssertion('Upload iOS version to GitHub artifacts', true, null, 'IOS', 'Upload iOS version to GitHub artifacts', [
-                {key: 'name', value: 'New Expensify.ipa'},
-                {key: 'path', value: '/Users/runner/work/App/App/New Expensify.ipa'},
+                {key: 'name', value: 'New Ieatta.ipa'},
+                {key: 'path', value: '/Users/runner/work/App/App/New Ieatta.ipa'},
             ]),
             utils.createStepAssertion('Upload iOS version to Browser Stack', true, null, 'IOS', 'Uploading version to Browser Stack', null, [{key: 'BROWSERSTACK', value: '***'}]),
         );

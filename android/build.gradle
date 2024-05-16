@@ -16,6 +16,9 @@ buildscript {
         // This property configures the type of Mapbox SDK used by the @rnmapbox/maps library.
         // "mapbox" indicates the usage of the Mapbox SDK.
         RNMapboxMapsImpl = "mapbox"
+
+        // https://react-native-google-signin.github.io/docs/setting-up/android
+        googlePlayServicesAuthVersion = "20.7.0" // <--- use this version or newer
     }
     repositories {
         google()
@@ -30,9 +33,10 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+        // for google login
+        classpath 'com.google.gms:google-services:4.4.0' // <--- use this version or newer
     }
 }
-
 
 allprojects {
     configurations.all {
@@ -46,6 +50,11 @@ allprojects {
         }
     }
     repositories {
+       configurations.all {
+            resolutionStrategy {
+               force "com.google.android.gms:play-services-location:21.0.1"
+            }
+        }
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url("$rootDir/../node_modules/react-native/android")
@@ -60,7 +69,7 @@ allprojects {
                 // 'mapbox' is the fixed username for Mapbox's Maven repository.
                 username = 'mapbox'
 
-                // The value for password is read from the 'MAPBOX_DOWNLOADS_TOKEN' gradle property. 
+                // The value for password is read from the 'MAPBOX_DOWNLOADS_TOKEN' gradle property.
                 // Run "npm run setup-mapbox-sdk" to set this property in «USER_HOME»/.gradle/gradle.properties
 
                 // Example gradle.properties entry:

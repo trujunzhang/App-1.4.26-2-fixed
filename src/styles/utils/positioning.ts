@@ -19,6 +19,13 @@ export default {
         position: 'fixed' as ViewStyle['position'],
     },
 
+    pInset: {
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+    },
+
     t0: {
         top: 0,
     },

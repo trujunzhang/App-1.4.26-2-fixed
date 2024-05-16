@@ -27,6 +27,9 @@ type PersonalDetails = {
     /** ID of the current user from their personal details */
     accountID: number;
 
+    /** Currently logged in user userID in the firebase's table */
+    userID: string;
+
     /** First name of the current user from their personal details */
     firstName?: string;
 
@@ -47,6 +50,9 @@ type PersonalDetails = {
 
     /** Avatar thumbnail URL of the current user from their personal details */
     avatarThumbnail?: string;
+
+    /** Original URL of the current user from their personal details */
+    originalUrl?: string;
 
     originalFileName?: string;
 

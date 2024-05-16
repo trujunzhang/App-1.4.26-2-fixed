@@ -7,6 +7,7 @@ import DateUtils from '@libs/DateUtils';
 import * as LocaleDigitUtils from '@libs/LocaleDigitUtils';
 import * as LocalePhoneNumber from '@libs/LocalePhoneNumber';
 import * as Localize from '@libs/Localize';
+import Log from '@libs/Log';
 import * as NumberFormatUtils from '@libs/NumberFormatUtils';
 import CONST from '@src/CONST';
 import type {TranslationPaths} from '@src/languages/types';
@@ -87,8 +88,16 @@ function LocaleContextProvider({preferredLocale, currentUserPersonalDetails = {}
 
     const datetimeToCalendarTime = useMemo<LocaleContextProps['datetimeToCalendarTime']>(
         () =>
-            (datetime, includeTimezone, isLowercase = false) =>
-                DateUtils.datetimeToCalendarTime(locale, datetime, includeTimezone, selectedTimezone, isLowercase),
+            (datetime, includeTimezone, isLowercase = false) => {
+                // Log.info('');
+                // Log.info('================================');
+                // Log.info(`datetime in the LocaleContextProvider: ${datetime}`)
+                // Log.info(`value in the LocaleContextProvider: ${value}`)
+                // Log.info('================================');
+                // Log.info('');
+                const value = DateUtils.datetimeToCalendarTime(locale, datetime, includeTimezone, selectedTimezone, isLowercase);
+                return value;
+            },
         [locale, selectedTimezone],
     );
 

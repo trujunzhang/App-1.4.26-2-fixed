@@ -1,6 +1,8 @@
 import type * as OnyxCommon from './OnyxCommon';
 
 type Form = {
+    editFormUniqueId?: string;
+
     /** Controls the loading state of the form */
     isLoading?: boolean;
 

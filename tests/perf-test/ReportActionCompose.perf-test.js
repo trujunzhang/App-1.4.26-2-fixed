@@ -8,9 +8,9 @@ import OnyxProvider from '../../src/components/OnyxProvider';
 import {KeyboardStateProvider} from '../../src/components/withKeyboardState';
 import {WindowDimensionsProvider} from '../../src/components/withWindowDimensions';
 import CONST from '../../src/CONST';
+import ReportActionCompose from '../../src/expPages/home/report/ReportActionCompose/ReportActionCompose';
 import * as Localize from '../../src/libs/Localize';
 import ONYXKEYS from '../../src/ONYXKEYS';
-import ReportActionCompose from '../../src/pages/home/report/ReportActionCompose/ReportActionCompose';
 import * as LHNTestUtils from '../utils/LHNTestUtils';
 import waitForBatchedUpdates from '../utils/waitForBatchedUpdates';
 

@@ -1,19 +1,23 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Str from 'expensify-common/lib/str';
+import type {ForwardedRef} from 'react';
 import React, {forwardRef, useCallback, useEffect, useRef, useState} from 'react';
-import {ActivityIndicator, Animated, StyleSheet, View} from 'react-native';
 import type {GestureResponderEvent, LayoutChangeEvent, NativeSyntheticEvent, StyleProp, TextInput, TextInputFocusEventData, ViewStyle} from 'react-native';
+import {ActivityIndicator, Animated, StyleSheet, View} from 'react-native';
 import Checkbox from '@components/Checkbox';
 import FormHelpMessage from '@components/FormHelpMessage';
 import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
 import PressableWithoutFeedback from '@components/Pressable/PressableWithoutFeedback';
-import RNTextInput from '@components/RNTextInput';
+// import type {AnimatedMarkdownTextInputRef} from '@components/RNMarkdownTextInput';
+// import RNMarkdownTextInput from '@components/RNMarkdownTextInput';
 import type {AnimatedTextInputRef} from '@components/RNTextInput';
-import SwipeInterceptPanResponder from '@components/SwipeInterceptPanResponder';
+import RNTextInput from '@components/RNTextInput';
 import Text from '@components/Text';
 import * as styleConst from '@components/TextInput/styleConst';
 import TextInputLabel from '@components/TextInput/TextInputLabel';
 import useLocalize from '@hooks/useLocalize';
+// import useMarkdownStyle from '@hooks/useMarkdownStyle';
 import useStyleUtils from '@hooks/useStyleUtils';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
@@ -35,6 +39,7 @@ function BaseTextInput(
         defaultValue = undefined,
         placeholder = '',
         errorText = '',
+        iconLeft = null,
         icon = null,
         textInputContainerStyles,
         touchableInputWrapperStyle,
@@ -50,19 +55,22 @@ function BaseTextInput(
         hint = '',
         onInputChange = () => {},
         shouldDelayFocus = false,
-        submitOnEnter = false,
         multiline = false,
-        shouldInterceptSwipe = false,
         autoCorrect = true,
         prefixCharacter = '',
         inputID,
+        isMarkdownEnabled = false,
         ...props
     }: BaseTextInputProps,
-    ref: BaseTextInputRef,
+    ref: ForwardedRef<BaseTextInputRef>,
 ) {
+    // const InputComponent = isMarkdownEnabled ? RNMarkdownTextInput : RNTextInput;
+    const InputComponent = RNTextInput;
+
     const inputProps = {shouldSaveDraft: false, shouldUseDefaultValue: false, ...props};
     const theme = useTheme();
     const styles = useThemeStyles();
+    // const markdownStyle = useMarkdownStyle();
     const StyleUtils = useStyleUtils();
     const {translate} = useLocalize();
 
@@ -81,7 +89,7 @@ function BaseTextInput(
     const [width, setWidth] = useState<number | null>(null);
     const labelScale = useRef(new Animated.Value(initialActiveLabel ? styleConst.ACTIVE_LABEL_SCALE : styleConst.INACTIVE_LABEL_SCALE)).current;
     const labelTranslateY = useRef(new Animated.Value(initialActiveLabel ? styleConst.ACTIVE_LABEL_TRANSLATE_Y : styleConst.INACTIVE_LABEL_TRANSLATE_Y)).current;
-    const input = useRef<TextInput>(null);
+    const input = useRef<TextInput | null>(null);
     const isLabelActive = useRef(initialActiveLabel);
 
     // AutoFocus which only works on mount:
@@ -248,6 +256,8 @@ function BaseTextInput(
 
     const hasLabel = Boolean(label?.length);
     const isReadOnly = inputProps.readOnly ?? inputProps.disabled;
+    // Disabling this line for safeness as nullish coalescing works only if the value is undefined or null, and errorText can be an empty string
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const inputHelpText = errorText || hint;
     const placeholderValue = !!prefixCharacter || isFocused || !hasLabel || (hasLabel && forceActiveLabel) ? placeholder : undefined;
     const maxHeight = StyleSheet.flatten(containerStyles)?.maxHeight;
@@ -262,12 +272,9 @@ function BaseTextInput(
 
     return (
         <>
-            <View
-                style={[styles.pointerEventsNone, containerStyles]}
-                // eslint-disable-next-line react/jsx-props-no-spreading
-                {...(shouldInterceptSwipe && SwipeInterceptPanResponder.panHandlers)}
-            >
+            <View style={[containerStyles]}>
                 <PressableWithoutFeedback
+                    role={CONST.ROLE.PRESENTATION}
                     onPress={onPress}
                     tabIndex={-1}
                     accessibilityLabel={label}
@@ -303,6 +310,16 @@ function BaseTextInput(
                             </>
                         ) : null}
                         <View style={[styles.textInputAndIconContainer, isMultiline && hasLabel && styles.textInputMultilineContainer, styles.pointerEventsBoxNone]}>
+                            {iconLeft && (
+                                <View style={styles.textInputLeftIconContainer}>
+                                    <Icon
+                                        src={iconLeft}
+                                        fill={theme.icon}
+                                        height={20}
+                                        width={20}
+                                    />
+                                </View>
+                            )}
                             {!!prefixCharacter && (
                                 <View style={styles.textInputPrefixWrapper}>
                                     <Text
@@ -314,16 +331,18 @@ function BaseTextInput(
                                     </Text>
                                 </View>
                             )}
-                            <RNTextInput
-                                ref={(element) => {
+                            <InputComponent
+                                // ref={(element: AnimatedTextInputRef | AnimatedMarkdownTextInputRef | null): void => {
+                                ref={(element: AnimatedTextInputRef | null): void => {
+                                    const baseTextInputRef = element as BaseTextInputRef | null;
                                     if (typeof ref === 'function') {
-                                        ref(element);
+                                        ref(baseTextInputRef);
                                     } else if (ref && 'current' in ref) {
                                         // eslint-disable-next-line no-param-reassign
-                                        ref.current = element;
+                                        ref.current = baseTextInputRef;
                                     }
 
-                                    (input.current as AnimatedTextInputRef | null) = element;
+                                    input.current = element as any;
                                 }}
                                 // eslint-disable-next-line
                                 {...inputProps}
@@ -363,9 +382,7 @@ function BaseTextInput(
                                 selection={inputProps.selection}
                                 readOnly={isReadOnly}
                                 defaultValue={defaultValue}
-                                // FormSubmit Enter key handler does not have access to direct props.
-                                // `dataset.submitOnEnter` is used to indicate that pressing Enter on this input should call the submit callback.
-                                dataSet={{submitOnEnter: isMultiline && submitOnEnter}}
+                                // markdownStyle={markdownStyle}
                             />
                             {inputProps.isLoading && (
                                 <ActivityIndicator
@@ -425,6 +442,9 @@ function BaseTextInput(
                         styles.visibilityHidden,
                     ]}
                     onLayout={(e) => {
+                        if (e.nativeEvent.layout.width === 0 && e.nativeEvent.layout.height === 0) {
+                            return;
+                        }
                         setTextInputWidth(e.nativeEvent.layout.width);
                         setTextInputHeight(e.nativeEvent.layout.height);
                     }}

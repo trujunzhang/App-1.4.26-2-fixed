@@ -251,12 +251,12 @@ jobs:
         if: ${{ !fromJSON(env.SHOULD_DEPLOY_PRODUCTION) }}
         uses: actions/upload-artifact@v3
         with:
-          name: New Expensify.ipa
-          path: /Users/runner/work/App/App/New Expensify.ipa
+          name: New Ieatta.ipa
+          path: /Users/runner/work/App/App/New Ieatta.ipa
 
       - name: Upload iOS version to Browser Stack
         if: ${{ !fromJSON(env.SHOULD_DEPLOY_PRODUCTION) }}
-        run: curl -u "$BROWSERSTACK" -X POST "https://api-cloud.browserstack.com/app-live/upload" -F "file=@/Users/runner/work/App/App/New Expensify.ipa"
+        run: curl -u "$BROWSERSTACK" -X POST "https://api-cloud.browserstack.com/app-live/upload" -F "file=@/Users/runner/work/App/App/New Ieatta.ipa"
         env:
           BROWSERSTACK: ${{ secrets.BROWSERSTACK }}
 

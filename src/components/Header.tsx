@@ -23,7 +23,7 @@ type HeaderProps = {
 function Header({title = '', subtitle = '', textStyles = [], shouldShowEnvironmentBadge = false}: HeaderProps) {
     const styles = useThemeStyles();
     return (
-        <View style={[styles.flex1, styles.flexRow]}>
+        <View style={[styles.flex1, styles.flexRow, styles.alignItemsCenter, styles.justifyContentCenter, {backgroundColor: 'transparent'}]}>
             <View style={styles.mw100}>
                 {typeof title === 'string'
                     ? Boolean(title) && (

@@ -1,6 +1,6 @@
 {
-    "short_name": "New Expensify",
-    "name": "New Expensify",
+    "short_name": "New Ieatta",
+    "name": "New Ieatta",
     "icons": [
         {
             "src": "expensify-app-icon.svg",
@@ -12,7 +12,7 @@
     "related_applications": [
         {
             "platform": "play",
-            "id": "com.expensify.chat"
+            "id": "com.ieatta.track"
         }
     ],
     "start_url": ".",

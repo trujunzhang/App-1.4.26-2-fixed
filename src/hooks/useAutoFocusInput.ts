@@ -3,7 +3,7 @@ import {useCallback, useContext, useEffect, useRef, useState} from 'react';
 import type {TextInput} from 'react-native';
 import {InteractionManager} from 'react-native';
 import CONST from '@src/CONST';
-import * as Expensify from '@src/Expensify';
+import * as Ieatta from '@src/Ieatta';
 
 type UseAutoFocusInput = {
     inputCallbackRef: (ref: TextInput | null) => void;
@@ -14,7 +14,7 @@ export default function useAutoFocusInput(): UseAutoFocusInput {
     const [isScreenTransitionEnded, setIsScreenTransitionEnded] = useState(false);
 
     // @ts-expect-error TODO: Remove this when Expensify.js is migrated.
-    const {isSplashHidden} = useContext(Expensify.SplashScreenHiddenContext);
+    const {isSplashHidden} = useContext(Ieatta.SplashScreenHiddenContext);
 
     const inputRef = useRef<TextInput | null>(null);
     const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);

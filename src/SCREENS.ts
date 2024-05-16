@@ -10,8 +10,28 @@ const PROTECTED_SCREENS = {
     REPORT_ATTACHMENTS: 'ReportAttachments',
 } as const;
 
+const DRAWER_SCREENS = {
+    DRAWER_SIDEBAR_HOME: 'DrawerSidebarHome', // default
+} as const;
+
 const SCREENS = {
     ...PROTECTED_SCREENS,
+
+    ...DRAWER_SCREENS,
+
+    RESTAURANT: 'Restaurant',
+    EVENT: 'Event',
+    RECIPE: 'Recipe',
+
+    RIGHT_IEATTA: {
+        RESTAURANT: 'EditIeatta_Restaurant',
+        EVENT: 'EditIeatta_Event',
+        RECIPE: 'EditIeatta_Recipe',
+        REVIEW: 'EditIeatta_Review',
+        ADD_RECIPES_IN_EVENT: 'AddRecipesInEvent',
+        ADD_USERS_IN_EVENT: 'AddUsersInEvent',
+    },
+
     REPORT: 'Report',
     NOT_FOUND: 'not-found',
     TRANSITION_BETWEEN_APPS: 'TransitionBetweenApps',
@@ -85,6 +105,7 @@ const SCREENS = {
         SEARCH: 'Search',
     },
     RIGHT_MODAL: {
+        EDIT_IEATTA: 'EditIeatta',
         SETTINGS: 'Settings',
         NEW_CHAT: 'NewChat',
         DETAILS: 'Details',

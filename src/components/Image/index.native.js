@@ -1,17 +1,12 @@
-import {Image as ImageComponent} from 'expo-image';
 import lodashGet from 'lodash/get';
 import React from 'react';
 import {withOnyx} from 'react-native-onyx';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
+// eslint-disable-next-line rulesdir/prefer-import-module-contents
+import {Image as CachedImage} from '../../../plugins/react-native-expo-image-cache/src';
 import {defaultProps, imagePropTypes} from './imagePropTypes';
 import RESIZE_MODES from './resizeModes';
-
-const dimensionsCache = new Map();
-
-function resolveDimensions(key) {
-    return dimensionsCache.get(key);
-}
 
 function Image(props) {
     // eslint-disable-next-line react/destructuring-assignment
@@ -34,15 +29,21 @@ function Image(props) {
     }
 
     return (
-        <ImageComponent
+        <CachedImage
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...rest}
-            source={imageSource}
+            uri={imageSource.uri}
+            // source={{uri: "https://res.cloudinary.com/di3fvexj8/image/upload/v1507529261/politicl/o_xr3usf.jpg"}}
             onLoad={(evt) => {
-                const {width, height, url} = evt.source;
-                dimensionsCache.set(url, {width, height});
+                const {width, height} = evt.nativeEvent;
                 if (props.onLoad) {
-                    props.onLoad({nativeEvent: {width, height}});
+                    props.onLoad(evt);
+                }
+            }}
+            // eslint-disable-next-line rulesdir/prefer-early-return
+            onError={(evt) => {
+                if (props.onError) {
+                    props.onError();
                 }
             }}
         />
@@ -58,6 +59,5 @@ const ImageWithOnyx = withOnyx({
     },
 })(Image);
 ImageWithOnyx.resizeMode = RESIZE_MODES;
-ImageWithOnyx.resolveDimensions = resolveDimensions;
 
 export default ImageWithOnyx;

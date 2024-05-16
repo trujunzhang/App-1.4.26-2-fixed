@@ -56,13 +56,13 @@ describe('ReportUtils', () => {
 
     test('[ReportUtils] findLastAccessedReport on 2k reports and policies', async () => {
         const ignoreDomainRooms = true;
-        const isFirstTimeNewExpensifyUser = true;
+        const isFirstTimeNewIeattaUser = true;
         const reports = getMockedReports(2000);
         const policies = getMockedPolicies(2000);
         const openOnAdminRoom = true;
 
         await waitForBatchedUpdates();
-        await measureFunction(() => ReportUtils.findLastAccessedReport(reports, ignoreDomainRooms, policies, isFirstTimeNewExpensifyUser, openOnAdminRoom), {runs});
+        await measureFunction(() => ReportUtils.findLastAccessedReport(reports, ignoreDomainRooms, policies, isFirstTimeNewIeattaUser, openOnAdminRoom), {runs});
     });
 
     test('[ReportUtils] canDeleteReportAction on 5k reports and policies', async () => {

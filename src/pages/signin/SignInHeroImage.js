@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Lottie from '@components/Lottie';
-import LottieAnimations from '@components/LottieAnimations';
+import {Image} from 'react-native';
+import * as Illustrations from '@components/Icon/Illustrations';
 import withWindowDimensions, {windowDimensionsPropTypes} from '@components/withWindowDimensions';
 import useThemeStyles from '@hooks/useThemeStyles';
 import variables from '@styles/variables';
@@ -19,7 +19,7 @@ const defaultProps = {
 function SignInHeroImage(props) {
     const styles = useThemeStyles();
     let imageSize;
-    if (props.isSmallScreenWidth || props.shouldShowSmallScreen) {
+    if (props.isSmallScreenWidth) {
         imageSize = {
             height: variables.signInHeroImageMobileHeight,
             width: variables.signInHeroImageMobileWidth,
@@ -37,12 +37,9 @@ function SignInHeroImage(props) {
     }
 
     return (
-        <Lottie
-            source={LottieAnimations.Hands}
-            loop
-            autoPlay
+        <Image
+            source={Illustrations.SignupIllustration}
             style={[styles.alignSelfCenter, imageSize]}
-            webStyle={{...styles.alignSelfCenter, ...imageSize}}
         />
     );
 }

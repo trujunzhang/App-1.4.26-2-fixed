@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {useMemo} from 'react';
 import {View} from 'react-native';
 import {withSafeAreaInsets} from 'react-native-safe-area-context';
 import ExpensifyWordmark from '@components/ExpensifyWordmark';
@@ -44,44 +44,31 @@ function SignInPageContent(props) {
     const StyleUtils = useStyleUtils();
 
     return (
-        <View style={[styles.flex1, styles.signInPageLeftContainer]}>
-            <View style={[styles.flex1, styles.alignSelfCenter, styles.signInPageWelcomeFormContainer]}>
-                {/* This empty view creates margin on the top of the sign in form which will shrink and grow depending on if the keyboard is open or not */}
-                <View style={[styles.flexGrow1, isSmallScreenWidth ? styles.signInPageContentTopSpacerSmallScreens : styles.signInPageContentTopSpacer]} />
-                <View style={[styles.flexGrow2, styles.mb8]}>
-                    <SignInPageForm style={[styles.alignSelfStretch]}>
-                        <View style={[isSmallScreenWidth ? styles.mb8 : styles.mb15, isSmallScreenWidth ? styles.alignItemsCenter : styles.alignSelfStart]}>
-                            <ExpensifyWordmark />
-                        </View>
-                        <View style={[styles.signInPageWelcomeTextContainer]}>
-                            {props.shouldShowWelcomeHeader && props.welcomeHeader ? (
-                                <Text
-                                    style={[
-                                        styles.loginHeroHeader,
-                                        StyleUtils.getLineHeightStyle(variables.lineHeightSignInHeroXSmall),
-                                        StyleUtils.getFontSizeStyle(variables.fontSizeSignInHeroXSmall),
-                                        !props.welcomeText ? styles.mb5 : {},
-                                        !isSmallScreenWidth ? styles.textAlignLeft : {},
-                                        styles.mb5,
-                                    ]}
-                                >
-                                    {props.welcomeHeader}
-                                </Text>
-                            ) : null}
-                            {props.shouldShowWelcomeText && props.welcomeText ? (
-                                <Text style={[styles.loginHeroBody, styles.mb5, styles.textNormal, !isSmallScreenWidth ? styles.textAlignLeft : {}]}>{props.welcomeText}</Text>
-                            ) : null}
-                        </View>
-                        {props.children}
-                    </SignInPageForm>
-                    <View style={[styles.mb8, styles.signInPageWelcomeTextContainer, styles.alignSelfCenter]}>
-                        <OfflineIndicator style={[styles.m0, styles.pl0, styles.alignItemsStart]} />
-                    </View>
-                    {props.shouldShowSmallScreen ? (
-                        <View style={[styles.mt8]}>
-                            <SignInHeroImage shouldShowSmallScreen />
-                        </View>
-                    ) : null}
+        <View>
+            {isSmallScreenWidth ? (
+                <View style={[styles.mb12]}>
+                    <SignInHeroImage shouldShowSmallScreen />
+                </View>
+            ) : null}
+            <View style={[isSmallScreenWidth ? styles.alignItemsCenter : styles.alignItemsStart]}>
+                <View>
+                    <Text
+                        style={[
+                            styles.loginHeroHeader,
+                            StyleUtils.getLineHeightStyle(variables.lineHeightSignInHeroXSmall),
+                            StyleUtils.getFontSizeStyle(variables.fontSizeSignInHeroXSmall),
+                            !props.welcomeText ? styles.mb5 : {},
+                            !isSmallScreenWidth ? styles.textAlignLeft : {},
+                            styles.mb2,
+                        ]}
+                    >
+                        {props.welcomeHeader}
+                    </Text>
+                    <Text style={[styles.loginHeroBody, styles.mb2, styles.textNormal, !isSmallScreenWidth ? styles.textAlignLeft : {}]}>{props.welcomeText}</Text>
+                </View>
+                <View style={[styles.mt2, styles.alignItemsStart]}>
+                    {props.children}
+                    <OfflineIndicator style={[styles.m0, styles.p8, styles.alignItemsStart]} />
                 </View>
             </View>
         </View>

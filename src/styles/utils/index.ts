@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import type {Animated, DimensionValue, ImageStyle, PressableStateCallbackType, StyleProp, TextStyle, ViewStyle} from 'react-native';
+import type {Animated, ColorValue, DimensionValue, ImageStyle, PressableStateCallbackType, StyleProp, TextStyle, ViewStyle} from 'react-native';
 import type {OnyxEntry} from 'react-native-onyx';
 import type {EdgeInsets} from 'react-native-safe-area-context';
 import type {ValueOf} from 'type-fest';
@@ -398,7 +398,7 @@ function getBackgroundAndBorderStyle(backgroundColor: string | undefined): ViewS
 /**
  * Returns a style with the specified backgroundColor
  */
-function getBackgroundColorStyle(backgroundColor: string): ViewStyle {
+function getBackgroundColorStyle(backgroundColor: ColorValue): ViewStyle {
     return {
         backgroundColor,
     };
@@ -528,6 +528,7 @@ function getFontFamilyMonospace({fontStyle, fontWeight}: TextStyle): string {
 
     return italicBold || bold || italic || FontUtils.fontFamily.platform.MONOSPACE;
 }
+
 /**
  * Returns the font size for the HTML code tag renderer.
  */
@@ -927,6 +928,15 @@ function getCheckboxPressableStyle(borderRadius = 6): ViewStyle {
     };
 }
 
+function getMultiselectListStyles(styles: ThemeStyles, isSelected: boolean, isDisabled: boolean): ViewStyle {
+    return {
+        ...(isSelected && styles.checkedContainer),
+        ...(isSelected && styles.borderColorFocus),
+        ...(isDisabled && styles.cursorDisabled),
+        ...(isDisabled && styles.buttonOpacityDisabled),
+    };
+}
+
 /**
  * Returns style object for the dropbutton height
  */
@@ -1044,6 +1054,7 @@ const staticStyleUtils = {
     getColorStyle,
     getDefaultWorkspaceAvatarColor,
     getDirectionStyle,
+    getMultiselectListStyles,
     getDropDownButtonHeight,
     getEmojiPickerListHeight,
     getEmojiPickerStyle,
@@ -1239,7 +1250,13 @@ const createStyleUtils = (theme: ThemeColors, styles: ThemeStyles) => ({
     /**
      * Get the styles of the text next to dot indicators
      */
-    getDotIndicatorTextStyles: (isErrorText = true): TextStyle => (isErrorText ? {...styles.offlineFeedback.text, color: styles.formError.color} : {...styles.offlineFeedback.text}),
+    getDotIndicatorTextStyles: (isErrorText = true): TextStyle =>
+        isErrorText
+            ? {
+                  ...styles.offlineFeedback.text,
+                  color: styles.formError.color,
+              }
+            : {...styles.offlineFeedback.text},
 
     getEmojiReactionBubbleStyle: (isHovered: boolean, hasUserReacted: boolean, isContextMenu = false): ViewStyle => {
         let backgroundColor = theme.border;

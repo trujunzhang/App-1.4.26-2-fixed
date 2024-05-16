@@ -10,6 +10,10 @@ export default {
         height: '100%',
     },
 
+    h80: {
+        height: '80%',
+    },
+
     w15: {
         width: '15%',
     },
@@ -52,6 +56,10 @@ export default {
 
     w80: {
         width: '80%',
+    },
+
+    w90: {
+        width: '90%',
     },
 
     w100: {

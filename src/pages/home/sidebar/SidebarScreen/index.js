@@ -38,13 +38,7 @@ function SidebarScreen(props) {
             <BaseSidebarScreen
                 // eslint-disable-next-line react/jsx-props-no-spreading
                 {...props}
-            >
-                <FloatingActionButtonAndPopover
-                    ref={popoverModal}
-                    onShowCreateMenu={createDragoverListener}
-                    onHideCreateMenu={removeDragoverListener}
-                />
-            </BaseSidebarScreen>
+            />
         </FreezeWrapper>
     );
 }

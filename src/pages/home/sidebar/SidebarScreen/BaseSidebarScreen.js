@@ -49,5 +49,4 @@ function BaseSidebarScreen(props) {
 
 BaseSidebarScreen.propTypes = sidebarPropTypes;
 BaseSidebarScreen.displayName = 'BaseSidebarScreen';
-
 export default BaseSidebarScreen;

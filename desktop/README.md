@@ -1,7 +1,7 @@
 <div align="center">
     <div style="display: flex; justify-content: center; align-items: center;">
         <a href="https://new.expensify.com">
-            <img src="https://raw.githubusercontent.com/Expensify/App/main/web/favicon.png" width="64" height="64" alt="New Expensify Icon">
+            <img src="https://raw.githubusercontent.com/Expensify/App/main/web/favicon.png" width="64" height="64" alt="New Ieatta Icon">
         </a>
         <h1 style="margin: 24px">+</h1>
         <a href="https://www.electronjs.org/">
@@ -10,7 +10,7 @@
     </div>
     <h1>
         <a href="https://new.expensify.com">
-            New Expensify
+            New Ieatta
         </a>
         +
         <a href="https://www.electronjs.org/">
@@ -26,7 +26,7 @@
 * [Packaging](#packaging)
 
 # Architecture
-The New Expensify desktop app is built using [Electron.js](https://www.electronjs.org/). We try our best to maintain Electron best practices, particularly when it comes to [security](https://www.electronjs.org/docs/latest/tutorial/security). 
+The New Ieatta desktop app is built using [Electron.js](https://www.electronjs.org/). We try our best to maintain Electron best practices, particularly when it comes to [security](https://www.electronjs.org/docs/latest/tutorial/security). 
 
 The desktop app is organized in three pieces:
 
@@ -78,7 +78,7 @@ mc mb electron-builder/electron-builder
 6. Verify that the new bucket has been created by navigating to https://localhost:9000/minio/electron-builder in your browser and confriming you see an interface like this:
 ![electron-builder](https://user-images.githubusercontent.com/3981102/120376267-8842d700-c2d0-11eb-86cb-f595f27d535d.png)
 
-7. Set your testing bucket to be public, which will allow the NewExpensify.dmg access the local latest-mac.yml file we'll be publishing
+7. Set your testing bucket to be public, which will allow the NewIeatta.dmg access the local latest-mac.yml file we'll be publishing
 ```
 mc policy set public electron-builder/electron-builder
 ```
@@ -123,7 +123,7 @@ AWS_ACCESS_KEY_ID=RootUserKey AWS_SECRET_ACCESS_KEY=RootPassKey APPLE_ID=YOUR_AP
 
 This command will create a build, notarize it, and push your build to the server. Note that it can take around 10 minutes for the command to complete.
 
-Once the command finishes, revert the version update in `package.json`, remove `--publish always` from the `desktop-build` command, and again run the `npm run desktop-build` command above **including the args**. After the build is done, you'll find `NewExpensify.dmg` in the `dist/` folder in the root of the project. Open the `.dmg` and install the app. Your app will attempt to auto-update in the background.
+Once the command finishes, revert the version update in `package.json`, remove `--publish always` from the `desktop-build` command, and again run the `npm run desktop-build` command above **including the args**. After the build is done, you'll find `NewIeatta.dmg` in the `dist/` folder in the root of the project. Open the `.dmg` and install the app. Your app will attempt to auto-update in the background.
 
 # Packaging
 To avoid bundling unnecessary `node_modules` we use a [2 package structure](https://www.electron.build/tutorials/two-package-structure)

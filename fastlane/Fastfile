@@ -92,7 +92,7 @@ platform :android do
     )
 
     upload_to_play_store(
-        package_name: "com.expensify.chat",
+        package_name: "com.ieatta.track",
         json_key: './android/app/android-fastlane-json-key.json',
         aab: './android/app/build/outputs/bundle/productionRelease/app-production-release.aab',
         track: 'internal',
@@ -105,13 +105,13 @@ platform :android do
     # Google is very unreliable, so we retry a few times
     ENV["SUPPLY_UPLOAD_MAX_RETRIES"]="5"
     google_play_track_version_codes(
-      package_name: "com.expensify.chat",
+      package_name: "com.ieatta.track",
       json_key: './android/app/android-fastlane-json-key.json',
       track: 'internal'
     )
 
     upload_to_play_store(
-      package_name: "com.expensify.chat",
+      package_name: "com.ieatta.track",
       json_key: './android/app/android-fastlane-json-key.json',
       version_code: ENV["VERSION"].to_i,
       track: 'internal',
@@ -133,8 +133,8 @@ platform :ios do
     ENV["ENVFILE"]=".env.production"
 
     build_app(
-        workspace: "./ios/NewExpensify.xcworkspace",
-        scheme: "New Expensify"
+        workspace: "./ios/NewIeatta.xcworkspace",
+        scheme: "New Ieatta"
     )
   end
 
@@ -169,15 +169,15 @@ platform :ios do
     )
 
     build_app(
-        workspace: "./ios/NewExpensify.xcworkspace",
+        workspace: "./ios/NewIeatta.xcworkspace",
         skip_profile_detection: true,
-        scheme: "New Expensify AdHoc",
+        scheme: "New Ieatta AdHoc",
         export_method: "ad-hoc",
         export_options: {
             method: "ad-hoc",
             provisioningProfiles: {
-              "com.expensify.chat.adhoc" => "(NewApp) AdHoc",
-              "com.expensify.chat.adhoc.NotificationServiceExtension" => "(NewApp) AdHoc: Notification Service",
+              "com.ieatta.track.adhoc" => "(NewApp) AdHoc",
+              "com.ieatta.track.adhoc.NotificationServiceExtension" => "(NewApp) AdHoc: Notification Service",
             },
             manageAppVersionAndBuildNumber: false
         }
@@ -227,9 +227,9 @@ platform :ios do
     )
 
     build_app(
-        workspace: "./ios/NewExpensify.xcworkspace",
-        scheme: "New Expensify",
-        output_name: "New Expensify.ipa",
+        workspace: "./ios/NewIeatta.xcworkspace",
+        scheme: "New Ieatta",
+        output_name: "New Ieatta.ipa",
         export_options: {
             provisioningProfiles: {
               "com.chat.expensify.chat" => "(NewApp) AppStore",
@@ -244,7 +244,7 @@ platform :ios do
           api_key_path: "./ios/ios-fastlane-json-key.json",
           distribute_external: true,
           notify_external_testers: true,
-          changelog: "Thank you for beta testing New Expensify, this version includes bug fixes and improvements.",
+          changelog: "Thank you for beta testing New Ieatta, this version includes bug fixes and improvements.",
           groups: ["Beta"],
           demo_account_required: true,
           beta_app_review_info: {

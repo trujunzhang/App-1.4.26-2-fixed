@@ -15,20 +15,21 @@ import HTMLEngineProvider from './components/HTMLEngineProvider';
 import {LocaleContextProvider} from './components/LocaleContextProvider';
 import OnyxProvider from './components/OnyxProvider';
 import PopoverContextProvider from './components/PopoverProvider';
+import RealmLocalProvider from './components/Realm/provider';
 import SafeArea from './components/SafeArea';
 import ThemeIllustrationsProvider from './components/ThemeIllustrationsProvider';
 import ThemeProvider from './components/ThemeProvider';
 import ThemeStylesProvider from './components/ThemeStylesProvider';
-import {CurrentReportIDContextProvider} from './components/withCurrentReportID';
+import {CurrentRestaurantIDContextProvider} from './components/withCurrentRestaurantID';
 import {EnvironmentProvider} from './components/withEnvironment';
 import {KeyboardStateProvider} from './components/withKeyboardState';
 import {WindowDimensionsProvider} from './components/withWindowDimensions';
-import Expensify from './Expensify';
+import {ReportAttachmentsProvider} from './expPages/home/report/ReportAttachmentsContext';
 import useDefaultDragAndDrop from './hooks/useDefaultDragAndDrop';
+import Ieatta from './Ieatta';
 import OnyxUpdateManager from './libs/actions/OnyxUpdateManager';
 import * as Session from './libs/actions/Session';
 import * as Environment from './libs/Environment/Environment';
-import {ReportAttachmentsProvider} from './pages/home/report/ReportAttachmentsContext';
 
 // For easier debugging and development, when we are in web we expose Onyx to the window, so you can more easily set data into Onyx
 if (window && Environment.isDevelopment()) {
@@ -41,6 +42,7 @@ LogBox.ignoreLogs([
     // the timer is lost. Currently Expensify is using a 30 minutes interval to refresh personal details.
     // More details here: https://git.io/JJYeb
     'Setting a timer for a long period of time',
+    'Require cycle:',
 ]);
 
 const fill = {flex: 1};
@@ -64,17 +66,18 @@ function App() {
                     WindowDimensionsProvider,
                     KeyboardStateProvider,
                     PopoverContextProvider,
-                    CurrentReportIDContextProvider,
+                    CurrentRestaurantIDContextProvider,
                     ReportAttachmentsProvider,
                     PickerStateProvider,
                     EnvironmentProvider,
                     CustomStatusBarAndBackgroundContextProvider,
+                    RealmLocalProvider,
                 ]}
             >
                 <CustomStatusBarAndBackground />
-                <ErrorBoundary errorMessage="NewExpensify crash caught by error boundary">
+                <ErrorBoundary errorMessage="NewIeatta crash caught by error boundary">
                     <ColorSchemeWrapper>
-                        <Expensify />
+                        <Ieatta />
                     </ColorSchemeWrapper>
                 </ErrorBoundary>
             </ComposeProviders>

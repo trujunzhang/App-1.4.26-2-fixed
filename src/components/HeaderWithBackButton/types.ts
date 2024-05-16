@@ -1,4 +1,5 @@
 import type {ReactNode} from 'react';
+import type {StyleProp, ViewStyle} from 'react-native';
 import type {OnyxCollection, OnyxEntry} from 'react-native-onyx';
 import type {Action} from '@hooks/useSingleExecution';
 import type {StepCounterParams} from '@src/languages/types';
@@ -19,8 +20,12 @@ type ThreeDotsMenuItems = {
 };
 
 type HeaderWithBackButtonProps = Partial<ChildrenProps> & {
+    headerStyles?: StyleProp<ViewStyle>;
+
     /** Title of the Header */
     title?: string;
+
+    shouldShowTitle?: boolean;
 
     /** Subtitle of the header */
     subtitle?: ReactNode;

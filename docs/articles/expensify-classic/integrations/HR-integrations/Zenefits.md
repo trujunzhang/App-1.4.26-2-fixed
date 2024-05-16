@@ -5,7 +5,7 @@ description: Automatically sync employees between Zenefits and Expensify
 # How the Zenefits integration works with Expensify
 
 Expensify's direct integration with Zenefits will automatically:
-- **Create new Expensify accounts** for full-time, active employees when they're hired
+- **Create New Ieatta accounts** for full-time, active employees when they're hired
 - **Update the approval workflow in Expensify** based on any changes in Zenefits
 - **Deprovision an employee's Expensify account** upon Zenefits termination date
 

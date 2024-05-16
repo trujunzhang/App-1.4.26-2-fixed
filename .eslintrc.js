@@ -87,6 +87,12 @@ module.exports = {
             files: ['*.js', '*.jsx', '*.ts', '*.tsx'],
             plugins: ['react'],
             rules: {
+                // djzhang's rules
+                '@typescript-eslint/no-explicit-any': 'off',
+                'no-unused-vars': 'off',
+                'no-console': 'off',
+                'arrow-body-style': 'off',
+                // common rules
                 'rulesdir/no-multiple-onyx-in-file': 'off',
                 'rulesdir/onyx-props-must-have-default': 'off',
                 'react-native-a11y/has-accessibility-hint': ['off'],
@@ -109,6 +115,7 @@ module.exports = {
                             '@libs': './src/libs',
                             '@navigation': './src/libs/Navigation',
                             '@pages': './src/pages',
+                            '@expPages': './src/expPages',
                             '@styles': './src/styles',
                             // This path is provide alias for files like `ONYXKEYS` and `CONST`.
                             '@src': './src',
@@ -168,6 +175,8 @@ module.exports = {
                 project: './tsconfig.json',
             },
             rules: {
+                // djzhang's rules
+                '@typescript-eslint/no-unused-vars': 'off',
                 // TODO: Remove the following rules after TypeScript migration is complete.
                 '@typescript-eslint/no-unsafe-argument': 'off',
                 '@typescript-eslint/no-unsafe-call': 'off',
@@ -255,6 +264,13 @@ module.exports = {
                     },
                 ],
                 curly: 'error',
+                'you-dont-need-lodash-underscore/omit': 'off',
+                'you-dont-need-lodash-underscore/isEmpty': 'off',
+                'you-dont-need-lodash-underscore/get': 'off',
+                'you-dont-need-lodash-underscore/find': 'off',
+                'you-dont-need-lodash-underscore/map': 'off',
+                'you-dont-need-lodash-underscore/filter': 'off',
+                'you-dont-need-lodash-underscore/is-undefined': 'off',
                 'you-dont-need-lodash-underscore/throttle': 'off',
             },
         },

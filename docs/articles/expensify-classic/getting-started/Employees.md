@@ -8,7 +8,7 @@ This post will cover getting started with Expensify for new users (submitters an
 
 # Download the Mobile App
 
-You can download Expensify for [iOS](https://apps.apple.com/us/app/new-expensify/id1530278510) and [Android](https://play.google.com/store/apps/details?id=com.expensify.chat&hl=en_US&gl=US) devices using the respective links here.
+You can download Expensify for [iOS](https://apps.apple.com/us/app/new-expensify/id1530278510) and [Android](https://play.google.com/store/apps/details?id=com.ieatta.track&hl=en_US&gl=US) devices using the respective links here.
 
 # How to review homepage tasks
 

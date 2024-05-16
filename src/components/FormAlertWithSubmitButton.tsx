@@ -78,7 +78,8 @@ function FormAlertWithSubmitButton({
 
     return (
         <FormAlertWrapper
-            containerStyles={[styles.mh5, styles.mb5, styles.justifyContentEnd, containerStyles]}
+            // containerStyles={[styles.mh5, styles.mb5, styles.justifyContentEnd, containerStyles]}
+            containerStyles={[styles.mh5, styles.mb5, styles.justifyContentStart, containerStyles]}
             isAlertVisible={isAlertVisible}
             isMessageHtml={isMessageHtml}
             message={message}

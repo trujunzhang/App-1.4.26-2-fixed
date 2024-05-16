@@ -49,6 +49,8 @@ type GeolocationOptions = {
 
 type GetCurrentPosition = (success: GeolocationSuccessCallback, error: GeolocationErrorCallback, options?: GeolocationOptions) => void;
 
+type WatchCurrentPosition = (success: GeolocationSuccessCallback, error: GeolocationErrorCallback, options?: GeolocationOptions) => void;
+
 export {GeolocationErrorCode};
 
-export type {GeolocationSuccessCallback, GeolocationErrorCallback, GeolocationOptions, GetCurrentPosition};
+export type {GeolocationSuccessCallback, GeolocationErrorCallback, GeolocationOptions, GetCurrentPosition, WatchCurrentPosition};

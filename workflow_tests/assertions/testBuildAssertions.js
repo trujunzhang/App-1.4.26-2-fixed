@@ -396,7 +396,7 @@ const assertPostGithubCommentJobExecuted = (
                 {key: 'IOS', value: iOSStatus},
                 {key: 'WEB', value: webStatus},
                 {key: 'ANDROID_LINK', value: androidStatus === 'success' ? 'http://dummy.android.link' : ''},
-                {key: 'DESKTOP_LINK', value: `https://ad-hoc-expensify-cash.s3.amazonaws.com/desktop/${pullRequestNumber}/NewExpensify.dmg`},
+                {key: 'DESKTOP_LINK', value: `https://ad-hoc-expensify-cash.s3.amazonaws.com/desktop/${pullRequestNumber}/NewIeatta.dmg`},
                 {key: 'IOS_LINK', value: iOSStatus === 'success' ? 'http://dummy.ios.link' : ''},
                 {key: 'WEB_LINK', value: `https://${pullRequestNumber}.pr-testing.expensify.com`},
             ],

@@ -1,7 +1,6 @@
 import {createRef} from 'react';
-import type {OnyxUpdate} from 'react-native-onyx';
+import type {OnyxEntry, OnyxUpdate} from 'react-native-onyx';
 import Onyx from 'react-native-onyx';
-import type {OnyxEntry} from 'react-native-onyx/lib/types';
 import type {ValueOf} from 'type-fest';
 import * as API from '@libs/API';
 import * as CardUtils from '@libs/CardUtils';

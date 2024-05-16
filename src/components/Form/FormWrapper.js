@@ -149,7 +149,7 @@ function FormWrapper(props) {
                                 focusInput.focus();
                             }
                         }}
-                        containerStyles={[styles.mh0, styles.mt5, styles.flex1, ...submitButtonStyles]}
+                        containerStyles={[styles.mh0, styles.mt5, styles.flex1, {zIndex: -1}, ...submitButtonStyles]}
                         enabledWhenOffline={enabledWhenOffline}
                         isSubmitActionDangerous={isSubmitActionDangerous}
                         disablePressOnEnter

@@ -3,7 +3,8 @@ import React, {useMemo} from 'react';
 import type {OnyxEntry} from 'react-native-onyx';
 import {withOnyx} from 'react-native-onyx';
 import getComponentDisplayName from '@libs/getComponentDisplayName';
-import personalDetailsPropType from '@pages/personalDetailsPropType';
+import Log from '@libs/Log';
+import personalDetailsPropType from '@expPages/personalDetailsPropType';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import type {PersonalDetails, Session} from '@src/types/onyx';
@@ -42,6 +43,13 @@ export default function <TProps extends WithCurrentUserPersonalDetailsProps, TRe
             () => (accountPersonalDetails ? {...accountPersonalDetails, accountID} : {}) as CurrentUserPersonalDetails,
             [accountPersonalDetails, accountID],
         );
+
+        // Log.info("")
+        // Log.info("================================")
+        // Log.info(`accountID: ${JSON.stringify(currentUserPersonalDetails)}`)
+        // Log.info("================================")
+        // Log.info("")
+
         return (
             <WrappedComponent
                 // eslint-disable-next-line react/jsx-props-no-spreading

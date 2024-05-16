@@ -25,7 +25,7 @@ import {getGroupChatName} from '@libs/GroupChatUtils';
 import * as OptionsListUtils from '@libs/OptionsListUtils';
 import ReportActionComposeFocusManager from '@libs/ReportActionComposeFocusManager';
 import * as ReportUtils from '@libs/ReportUtils';
-import * as ReportActionContextMenu from '@pages/home/report/ContextMenu/ReportActionContextMenu';
+import * as ReportActionContextMenu from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
 import CONST from '@src/CONST';
 
 const propTypes = {

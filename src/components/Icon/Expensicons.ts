@@ -1,6 +1,8 @@
 import AddReaction from '@assets/images/add-reaction.svg';
+import AddPhoto from '@assets/images/addphoto-icon.svg';
 import Android from '@assets/images/android.svg';
 import Apple from '@assets/images/apple.svg';
+import ArrowLeft from '@assets/images/arrow-left.svg';
 import ArrowRightLong from '@assets/images/arrow-right-long.svg';
 import ArrowRight from '@assets/images/arrow-right.svg';
 import UpArrow from '@assets/images/arrow-up.svg';
@@ -45,9 +47,11 @@ import Download from '@assets/images/download.svg';
 import DragAndDrop from '@assets/images/drag-and-drop.svg';
 import DragHandles from '@assets/images/drag-handles.svg';
 import Emoji from '@assets/images/emoji.svg';
+import EmptyCamera from '@assets/images/empty-photo-icon.svg';
 import EmptyStateAttachReceipt from '@assets/images/empty-state__attach-receipt.svg';
 import EmptyStateRoutePending from '@assets/images/emptystate__routepending.svg';
 import EReceiptIcon from '@assets/images/eReceiptIcon.svg';
+import EventInfo from '@assets/images/event-icon.svg';
 import Exclamation from '@assets/images/exclamation.svg';
 import Exit from '@assets/images/exit.svg';
 import Expand from '@assets/images/expand.svg';
@@ -68,6 +72,7 @@ import Hashtag from '@assets/images/hashtag.svg';
 import Heart from '@assets/images/heart.svg';
 import History from '@assets/images/history.svg';
 import Hourglass from '@assets/images/hourglass.svg';
+import IconMenu from '@assets/images/icon_menu.svg';
 import ImageCropCircleMask from '@assets/images/image-crop-circle-mask.svg';
 import ImageCropSquareMask from '@assets/images/image-crop-square-mask.svg';
 import Info from '@assets/images/info.svg';
@@ -81,12 +86,14 @@ import Lock from '@assets/images/lock.svg';
 import Luggage from '@assets/images/luggage.svg';
 import MagnifyingGlass from '@assets/images/magnifying-glass.svg';
 import Mail from '@assets/images/mail.svg';
+import MapPin from '@assets/images/map-pin.svg';
+import MapMarker from '@assets/images/map_marker.svg';
 import Megaphone from '@assets/images/megaphone.svg';
 import Menu from '@assets/images/menu.svg';
 import MoneyBag from '@assets/images/money-bag.svg';
 import MoneyCircle from '@assets/images/money-circle.svg';
 import Monitor from '@assets/images/monitor.svg';
-import NewExpensify from '@assets/images/new-expensify.svg';
+import NewIeatta from '@assets/images/new-expensify.svg';
 import NewWindow from '@assets/images/new-window.svg';
 import NewWorkspace from '@assets/images/new-workspace.svg';
 import OfflineCloud from '@assets/images/offline-cloud.svg';
@@ -96,18 +103,24 @@ import Paycheck from '@assets/images/paycheck.svg';
 import Pencil from '@assets/images/pencil.svg';
 import Phone from '@assets/images/phone.svg';
 import Pin from '@assets/images/pin.svg';
+import PNGBusinessMediumSquare from '@assets/images/placeholder/business_medium_square.png';
+import LargeEmptyBizSkyline from '@assets/images/placeholder/large_empty_biz_skyline.yji.svg';
+import User60Square from '@assets/images/placeholder/user_60_square.png';
 import Plus from '@assets/images/plus.svg';
 import Printer from '@assets/images/printer.svg';
 import Profile from '@assets/images/profile.svg';
 import QrCode from '@assets/images/qrcode.svg';
 import QuestionMark from '@assets/images/question-mark-circle.svg';
+import QueueList from '@assets/images/queue-list.svg';
 import ReceiptSearch from '@assets/images/receipt-search.svg';
 import Receipt from '@assets/images/receipt.svg';
+import ResetIcon from '@assets/images/reset.png';
 import Rotate from '@assets/images/rotate-image.svg';
 import RotateLeft from '@assets/images/rotate-left.svg';
 import Send from '@assets/images/send.svg';
 import Shield from '@assets/images/shield.svg';
 import AppleLogo from '@assets/images/signIn/apple-logo.svg';
+import GoogleLogoIcon from '@assets/images/signIn/google-logo.png';
 import GoogleLogo from '@assets/images/signIn/google-logo.svg';
 import Facebook from '@assets/images/social-facebook.svg';
 import Instagram from '@assets/images/social-instagram.svg';
@@ -128,6 +141,9 @@ import User from '@assets/images/user.svg';
 import Users from '@assets/images/users.svg';
 import Wallet from '@assets/images/wallet.svg';
 import Workspace from '@assets/images/workspace-default-avatar.svg';
+import WriteAReview from '@assets/images/writeareview-icon.svg';
+import YelpLogo from '@assets/images/yelp-logo.svg';
+import YelpMenu from '@assets/images/yelp-menu.png';
 import Zoom from '@assets/images/zoom.svg';
 import LoungeAccess from './svgs/LoungeAccessIcon';
 
@@ -139,6 +155,7 @@ export {
     AnnounceRoomAvatar,
     Apple,
     AppleLogo,
+    ArrowLeft,
     ArrowRight,
     ArrowRightLong,
     ArrowsUpDown,
@@ -222,7 +239,7 @@ export {
     MoneyBag,
     MoneyCircle,
     Monitor,
-    NewExpensify,
+    NewIeatta,
     NewWindow,
     NewWorkspace,
     Offline,
@@ -258,10 +275,25 @@ export {
     Wallet,
     Workspace,
     Zoom,
+    GoogleLogoIcon,
     Twitter,
     Youtube,
     Facebook,
     Podcast,
     Linkedin,
     Instagram,
+    IconMenu,
+    MapPin,
+    QueueList,
+    YelpLogo,
+    WriteAReview,
+    EventInfo,
+    AddPhoto,
+    EmptyCamera,
+    PNGBusinessMediumSquare,
+    LargeEmptyBizSkyline,
+    User60Square,
+    YelpMenu,
+    ResetIcon,
+    MapMarker,
 };

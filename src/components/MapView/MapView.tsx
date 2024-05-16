@@ -55,7 +55,8 @@ const MapView = forwardRef<MapViewHandle, ComponentProps>(
                             return;
                         }
 
-                        setCurrentPosition({longitude: initialState.location[0], latitude: initialState.location[1]});
+                        // setCurrentPosition({longitude: initialState.location[0], latitude: initialState.location[1]});
+                        setCurrentPosition({longitude: initialState.location.longitude, latitude: initialState.location.latitude});
                     },
                 );
             }, [cachedUserLocation, initialState, isOffline]),
@@ -142,7 +143,8 @@ const MapView = forwardRef<MapViewHandle, ComponentProps>(
 
         return (
             <>
-                {!isOffline && Boolean(accessToken) && Boolean(currentPosition) ? (
+                {/* {Boolean(accessToken) && Boolean(currentPosition) ? ( */}
+                {Boolean(accessToken) && Boolean(currentPosition?.latitude) && Boolean(currentPosition?.longitude) ? (
                     <View style={style}>
                         <Mapbox.MapView
                             style={{flex: 1}}
@@ -159,7 +161,9 @@ const MapView = forwardRef<MapViewHandle, ComponentProps>(
                             <Mapbox.Camera
                                 ref={cameraRef}
                                 defaultSettings={{
-                                    centerCoordinate: currentPosition ? [currentPosition.longitude, currentPosition.latitude] : initialState?.location,
+                                    // centerCoordinate: currentPosition ? [currentPosition.longitude, currentPosition.latitude] : initialState?.location,
+                                    // centerCoordinate: initialState?.location,
+                                    centerCoordinate: [initialState?.location.longitude ?? 0, initialState?.location.latitude ?? 0],
                                     zoomLevel: initialState?.zoom,
                                 }}
                             />

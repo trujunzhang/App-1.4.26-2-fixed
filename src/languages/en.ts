@@ -386,14 +386,156 @@ export default {
         getStarted: 'Get started below.',
         anotherLoginPageIsOpen: 'Another login page is open.',
         anotherLoginPageIsOpenExplanation: "You've opened the login page in a separate tab, please login from that specific tab.",
-        welcomeBack: 'Welcome back!',
-        welcome: 'Welcome!',
+        welcomeBack: 'Welcome to IEATTA',
+        welcome: 'New to IEATTA?',
         phrase2: "Money talks. And now that chat and payments are in one place, it's also easy.",
         phrase3: 'Your payments get to you as fast as you can get your point across.',
         enterPassword: 'Please enter your password',
         newFaceEnterMagicCode: ({login}: NewFaceEnterMagicCodeParams) =>
             `It's always great to see a new face around here! Please enter the magic code sent to ${login}. It should arrive within a minute or two.`,
         welcomeEnterMagicCode: ({login}: WelcomeEnterMagicCodeParams) => `Please enter the magic code sent to ${login}. It should arrive within a minute or two.`,
+    },
+    sections: {
+        titles: {
+            currentAddress: 'Current Address',
+            photos: 'Photos',
+            events: 'Events',
+            eventsRecorded: 'Events Recorded',
+            eventWhatWhy: 'what/why:',
+            eventPeopleOrdered: 'People Ordered',
+            eventWaiters: 'Waiters',
+            onTheMenu: 'On the Menu',
+            reviews: 'Reviews',
+            recommendedReviews: 'Recommended Reviews',
+        },
+        empty: {
+            noRecipes: 'no recipes',
+            noReviews: 'no reviews',
+            noEvents: 'no events',
+            noPeopleOrdered: 'no people ordered',
+        },
+    },
+    add: {
+        recipe: {
+            title: 'Add Recipes',
+            button: 'Add Recipes',
+            search: 'Search Recipes(by name)',
+            section: {
+                title: 'recipes',
+            },
+        },
+        waiter: {
+            title: 'Add Waiters',
+            button: 'Add Waiters',
+        },
+        orderedUser: {
+            title: 'Add Users Ordered',
+            button: 'Add users ordered',
+            search: 'Search Users(by name)',
+            section: {
+                orderedUsersTitle: 'ordered users',
+                title: 'users',
+            },
+        },
+    },
+    edit: {
+        reset: 'Reset Form Date',
+        restaurant: {
+            button: 'Edit Restaurant',
+            form: {
+                header: {
+                    new: 'New Restaurant',
+                    edit: 'Edit Restaurant',
+                },
+                displayName: {
+                    title: 'displayName',
+                    placeholder: 'restaurant name',
+                    error: 'name can not be empty',
+                },
+                note: {
+                    title: 'note',
+                    placeholder: 'restaurant note',
+                    error: 'note can be empty',
+                },
+            },
+        },
+        event: {
+            button: 'Edit Event',
+            form: {
+                header: {
+                    new: 'New Event',
+                    edit: 'Edit Event',
+                },
+                displayName: {
+                    title: 'displayName',
+                    placeholder: 'event name',
+                    error: 'name can not be empty',
+                },
+                want: {
+                    title: 'want',
+                    placeholder: 'want note',
+                    error: 'note can be empty',
+                },
+                start: {
+                    title: 'start time',
+                    placeholder: 'start time',
+                    error: 'time can be empty',
+                },
+                end: {
+                    title: 'end time',
+                    placeholder: 'end time',
+                    error: 'time can be empty',
+                },
+            },
+        },
+        recipe: {
+            button: 'Edit Recipe',
+            form: {
+                header: {
+                    new: 'New Recipe',
+                    edit: 'Edit Recipe',
+                },
+                displayName: {
+                    title: 'displayName',
+                    placeholder: 'recipe name',
+                    error: 'name can not be empty',
+                },
+                price: {
+                    title: 'price',
+                    placeholder: 'recipe note',
+                    error: {
+                        empty: 'price can be empty',
+                        number: 'price can only be number',
+                    },
+                },
+            },
+        },
+        review: {
+            button: 'Edit Review',
+            form: {
+                header: {
+                    new: 'New Review',
+                    edit: 'Edit Review',
+                },
+                note: {
+                    title: 'Notes',
+                    placeholder: 'review notes',
+                    error: 'notes can be empty',
+                },
+            },
+        },
+    },
+    sidebar: {
+        header: {
+            title: 'IEATTA',
+            subTitle: 'Eating Experience Track',
+        },
+        search: {
+            message: 'Search nearby restaurants ...',
+        },
+        syncDB: {
+            message: 'Syncing database ...',
+        },
     },
     login: {
         hero: {
@@ -773,7 +915,7 @@ export default {
     initialSettingsPage: {
         about: 'About',
         aboutPage: {
-            description: 'The New Expensify App is built by a community of open source developers from around the world. Help us build the future of Expensify.',
+            description: 'The New Ieatta App is built by a community of open source developers from around the world. Help us build the future of Expensify.',
             appDownloadLinks: 'App download links',
             viewKeyboardShortcuts: 'View keyboard shortcuts',
             viewTheCode: 'View the code',
@@ -818,7 +960,7 @@ export default {
     },
     passwordPage: {
         changePassword: 'Change password',
-        changingYourPasswordPrompt: 'Changing your password will update your password for both your Expensify.com and New Expensify accounts.',
+        changingYourPasswordPrompt: 'Changing your password will update your password for both your Expensify.com and New Ieatta accounts.',
         currentPassword: 'Current password',
         newPassword: 'New password',
         newPasswordPrompt: 'New password must be different than your old password, have at least 8 characters, 1 capital letter, 1 lowercase letter, and 1 number.',
@@ -1067,13 +1209,13 @@ export default {
         chooseThemeBelowOrSync: 'Choose a theme below, or sync with your device settings.',
     },
     signInPage: {
-        expensifyDotCash: 'New Expensify',
+        expensifyDotCash: 'New Ieatta',
         theCode: 'the code',
         openJobs: 'open jobs',
         heroHeading: 'Split bills\nand chat with friends.',
         heroDescription: {
             phrase1: "Money talks. And now that chat and payments are in one place, it's also easy. Your payments get to you as fast as you can get your point across.",
-            phrase2: 'The New Expensify is open source. View',
+            phrase2: 'The New Ieatta is open source. View',
             phrase3: 'the code',
             phrase4: 'View',
             phrase5: 'open jobs',
@@ -1202,7 +1344,7 @@ export default {
         enterPassword: 'Enter a password',
         setPassword: 'Set password',
         newPasswordPrompt: 'Your password must have at least 8 characters, 1 capital letter, 1 lowercase letter, and 1 number.',
-        passwordFormTitle: 'Welcome back to the New Expensify! Please set your password.',
+        passwordFormTitle: 'Welcome back to the New Ieatta! Please set your password.',
         passwordNotSet: 'We were unable to set your new password. We have sent you a new password link to try again.',
         setPasswordLinkInvalid: 'This set password link is invalid or has expired. A new one is waiting for you in your email inbox!',
         validateAccount: 'Verify account',
@@ -1323,9 +1465,9 @@ export default {
         verifyIdentity: 'Verify identity',
         genericError: 'There was an error while processing this step. Please try again.',
         cameraPermissionsNotGranted: 'Enable camera access',
-        cameraRequestMessage: 'We need access to your camera to complete bank account verification. Please enable via Settings > New Expensify.',
+        cameraRequestMessage: 'We need access to your camera to complete bank account verification. Please enable via Settings > New Ieatta.',
         microphonePermissionsNotGranted: 'Enable microphone access',
-        microphoneRequestMessage: 'We need access to your microphone to complete bank account verification. Please enable via Settings > New Expensify.',
+        microphoneRequestMessage: 'We need access to your microphone to complete bank account verification. Please enable via Settings > New Ieatta.',
         originalDocumentNeeded: 'Please upload an original image of your ID rather than a screenshot or scanned image.',
         documentNeedsBetterQuality: 'Your ID appears to be damaged or has missing security features. Please upload an original image of an undamaged ID that is entirely visible.',
         imageNeedsBetterQuality: "There's an issue with the image quality of your ID. Please upload a new image where your entire ID can be seen clearly.",
@@ -1810,17 +1952,17 @@ export default {
         },
     },
     desktopApplicationMenu: {
-        mainMenu: 'New Expensify',
-        about: 'About New Expensify',
-        update: 'Update New Expensify',
+        mainMenu: 'New Ieatta',
+        about: 'About New Ieatta',
+        update: 'Update New Ieatta',
         checkForUpdates: 'Check for updates',
         toggleDevTools: 'Toggle Developer Tools',
         viewShortcuts: 'View keyboard shortcuts',
         services: 'Services',
-        hide: 'Hide New Expensify',
+        hide: 'Hide New Ieatta',
         hideOthers: 'Hide Others',
         showAll: 'Show All',
-        quit: 'Quit New Expensify',
+        quit: 'Quit New Ieatta',
         fileMenu: 'File',
         closeWindow: 'Close Window',
         editMenu: 'Edit',
@@ -2045,19 +2187,19 @@ export default {
             buttonText1: 'Start a chat, ',
             buttonText2: `get $${CONST.REFERRAL_PROGRAM.REVENUE}.`,
             header: `Start a chat, get $${CONST.REFERRAL_PROGRAM.REVENUE}`,
-            body: `Get paid to talk to your friends! Start a chat with a new Expensify account and get $${CONST.REFERRAL_PROGRAM.REVENUE} when they become a customer.`,
+            body: `Get paid to talk to your friends! Start a chat with a New Ieatta account and get $${CONST.REFERRAL_PROGRAM.REVENUE} when they become a customer.`,
         },
         [CONST.REFERRAL_PROGRAM.CONTENT_TYPES.MONEY_REQUEST]: {
             buttonText1: 'Request money, ',
             buttonText2: `get $${CONST.REFERRAL_PROGRAM.REVENUE}.`,
             header: `Request money, get $${CONST.REFERRAL_PROGRAM.REVENUE}`,
-            body: `It pays to get paid! Request money from a new Expensify account and get $${CONST.REFERRAL_PROGRAM.REVENUE} when they become a customer.`,
+            body: `It pays to get paid! Request money from a New Ieatta account and get $${CONST.REFERRAL_PROGRAM.REVENUE} when they become a customer.`,
         },
         [CONST.REFERRAL_PROGRAM.CONTENT_TYPES.SEND_MONEY]: {
             buttonText1: 'Send money, ',
             buttonText2: `get $${CONST.REFERRAL_PROGRAM.REVENUE}.`,
             header: `Send money, get $${CONST.REFERRAL_PROGRAM.REVENUE}`,
-            body: `You gotta send money to make money! Send money to a new Expensify account and get $${CONST.REFERRAL_PROGRAM.REVENUE} when they become a customer.`,
+            body: `You gotta send money to make money! Send money to a New Ieatta account and get $${CONST.REFERRAL_PROGRAM.REVENUE} when they become a customer.`,
         },
         [CONST.REFERRAL_PROGRAM.CONTENT_TYPES.REFER_FRIEND]: {
             buttonText1: 'Invite a friend, ',

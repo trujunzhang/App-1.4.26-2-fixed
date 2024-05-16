@@ -10,27 +10,27 @@ import os.log
 import Intents
 
 class NotificationService: UANotificationServiceExtension {
-  
+
   var contentHandler: ((UNNotificationContent) -> Void)?
   var bestAttemptContent: UNMutableNotificationContent?
-  let log = OSLog(subsystem: Bundle.main.bundleIdentifier ?? "com.expensify.chat.dev.NotificationServiceExtension", category: "NotificationService")
-  
+  let log = OSLog(subsystem: Bundle.main.bundleIdentifier ?? "com.ieatta.track.dev.NotificationServiceExtension", category: "NotificationService")
+
   override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
     os_log("[NotificationService] didReceive() - received notification", log: log)
-    
+
     self.contentHandler = contentHandler
     guard let bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent) else {
       contentHandler(request.content)
       return
     }
-    
+
     if #available(iOSApplicationExtension 15.0, *) {
       configureCommunicationNotification(notificationContent: bestAttemptContent, contentHandler: contentHandler)
     } else {
       contentHandler(bestAttemptContent)
     }
   }
-  
+
   /**
    * Parses the notification content and modifies it to be a Communication Notification. More info here: https://developer.apple.com/documentation/usernotifications/implementing_communication_notifications
    */
@@ -48,7 +48,7 @@ class NotificationService: UANotificationServiceExtension {
       contentHandler(notificationContent)
       return
     }
-    
+
     // Create an intent for the incoming communication message
     let intent: INSendMessageIntent = createMessageIntent(notificationData: notificationData)
 
@@ -68,13 +68,13 @@ class NotificationService: UANotificationServiceExtension {
             contentHandler(notificationContent)
             return
         }
-        
+
         // After donation, update the notification content.
         do {
           // Update notification content before displaying the
           // communication notification.
           let updatedContent = try notificationContent.updating(from: intent)
-          
+
           // Call the content handler with the updated content
           // to display the communication notification.
           contentHandler(updatedContent)
@@ -84,56 +84,56 @@ class NotificationService: UANotificationServiceExtension {
         }
     }
   }
-  
+
   func parsePayload(notificationContent: UNMutableNotificationContent) throws -> NotificationData  {
     guard let payload = notificationContent.userInfo["payload"] as? NSDictionary else {
       throw ExpError.runtimeError("payload missing")
     }
-    
+
     guard let reportID = payload["reportID"] as? Int64 else {
       throw ExpError.runtimeError("payload.reportID missing")
     }
-    
+
     guard let reportActionID = payload["reportActionID"] as? String else {
       throw ExpError.runtimeError("payload.reportActionID missing")
     }
-    
+
     guard let onyxData = payload["onyxData"] as? NSArray else {
       throw ExpError.runtimeError("payload.onyxData missing" + reportActionID)
     }
-    
+
     guard let reportActionOnyxUpdate = onyxData[1] as? NSDictionary else {
       throw ExpError.runtimeError("payload.onyxData[1] missing" + reportActionID)
     }
-    
+
     guard let reportActionCollection = reportActionOnyxUpdate["value"] as? NSDictionary else {
       throw ExpError.runtimeError("payload.onyxData[1].value (report action onyx update) missing" + reportActionID)
     }
-    
+
     guard let reportAction = reportActionCollection[reportActionID] as? NSDictionary else {
       throw ExpError.runtimeError("payload.onyxData[1].value['\(reportActionID)'] (report action) missing" + reportActionID)
     }
-    
+
     guard let avatarURL = reportAction["avatar"] as? String else {
       throw ExpError.runtimeError("reportAction.avatar missing. reportActionID: " + reportActionID)
     }
-    
+
     guard let accountID = reportAction["actorAccountID"] as? Int else {
       throw ExpError.runtimeError("reportAction.actorAccountID missing. reportActionID: " + reportActionID)
     }
-    
+
     guard let person = reportAction["person"] as? NSArray else {
       throw ExpError.runtimeError("reportAction.person missing. reportActionID: " + reportActionID)
     }
-    
+
     guard let personObject = person[0] as? NSDictionary else {
       throw ExpError.runtimeError("reportAction.person[0] missing. reportActionID: " + reportActionID)
     }
-    
+
     guard let userName = personObject["text"] as? String else {
       throw ExpError.runtimeError("reportAction.person[0].text missing. reportActionID: " + reportActionID)
     }
-    
+
     return NotificationData(
       reportID: reportID,
       reportActionID: reportActionID,
@@ -145,7 +145,7 @@ class NotificationService: UANotificationServiceExtension {
       roomName: payload["roomName"] as? String
     )
   }
-  
+
   @available(iOSApplicationExtension 14.0, *)
   func createMessageIntent(notificationData: NotificationData) -> INSendMessageIntent {
     // Initialize only the sender for a one-to-one message intent.
@@ -157,13 +157,13 @@ class NotificationService: UANotificationServiceExtension {
                           image: avatar,
                           contactIdentifier: nil,
                           customIdentifier: nil)
-    
+
     // Configure the group/room name if there is one
     var speakableGroupName: INSpeakableString? = nil
     var recipients: [INPerson]? = nil
     if (notificationData.roomName != nil) {
       speakableGroupName = INSpeakableString(spokenPhrase: notificationData.roomName ?? "")
-      
+
       // To add the group name subtitle there must be multiple recipients set. However, we do not have
       // data on the participatns in the room/group chat so we just add a placeholder here. This shouldn't
       // appear anywhere in the UI
@@ -186,13 +186,13 @@ class NotificationService: UANotificationServiceExtension {
                                      serviceName: nil,
                                      sender: sender,
                                      attachments: nil)
-    
+
     // If the group name is set, we force the avatar to just be the sender's avatar
     intent.setImage(avatar, forParameterNamed: \.speakableGroupName)
-    
+
     return intent
   }
-  
+
   override func serviceExtensionTimeWillExpire() {
     // Called just before the extension will be terminated by the system.
     // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
@@ -200,12 +200,12 @@ class NotificationService: UANotificationServiceExtension {
       contentHandler(bestAttemptContent)
     }
   }
-  
+
   func fetchINImage(imageURL: String, reportActionID: String) -> INImage? {
     guard let url = URL(string: imageURL) else {
       return nil
     }
-    
+
     do {
       let data = try Data(contentsOf: url)
       return INImage(imageData: data)
@@ -225,7 +225,7 @@ class NotificationData {
   public var title: String
   public var messageText: String
   public var roomName: String?
-  
+
   public init (reportID: Int64, reportActionID: String, avatarURL: String, accountID: Int, userName: String, title: String, messageText: String, roomName: String?) {
     self.reportID = reportID
     self.reportActionID = reportActionID

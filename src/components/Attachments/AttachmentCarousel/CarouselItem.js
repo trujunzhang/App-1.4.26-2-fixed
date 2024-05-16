@@ -9,7 +9,7 @@ import SafeAreaConsumer from '@components/SafeAreaConsumer';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
-import ReportAttachmentsContext from '@pages/home/report/ReportAttachmentsContext';
+import ReportAttachmentsContext from '@expPages/home/report/ReportAttachmentsContext';
 import CONST from '@src/CONST';
 
 const propTypes = {

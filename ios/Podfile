@@ -3,6 +3,12 @@ require File.join(File.dirname(`node --print "require.resolve('expo/package.json
 # This value is used by $RNMapboxMaps
 $RNMapboxMapsImpl = 'mapbox'
 
+use_frameworks! :linkage => :static
+# right after `use_frameworks! :linkage => :static`
+$RNFirebaseAsStaticFramework = true
+# Override Firebase SDK Version
+$FirebaseSDKVersion = '10.19.0'
+
 def node_require(script)
   # Resolve script with node to allow for hoisting
   require Pod::Executable.execute_command('node', ['-p',
@@ -52,8 +58,11 @@ pre_install do |installer|
   $RNMapboxMaps.pre_install(installer)
 end
 
-target 'NewExpensify' do
+target 'NewIeatta' do
   use_expo_modules!
+
+  pod 'react-native-date-picker', :path => '../node_modules/react-native-date-picker'
+
   post_integrate do |installer|
     begin
       expo_patch_react_imports!(installer)
@@ -63,7 +72,7 @@ target 'NewExpensify' do
   end
   permissions_path = '../node_modules/react-native-permissions/ios'
 
-  project 'NewExpensify',
+  project 'NewIeatta',
     'DebugDevelopment' => :debug,
     'DebugAdHoc' => :debug,
     'DebugProduction' => :debug,
@@ -80,7 +89,7 @@ target 'NewExpensify' do
   )
 
 
-  target 'NewExpensifyTests' do
+  target 'NewIeattaTests' do
     inherit! :complete
     # Pods for testing
   end

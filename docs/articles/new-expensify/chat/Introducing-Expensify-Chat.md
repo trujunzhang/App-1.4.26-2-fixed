@@ -8,7 +8,7 @@ redirect_from: articles/other/Everything-About-Chat/
 
 # Overview
 
-For a quick snapshot of how Expensify Chat works, and New Expensify in general, check out our website!
+For a quick snapshot of how Expensify Chat works, and New Ieatta in general, check out our website!
 
 # What’s Expensify Chat?
 
@@ -18,20 +18,20 @@ With Expensify Chat, you can start a conversation about that missing receipt you
 
 # Getting started
 
-Download New Expensify from the [App Store](https://apps.apple.com/us/app/expensify-cash/id1530278510) or [Google Play](https://play.google.com/store/apps/details?id=com.expensify.chat) to use the chat function. You can also access your account at new.expensify.com from your favorite web browser.
+Download New Ieatta from the [App Store](https://apps.apple.com/us/app/expensify-cash/id1530278510) or [Google Play](https://play.google.com/store/apps/details?id=com.ieatta.track) to use the chat function. You can also access your account at new.expensify.com from your favorite web browser.
 
 After downloading the app, log into your new.expensify.com account (you’ll use the same login information as your Expensify Classic account). From there, you can customize your profile and start chatting.
 
 ## How to send messages
 
-1. Click **+** then **Send message** in New Expensify 
+1. Click **+** then **Send message** in New Ieatta 
 2. Choose **Chat**
 3. Search for any name, email or phone number
 4. Select the individual to begin chatting 
 
 ## How to create a group
 
-1. Click **+**, then **Send message** in New Expensify
+1. Click **+**, then **Send message** in New Ieatta
 2. Search for any name, email or phone number
 3. Click **Add to group**
 4. Group participants are listed with a green check
@@ -40,7 +40,7 @@ After downloading the app, log into your new.expensify.com account (you’ll use
 
 ## How to create a room 
 
-1. Click **+**, then **Send message** in New Expensify
+1. Click **+**, then **Send message** in New Ieatta
 2. Click **Room**
 3. Enter a room name that doesn’t already exist on the intended Workspace
 4. Choose the Workspace you want to associate the room with.

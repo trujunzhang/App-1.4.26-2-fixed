@@ -58,14 +58,16 @@ const webpackConfig = ({envFile = '.env', platform = 'web'}) => ({
         publicPath: '/',
     },
     stats: {
-        warningsFilter: [],
+        // We can ignore the "module not installed" warning from lottie-react-native
+        // because we are not using the library for JSON format of Lottie animations.
+        warningsFilter: ['./node_modules/lottie-react-native/lib/module/LottieView/index.web.js'],
     },
     plugins: [
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             template: 'web/index.html',
             filename: 'index.html',
-            splashLogo: fs.readFileSync(path.resolve(__dirname, `../../assets/images/new-expensify${mapEnvToLogoSuffix(envFile)}.svg`), 'utf-8'),
+            splashLogo: fs.readFileSync(path.resolve(__dirname, `../../assets/images/splash${mapEnvToLogoSuffix(envFile)}.svg`), 'utf-8'),
             isWeb: platform === 'web',
             isProduction: envFile === '.env.production',
             isStaging: envFile === '.env.staging',
@@ -209,6 +211,7 @@ const webpackConfig = ({envFile = '.env', platform = 'web'}) => ({
             '@libs': path.resolve(__dirname, '../../src/libs/'),
             '@navigation': path.resolve(__dirname, '../../src/libs/Navigation/'),
             '@pages': path.resolve(__dirname, '../../src/pages/'),
+            '@expPages': path.resolve(__dirname, '../../src/expPages/'),
             '@styles': path.resolve(__dirname, '../../src/styles/'),
             // This path is provide alias for files like `ONYXKEYS` and `CONST`.
             '@src': path.resolve(__dirname, '../../src/'),
@@ -237,8 +240,10 @@ const webpackConfig = ({envFile = '.env', platform = 'web'}) => ({
         ],
         fallback: {
             'process/browser': require.resolve('process/browser'),
+            crypto: false,
         },
     },
+
     optimization: {
         runtimeChunk: 'single',
         splitChunks: {

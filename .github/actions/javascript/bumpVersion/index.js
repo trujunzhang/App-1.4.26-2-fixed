@@ -17,8 +17,8 @@ const getBuildVersion = __nccwpck_require__(4016);
 
 // Filepath constants
 const BUILD_GRADLE_PATH = process.env.NODE_ENV === 'test' ? path.resolve(__dirname, '../../android/app/build.gradle') : './android/app/build.gradle';
-const PLIST_PATH = './ios/NewExpensify/Info.plist';
-const PLIST_PATH_TEST = './ios/NewExpensifyTests/Info.plist';
+const PLIST_PATH = './ios/NewIeatta/Info.plist';
+const PLIST_PATH_TEST = './ios/NewIeattaTests/Info.plist';
 const PLIST_PATH_NSE = './ios/NotificationServiceExtension/Info.plist';
 
 exports.BUILD_GRADLE_PATH = BUILD_GRADLE_PATH;

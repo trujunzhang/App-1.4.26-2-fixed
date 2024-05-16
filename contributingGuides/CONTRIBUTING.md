@@ -1,5 +1,5 @@
 # Contributing to Expensify
-Welcome! Thanks for checking out the New Expensify app and taking the time to contribute!
+Welcome! Thanks for checking out the New Ieatta app and taking the time to contribute!
 
 ## Getting Started
 If you would like to become an Expensify contributor, the first step is to read this document in its **entirety**. The second step is to review the README guidelines [here](https://github.com/Expensify/App/blob/main/README.md) to understand our coding philosophy and for a general overview of the code repository (i.e. how to run the app locally, testing, storage, our app philosophy, etc). Please read both documents before asking questions, as it may be covered within the documentation.
@@ -13,7 +13,7 @@ You can create as many accounts as needed in order to test your changes directly
 2. A member of our customer onboarding team gets auto-assigned to every new policy created by a non-paying account to help them set up. Please **do not interact with these teams, ask for calls, or support on your issues.** If you do need to test functionality inside the defaultRooms (#admins & #announce) for any issues you’re working on, please let them know that you are a contributor and don’t need assistance. They will proceed to ignore the chat.
 
 ##### Generating Multiple Test Accounts
-You can generate multiple test accounts by using a `+` postfix, for example if your email is test@test.com, you can create multiple New Expensify accounts connected to the same email address by using test+123@test.com, test+456@test.com, etc.
+You can generate multiple test accounts by using a `+` postfix, for example if your email is test@test.com, you can create multiple New Ieatta accounts connected to the same email address by using test+123@test.com, test+456@test.com, etc.
 
 ##### High Traffic Accounts
 

@@ -1,3 +1,4 @@
+import React from 'react';
 import type {ViewStyle} from 'react-native';
 import type {ModalProps} from 'react-native-modal';
 import type {ValueOf} from 'type-fest';
@@ -19,6 +20,8 @@ type BaseModalProps = Partial<ModalProps> & {
 
     /** Should we announce the Modal visibility changes? */
     shouldSetModalVisibility?: boolean;
+
+    headerContent?: React.ReactNode;
 
     /** Callback method fired when the user requests to close the modal */
     onClose: () => void;

@@ -2,7 +2,7 @@ import {create} from '@storybook/theming';
 import colors from '../src/styles/theme/colors';
 
 export default create({
-    brandTitle: 'New Expensify UI Docs',
+    brandTitle: 'New Ieatta UI Docs',
     brandImage: 'logomark.svg',
     fontBase: 'ExpensifyNeue-Regular',
     fontCode: 'monospace',

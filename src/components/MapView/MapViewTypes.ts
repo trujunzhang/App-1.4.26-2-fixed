@@ -41,7 +41,8 @@ type PendingMapViewProps = {
 // Initial state of the map
 type InitialState = {
     // Coordinate on which to center the map
-    location: [number, number];
+    // location: [number, number];
+    location: {latitude: number; longitude: number};
     zoom: number;
 };
 

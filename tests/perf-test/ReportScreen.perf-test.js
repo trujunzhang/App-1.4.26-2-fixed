@@ -11,10 +11,10 @@ import {CurrentReportIDContextProvider} from '../../src/components/withCurrentRe
 import {KeyboardStateProvider} from '../../src/components/withKeyboardState';
 import {WindowDimensionsProvider} from '../../src/components/withWindowDimensions';
 import CONST from '../../src/CONST';
+import {ReportAttachmentsProvider} from '../../src/expPages/home/report/ReportAttachmentsContext';
+import ReportScreen from '../../src/expPages/home/ReportScreen';
 import * as Localize from '../../src/libs/Localize';
 import ONYXKEYS from '../../src/ONYXKEYS';
-import {ReportAttachmentsProvider} from '../../src/pages/home/report/ReportAttachmentsContext';
-import ReportScreen from '../../src/pages/home/ReportScreen';
 import * as LHNTestUtils from '../utils/LHNTestUtils';
 import PusherHelper from '../utils/PusherHelper';
 import * as ReportTestUtils from '../utils/ReportTestUtils';

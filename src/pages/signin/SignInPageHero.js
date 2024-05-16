@@ -25,24 +25,11 @@ const defaultProps = {
 
 function SignInPageHero(props) {
     const styles = useThemeStyles();
-    const StyleUtils = useStyleUtils();
+    const styleUtils = useStyleUtils();
     return (
-        <View
-            style={[
-                StyleUtils.getHeight(props.windowHeight < variables.signInContentMinHeight ? variables.signInContentMinHeight : props.windowHeight),
-                StyleUtils.getMinimumHeight(variables.signInContentMinHeight),
-                props.windowWidth <= variables.tabletResponsiveWidthBreakpoint ? styles.flexColumn : styles.flexColumn,
-                styles.pt20,
-                StyleUtils.getMaximumWidth(variables.signInHeroContextMaxWidth),
-                styles.alignSelfCenter,
-            ]}
-        >
-            <View style={[styles.flex1, styles.alignSelfCenter, styles.gap7]}>
+        <View style={[props.windowWidth <= variables.tabletResponsiveWidthBreakpoint ? styles.flexColumn : styles.flexColumn, styles.pt20, styles.alignSelfCenter]}>
+            <View style={[styles.alignSelfCenter]}>
                 <SignInHeroImage />
-                <SignInHeroCopy
-                    customHeadline={props.customHeadline}
-                    customHeroBody={props.customHeroBody}
-                />
             </View>
         </View>
     );

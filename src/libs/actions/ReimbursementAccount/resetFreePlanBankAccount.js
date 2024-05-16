@@ -1,7 +1,7 @@
 import Onyx from 'react-native-onyx';
 import * as API from '@libs/API';
-import * as PlaidDataProps from '@pages/ReimbursementAccount/plaidDataPropTypes';
-import * as ReimbursementAccountProps from '@pages/ReimbursementAccount/reimbursementAccountPropTypes';
+import * as PlaidDataProps from '@expPages/ReimbursementAccount/plaidDataPropTypes';
+import * as ReimbursementAccountProps from '@expPages/ReimbursementAccount/reimbursementAccountPropTypes';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 

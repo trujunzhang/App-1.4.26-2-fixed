@@ -13,6 +13,7 @@ import useKeyboardShortcut from '@hooks/useKeyboardShortcut';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import HapticFeedback from '@libs/HapticFeedback';
+import variables from '@styles/variables';
 import CONST from '@src/CONST';
 import type ChildrenProps from '@src/types/utils/ChildrenProps';
 import type IconAsset from '@src/types/utils/IconAsset';
@@ -20,7 +21,7 @@ import validateSubmitShortcut from './validateSubmitShortcut';
 
 type ButtonWithText = {
     /** The text for the button label */
-    text: string;
+    text?: string;
 
     /** Boolean whether to display the right icon */
     shouldShowRightIcon?: boolean;
@@ -86,6 +87,15 @@ type ButtonProps = (ButtonWithText | ChildrenProps) & {
 
     /** Additional button styles. Specific to the OpacityView of the button */
     innerStyles?: StyleProp<ViewStyle>;
+
+    /** Additional button styles. Specific to the OpacityView of the button */
+    hoverStyles?: StyleProp<ViewStyle>;
+
+    /** The width of the icon. */
+    iconWidth?: number;
+
+    /** The height of the icon. */
+    iconHeight?: number;
 
     /** Additional text styles */
     textStyles?: StyleProp<TextStyle>;
@@ -183,7 +193,11 @@ function Button(
 
         style = [],
         innerStyles = [],
+        hoverStyles = [],
         textStyles = [],
+
+        iconWidth = variables.iconSizeSmall,
+        iconHeight = variables.iconSizeSmall,
 
         shouldUseDefaultHover = true,
         success = false,
@@ -241,7 +255,8 @@ function Button(
                                 <Icon
                                     src={icon}
                                     fill={iconFill ?? (success || danger ? theme.textLight : theme.icon)}
-                                    small={small}
+                                    width={iconWidth}
+                                    height={iconHeight}
                                 />
                             </View>
                         )}
@@ -252,7 +267,8 @@ function Button(
                             <Icon
                                 src={iconRight}
                                 fill={iconFill ?? (success || danger ? theme.textLight : theme.icon)}
-                                small={small}
+                                width={iconWidth}
+                                height={iconHeight}
                             />
                         </View>
                     )}
@@ -325,6 +341,7 @@ function Button(
                     shouldUseDefaultHover && !isDisabled ? styles.buttonDefaultHovered : undefined,
                     success && !isDisabled ? styles.buttonSuccessHovered : undefined,
                     danger && !isDisabled ? styles.buttonDangerHovered : undefined,
+                    hoverStyles,
                 ]}
                 id={id}
                 accessibilityLabel={accessibilityLabel}

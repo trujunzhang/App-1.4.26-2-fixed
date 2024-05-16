@@ -10,6 +10,8 @@ import type {MixedStyleDeclaration, MixedStyleRecord} from 'react-native-render-
 import type DotLottieAnimation from '@components/LottieAnimations/types';
 import * as Browser from '@libs/Browser';
 import CONST from '@src/CONST';
+import {tailwindFontSize, tailwindFontWeight, tailwindShadow} from './tailwindcss';
+import TailwindColors from './tailwindcss/colors';
 import {defaultTheme} from './theme';
 import colors from './theme/colors';
 import type {ThemeColors} from './theme/types';
@@ -54,11 +56,18 @@ type WebViewStyle = {
     baseFontStyle: MixedStyleDeclaration;
 };
 
-type CustomPickerStyle = PickerStyle & {icon?: ViewStyle};
+type CustomPickerStyle = PickerStyle & {
+    icon?: ViewStyle;
+};
 
-type OverlayStylesParams = {progress: Animated.AnimatedInterpolation<string | number>};
+type OverlayStylesParams = {
+    progress: Animated.AnimatedInterpolation<string | number>;
+};
 
-type TwoFactorAuthCodesBoxParams = {isExtraSmallScreenWidth: boolean; isSmallScreenWidth: boolean};
+type TwoFactorAuthCodesBoxParams = {
+    isExtraSmallScreenWidth: boolean;
+    isSmallScreenWidth: boolean;
+};
 
 type Translation = 'perspective' | 'rotate' | 'rotateX' | 'rotateY' | 'rotateZ' | 'scale' | 'scaleX' | 'scaleY' | 'translateX' | 'translateY' | 'skewX' | 'skewY' | 'matrix';
 
@@ -224,6 +233,14 @@ const webViewStyles = (theme: ThemeColors) =>
         },
     } satisfies WebViewStyle);
 
+// Object.keys(pageStyle).forEach(key => key(theme)),
+
+//   Object.assign({}, ...Object.values(pageStyle).forEach(func => {
+//     if (typeof func === 'function') {
+//       func(theme);
+//     }
+//   })),
+
 const styles = (theme: ThemeColors) =>
     ({
         // Add all of our utility and helper styles
@@ -243,6 +260,29 @@ const styles = (theme: ThemeColors) =>
         ...objectFit,
         ...textDecorationLine,
         editedLabelStyles,
+        // Tailwind style shadows
+        ...tailwindShadow,
+        ...tailwindFontSize,
+        ...tailwindFontWeight,
+
+        // Add all pages styles
+        // ...pageStyle.signInPage(theme),
+        // ...pageStyle.restaurantRowStyle(theme),
+        // ...pageStyle.restaurantCardStyle(theme),
+        // ...pageStyle.restaurantInfoPanelStyles(theme),
+        // ...pageStyle.restaurantWithPhotosInfoPanelStyles(theme),
+
+        // ...Object.keys(pageStyle).forEach(key => key(theme)),
+
+        // ...Object.assign(
+        //     {},
+        //     ...Object.values(pageStyle).forEach((func) => {
+        //         if (typeof func === 'function') {
+        //             return func(theme);
+        //         }
+        //         return {}
+        //     }),
+        // ),
 
         autoCompleteSuggestionsContainer: {
             backgroundColor: theme.appBG,
@@ -400,12 +440,20 @@ const styles = (theme: ThemeColors) =>
             fontSize: variables.fontSizeLarge,
         },
 
+        textXLarge: {
+            fontSize: variables.fontSizeXLarge,
+        },
+
         textXXLarge: {
             fontSize: variables.fontSizeXXLarge,
         },
 
         textXXXLarge: {
             fontSize: variables.fontSizeXXXLarge,
+        },
+
+        textXXXXLarge: {
+            fontSize: variables.fontSizeXXXXLarge,
         },
 
         textHero: {
@@ -1044,6 +1092,11 @@ const styles = (theme: ThemeColors) =>
             margin: 1,
         },
 
+        textInputLeftIconContainer: {
+            justifyContent: 'center',
+            paddingRight: 8,
+        },
+
         secureInput: {
             borderTopRightRadius: 0,
             borderBottomRightRadius: 0,
@@ -1228,9 +1281,19 @@ const styles = (theme: ThemeColors) =>
         },
 
         signInPage: {
-            backgroundColor: theme.highlightBG,
+            // backgroundColor: theme.highlightBG,
+            backgroundColor: TailwindColors.white,
             minHeight: '100%',
             flex: 1,
+        },
+
+        signInGoogleLogoIcon: {
+            width: 24,
+            height: 24,
+        },
+
+        signInGoogleLogoText: {
+            color: TailwindColors.gray800,
         },
 
         signInPageHeroCenter: {
@@ -2453,8 +2516,16 @@ const styles = (theme: ThemeColors) =>
             borderRadius: 88,
         },
 
-        rootNavigatorContainerStyles: (isSmallScreenWidth: boolean) => ({marginLeft: isSmallScreenWidth ? 0 : variables.sideBarWidth, flex: 1} satisfies ViewStyle),
-        RHPNavigatorContainerNavigatorContainerStyles: (isSmallScreenWidth: boolean) => ({marginLeft: isSmallScreenWidth ? 0 : variables.sideBarWidth, flex: 1} satisfies ViewStyle),
+        rootNavigatorContainerStyles: (isSmallScreenWidth: boolean) =>
+            ({
+                marginLeft: isSmallScreenWidth ? 0 : variables.sideBarWidth,
+                flex: 1,
+            } satisfies ViewStyle),
+        RHPNavigatorContainerNavigatorContainerStyles: (isSmallScreenWidth: boolean) =>
+            ({
+                marginLeft: isSmallScreenWidth ? 0 : variables.sideBarWidth,
+                flex: 1,
+            } satisfies ViewStyle),
 
         avatarInnerTextChat: {
             color: theme.text,
@@ -2501,6 +2572,11 @@ const styles = (theme: ThemeColors) =>
             alignItems: 'center',
             backgroundColor: theme.componentBG,
             marginLeft: 8,
+        },
+
+        optionSelectCircle: {
+            borderRadius: variables.componentSizeSmall / 2 + 1,
+            padding: 1,
         },
 
         unreadIndicatorContainer: {
@@ -3242,17 +3318,17 @@ const styles = (theme: ThemeColors) =>
             textAlign: 'left',
         },
 
-        cardSectionTitle: {
-            lineHeight: variables.lineHeightXXLarge,
-        },
-
-        cardMenuItem: {
-            paddingLeft: 8,
-            paddingRight: 0,
-            borderRadius: variables.buttonBorderRadius,
-            height: variables.componentSizeLarge,
-            alignItems: 'center',
-        },
+        // cardSectionTitle: {
+        //     lineHeight: variables.lineHeightXXLarge,
+        // },
+        //
+        // cardMenuItem: {
+        //     paddingLeft: 8,
+        //     paddingRight: 0,
+        //     borderRadius: variables.buttonBorderRadius,
+        //     height: variables.componentSizeLarge,
+        //     alignItems: 'center',
+        // },
 
         transferBalance: {
             paddingLeft: 20,
@@ -4161,6 +4237,231 @@ const styles = (theme: ThemeColors) =>
 
         singleOptionSelectorCircle: {
             borderColor: theme.icon,
+        },
+
+        /**
+         * Selections in app's vApp-1.4.64-6
+         */
+        selectionListPressableItemWrapper: {
+            alignItems: 'center',
+            flexDirection: 'row',
+            paddingHorizontal: 16,
+            paddingVertical: 16,
+            marginHorizontal: 20,
+            backgroundColor: theme.highlightBG,
+            borderRadius: 8,
+        },
+
+        cardSectionContainer: {
+            backgroundColor: theme.cardBG,
+            borderRadius: variables.componentBorderRadiusCard,
+            width: 'auto',
+            textAlign: 'left',
+            overflow: 'hidden',
+            marginBottom: 20,
+            marginHorizontal: variables.sectionMargin,
+        },
+
+        cardSectionIllustration: {
+            width: 'auto',
+            height: variables.sectionIllustrationHeight,
+        },
+
+        cardSectionTitle: {
+            fontSize: variables.fontSizeLarge,
+            lineHeight: variables.lineHeightXLarge,
+        },
+
+        cardMenuItem: {
+            paddingLeft: 8,
+            paddingRight: 0,
+            borderRadius: variables.buttonBorderRadius,
+            height: variables.componentSizeLarge,
+            alignItems: 'center',
+        },
+
+        emptyCardSectionTitle: {
+            fontSize: variables.fontSizeXLarge,
+            lineHeight: variables.lineHeightXXLarge,
+            textAlign: 'center',
+        },
+
+        emptyCardSectionSubtitle: {
+            fontSize: variables.fontSizeNormal,
+            lineHeight: variables.lineHeightXLarge,
+            color: theme.textSupporting,
+            textAlign: 'center',
+        },
+
+        /**
+         * Ieatta styles
+         * @param colorScheme
+         */
+
+        sectionComponentContainer: {
+            background: theme.componentBG,
+        },
+
+        sectionTitleMobileStrong: {
+            fontFamily: FontUtils.fontFamily.platform.EXP_NEUE,
+            fontWeight: 'bold',
+            fontSize: variables.fontSizeSectionMobileTitle,
+            lineHeight: variables.lineHeightXLarge,
+        },
+
+        sectionTitleWebStrong: {
+            fontFamily: FontUtils.fontFamily.platform.EXP_NEUE,
+            fontWeight: 'bold',
+            fontSize: variables.fontSizeSectionWebTitle,
+            lineHeight: variables.lineHeightXLarge,
+        },
+
+        sectionInfoNormal: {
+            fontFamily: FontUtils.fontFamily.platform.EXP_NEUE,
+            // fontWeight: 'bold',
+            fontSize: variables.fontSizeLabel,
+            lineHeight: variables.lineHeightNormal,
+        },
+
+        rowContainerInSidebar: {
+            // backgroundColor: TailwindColors.white,
+            backgroundColor: theme.componentBG,
+            width: '100%',
+            height: 120,
+        },
+
+        /**
+         * Ieatta restaurant card view on the small screen
+         */
+        restaurantCardContainer: {
+            borderRadius: 16,
+            backgroundColor: theme.componentBG,
+            // backgroundColor: TailwindColors.white,
+        },
+        streetTextInRestaurantItem: {
+            // color: TailwindColors.gray700,
+            color: theme.textSupporting,
+            textAlign: 'left',
+        },
+        ratingIconInRestaurantItem: {
+            width: 146,
+            height: 17,
+        },
+
+        /**
+         * Ieatta header panel on the small screen
+         */
+        headerPanelMobile: {
+            backgroundColor: theme.componentBG,
+            // backgroundColor: TailwindColors.white,
+        },
+        editTextInHeaderPanel: {
+            color: TailwindColors.blue500,
+        },
+        restaurantTitleInHeaderPanel: {
+            fontSize: 28,
+            fontWeight: '700',
+            // color: TailwindColors.black,
+        },
+        recipePriceTitleInHeaderPanel: {
+            fontSize: 28,
+            fontWeight: '700',
+            // color: TailwindColors.black,
+            color: theme.textSupporting,
+        },
+        recipePriceTitleInHeaderWebPanel: {
+            fontSize: 28,
+            fontWeight: '700',
+            color: TailwindColors.orange500,
+        },
+        restaurantAndRecipeTitleInHeaderWebPanel: {
+            fontSize: 48,
+            fontWeight: '700',
+            color: TailwindColors.white,
+        },
+        updatedDateInHeaderWebPanel: {
+            color: TailwindColors.blue500,
+            textAlign: 'left',
+            fontWeight: '700',
+        },
+        restaurantAddressInHeaderWebPanel: {
+            color: TailwindColors.white,
+        },
+        reviewCountInHeaderWebPanel: {
+            color: TailwindColors.white,
+        },
+        eventWebInfoPanel: {
+            height: 420,
+        },
+        eventLeftPanelBorderInWebHeaderPanel: {
+            borderWidth: 1,
+            borderRadius: 5,
+            borderColor: theme.border,
+        },
+        eventTitleInHeaderPanel: {
+            fontSize: 16,
+            fontWeight: '500',
+            color: TailwindColors.gray500,
+        },
+        restaurantTitleInWebHeaderPanel: {
+            fontSize: 12,
+            fontWeight: '700',
+            color: TailwindColors.black,
+        },
+        eventTitleInWebHeaderPanel: {
+            fontSize: 22,
+            fontWeight: '700',
+            // color: TailwindColors.black,
+        },
+        restaurantNoteInHeaderPanel: {
+            color: theme.textSupporting,
+            // color: TailwindColors.gray900,
+        },
+        actionsBarInHeaderPanel: {
+            height: 45,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexDirection: 'row',
+            width: '100%',
+        },
+        actionRowInHeaderPanel: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row',
+            height: '100%',
+        },
+        actionTitleInHeaderPanel: {
+            fontWeight: '600',
+            // fontFamily: FontFamily.interSemiBold,
+            marginLeft: 9,
+            textAlign: 'left',
+            color: TailwindColors.blue500,
+            // fontSize: FontSize.size_base,
+        },
+
+        /**
+         * Add recipe item
+         */
+        leftImageWrapperInSelectionListItem: {
+            width: 100,
+            height: '100%',
+        },
+
+        leftUserImageWrapperInSelectionListItem: {
+            width: 70,
+            height: '100%',
+        },
+
+        /**
+         * rating Icons
+         */
+        ratingIconInHeaderPanel: {
+            width: 146,
+            height: 17,
+        },
+        ratingIconInHeaderWebPanel: {
+            width: 202,
+            height: 28,
         },
 
         colorSchemeStyle: (colorScheme: ColorScheme) => ({colorScheme}),

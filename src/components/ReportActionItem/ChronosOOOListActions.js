@@ -9,7 +9,7 @@ import Text from '@components/Text';
 import withLocalize, {withLocalizePropTypes} from '@components/withLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import DateUtils from '@libs/DateUtils';
-import reportActionPropTypes from '@pages/home/report/reportActionPropTypes';
+import reportActionPropTypes from '@expPages/home/report/reportActionPropTypes';
 import * as Chronos from '@userActions/Chronos';
 
 const propTypes = {

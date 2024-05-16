@@ -62,7 +62,7 @@ function openOldDotLink(url: string) {
     );
 }
 
-function getInternalNewExpensifyPath(href: string) {
+function getInternalNewIeattaPath(href: string) {
     const attrPath = Url.getPathFromURL(href);
     return (Url.hasSameExpensifyOrigin(href, CONST.NEW_EXPENSIFY_URL) || Url.hasSameExpensifyOrigin(href, CONST.STAGING_NEW_EXPENSIFY_URL) || href.startsWith(CONST.DEV_NEW_EXPENSIFY_URL)) &&
         !CONST.PATHS_TO_TREAT_AS_EXTERNAL.find((path) => attrPath.startsWith(path))
@@ -83,7 +83,7 @@ function getInternalExpensifyPath(href: string) {
 function openLink(href: string, environmentURL: string, isAttachment = false) {
     const hasSameOrigin = Url.hasSameExpensifyOrigin(href, environmentURL);
     const hasExpensifyOrigin = Url.hasSameExpensifyOrigin(href, CONFIG.EXPENSIFY.EXPENSIFY_URL) || Url.hasSameExpensifyOrigin(href, CONFIG.EXPENSIFY.STAGING_API_ROOT);
-    const internalNewExpensifyPath = getInternalNewExpensifyPath(href);
+    const internalNewIeattaPath = getInternalNewIeattaPath(href);
     const internalExpensifyPath = getInternalExpensifyPath(href);
 
     // There can be messages from Concierge with links to specific NewDot reports. Those URLs look like this:
@@ -98,10 +98,10 @@ function openLink(href: string, environmentURL: string, isAttachment = false) {
         return;
     }
 
-    // If we are handling a New Expensify link then we will assume this should be opened by the app internally. This ensures that the links are opened internally via react-navigation
+    // If we are handling a New Ieatta link then we will assume this should be opened by the app internally. This ensures that the links are opened internally via react-navigation
     // instead of in a new tab or with a page refresh (which is the default behavior of an anchor tag)
-    if (internalNewExpensifyPath && hasSameOrigin) {
-        Navigation.navigate(internalNewExpensifyPath as Route);
+    if (internalNewIeattaPath && hasSameOrigin) {
+        Navigation.navigate(internalNewIeattaPath as Route);
         return;
     }
 
@@ -115,4 +115,4 @@ function openLink(href: string, environmentURL: string, isAttachment = false) {
     openExternalLink(href);
 }
 
-export {buildOldDotURL, openOldDotLink, openExternalLink, openLink, getInternalNewExpensifyPath, getInternalExpensifyPath};
+export {buildOldDotURL, openOldDotLink, openExternalLink, openLink, getInternalNewIeattaPath, getInternalExpensifyPath};

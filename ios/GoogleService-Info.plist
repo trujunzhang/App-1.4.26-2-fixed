@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>921154746561-s3uqn2oe4m85tufi6mqflbfbuajrm2i3.apps.googleusercontent.com</string>
+	<string>229321919225-bvhcakm216dta1p0tb1fb5m4cp8pqse5.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.921154746561-s3uqn2oe4m85tufi6mqflbfbuajrm2i3</string>
+	<string>com.googleusercontent.apps.229321919225-bvhcakm216dta1p0tb1fb5m4cp8pqse5</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>229321919225-5kuhq3vq7og1pakg52ata091b0uiu3tt.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyA9Qn7q5Iw26gTzjI7012C4PaFrFagpC_I</string>
+	<string>AIzaSyBv5E6l1pVQRCI6rLZJlVyHaBvKoLzBMuU</string>
 	<key>GCM_SENDER_ID</key>
-	<string>921154746561</string>
+	<string>229321919225</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.chat.expensify.chat</string>
+	<string>com.ieatta.track</string>
 	<key>PROJECT_ID</key>
-	<string>expensify-chat</string>
+	<string>new-ieatta</string>
 	<key>STORAGE_BUCKET</key>
-	<string>expensify-chat.appspot.com</string>
+	<string>new-ieatta.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:921154746561:ios:216bd10ccc947659027c40</string>
-	<key>DATABASE_URL</key>
-	<string>https://expensify-chat.firebaseio.com</string>
+	<string>1:229321919225:ios:3d0079fdd97ee52b9f3028</string>
 </dict>
 </plist>

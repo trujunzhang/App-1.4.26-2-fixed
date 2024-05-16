@@ -124,7 +124,7 @@ This pattern blocks the user from interacting with an entire page.
 
 The following flowchart can be used to determine which UX pattern should be used.
 
-![New Expensify Data Flow Chart](/contributingGuides/OfflineUX_Patterns_Flowchart.png)
+![New Ieatta Data Flow Chart](/contributingGuides/OfflineUX_Patterns_Flowchart.png)
 
 ### Answering Questions on the Flow Chart
 

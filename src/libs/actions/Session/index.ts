@@ -20,7 +20,7 @@ import * as Pusher from '@libs/Pusher/pusher';
 import * as ReportUtils from '@libs/ReportUtils';
 import * as SessionUtils from '@libs/SessionUtils';
 import Timers from '@libs/Timers';
-import {hideContextMenu} from '@pages/home/report/ContextMenu/ReportActionContextMenu';
+import {hideContextMenu} from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
 import * as Device from '@userActions/Device';
 import * as PriorityMode from '@userActions/PriorityMode';
 import redirectToSignIn from '@userActions/SignInRedirect';

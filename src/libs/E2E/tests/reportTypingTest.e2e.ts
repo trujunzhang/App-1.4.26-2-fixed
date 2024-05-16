@@ -4,7 +4,7 @@ import waitForKeyboard from '@libs/E2E/actions/waitForKeyboard';
 import E2EClient from '@libs/E2E/client';
 import Navigation from '@libs/Navigation/Navigation';
 import Performance from '@libs/Performance';
-import {getRerenderCount, resetRerenderCount} from '@pages/home/report/ReportActionCompose/ComposerWithSuggestions/index.e2e';
+import {getRerenderCount, resetRerenderCount} from '@expPages/home/report/ReportActionCompose/ComposerWithSuggestions/index.e2e';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';
 import * as NativeCommands from '../../../../tests/e2e/nativeCommands/NativeCommandsAction';

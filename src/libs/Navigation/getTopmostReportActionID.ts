@@ -29,6 +29,7 @@ function getTopmostReportActionID(state: NavigationState | NavigationState<RootS
     }
 
     if (directReportActionIDParam) {
+        // @ts-ignore
         return directReportActionIDParam;
     }
 

@@ -7,10 +7,12 @@ import CustomStatusBarAndBackgroundContext from './CustomStatusBarAndBackgroundC
 import updateGlobalBackgroundColor from './updateGlobalBackgroundColor';
 import updateStatusBarAppearance from './updateStatusBarAppearance';
 
+// import Log from "@libs/Log";
+
 type CustomStatusBarAndBackgroundProps = {
     /** Whether the CustomStatusBar is nested within another CustomStatusBar.
      *  A nested CustomStatusBar will disable the "root" CustomStatusBar. */
-    isNested: boolean;
+    isNested?: boolean;
 };
 
 function CustomStatusBarAndBackground({isNested = false}: CustomStatusBarAndBackgroundProps) {
@@ -19,6 +21,12 @@ function CustomStatusBarAndBackground({isNested = false}: CustomStatusBarAndBack
     const [statusBarStyle, setStatusBarStyle] = useState(theme.statusBarStyle);
 
     const isDisabled = !isNested && isRootStatusBarDisabled;
+
+    // Log.info("")
+    // Log.info("================================")
+    // Log.info(`isDisabled: ${isDisabled}`)
+    // Log.info("================================")
+    // Log.info("")
 
     // Disable the root status bar when a nested status bar is rendered
     useEffect(() => {

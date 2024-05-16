@@ -49,7 +49,8 @@ const MapView = forwardRef<MapViewHandle, ComponentProps>(
         const StyleUtils = useStyleUtils();
 
         const [mapRef, setMapRef] = useState<MapRef | null>(null);
-        const [currentPosition, setCurrentPosition] = useState(cachedUserLocation);
+        // const [currentPosition, setCurrentPosition] = useState(cachedUserLocation);
+        const [currentPosition, setCurrentPosition] = useState(initialState.location);
         const [userInteractedWithMap, setUserInteractedWithMap] = useState(false);
         const [shouldResetBoundaries, setShouldResetBoundaries] = useState<boolean>(false);
         const setRef = useCallback((newRef: MapRef | null) => setMapRef(newRef), []);
@@ -66,21 +67,22 @@ const MapView = forwardRef<MapViewHandle, ComponentProps>(
                 }
 
                 hasAskedForLocationPermission.current = true;
-                getCurrentPosition(
-                    (params) => {
-                        const currentCoords = {longitude: params.coords.longitude, latitude: params.coords.latitude};
-                        setCurrentPosition(currentCoords);
-                        setUserLocation(currentCoords);
-                    },
-                    () => {
-                        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-                        if (cachedUserLocation || !initialState) {
-                            return;
-                        }
+                // getCurrentPosition(
+                //     (params) => {
+                //         const currentCoords = {longitude: params.coords.longitude, latitude: params.coords.latitude};
+                //         setCurrentPosition(currentCoords);
+                //         setUserLocation(currentCoords);
+                //     },
+                //     () => {
+                //         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                //         if (cachedUserLocation || !initialState) {
+                //             return;
+                //         }
 
-                        setCurrentPosition({longitude: initialState.location[0], latitude: initialState.location[1]});
-                    },
-                );
+                //         // setCurrentPosition({longitude: initialState.location[0], latitude: initialState.location[1]});
+                //         setCurrentPosition({longitude: initialState.location.longitude, latitude: initialState.location.latitude});
+                //     },
+                // );
             }, [cachedUserLocation, initialState, isOffline]),
         );
 
@@ -175,7 +177,7 @@ const MapView = forwardRef<MapViewHandle, ComponentProps>(
 
         return (
             <>
-                {!isOffline && Boolean(accessToken) && Boolean(currentPosition) ? (
+                {Boolean(accessToken) && Boolean(currentPosition.latitude) && Boolean(currentPosition.longitude) ? (
                     <View
                         style={style}
                         // eslint-disable-next-line react/jsx-props-no-spreading
@@ -187,8 +189,13 @@ const MapView = forwardRef<MapViewHandle, ComponentProps>(
                             mapLib={mapboxgl}
                             mapboxAccessToken={accessToken}
                             initialViewState={{
-                                longitude: currentPosition?.longitude,
-                                latitude: currentPosition?.latitude,
+                                // longitude: currentPosition?.longitude,
+                                // latitude: currentPosition?.latitude,
+
+                                longitude: -122.4021,
+                                latitude: 37.7911,
+                                // DEFAULT_COORDINATE: [-122.4021, 37.7911],
+
                                 zoom: initialState.zoom,
                             }}
                             style={StyleUtils.getTextColorStyle(theme.mapAttributionText)}

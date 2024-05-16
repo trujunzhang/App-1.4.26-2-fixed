@@ -7,11 +7,11 @@ import OnyxProvider from '../../src/components/OnyxProvider';
 import {CurrentReportIDContextProvider} from '../../src/components/withCurrentReportID';
 import {EnvironmentProvider} from '../../src/components/withEnvironment';
 import CONST from '../../src/CONST';
+import ReportActionItemSingle from '../../src/expPages/home/report/ReportActionItemSingle';
+import reportActionPropTypes from '../../src/expPages/home/report/reportActionPropTypes';
+import SidebarLinksData from '../../src/expPages/home/sidebar/SidebarLinksData';
+import reportPropTypes from '../../src/expPages/reportPropTypes';
 import DateUtils from '../../src/libs/DateUtils';
-import ReportActionItemSingle from '../../src/pages/home/report/ReportActionItemSingle';
-import reportActionPropTypes from '../../src/pages/home/report/reportActionPropTypes';
-import SidebarLinksData from '../../src/pages/home/sidebar/SidebarLinksData';
-import reportPropTypes from '../../src/pages/reportPropTypes';
 
 // we have to mock `useIsFocused` because it's used in the SidebarLinks component
 const mockedNavigate = jest.fn();

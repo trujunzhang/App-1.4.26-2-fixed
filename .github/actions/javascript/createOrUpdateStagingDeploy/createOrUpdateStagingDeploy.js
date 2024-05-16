@@ -117,7 +117,7 @@ async function run() {
         if (shouldCreateNewDeployChecklist) {
             const {data: newChecklist} = await GithubUtils.octokit.issues.create({
                 ...defaultPayload,
-                title: `Deploy Checklist: New Expensify ${format(new Date(), CONST.DATE_FORMAT_STRING)}`,
+                title: `Deploy Checklist: New Ieatta ${format(new Date(), CONST.DATE_FORMAT_STRING)}`,
                 labels: [CONST.LABELS.STAGING_DEPLOY],
                 assignees: [CONST.APPLAUSE_BOT],
             });

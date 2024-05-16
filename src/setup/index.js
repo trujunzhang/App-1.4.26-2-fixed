@@ -4,6 +4,7 @@ import intlPolyfill from '@libs/IntlPolyfill';
 import * as Metrics from '@libs/Metrics';
 import * as Device from '@userActions/Device';
 import exposeGlobalMemoryOnlyKeysMethods from '@userActions/MemoryOnlyKeys/exposeGlobalMemoryOnlyKeysMethods';
+import CONFIG from '@src/CONFIG';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import platformSetup from './platformSetup';
@@ -31,6 +32,17 @@ export default function () {
         captureMetrics: Metrics.canCaptureOnyxMetrics(),
         initialKeyStates: {
             // Clear any loading and error messages so they do not appear on app startup
+            [ONYXKEYS.MAPBOX_ACCESS_TOKEN]: {token: CONFIG.MAPBOX_API_KEY},
+            [ONYXKEYS.RESTAURANT_ID_IN_SIDEBAR]: '',
+            [ONYXKEYS.FIREBASE_SYNC_STATUS]: {
+                isUsersSyncCompleted: false,
+                isRestaurantsSyncCompleted: false,
+                isEventsSyncCompleted: false,
+                isRecipesSyncCompleted: false,
+                isReviewsSyncCompleted: false,
+                isPhotosSyncCompleted: false,
+                isPeopleInEventsSyncCompleted: false,
+            },
             [ONYXKEYS.SESSION]: {loading: false},
             [ONYXKEYS.ACCOUNT]: CONST.DEFAULT_ACCOUNT_DATA,
             [ONYXKEYS.NETWORK]: {isOffline: false},

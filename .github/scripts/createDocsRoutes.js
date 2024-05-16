@@ -8,7 +8,7 @@ const docsDir = `${process.cwd()}/docs`;
 const routes = yaml.load(fs.readFileSync(`${docsDir}/_data/_routes.yml`, 'utf8'));
 const platformNames = {
     expensifyClassic: 'expensify-classic',
-    newExpensify: 'new-expensify',
+    NewIeatta: 'new-expensify',
 };
 
 /**
@@ -56,7 +56,7 @@ function pushOrCreateEntry(hubs, hub, key, entry) {
 /**
  * Add articles and sections to hubs
  * @param {Array} hubs - The hubs inside docs/articles/ for a platform
- * @param {String} platformName - Expensify Classic or New Expensify
+ * @param {String} platformName - Expensify Classic or New Ieatta
  * @param {Array} routeHubs - The hubs insude docs/data/_routes.yml for a platform
  */
 function createHubsWithArticles(hubs, platformName, routeHubs) {
@@ -90,23 +90,23 @@ function createHubsWithArticles(hubs, platformName, routeHubs) {
 
 function run() {
     const expensifyClassicArticleHubs = fs.readdirSync(`${docsDir}/articles/${platformNames.expensifyClassic}`);
-    const newExpensifyArticleHubs = fs.readdirSync(`${docsDir}/articles/${platformNames.newExpensify}`);
+    const NewIeattaArticleHubs = fs.readdirSync(`${docsDir}/articles/${platformNames.NewIeatta}`);
 
     const expensifyClassicRoute = _.find(routes.platforms, (platform) => platform.href === platformNames.expensifyClassic);
-    const newExpensifyRoute = _.find(routes.platforms, (platform) => platform.href === platformNames.newExpensify);
+    const NewIeattaRoute = _.find(routes.platforms, (platform) => platform.href === platformNames.NewIeatta);
 
     if (expensifyClassicArticleHubs.length !== expensifyClassicRoute.hubs.length) {
         console.error(warnMessage(platformNames.expensifyClassic));
         process.exit(1);
     }
 
-    if (newExpensifyArticleHubs.length !== newExpensifyRoute.hubs.length) {
-        console.error(warnMessage(platformNames.newExpensify));
+    if (NewIeattaArticleHubs.length !== NewIeattaRoute.hubs.length) {
+        console.error(warnMessage(platformNames.NewIeatta));
         process.exit(1);
     }
 
     createHubsWithArticles(expensifyClassicArticleHubs, platformNames.expensifyClassic, expensifyClassicRoute.hubs);
-    createHubsWithArticles(newExpensifyArticleHubs, platformNames.newExpensify, newExpensifyRoute.hubs);
+    createHubsWithArticles(NewIeattaArticleHubs, platformNames.NewIeatta, NewIeattaRoute.hubs);
 
     // Convert the object to YAML and write it to the file
     let yamlString = yaml.dump(routes);

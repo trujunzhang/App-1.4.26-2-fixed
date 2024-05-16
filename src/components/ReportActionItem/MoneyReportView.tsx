@@ -15,7 +15,7 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import useWindowDimensions from '@hooks/useWindowDimensions';
 import * as CurrencyUtils from '@libs/CurrencyUtils';
 import * as ReportUtils from '@libs/ReportUtils';
-import AnimatedEmptyStateBackground from '@pages/home/report/AnimatedEmptyStateBackground';
+import AnimatedEmptyStateBackground from '@expPages/home/report/AnimatedEmptyStateBackground';
 import variables from '@styles/variables';
 import type {PolicyReportField, Report} from '@src/types/onyx';
 

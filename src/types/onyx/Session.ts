@@ -20,8 +20,11 @@ type Session = {
     /** Currently logged in user encrypted authToken */
     encryptedAuthToken?: string;
 
-    /** Currently logged in user accountID */
+    /** Currently logged in user accountID generated in the client */
     accountID?: number;
+
+    /** Currently logged in user userID in the firebase's table */
+    userID?: string;
 
     autoAuthState?: AutoAuthState;
 

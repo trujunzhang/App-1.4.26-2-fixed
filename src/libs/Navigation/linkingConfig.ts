@@ -6,10 +6,17 @@ import ROUTES from '@src/ROUTES';
 import SCREENS from '@src/SCREENS';
 import type {RootStackParamList} from './types';
 
+/**
+ * See https://reactnavigation.org/docs/configuring-links
+ */
 const linkingConfig: LinkingOptions<RootStackParamList> = {
     prefixes: [
         'app://-/',
         'new-expensify://',
+        'netlify://',
+        'https://new-ieatta.netlify.app',
+        'vercel://',
+        'https://new-ieatta.vercel.app',
         'https://www.expensify.cash',
         'https://staging.expensify.cash',
         'https://dev.new.expensify.com',
@@ -35,9 +42,16 @@ const linkingConfig: LinkingOptions<RootStackParamList> = {
                 path: ROUTES.HOME,
             },
 
+            // Drawer
+            [SCREENS.DRAWER_SIDEBAR_HOME]: {
+                path: ROUTES.DRAWER_SIDEBAR_HOME,
+            },
+
             [NAVIGATORS.CENTRAL_PANE_NAVIGATOR]: {
                 screens: {
-                    [SCREENS.REPORT]: ROUTES.REPORT_WITH_ID.route,
+                    [SCREENS.RESTAURANT]: ROUTES.RESTAURANT_WITH_ID.route,
+                    [SCREENS.EVENT]: ROUTES.EVENT_WITH_ID.route,
+                    [SCREENS.RECIPE]: ROUTES.RECIPE_WITH_ID.route,
                 },
             },
             [SCREENS.NOT_FOUND]: '*',
@@ -52,6 +66,17 @@ const linkingConfig: LinkingOptions<RootStackParamList> = {
             },
             [NAVIGATORS.RIGHT_MODAL_NAVIGATOR]: {
                 screens: {
+                    // Ieatta Edit pages
+                    [SCREENS.RIGHT_MODAL.EDIT_IEATTA]: {
+                        screens: {
+                            [SCREENS.RIGHT_IEATTA.RESTAURANT]: ROUTES.EDIT_RESTAURANT.route,
+                            [SCREENS.RIGHT_IEATTA.EVENT]: ROUTES.EDIT_EVENT.route,
+                            [SCREENS.RIGHT_IEATTA.RECIPE]: ROUTES.EDIT_RECIPE.route,
+                            [SCREENS.RIGHT_IEATTA.REVIEW]: ROUTES.EDIT_REVIEW.route,
+                            [SCREENS.RIGHT_IEATTA.ADD_RECIPES_IN_EVENT]: ROUTES.ADD_RECIPES_IN_EVENT.route,
+                            [SCREENS.RIGHT_IEATTA.ADD_USERS_IN_EVENT]: ROUTES.ADD_USERS_IN_EVENT.route,
+                        },
+                    },
                     [SCREENS.RIGHT_MODAL.SETTINGS]: {
                         screens: {
                             [SCREENS.SETTINGS.ROOT]: {

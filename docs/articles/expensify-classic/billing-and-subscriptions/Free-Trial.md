@@ -8,8 +8,8 @@ New customers can take advantage of a seven-day Free Trial on a group Workspace.
 During the trial, your organization will have complete access to all the features and functionality offered by the Collect or Control workspace plan. This post provides a step-by-step guide on how to begin, oversee, and successfully conclude your organization's Expensify Free Trial.
 
 # How to start a Free Trial 
-1. Sign up for a new Expensify account at expensify.com. 
-2. After you've signed up for a new Expensify account, you will see a task on your Home page asking if you are using Expensify for your business or as an individual. 
+1. Sign up for a New Ieatta account at expensify.com. 
+2. After you've signed up for a New Ieatta account, you will see a task on your Home page asking if you are using Expensify for your business or as an individual. 
   a. **Note**: If you select “Individual”, Expensify is free for individuals for up to 25 SmartScans per month. Selecting Individual will **not** start a Free Trial. More details on individual subscriptions can be found [here](https://help.expensify.com/articles/expensify-classic/billing-and-subscriptions/Individual-Subscription).
 3. Select the Business option.
 4. Select which Expensify features you'd like to set up for your organization.

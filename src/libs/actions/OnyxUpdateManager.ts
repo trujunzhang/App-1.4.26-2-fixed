@@ -72,7 +72,7 @@ export default () => {
                 Log.info('Client has not gotten reliable updates before so reconnecting the app to start the process');
 
                 // Since this is a full reconnectApp, we'll not apply the updates we received - those will come in the reconnect app request.
-                canUnpauseQueuePromise = App.finalReconnectAppAfterActivatingReliableUpdates();
+                // canUnpauseQueuePromise = App.finalReconnectAppAfterActivatingReliableUpdates();
             } else {
                 // The flow below is setting the promise to a getMissingOnyxUpdates to address flow (2) explained above.
                 console.debug(`[OnyxUpdateManager] Client is behind the server by ${Number(previousUpdateIDFromServer) - lastUpdateIDAppliedToClient} so fetching incremental updates`);
@@ -81,16 +81,16 @@ export default () => {
                     previousUpdateIDFromServer,
                     lastUpdateIDAppliedToClient,
                 });
-                canUnpauseQueuePromise = App.getMissingOnyxUpdates(lastUpdateIDAppliedToClient, lastUpdateIDFromServer);
+                // canUnpauseQueuePromise = App.getMissingOnyxUpdates(lastUpdateIDAppliedToClient, lastUpdateIDFromServer);
             }
 
-            canUnpauseQueuePromise.finally(() => {
-                OnyxUpdates.apply(updateParams).finally(() => {
-                    console.debug('[OnyxUpdateManager] Done applying all updates');
-                    Onyx.set(ONYXKEYS.ONYX_UPDATES_FROM_SERVER, null);
-                    SequentialQueue.unpause();
-                });
-            });
+            // canUnpauseQueuePromise.finally(() => {
+            //     OnyxUpdates.apply(updateParams).finally(() => {
+            //         console.debug('[OnyxUpdateManager] Done applying all updates');
+            //         Onyx.set(ONYXKEYS.ONYX_UPDATES_FROM_SERVER, null);
+            //         SequentialQueue.unpause();
+            //     });
+            // });
         },
     });
 };

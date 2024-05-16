@@ -1,7 +1,7 @@
 import type {NavigationState} from '@react-navigation/native';
 import {DefaultTheme, getPathFromState, NavigationContainer} from '@react-navigation/native';
 import React, {useEffect, useMemo, useRef} from 'react';
-import useCurrentReportID from '@hooks/useCurrentReportID';
+import useCurrentRestaurantID from '@hooks/useCurrentRestaurantID';
 import useTheme from '@hooks/useTheme';
 import useWindowDimensions from '@hooks/useWindowDimensions';
 import Log from '@libs/Log';
@@ -41,7 +41,7 @@ function NavigationRoot({authenticated, onReady}: NavigationRootProps) {
     const firstRenderRef = useRef(true);
     const theme = useTheme();
 
-    const currentReportIDValue = useCurrentReportID();
+    const currentRestaurantIDValue = useCurrentRestaurantID();
     const {isSmallScreenWidth} = useWindowDimensions();
 
     // https://reactnavigation.org/docs/themes
@@ -85,7 +85,7 @@ function NavigationRoot({authenticated, onReady}: NavigationRootProps) {
 
         // Performance optimization to avoid context consumers to delay first render
         setTimeout(() => {
-            currentReportIDValue?.updateCurrentReportID(state);
+            currentRestaurantIDValue?.updateCurrentRestaurantID(state);
         }, 0);
         parseAndLogRoute(state);
     };

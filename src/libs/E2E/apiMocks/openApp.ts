@@ -875,7 +875,7 @@ const openApp = (): Response => ({
         },
         {
             onyxMethod: 'merge',
-            key: 'isFirstTimeNewExpensifyUser',
+            key: 'isFirstTimeNewIeattaUser',
             value: false,
         },
         {

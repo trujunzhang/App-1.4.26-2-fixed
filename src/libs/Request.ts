@@ -16,7 +16,8 @@ function makeXHR(request: Request): Promise<Response | void> {
             return new Promise<void>((resolve) => resolve());
         }
 
-        return HttpUtils.xhr(request.command, finalParameters, request.type, request.shouldUseSecure);
+        // return HttpUtils.xhr(request.command, finalParameters, request.type, request.shouldUseSecure);
+        return Promise.resolve();
     });
 }
 

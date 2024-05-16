@@ -15,6 +15,9 @@ import FormContext from './FormContext';
 import FormWrapper from './FormWrapper';
 
 const propTypes = {
+    /** A unique id of the edit model */
+    editFormUniqueId: PropTypes.string.isRequired,
+
     /** A unique Onyx key identifying the form */
     formID: PropTypes.string.isRequired,
 
@@ -110,7 +113,7 @@ function getInitialValueByType(valueType) {
 }
 
 const FormProvider = forwardRef(
-    ({validate, formID, shouldValidateOnBlur, shouldValidateOnChange, children, formState, network, enabledWhenOffline, draftValues, onSubmit, ...rest}, forwardedRef) => {
+    ({validate, editFormUniqueId, formID, shouldValidateOnBlur, shouldValidateOnChange, children, formState, network, enabledWhenOffline, draftValues, onSubmit, ...rest}, forwardedRef) => {
         const inputRefs = useRef({});
         const touchedInputs = useRef({});
         const [inputValues, setInputValues] = useState(() => ({...draftValues}));

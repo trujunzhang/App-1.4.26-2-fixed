@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import transactionPropTypes from '@components/transactionPropTypes';
-import reportActionPropTypes from '@pages/home/report/reportActionPropTypes';
-import reportPropTypes from '@pages/reportPropTypes';
+import reportActionPropTypes from '@expPages/home/report/reportActionPropTypes';
+import reportPropTypes from '@expPages/reportPropTypes';
 
 const propTypes = {
     /** source is used to determine the starting index in the array of attachments */

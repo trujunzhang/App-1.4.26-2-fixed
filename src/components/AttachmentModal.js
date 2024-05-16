@@ -21,7 +21,7 @@ import Navigation from '@libs/Navigation/Navigation';
 import * as ReportActionsUtils from '@libs/ReportActionsUtils';
 import * as TransactionUtils from '@libs/TransactionUtils';
 import useNativeDriver from '@libs/useNativeDriver';
-import reportPropTypes from '@pages/reportPropTypes';
+import reportPropTypes from '@expPages/reportPropTypes';
 import * as IOU from '@userActions/IOU';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';

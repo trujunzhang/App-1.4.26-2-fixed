@@ -9,9 +9,10 @@ import PressableWithoutFeedback from '@components/Pressable/PressableWithoutFeed
 import withCurrentUserPersonalDetails from '@components/withCurrentUserPersonalDetails';
 import useLocalize from '@hooks/useLocalize';
 import compose from '@libs/compose';
+import Log from '@libs/Log';
 import Navigation from '@libs/Navigation/Navigation';
 import * as UserUtils from '@libs/UserUtils';
-import personalDetailsPropType from '@pages/personalDetailsPropType';
+import personalDetailsPropType from '@expPages/personalDetailsPropType';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
@@ -48,6 +49,12 @@ function PressableAvatarWithIndicator({isCreateMenuOpen, currentUserPersonalDeta
 
         Navigation.navigate(ROUTES.SETTINGS);
     }, [isCreateMenuOpen]);
+
+    // Log.info("")
+    // Log.info("================================")
+    // Log.info(`currentUserPersonalDetails.avatar: ${JSON.stringify(currentUserPersonalDetails) }`)
+    // Log.info("================================")
+    // Log.info("")
 
     return (
         <PressableWithoutFeedback

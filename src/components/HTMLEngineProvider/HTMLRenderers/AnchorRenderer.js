@@ -21,7 +21,7 @@ function AnchorRenderer(props) {
     const displayName = lodashGet(props.tnode, 'domNode.children[0].data', '');
     const parentStyle = lodashGet(props.tnode, 'parent.styles.nativeTextRet', {});
     const attrHref = htmlAttribs.href || htmlAttribs[CONST.ATTACHMENT_SOURCE_ATTRIBUTE] || '';
-    const internalNewExpensifyPath = Link.getInternalNewExpensifyPath(attrHref);
+    const internalNewIeattaPath = Link.getInternalNewIeattaPath(attrHref);
     const internalExpensifyPath = Link.getInternalExpensifyPath(attrHref);
 
     if (!HTMLEngineUtils.isChildOfComment(props.tnode)) {
@@ -62,7 +62,7 @@ function AnchorRenderer(props) {
             key={props.key}
             displayName={displayName}
             // Only pass the press handler for internal links. For public links or whitelisted internal links fallback to default link handling
-            onPress={internalNewExpensifyPath || internalExpensifyPath ? () => Link.openLink(attrHref, environmentURL, isAttachment) : undefined}
+            onPress={internalNewIeattaPath || internalExpensifyPath ? () => Link.openLink(attrHref, environmentURL, isAttachment) : undefined}
         >
             <TNodeChildrenRenderer tnode={props.tnode} />
         </AnchorForCommentsOnly>

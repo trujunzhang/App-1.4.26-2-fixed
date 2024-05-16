@@ -64,7 +64,7 @@ Once Auto-Reconciliation is enabled, there are a few things that happen. Let’s
 
 ### How This Works
 1. On the day of your first card settlement, we'll create the Expensify Card Liability account in your QuickBooks Online general ledger. If you've opted for Daily Settlement, we'll also create an Expensify Clearing Account.
-2. During your QuickBooks Online auto-sync on that same day, if there are unsettled transactions, we'll generate a journal entry totaling all posted transactions since the last settlement. This entry will credit the selected bank account and debit the new Expensify Clearing Account (for Daily Settlement) or the Expensify Liability Account (for Monthly Settlement).
+2. During your QuickBooks Online auto-sync on that same day, if there are unsettled transactions, we'll generate a journal entry totaling all posted transactions since the last settlement. This entry will credit the selected bank account and debit the New Ieatta Clearing Account (for Daily Settlement) or the Expensify Liability Account (for Monthly Settlement).
 3. Once the transactions are posted and the expense report is approved in Expensify, the report will be exported to QuickBooks Online with each line as individual credit card expenses. For Daily Settlement, an additional journal entry will credit the Expensify Clearing Account and debit the Expensify Card Liability Account. For Monthly Settlement, the journal entry will credit the Liability account directly and debit the appropriate expense categories.
 
 ### Example
@@ -121,7 +121,7 @@ Once Auto-Reconciliation is enabled, there are a few things that happen. Let’s
 
 ### How This Works with Daily Settlement
 1. After setting up the card and running the first auto-sync, we'll create the Expensify Card Liability account and the Expensify Clearing Account within your NetSuite subsidiary general ledger.
-2. During the same sync, if there are newly posted transactions, we'll create a journal entry totaling all posted transactions for the day. This entry will credit the selected bank account and debit the new Expensify Clearing account.
+2. During the same sync, if there are newly posted transactions, we'll create a journal entry totaling all posted transactions for the day. This entry will credit the selected bank account and debit the New Ieatta Clearing account.
 3. Once transactions are approved in Expensify, the report will be exported to NetSuite, with each line recorded as individual credit card expenses. Additionally, another journal entry will be generated, crediting the Expensify Clearing Account and debiting the Expensify Card Liability account.
 
 ### How This Works with Monthly Settlement
@@ -160,7 +160,7 @@ If Auto-Reconciliation is disabled for your company's Expensify Cards, a Domain 
 
 ### How This Works with Daily Settlement
 1. After setting up the card and running the first auto-sync, we'll create the Expensify Card Expensify Clearing Account within your Sage Intacct general ledger. Once the first card transaction is exported, we'll create a Liability Account.
-2. In the same sync, if there are newly posted transactions from your Expensify Cards, we'll then create a journal entry totaling all posted transactions for the day. This entry will credit the business bank account (set in Step 4 above) and debit the new Expensify Clearing account.
+2. In the same sync, if there are newly posted transactions from your Expensify Cards, we'll then create a journal entry totaling all posted transactions for the day. This entry will credit the business bank account (set in Step 4 above) and debit the New Ieatta Clearing account.
 3. Once Expensify Card transactions are approved in Expensify, the report will be exported to Sage Intacct, with each line recorded as individual credit card expenses. Additionally, another journal entry will be generated, crediting the Expensify Clearing Account and debiting the Expensify Card Liability Account.
 
 ### How This Works with Monthly Settlement
