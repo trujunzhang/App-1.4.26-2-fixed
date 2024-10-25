@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+const IS_E2E_TESTING = process.env.E2E_TESTING === 'true';
+
 const defaultPresets = ['@babel/preset-react', '@babel/preset-env', '@babel/preset-flow', '@babel/preset-typescript'];
 const defaultPlugins = [
     // Adding the commonjs: true option to react-native-web plugin can cause styling conflicts
@@ -13,10 +15,6 @@ const defaultPlugins = [
     'transform-class-properties',
 
     // Keep it last
-    // Reanimated for Web requires the following configuration steps.
-    // You need to add @babel/plugin-proposal-export-namespace-from as well as Reanimated Babel plugin to your babel.config.js.
-    // See https://docs.swmansion.com/react-native-reanimated/docs/guides/web-support
-    '@babel/plugin-proposal-export-namespace-from',
     'react-native-reanimated/plugin',
 ];
 
@@ -34,11 +32,8 @@ const metro = {
 
         ['@babel/plugin-proposal-class-properties', {loose: true}],
         ['@babel/plugin-proposal-private-methods', {loose: true}],
-        // ['@babel/plugin-proposal-private-property-in-object', {loose: true}],
-        // https://babeljs.io/docs/babel-plugin-transform-private-property-in-object
-        ['@babel/plugin-transform-private-property-in-object', {loose: true}],
+        ['@babel/plugin-proposal-private-property-in-object', {loose: true}],
         // The reanimated babel plugin needs to be last, as stated here: https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/installation
-        '@babel/plugin-proposal-export-namespace-from',
         'react-native-reanimated/plugin',
         // Import alias for native devices
         [
@@ -74,13 +69,16 @@ const metro = {
                     // This path is provide alias for files like `ONYXKEYS` and `CONST`.
                     '@src': './src',
                     '@userActions': './src/libs/actions',
+                    '@desktop': './desktop',
+                    '@github': './.github',
                 },
             },
         ],
     ],
     env: {
         production: {
-            plugins: [['transform-remove-console', {exclude: ['error', 'warn']}]],
+            // Keep console logs for e2e tests
+            plugins: IS_E2E_TESTING ? [] : [['transform-remove-console', {exclude: ['error', 'warn']}]],
         },
     },
 };

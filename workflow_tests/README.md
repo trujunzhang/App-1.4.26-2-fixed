@@ -2,7 +2,7 @@
 
 ## Components
 The workflow testing framework consists mainly of 3 components:
-- [Jest](https://jestjs.io/) - testing framework, also used for [application tests](https://github.com/Expensify/App/tree/main/tests)
+- [Jest](https://jestjs.io/) - testing framework, also used for [application tests](https://github.com/Ieatta/App/tree/main/tests)
 - [Mock-github](https://github.com/kiegroup/mock-github) - package allowing for creation of local repositories, which can be used to make sure that the workflow tests have access only to these files that they should and that they won't modify the actual repository
 - [Act-js](https://github.com/kiegroup/act-js) - JS wrapper around [Act](https://github.com/nektos/act). Act is a tool that allows to run GitHub Actions workflows locally, and Act-js allows to configure and run Act from JS code, like Jest tests. It also provides additional tools like mocking workflow steps and retrieving the workflow output a JSON, which allows for comparison of the actual output with expected values
 
@@ -246,7 +246,7 @@ const FILES_TO_COPY_INTO_TEST_REPO = [
 ];
 
 beforeEach(async () => {
-    mockGithub = new kieMockGithub.MockGithub({
+    mockGithub = new MockGithub({
         repo: {
             testWorkflowsRepo: {
                 files: FILES_TO_COPY_INTO_TEST_REPO,
@@ -339,7 +339,7 @@ const FILES_TO_COPY_INTO_TEST_REPO = [
 `beforeEach` gets executed before each test. Here we create the local test repository with the files defined in the `FILES_TO_COPY_INTO_TEST_REPO` variable. `testWorkflowRepo` is the name of the test repo and can be changed to whichever name you choose, just remember to use it later when accessing this repo. _Note that we can't use `beforeAll()` method, because while mocking steps `Act-js` modifies the workflow file copied into the test repo and thus mocking could persist between tests_
 ```javascript
 beforeEach(async () => {
-    mockGithub = new kieMockGithub.MockGithub({
+    mockGithub = new MockGithub({
         repo: {
             testWorkflowsRepo: {
                 files: FILES_TO_COPY_INTO_TEST_REPO,

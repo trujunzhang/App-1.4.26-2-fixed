@@ -5,7 +5,8 @@ type WindowDimensions = {
     isSmallScreenWidth: boolean;
     isMediumScreenWidth: boolean;
     isLargeScreenWidth: boolean;
-    isTabletScreenWidth: boolean;
+    isExtraSmallScreenWidth: boolean;
+    isSmallScreen: boolean;
 };
 
 export default WindowDimensions;

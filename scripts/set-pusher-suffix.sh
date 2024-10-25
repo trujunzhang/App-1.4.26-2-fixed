@@ -2,7 +2,7 @@
 # a script that sets Pusher room suffix (for internal usage)
 
 # config file to be parsed for the suffix (relative to current project root)
-CONFIG_FILE="../Web-Expensify/_config.local.php"
+CONFIG_FILE="../Web-Ieatta/_config.local.php"
 
 if [ -f '.env' ]; then
     while read -r line; do
@@ -16,7 +16,7 @@ fi
 # use the suffix only when the config file can be found
 if [ -f "$CONFIG_FILE" ]; then
     # If we are pointing to the staging or production api don't add the suffix
-    if [[ $EXPENSIFY_URL == "https://www.expensify.com/" ]]; then
+    if [[ $EXPENSIFY_URL == "https://www.ieatta.com/" ]]; then
         echo "Ignoring the PUSHER_DEV_SUFFIX since we are not pointing to the dev API"
         exit 0
     fi

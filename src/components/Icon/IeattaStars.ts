@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable rulesdir/no-inline-named-export */

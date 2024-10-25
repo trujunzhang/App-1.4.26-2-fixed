@@ -1,25 +1,15 @@
 import React from 'react';
-import {Image as RNImage, View} from 'react-native';
-import type {GestureResponderEvent, HostComponent, PressableStateCallbackType, PressableProps as RNPressableProps, StyleProp, ViewStyle} from 'react-native';
-import Avatar from '@components/Avatar';
-import Button from '@components/Button';
-import DisplayNames from '@components/DisplayNames';
+import type {GestureResponderEvent, StyleProp, ViewStyle} from 'react-native';
+import {View} from 'react-native';
 import Icon from '@components/Icon';
-import * as Expensicons from '@components/Icon/Expensicons';
-import IeattaUserDetailsTooltip from '@components/Ieatta/detailedPage/common/IeattaUserDetailsTooltip';
 import {PressableWithFeedback} from '@components/Pressable';
-import Text from '@components/Text';
 import Tooltip from '@components/Tooltip';
 import useLocalize from '@hooks/useLocalize';
-import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
-import Navigation from '@libs/Navigation/Navigation';
 import TailwindColors from '@styles/tailwindcss/colors';
+import variables from '@styles/variables';
 import CONST from '@src/CONST';
 import type {TranslationPaths} from '@src/languages/types';
-import ROUTES from '@src/ROUTES';
-import type {IFBPeopleInEvent} from '@src/types/firebase';
-import type {PersonalDetails} from '@src/types/onyx';
 import type IconAsset from '@src/types/utils/IconAsset';
 
 type IconWithTooltipProps = {
@@ -32,13 +22,32 @@ type IconWithTooltipProps = {
     containerStyle: StyleProp<ViewStyle>;
 
     testID: string;
-    iconFill: string;
+
+    /** The fill color for the icon. Can be hex, rgb, rgba, or valid react-native named color such as 'red' or 'blue'. */
+    iconFill?: string;
+
+    /** The width of the icon. */
+    iconWidth?: number;
+
+    /** The height of the icon. */
+    iconHeight?: number;
 
     /** The asset to render. */
     iconSrc: IconAsset;
 };
 
-function IconWithTooltip({toolTip, onPress, containerStyle, testID, iconFill, iconSrc}: IconWithTooltipProps) {
+function IconWithTooltip({
+    toolTip,
+    onPress,
+    containerStyle,
+    testID,
+
+    iconWidth = variables.iconSizeNormal,
+    iconHeight = variables.iconSizeNormal,
+    iconFill = TailwindColors.blue500,
+
+    iconSrc,
+}: IconWithTooltipProps) {
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 
@@ -57,6 +66,8 @@ function IconWithTooltip({toolTip, onPress, containerStyle, testID, iconFill, ic
                     <Icon
                         testID={testID}
                         fill={iconFill}
+                        width={iconWidth}
+                        height={iconHeight}
                         src={iconSrc}
                     />
                 </View>

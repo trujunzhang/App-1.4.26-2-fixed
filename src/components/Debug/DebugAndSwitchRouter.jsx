@@ -4,29 +4,19 @@
 import PropTypes from 'prop-types';
 import {useEffect} from 'react';
 import {OnyxCollection, withOnyx} from 'react-native-onyx';
-import withCurrentReportID from '@components/withCurrentReportID';
-import withNavigationFocus from '@components/withNavigationFocus';
 import compose from '@libs/compose';
 import getRoutePathForDebug from '@libs/getRoutePathForDebug';
 import Log from '@libs/Log';
 import Navigation from '@navigation/Navigation';
 import {eventsPropTypes, peopleInEventsPropTypes, photosPropTypes, recipesPropTypes, restaurantsPropTypes, reviewsPropTypes, usersPropTypes} from '@pages/proptypes';
-import reportPropTypes from '@expPages/reportPropTypes';
 import Config from '@src/CONFIG';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES, {Route} from '@src/ROUTES';
-import {PolicyMembers} from '@src/types/onyx';
 
-const propTypes = {
-    /** List of reports */
-    // eslint-disable-next-line react/no-unused-prop-types
-    chatReports: PropTypes.objectOf(reportPropTypes),
-};
+const propTypes = {};
 
-const defaultProps = {
-    chatReports: {},
-};
+const defaultProps = {};
 
 function getDebugRouteName() {
     // const developingRouteName = "settings/preferences";
@@ -62,7 +52,7 @@ function getDebugRouteName() {
     // const developingRouteName = ROUTES.EVENT_WITH_ID.route;
 
     // RECIPE_WITH_ID
-    // const developingRouteName = 'm/:recipeId?';
+    // const developingRouteName = ROUTES.RECIPE_WITH_ID.route;
 
     /**
      * Edit pages
@@ -85,8 +75,11 @@ function getDebugRouteName() {
     // ADD_USERS_IN_EVENT: {
     // const developingRouteName = ROUTES.ADD_USERS_IN_EVENT.route;
 
-    // PHOTOS_PAGE: {
-    const developingRouteName = ROUTES.PHOTOS_PAGE.route;
+    // PHOTOS_GRID_VIEW: {
+    const developingRouteName = ROUTES.PHOTOS_GRID_VIEW.route;
+
+    // PHOTOS_PAGE_VIEW: {
+    // const developingRouteName = ROUTES.PHOTOS_PAGE_VIEW.route;
 
     return developingRouteName;
 }
@@ -107,7 +100,7 @@ function DebugAndSwitchRouter(props) {
             Log.info('================================');
             Log.info('');
             if (routeName !== null) {
-                Navigation.navigate(routeName);
+                // Navigation.navigate(routeName);
             }
         }, 2000);
     }, [props]);

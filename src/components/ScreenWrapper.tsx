@@ -34,6 +34,8 @@ type ScreenWrapperChildrenProps = {
 };
 
 type ScreenWrapperProps = {
+    screenStyles?: StyleProp<ViewStyle>;
+
     /** Returns a function as a child to pass insets to or a node to render without insets */
     children: ReactNode | React.FC<ScreenWrapperChildrenProps>;
 
@@ -45,8 +47,6 @@ type ScreenWrapperProps = {
 
     /** Additional styles for header gap */
     headerGapStyles?: StyleProp<ViewStyle>;
-
-    screenStyles?: StyleProp<ViewStyle>;
 
     /** Styles for the offline indicator */
     offlineIndicatorStyle?: StyleProp<ViewStyle>;
@@ -105,6 +105,7 @@ const ScreenWrapperStatusContext = createContext({didScreenTransitionEnd: false}
 
 function ScreenWrapper(
     {
+        screenStyles,
         shouldEnableMaxHeight = false,
         shouldEnableMinHeight = false,
         includePaddingTop = true,
@@ -117,7 +118,6 @@ function ScreenWrapper(
         shouldShowOfflineIndicator = true,
         offlineIndicatorStyle,
         style,
-        screenStyles,
         shouldDismissKeyboardBeforeClose = true,
         onEntryTransitionEnd,
         testID,
@@ -137,8 +137,7 @@ function ScreenWrapper(
      */
     const navigationFallback = useNavigation<StackNavigationProp<RootStackParamList>>();
     const navigation = navigationProp ?? navigationFallback;
-    // const {windowHeight, isSmallScreenWidth} = useWindowDimensions(shouldUseCachedViewportHeight);
-    const {windowHeight, isSmallScreenWidth} = useWindowDimensions();
+    const {windowHeight, isSmallScreenWidth} = useWindowDimensions(shouldUseCachedViewportHeight);
     const {initialHeight} = useInitialDimensions();
     const styles = useThemeStyles();
     const keyboardState = useKeyboardState();
@@ -155,7 +154,6 @@ function ScreenWrapper(
 
     const panResponder = useRef(
         PanResponder.create({
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             onStartShouldSetPanResponderCapture: (_e, gestureState) => gestureState.numberActiveTouches === CONST.TEST_TOOL.NUMBER_OF_TAPS,
             onPanResponderRelease: toggleTestToolsModal,
         }),
@@ -163,7 +161,6 @@ function ScreenWrapper(
 
     const keyboardDissmissPanResponder = useRef(
         PanResponder.create({
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             onMoveShouldSetPanResponderCapture: (_e, gestureState) => {
                 const isHorizontalSwipe = Math.abs(gestureState.dx) > Math.abs(gestureState.dy);
                 const shouldDismissKeyboard = shouldDismissKeyboardBeforeClose && isKeyboardShown && Browser.isMobile();
@@ -238,7 +235,7 @@ function ScreenWrapper(
                 return (
                     <View
                         ref={ref}
-                        style={[screenStyles ?? styles.flex1, {minHeight}]}
+                        style={[styles.flex1, {minHeight}]}
                         // eslint-disable-next-line react/jsx-props-no-spreading
                         {...panResponder.panHandlers}
                         testID={testID}

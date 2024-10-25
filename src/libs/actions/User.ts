@@ -2,31 +2,53 @@ import {isBefore} from 'date-fns';
 import type {OnyxCollection, OnyxEntry, OnyxUpdate} from 'react-native-onyx';
 import Onyx from 'react-native-onyx';
 import type {ValueOf} from 'type-fest';
+import * as ActiveClientManager from '@libs/ActiveClientManager';
 import * as API from '@libs/API';
+import type {
+    AddNewContactMethodParams,
+    CloseAccountParams,
+    DeleteContactMethodParams,
+    GetStatementPDFParams,
+    RequestContactMethodValidateCodeParams,
+    SetContactMethodAsDefaultParams,
+    SetNameValuePairParams,
+    UpdateChatPriorityModeParams,
+    UpdateFrequentlyUsedEmojisParams,
+    UpdateNewsletterSubscriptionParams,
+    UpdatePreferredEmojiSkinToneParams,
+    UpdateStatusParams,
+    UpdateThemeParams,
+    ValidateLoginParams,
+    ValidateSecondaryLoginParams,
+} from '@libs/API/parameters';
+import {READ_COMMANDS, WRITE_COMMANDS} from '@libs/API/types';
 import * as ErrorUtils from '@libs/ErrorUtils';
+import Log from '@libs/Log';
 import Navigation from '@libs/Navigation/Navigation';
 import * as SequentialQueue from '@libs/Network/SequentialQueue';
+import * as PersonalDetailsUtils from '@libs/PersonalDetailsUtils';
 import * as Pusher from '@libs/Pusher/pusher';
 import PusherUtils from '@libs/PusherUtils';
 import * as ReportActionsUtils from '@libs/ReportActionsUtils';
+import playSound, {SOUNDS} from '@libs/Sound';
+import playSoundExcludingMobile from '@libs/Sound/playSoundExcludingMobile';
+import Visibility from '@libs/Visibility';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
-import type {FrequentlyUsedEmoji} from '@src/types/onyx';
+import type {BlockedFromConcierge, CustomStatusDraft, FrequentlyUsedEmoji, Policy} from '@src/types/onyx';
 import type Login from '@src/types/onyx/Login';
 import type {OnyxServerUpdate} from '@src/types/onyx/OnyxUpdatesFromServer';
 import type OnyxPersonalDetails from '@src/types/onyx/PersonalDetails';
 import type {Status} from '@src/types/onyx/PersonalDetails';
 import type ReportAction from '@src/types/onyx/ReportAction';
+import type {OriginalMessage} from '@src/types/onyx/ReportAction';
 import {isEmptyObject} from '@src/types/utils/EmptyObject';
 import type {EmptyObject} from '@src/types/utils/EmptyObject';
+import applyOnyxUpdatesReliably from './applyOnyxUpdatesReliably';
 import * as Link from './Link';
-import * as OnyxUpdates from './OnyxUpdates';
-import * as PersonalDetails from './PersonalDetails';
 import * as Report from './Report';
 import * as Session from './Session';
-
-type BlockedFromConciergeNVP = {expiresAt: number};
 
 let currentUserAccountID = -1;
 let currentEmail = '';
@@ -72,11 +94,9 @@ function closeAccount(reason: string) {
         },
     ];
 
-    type CloseAccountParams = {message: string};
-
     const parameters: CloseAccountParams = {message: reason};
 
-    API.write('CloseAccount', parameters, {
+    API.write(WRITE_COMMANDS.CLOSE_ACCOUNT, parameters, {
         optimisticData,
         failureData,
     });
@@ -146,15 +166,13 @@ function requestContactMethodValidateCode(contactMethod: string) {
         },
     ];
 
-    type RequestContactMethodValidateCodeParams = {email: string};
-
     const parameters: RequestContactMethodValidateCodeParams = {email: contactMethod};
 
-    API.write('RequestContactMethodValidateCode', parameters, {optimisticData, successData, failureData});
+    API.write(WRITE_COMMANDS.REQUEST_CONTACT_METHOD_VALIDATE_CODE, parameters, {optimisticData, successData, failureData});
 }
 
 /**
- * Sets whether the user is subscribed to Expensify news
+ * Sets whether the user is subscribed to Ieatta news
  */
 function updateNewsletterSubscription(isSubscribed: boolean) {
     const optimisticData: OnyxUpdate[] = [
@@ -172,11 +190,9 @@ function updateNewsletterSubscription(isSubscribed: boolean) {
         },
     ];
 
-    type UpdateNewsletterSubscriptionParams = {isSubscribed: boolean};
-
     const parameters: UpdateNewsletterSubscriptionParams = {isSubscribed};
 
-    API.write('UpdateNewsletterSubscription', parameters, {
+    API.write(WRITE_COMMANDS.UPDATE_NEWSLETTER_SUBSCRIPTION, parameters, {
         optimisticData,
         failureData,
     });
@@ -197,9 +213,7 @@ function deleteContactMethod(contactMethod: string, loginList: Record<string, Lo
             value: {
                 [contactMethod]: {
                     partnerUserID: '',
-                    errorFields: {
-                        deletedLogin: null,
-                    },
+                    errorFields: null,
                     pendingFields: {
                         deletedLogin: CONST.RED_BRICK_ROAD_PENDING_ACTION.DELETE,
                     },
@@ -224,6 +238,7 @@ function deleteContactMethod(contactMethod: string, loginList: Record<string, Lo
                 [contactMethod]: {
                     ...oldLoginData,
                     errorFields: {
+                        ...oldLoginData?.errorFields,
                         deletedLogin: ErrorUtils.getMicroSecondOnyxError('contacts.genericFailureMessages.deleteContactMethod'),
                     },
                     pendingFields: {
@@ -234,11 +249,9 @@ function deleteContactMethod(contactMethod: string, loginList: Record<string, Lo
         },
     ];
 
-    type DeleteContactMethodParams = {partnerUserID: string};
-
     const parameters: DeleteContactMethodParams = {partnerUserID: contactMethod};
 
-    API.write('DeleteContactMethod', parameters, {optimisticData, successData, failureData});
+    API.write(WRITE_COMMANDS.DELETE_CONTACT_METHOD, parameters, {optimisticData, successData, failureData});
     Navigation.goBack(ROUTES.SETTINGS_CONTACT_METHODS.route);
 }
 
@@ -323,11 +336,9 @@ function addNewContactMethodAndNavigate(contactMethod: string) {
         },
     ];
 
-    type AddNewContactMethodParams = {partnerUserID: string};
-
     const parameters: AddNewContactMethodParams = {partnerUserID: contactMethod};
 
-    API.write('AddNewContactMethod', parameters, {optimisticData, successData, failureData});
+    API.write(WRITE_COMMANDS.ADD_NEW_CONTACT_METHOD, parameters, {optimisticData, successData, failureData});
     Navigation.goBack(ROUTES.SETTINGS_CONTACT_METHODS.route);
 }
 
@@ -347,14 +358,9 @@ function validateLogin(accountID: number, validateCode: string) {
         },
     ];
 
-    type ValidateLoginParams = {
-        accountID: number;
-        validateCode: string;
-    };
-
     const parameters: ValidateLoginParams = {accountID, validateCode};
 
-    API.write('ValidateLogin', parameters, {optimisticData});
+    API.write(WRITE_COMMANDS.VALIDATE_LOGIN, parameters, {optimisticData});
     Navigation.navigate(ROUTES.HOME);
 }
 
@@ -432,11 +438,9 @@ function validateSecondaryLogin(contactMethod: string, validateCode: string) {
         },
     ];
 
-    type ValidateSecondaryLoginParams = {partnerUserID: string; validateCode: string};
-
     const parameters: ValidateSecondaryLoginParams = {partnerUserID: contactMethod, validateCode};
 
-    API.write('ValidateSecondaryLogin', parameters, {optimisticData, successData, failureData});
+    API.write(WRITE_COMMANDS.VALIDATE_SECONDARY_LOGIN, parameters, {optimisticData, successData, failureData});
 }
 
 /**
@@ -444,7 +448,7 @@ function validateSecondaryLogin(contactMethod: string, validateCode: string) {
  * and if so whether the expiresAt date of a user's ban is before right now
  *
  */
-function isBlockedFromConcierge(blockedFromConciergeNVP: OnyxEntry<BlockedFromConciergeNVP>): boolean {
+function isBlockedFromConcierge(blockedFromConciergeNVP: OnyxEntry<BlockedFromConcierge>): boolean {
     if (isEmptyObject(blockedFromConciergeNVP)) {
         return false;
     }
@@ -458,7 +462,7 @@ function isBlockedFromConcierge(blockedFromConciergeNVP: OnyxEntry<BlockedFromCo
 
 function triggerNotifications(onyxUpdates: OnyxServerUpdate[]) {
     onyxUpdates.forEach((update) => {
-        if (!update.shouldNotify) {
+        if (!update.shouldNotify && !update.shouldShowPushNotification) {
             return;
         }
 
@@ -466,6 +470,105 @@ function triggerNotifications(onyxUpdates: OnyxServerUpdate[]) {
         const reportActions = Object.values((update.value as OnyxCollection<ReportAction>) ?? {});
 
         reportActions.forEach((action) => action && ReportActionsUtils.isNotifiableReportAction(action) && Report.showReportActionNotification(reportID, action));
+    });
+}
+
+const isChannelMuted = (reportId: string) =>
+    new Promise((resolve) => {
+        const connectionId = Onyx.connect({
+            key: `${ONYXKEYS.COLLECTION.REPORT}${reportId}`,
+            callback: (report) => {
+                Onyx.disconnect(connectionId);
+
+                resolve(
+                    !report?.notificationPreference ||
+                        report?.notificationPreference === CONST.REPORT.NOTIFICATION_PREFERENCE.MUTE ||
+                        report?.notificationPreference === CONST.REPORT.NOTIFICATION_PREFERENCE.HIDDEN,
+                );
+            },
+        });
+    });
+
+function playSoundForMessageType(pushJSON: OnyxServerUpdate[]) {
+    const reportActionsOnly = pushJSON.filter((update) => update.key?.includes('reportActions_'));
+    // "reportActions_5134363522480668" -> "5134363522480668"
+    const reportID = reportActionsOnly
+        .map((value) => value.key.split('_')[1])
+        .find((reportKey) => reportKey === Navigation.getTopmostReportId() && Visibility.isVisible() && Visibility.hasFocus());
+
+    if (!reportID) {
+        return;
+    }
+
+    isChannelMuted(reportID).then((isSoundMuted) => {
+        if (isSoundMuted) {
+            return;
+        }
+
+        try {
+            const flatten = reportActionsOnly.flatMap((update) => {
+                const value = update.value as OnyxCollection<ReportAction>;
+
+                if (!value) {
+                    return [];
+                }
+
+                return Object.values(value);
+            }) as ReportAction[];
+
+            for (const data of flatten) {
+                // Someone completes a task
+                if (data.actionName === 'TASKCOMPLETED') {
+                    return playSound(SOUNDS.SUCCESS);
+                }
+            }
+
+            const types = flatten.map((data) => data?.originalMessage).filter(Boolean) as OriginalMessage[];
+
+            for (const message of types) {
+                // Pay someone flow
+                if ('IOUDetails' in message) {
+                    return playSound(SOUNDS.SUCCESS);
+                }
+
+                // mention user
+                if ('html' in message && typeof message.html === 'string' && message.html.includes(`<mention-user>@${currentEmail}</mention-user>`)) {
+                    return playSoundExcludingMobile(SOUNDS.ATTENTION);
+                }
+
+                // mention @here
+                if ('html' in message && typeof message.html === 'string' && message.html.includes('<mention-here>')) {
+                    return playSoundExcludingMobile(SOUNDS.ATTENTION);
+                }
+
+                // assign a task
+                if ('taskReportID' in message) {
+                    return playSound(SOUNDS.ATTENTION);
+                }
+
+                // Submit expense flow
+                if ('IOUTransactionID' in message) {
+                    return playSound(SOUNDS.ATTENTION);
+                }
+
+                // Someone reimburses an expense
+                if ('IOUReportID' in message) {
+                    return playSound(SOUNDS.SUCCESS);
+                }
+
+                // plain message
+                if ('html' in message) {
+                    return playSoundExcludingMobile(SOUNDS.RECEIVE);
+                }
+            }
+        } catch (e) {
+            let errorMessage = String(e);
+            if (e instanceof Error) {
+                errorMessage = e.message;
+            }
+
+            Log.client(`Unexpected error occurred while parsing the data to play a sound: ${errorMessage}`);
+        }
     });
 }
 
@@ -482,41 +585,34 @@ function subscribeToUserEvents() {
     // Handles the mega multipleEvents from Pusher which contains an array of single events.
     // Each single event is passed to PusherUtils in order to trigger the callbacks for that event
     PusherUtils.subscribeToPrivateUserChannelEvent(Pusher.TYPE.MULTIPLE_EVENTS, currentUserAccountID.toString(), (pushJSON) => {
-        // The data for this push event comes in two different formats:
-        // 1. Original format - this is what was sent before the RELIABLE_UPDATES project and will go away once RELIABLE_UPDATES is fully complete
-        //     - The data is an array of objects, where each object is an onyx update
-        //       Example: [{onyxMethod: 'whatever', key: 'foo', value: 'bar'}]
-        // 1. Reliable updates format - this is what was sent with the RELIABLE_UPDATES project and will be the format from now on
-        //     - The data is an object, containing updateIDs from the server and an array of onyx updates (this array is the same format as the original format above)
-        //       Example: {lastUpdateID: 1, previousUpdateID: 0, updates: [{onyxMethod: 'whatever', key: 'foo', value: 'bar'}]}
-        if (Array.isArray(pushJSON)) {
-            pushJSON.forEach((multipleEvent) => {
-                PusherUtils.triggerMultiEventHandler(multipleEvent.eventType, multipleEvent.data);
-            });
+        // If this is not the main client, we shouldn't process any data received from pusher.
+        if (!ActiveClientManager.isClientTheLeader()) {
+            Log.info('[Pusher] Received updates, but ignoring it since this is not the active client');
             return;
         }
-
+        // The data for the update is an object, containing updateIDs from the server and an array of onyx updates (this array is the same format as the original format above)
+        // Example: {lastUpdateID: 1, previousUpdateID: 0, updates: [{onyxMethod: 'whatever', key: 'foo', value: 'bar'}]}
         const updates = {
             type: CONST.ONYX_UPDATE_TYPES.PUSHER,
             lastUpdateID: Number(pushJSON.lastUpdateID || 0),
             updates: pushJSON.updates ?? [],
             previousUpdateID: Number(pushJSON.previousUpdateID || 0),
         };
-        if (!OnyxUpdates.doesClientNeedToBeUpdated(Number(pushJSON.previousUpdateID || 0))) {
-            OnyxUpdates.apply(updates);
-            return;
-        }
-
-        // If we reached this point, we need to pause the queue while we prepare to fetch older OnyxUpdates.
-        SequentialQueue.pause();
-        OnyxUpdates.saveUpdateInformation(updates);
+        applyOnyxUpdatesReliably(updates);
     });
 
     // Handles Onyx updates coming from Pusher through the mega multipleEvents.
-    PusherUtils.subscribeToMultiEvent(Pusher.TYPE.MULTIPLE_EVENT_TYPE.ONYX_API_UPDATE, (pushJSON: OnyxServerUpdate[]) =>
-        SequentialQueue.getCurrentRequest().then(() => {
-            // If we don't have the currentUserAccountID (user is logged out) we don't want to update Onyx with data from Pusher
+    PusherUtils.subscribeToMultiEvent(Pusher.TYPE.MULTIPLE_EVENT_TYPE.ONYX_API_UPDATE, (pushJSON: OnyxServerUpdate[]) => {
+        playSoundForMessageType(pushJSON);
+
+        return SequentialQueue.getCurrentRequest().then(() => {
+            // If we don't have the currentUserAccountID (user is logged out) or this is not the
+            // main client we don't want to update Onyx with data from Pusher
             if (currentUserAccountID === -1) {
+                return;
+            }
+            if (!ActiveClientManager.isClientTheLeader()) {
+                Log.info('[Pusher] Received updates, but ignoring it since this is not the active client');
                 return;
             }
 
@@ -527,8 +623,8 @@ function subscribeToUserEvents() {
             // Return a promise when Onyx is done updating so that the OnyxUpdatesManager can properly apply all
             // the onyx updates in order
             return onyxUpdatePromise;
-        }),
-    );
+        });
+    });
 }
 
 /**
@@ -543,13 +639,9 @@ function updatePreferredSkinTone(skinTone: number) {
         },
     ];
 
-    type UpdatePreferredEmojiSkinToneParams = {
-        value: number;
-    };
-
     const parameters: UpdatePreferredEmojiSkinToneParams = {value: skinTone};
 
-    API.write('UpdatePreferredEmojiSkinTone', parameters, {optimisticData});
+    API.write(WRITE_COMMANDS.UPDATE_PREFERRED_EMOJI_SKIN_TONE, parameters, {optimisticData});
 }
 
 /**
@@ -563,11 +655,10 @@ function updateFrequentlyUsedEmojis(frequentlyUsedEmojis: FrequentlyUsedEmoji[])
             value: frequentlyUsedEmojis,
         },
     ];
-    type UpdateFrequentlyUsedEmojisParams = {value: string};
 
     const parameters: UpdateFrequentlyUsedEmojisParams = {value: JSON.stringify(frequentlyUsedEmojis)};
 
-    API.write('UpdateFrequentlyUsedEmojis', parameters, {optimisticData});
+    API.write(WRITE_COMMANDS.UPDATE_FREQUENTLY_USED_EMOJIS, parameters, {optimisticData});
 }
 
 /**
@@ -585,28 +676,21 @@ function updateChatPriorityMode(mode: ValueOf<typeof CONST.PRIORITY_MODE>, autom
         },
     ];
 
-    if (autoSwitchedToFocusMode) {
-        optimisticData.push({
-            onyxMethod: Onyx.METHOD.MERGE,
-            key: ONYXKEYS.NVP_TRY_FOCUS_MODE,
-            value: true,
-        });
-    }
-
-    type UpdateChatPriorityModeParams = {
-        value: ValueOf<typeof CONST.PRIORITY_MODE>;
-        automatic: boolean;
-    };
+    optimisticData.push({
+        onyxMethod: Onyx.METHOD.MERGE,
+        key: ONYXKEYS.NVP_TRY_FOCUS_MODE,
+        value: true,
+    });
 
     const parameters: UpdateChatPriorityModeParams = {
         value: mode,
         automatic,
     };
 
-    API.write('UpdateChatPriorityMode', parameters, {optimisticData});
+    API.write(WRITE_COMMANDS.UPDATE_CHAT_PRIORITY_MODE, parameters, {optimisticData});
 
     if (!autoSwitchedToFocusMode) {
-        Navigation.goBack(ROUTES.SETTINGS_PREFERENCES);
+        Navigation.goBack();
     }
 }
 
@@ -620,6 +704,10 @@ function setShouldUseStagingServer(shouldUseStagingServer: boolean) {
 
 function clearUserErrorMessage() {
     Onyx.merge(ONYXKEYS.USER, {error: ''});
+}
+
+function setMuteAllSounds(isMutedAllSounds: boolean) {
+    Onyx.merge(ONYXKEYS.USER, {isMutedAllSounds});
 }
 
 /**
@@ -672,11 +760,9 @@ function generateStatementPDF(period: string) {
         },
     ];
 
-    type GetStatementPDFParams = {period: string};
-
     const parameters: GetStatementPDFParams = {period};
 
-    API.read('GetStatementPDF', parameters, {
+    API.read(READ_COMMANDS.GET_STATEMENT_PDF, parameters, {
         optimisticData,
         successData,
         failureData,
@@ -686,9 +772,16 @@ function generateStatementPDF(period: string) {
 /**
  * Sets a contact method / secondary login as the user's "Default" contact method.
  */
-function setContactMethodAsDefault(newDefaultContactMethod: string) {
+function setContactMethodAsDefault(newDefaultContactMethod: string, policies: OnyxCollection<Pick<Policy, 'id' | 'ownerAccountID' | 'owner'>>) {
     const oldDefaultContactMethod = currentEmail;
     const optimisticData: OnyxUpdate[] = [
+        {
+            onyxMethod: Onyx.METHOD.MERGE,
+            key: ONYXKEYS.ACCOUNT,
+            value: {
+                primaryLogin: newDefaultContactMethod,
+            },
+        },
         {
             onyxMethod: Onyx.METHOD.MERGE,
             key: ONYXKEYS.SESSION,
@@ -716,7 +809,7 @@ function setContactMethodAsDefault(newDefaultContactMethod: string) {
             value: {
                 [currentUserAccountID]: {
                     login: newDefaultContactMethod,
-                    displayName: PersonalDetails.createDisplayName(newDefaultContactMethod, myPersonalDetails),
+                    displayName: PersonalDetailsUtils.createDisplayName(newDefaultContactMethod, myPersonalDetails),
                 },
             },
         },
@@ -735,6 +828,13 @@ function setContactMethodAsDefault(newDefaultContactMethod: string) {
         },
     ];
     const failureData: OnyxUpdate[] = [
+        {
+            onyxMethod: Onyx.METHOD.MERGE,
+            key: ONYXKEYS.ACCOUNT,
+            value: {
+                primaryLogin: oldDefaultContactMethod,
+            },
+        },
         {
             onyxMethod: Onyx.METHOD.MERGE,
             key: ONYXKEYS.SESSION,
@@ -765,15 +865,30 @@ function setContactMethodAsDefault(newDefaultContactMethod: string) {
         },
     ];
 
-    type SetContactMethodAsDefaultParams = {
-        partnerUserID: string;
-    };
-
+    Object.values(policies ?? {}).forEach((policy) => {
+        if (policy?.ownerAccountID !== currentUserAccountID) {
+            return;
+        }
+        optimisticData.push({
+            onyxMethod: Onyx.METHOD.MERGE,
+            key: `${ONYXKEYS.COLLECTION.POLICY}${policy.id}`,
+            value: {
+                owner: newDefaultContactMethod,
+            },
+        });
+        failureData.push({
+            onyxMethod: Onyx.METHOD.MERGE,
+            key: `${ONYXKEYS.COLLECTION.POLICY}${policy.id}`,
+            value: {
+                owner: policy.owner,
+            },
+        });
+    });
     const parameters: SetContactMethodAsDefaultParams = {
         partnerUserID: newDefaultContactMethod,
     };
 
-    API.write('SetContactMethodAsDefault', parameters, {
+    API.write(WRITE_COMMANDS.SET_CONTACT_METHOD_AS_DEFAULT, parameters, {
         optimisticData,
         successData,
         failureData,
@@ -790,17 +905,13 @@ function updateTheme(theme: ValueOf<typeof CONST.THEME>) {
         },
     ];
 
-    type UpdateThemeParams = {
-        value: string;
-    };
-
     const parameters: UpdateThemeParams = {
         value: theme,
     };
 
-    API.write('UpdateTheme', parameters, {optimisticData});
+    API.write(WRITE_COMMANDS.UPDATE_THEME, parameters, {optimisticData});
 
-    Navigation.navigate(ROUTES.SETTINGS_PREFERENCES);
+    Navigation.goBack();
 }
 
 /**
@@ -819,15 +930,9 @@ function updateCustomStatus(status: Status) {
         },
     ];
 
-    type UpdateStatusParams = {
-        text?: string;
-        emojiCode: string;
-        clearAfter?: string;
-    };
-
     const parameters: UpdateStatusParams = {text: status.text, emojiCode: status.emojiCode, clearAfter: status.clearAfter};
 
-    API.write('UpdateStatus', parameters, {
+    API.write(WRITE_COMMANDS.UPDATE_STATUS, parameters, {
         optimisticData,
     });
 }
@@ -847,9 +952,7 @@ function clearCustomStatus() {
             },
         },
     ];
-    API.write('ClearStatus', undefined, {
-        optimisticData,
-    });
+    API.write(WRITE_COMMANDS.CLEAR_STATUS, {}, {optimisticData});
 }
 
 /**
@@ -859,7 +962,7 @@ function clearCustomStatus() {
  * @param status.emojiCode
  * @param status.clearAfter - ISO 8601 format string, which represents the time when the status should be cleared
  */
-function updateDraftCustomStatus(status: Status) {
+function updateDraftCustomStatus(status: CustomStatusDraft) {
     Onyx.merge(ONYXKEYS.CUSTOM_STATUS_DRAFT, status);
 }
 
@@ -870,9 +973,49 @@ function clearDraftCustomStatus() {
     Onyx.merge(ONYXKEYS.CUSTOM_STATUS_DRAFT, {text: '', emojiCode: '', clearAfter: ''});
 }
 
+function dismissReferralBanner(type: ValueOf<typeof CONST.REFERRAL_PROGRAM.CONTENT_TYPES>) {
+    const optimisticData: OnyxUpdate[] = [
+        {
+            onyxMethod: Onyx.METHOD.MERGE,
+            key: ONYXKEYS.NVP_DISMISSED_REFERRAL_BANNERS,
+            value: {
+                [type]: true,
+            },
+        },
+    ];
+    API.write(
+        WRITE_COMMANDS.DISMISS_REFERRAL_BANNER,
+        {type},
+        {
+            optimisticData,
+        },
+    );
+}
+
+function dismissTrackTrainingModal() {
+    const parameters: SetNameValuePairParams = {
+        name: ONYXKEYS.NVP_HAS_SEEN_TRACK_TRAINING,
+        value: true,
+    };
+
+    const optimisticData: OnyxUpdate[] = [
+        {
+            onyxMethod: Onyx.METHOD.MERGE,
+            key: ONYXKEYS.NVP_HAS_SEEN_TRACK_TRAINING,
+            value: true,
+        },
+    ];
+
+    API.write(WRITE_COMMANDS.SET_NAME_VALUE_PAIR, parameters, {
+        optimisticData,
+    });
+}
+
 export {
     clearFocusModeNotification,
     closeAccount,
+    dismissReferralBanner,
+    dismissTrackTrainingModal,
     resendValidateCode,
     requestContactMethodValidateCode,
     updateNewsletterSubscription,
@@ -885,6 +1028,7 @@ export {
     subscribeToUserEvents,
     updatePreferredSkinTone,
     setShouldUseStagingServer,
+    setMuteAllSounds,
     clearUserErrorMessage,
     updateFrequentlyUsedEmojis,
     joinScreenShare,

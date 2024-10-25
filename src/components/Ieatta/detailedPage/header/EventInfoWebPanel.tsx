@@ -1,16 +1,15 @@
 import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import moment from 'moment';
-import PropTypes from 'prop-types';
 import React from 'react';
 import {Image as RNImage, View} from 'react-native';
-import {withOnyx} from 'react-native-onyx';
 import type {OnyxEntry} from 'react-native-onyx';
+import {withOnyx} from 'react-native-onyx';
 import Button from '@components/Button';
-import Divider from '@components/Divider';
 import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
 import {IeattaStars} from '@components/Icon/IeattaStars';
+import Divider from '@components/Ieatta/components/Divider';
 import {SectionCommonTitle} from '@components/Ieatta/detailedPage/common';
 import PageFlashListItemWithEvent from '@components/Ieatta/detailedPage/PageFlashListItemWithEvent';
 import ImagePlaceholder from '@components/ImagePlaceholder';
@@ -22,18 +21,16 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import useWindowDimensions from '@hooks/useWindowDimensions';
 import {FBCollections, ReviewType} from '@libs/Firebase/constant';
 import {PageSection, RowPressableType} from '@libs/Firebase/list/constant';
+import type {IDisplayNameTitleRow} from '@libs/Firebase/list/types/rows/common';
 import {calcRateForRestaurant} from '@libs/Firebase/utils/rate_utils';
 import {StringUtils} from '@libs/Firebase/utils/string_utils';
 import {navigationToEditEvent, navigationToEditReview} from '@libs/ieatta/editFormUtils';
-import Navigation from '@libs/Navigation/Navigation';
 import TailwindColors from '@styles/tailwindcss/colors';
 import variables from '@styles/variables';
-import * as MapboxToken from '@userActions/MapboxToken';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
-import ROUTES from '@src/ROUTES';
 import type {IFBEvent, IFBRestaurant} from '@src/types/firebase';
-import type {MapboxAccessToken, Transaction} from '@src/types/onyx';
+import type {MapboxAccessToken} from '@src/types/onyx';
 import ActionBarInInfoPanel from './ActionBarInInfoPanel';
 
 type EventInfoWebPropsOnyxProps = {
@@ -92,45 +89,53 @@ function EventInfoWePanel({restaurant, event, mapboxAccessToken}: EventInfoWebPa
                     textStyles={[{color: TailwindColors.white}]}
                     text={translate('common.edit')}
                     onPress={() => {
-                        navigationToEditEvent(event.uniqueId);
+                        navigationToEditEvent({eventId: event.uniqueId, restaurantId: event.restaurantId});
                     }}
                 />
             </View>
         </View>
     );
 
-    const restaurantInfo = (
-        <View style={[styles.flex1, styles.flexColumn, styles.alignItemsStart, styles.gap2]}>
-            <PageFlashListItemWithEvent
-                item={{
-                    rowKey: 'PageSection.RESTAURANT_TITLE_IN_EVENT_PAGE<Restaurant-Title>',
-                    rowType: PageSection.RESTAURANT_TITLE_IN_EVENT_PAGE,
-                    rowData: {restaurantId: lodashGet(event, 'restaurantId', ''), displayName: lodashGet(restaurant, 'displayName', '')},
-                    pressType: RowPressableType.SINGLE_PRESS,
-                }}
-            />
-            <View style={[styles.flexRow, styles.alignItemsCenter, styles.gap2]}>
-                <RNImage
-                    style={[styles.ratingIconInHeaderPanel]}
-                    source={IeattaStars.STARS.SMALL[calcRateForRestaurant(lodashGet(restaurant, 'rate', 0), lodashGet(restaurant, 'reviewCount', 0))]}
+    const restaurantInfo = () => {
+        const rowData: IDisplayNameTitleRow = {
+            relatedId: lodashGet(event, 'restaurantId', ''),
+            modelPath: FBCollections.Restaurants,
+            displayName: lodashGet(restaurant, 'displayName', ''),
+        };
+        return (
+            <View style={[styles.flex1, styles.flexColumn, styles.alignItemsStart, styles.gap2]}>
+                <PageFlashListItemWithEvent
+                    item={{
+                        rowKey: 'PageSection.DISPLAY_NAME_TITLE_ROW<Restaurant-Title>',
+                        rowType: PageSection.DISPLAY_NAME_TITLE_ROW,
+                        rowData,
+                        modalName: 'display-name',
+                        pressType: RowPressableType.SINGLE_PRESS,
+                    }}
                 />
-                <Text style={[]}> {`${lodashGet(restaurant, 'reviewCount', 0)} reviews`}</Text>
+                <View style={[styles.flexRow, styles.alignItemsCenter, styles.gap2]}>
+                    <RNImage
+                        style={[styles.ratingIconInHeaderPanel]}
+                        source={IeattaStars.STARS.SMALL[calcRateForRestaurant(lodashGet(restaurant, 'rate', 0), lodashGet(restaurant, 'reviewCount', 0))]}
+                    />
+                    <Text style={[]}> {`${lodashGet(restaurant, 'reviewCount', 0)} reviews`}</Text>
+                </View>
+                <Text
+                    numberOfLines={2}
+                    style={[styles.base, styles.fontNormal, styles.textSupporting]}
+                >
+                    {restaurant?.address}
+                </Text>
             </View>
-            <Text
-                numberOfLines={2}
-                style={[styles.base, styles.fontNormal, styles.textSupporting]}
-            >
-                {restaurant?.address}
-            </Text>
-        </View>
-    );
+        );
+    };
 
     const leftPanel = (
         <View style={[styles.flex1, styles.flexRow, styles.alignItemsStart, styles.eventLeftPanelBorderInWebHeaderPanel]}>
             <View style={[styles.flex1, styles.h100]}>
                 <ImagePlaceholder
                     key={restaurant ? restaurant?.uniqueId : event.uniqueId}
-                    sourceUri={restaurant?.originalUrl}
+                    sourceUri={lodashGet(restaurant, 'originalUrl', '')}
                     style={[styles.w100, styles.h100]}
                     imageType="png"
                     placeholder={Expensicons.PNGBusinessMediumSquare}
@@ -147,7 +152,7 @@ function EventInfoWePanel({restaurant, event, mapboxAccessToken}: EventInfoWebPa
                             height={variables.iconSizeLarge}
                             fill={theme.textSupporting}
                         />
-                        {_.isUndefined(restaurant) === false && restaurantInfo}
+                        {_.isUndefined(restaurant) === false && restaurantInfo()}
                     </View>
                 </View>
                 {/** Middle Divider Container  */}
@@ -174,10 +179,10 @@ function EventInfoWePanel({restaurant, event, mapboxAccessToken}: EventInfoWebPa
         <View style={[styles.flex1, styles.flexRow, {backgroundColor: 'transparent'}]}>
             {restaurant !== null && restaurant !== undefined && (
                 <MapView
-                    initialState={{
-                        zoom: CONST.MAPBOX.DEFAULT_ZOOM,
-                        location: {longitude: restaurant.longitude, latitude: restaurant.latitude},
-                    }}
+                    // initialState={{
+                    //     zoom: CONST.MAPBOX.DEFAULT_ZOOM,
+                    //     location: {longitude: restaurant.longitude, latitude: restaurant.latitude},
+                    // }}
                     accessToken={mapboxAccessToken?.token ?? ''}
                     style={[styles.flex1, styles.w100, styles.h100, {backgroundColor: 'transparent'}]}
                     styleURL={CONST.MAPBOX.STYLE_URL}

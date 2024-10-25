@@ -37,7 +37,7 @@ function getNewDotURL(url: string): string {
 
     if (pathname === 'policy') {
         const workspaceID = params.policyID || '';
-        const section = urlObj.hash.slice(1) || 'overview';
+        const section = urlObj.hash.slice(1) || 'profile';
 
         return `workspace/${workspaceID}/${section}`;
     }
@@ -93,10 +93,10 @@ function getOldDotURL(url: string): string {
 }
 
 function OldDotIFrame({session}: OldDotIFrameProps) {
-    const [oldDotURL, setOldDotURL] = useState('https://staging.expensify.com');
+    const [oldDotURL, setOldDotURL] = useState('https://staging.ieatta.com');
 
     useEffect(() => {
-        setOldDotURL(`https://expensify.com.dev/${getOldDotURL(window.location.href)}`);
+        setOldDotURL(`https://ieatta.com.dev/${getOldDotURL(window.location.href)}`);
 
         window.addEventListener('message', (event: MessageEvent<string>) => {
             const url = event.data;
@@ -110,8 +110,8 @@ function OldDotIFrame({session}: OldDotIFrameProps) {
         if (!session) {
             return;
         }
-        document.cookie = `authToken=${session.authToken}; domain=expensify.com.dev; path=/;`;
-        document.cookie = `email=${session.email}; domain=expensify.com.dev; path=/;`;
+        document.cookie = `authToken=${session.authToken}; domain=ieatta.com.dev; path=/;`;
+        document.cookie = `email=${session.email}; domain=ieatta.com.dev; path=/;`;
     }, [session]);
 
     return (

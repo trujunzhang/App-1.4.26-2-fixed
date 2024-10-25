@@ -3,18 +3,17 @@ import React from 'react';
 import DetailedPhotosList from '@components/Ieatta/detailedPage/common/photoAndWaiter/DetailedPhotosList';
 import {PhotoType} from '@libs/Firebase/constant';
 import {filterWaiters} from '@libs/ieatta/eventUtils';
-import Log from '@libs/Log';
 import {RealmCollections} from '@libs/Realm/constant';
-import {toPhotosList} from '@libs/Realm/helpers/realmTypeHelper/index.native';
+import {toRealmModelList} from '@libs/Realm/helpers/realmTypeHelper';
+import * as RealmQuery from '@libs/Realm/services/realm-query';
+import type {IFBPhoto} from '@src/types/firebase';
 import type {WaitersRowInEventProps} from './types';
 
 function WaitersRowInEvent({waiterRow}: WaitersRowInEventProps) {
     const {event, eventId, restaurantId} = waiterRow;
 
-    const photos = useQuery(RealmCollections.Photos, (array) => {
-        return array.filtered('restaurantId == $0', restaurantId);
-    });
-    const waitersInRestaurant = toPhotosList(photos);
+    const photos = useQuery(RealmCollections.Photos, RealmQuery.queryForRealmPhotos({relatedId: restaurantId, photoType: PhotoType.Waiter}));
+    const waitersInRestaurant: IFBPhoto[] = toRealmModelList<IFBPhoto>(photos);
 
     const waitersInEvent = filterWaiters(event, waitersInRestaurant);
 
@@ -27,8 +26,11 @@ function WaitersRowInEvent({waiterRow}: WaitersRowInEventProps) {
 
     return (
         <DetailedPhotosList
-            isSmallScreenWidth
+            relatedId={eventId}
+            photoType={PhotoType.Waiter}
+            isSmallScreen
             photos={waitersInEvent}
+            modalName="waiter"
         />
     );
 }

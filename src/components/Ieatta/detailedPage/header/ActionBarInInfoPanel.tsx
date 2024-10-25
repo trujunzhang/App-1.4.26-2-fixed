@@ -1,10 +1,8 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import {View} from 'react-native';
 import Button from '@components/Button';
-import Divider from '@components/Divider';
 import * as Expensicons from '@components/Icon/Expensicons';
-import Text from '@components/Text';
+import Divider from '@components/Ieatta/components/Divider';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import TailwindColors from '@styles/tailwindcss/colors';
@@ -18,7 +16,7 @@ type ActionBarInInfoPanelProps = {
     onAddPhotoPress?: () => void;
 };
 
-function ActionBarInInfoPanel({actionBarType, infoId, shouldShowAddPhotoButton = true, onWriteReviewPress, onAddPhotoPress}: ActionBarInInfoPanelProps) {
+function ActionBarInInfoPanel({actionBarType, infoId, shouldShowAddPhotoButton = true, onWriteReviewPress = () => {}, onAddPhotoPress = () => {}}: ActionBarInInfoPanelProps) {
     const theme = useTheme();
     const styles = useThemeStyles();
 
@@ -43,8 +41,6 @@ function ActionBarInInfoPanel({actionBarType, infoId, shouldShowAddPhotoButton =
             hoverStyles={[{backgroundColor: TailwindColors.red700}]}
             textStyles={[styles.textStrong, styles.textLarge, {color: TailwindColors.white}]}
             icon={Expensicons.WriteAReview}
-            iconWidth={variables.iconSizeLarge}
-            iconHeight={variables.iconSizeLarge}
             iconFill={theme.text}
             iconStyles={[styles.mr2]}
             text="Write a Review"
@@ -77,8 +73,6 @@ function ActionBarInInfoPanel({actionBarType, infoId, shouldShowAddPhotoButton =
             ]}
             textStyles={[styles.textStrong, styles.textLarge, {color: TailwindColors.gray800}]}
             icon={Expensicons.AddPhoto}
-            iconWidth={variables.iconSizeLarge}
-            iconHeight={variables.iconSizeLarge}
             iconFill={theme.text}
             iconStyles={[styles.mr2]}
             text="Add photo"

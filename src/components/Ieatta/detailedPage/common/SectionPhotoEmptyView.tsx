@@ -2,7 +2,6 @@ import React from 'react';
 import {View} from 'react-native';
 import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
-import Text from '@components/Text';
 import useThemeStyles from '@hooks/useThemeStyles';
 import TailwindColors from '@styles/tailwindcss/colors';
 import variables from '@styles/variables';

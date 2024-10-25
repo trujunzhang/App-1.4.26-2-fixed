@@ -1,24 +1,22 @@
-import type {NavigationProp} from '@react-navigation/native';
-import React, {useMemo} from 'react';
-import {clearTestState} from 'realm';
 // eslint-disable-next-line no-restricted-imports
-import _ from 'underscore';
-import DetailedPageData from '@components/Ieatta/detailedPage/DetailedPageData';
+import _ from 'lodash';
+import React, {useMemo} from 'react';
+import DetailedPageLayout from '@components/Ieatta/detailedPage/DetailedPageLayout';
 import useWindowDimensions from '@hooks/useWindowDimensions';
+import type {RecipeScreenNavigationProps} from '@libs/Firebase/helper/RecipeUtils';
 import {buildRecipeRows} from '@libs/Firebase/list/builder/recipe';
 import type {IReviewOnSearchAndSortChanged} from '@libs/Firebase/list/types/rows/review';
-import type {RootStackParamList} from '@libs/Navigation/types';
-import type {IFBEvent, IFBRecipe, IFBReview} from '@src/types/firebase';
+import type {IFBRecipe, IFBReview} from '@src/types/firebase';
 
-type BaseRecipeScreenProps = IReviewOnSearchAndSortChanged & {
-    fetchMoreReviews: () => void;
-    recipeId: string;
-    recipe: IFBRecipe | undefined;
-    reviews: IFBReview[];
-    navigation: NavigationProp<RootStackParamList>;
-    shouldShowLoading?: boolean;
-    loadingContent?: React.ReactNode;
-};
+type BaseRecipeScreenProps = RecipeScreenNavigationProps &
+    IReviewOnSearchAndSortChanged & {
+        fetchMoreReviews: () => void;
+        recipeId: string;
+        recipe: IFBRecipe | undefined;
+        reviews: IFBReview[];
+        shouldShowLoading?: boolean;
+        loadingContent?: React.ReactNode;
+    };
 
 // eslint-disable-next-line react/prop-types
 function BaseRecipeScreen({
@@ -48,11 +46,11 @@ function BaseRecipeScreen({
                     onReviewSearchChanged,
                 },
             }),
-        [isSmallScreenWidth, recipeId, recipe, reviews, onReviewSortChanged, onReviewSearchChanged],
+        [isSmallScreenWidth, recipe, reviews, onReviewSortChanged, onReviewSearchChanged],
     );
 
     return (
-        <DetailedPageData
+        <DetailedPageLayout
             shouldShowNotFoundPage={shouldShowNotFoundPage}
             rowsData={rowsData}
             fetchMoreReviews={fetchMoreReviews}

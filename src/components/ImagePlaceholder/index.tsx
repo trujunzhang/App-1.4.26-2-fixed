@@ -9,6 +9,7 @@ import * as Expensicons from '@components/Icon/Expensicons';
 import Image from '@components/Image';
 import ImageSVG from '@components/ImageSVG';
 import useThemeStyles from '@hooks/useThemeStyles';
+import Log from '@libs/Log';
 
 type ImagePlaceholderProps = {
     // placeholder: AvatarSource | ImageSourcePropType;
@@ -22,7 +23,7 @@ type ImagePlaceholderProps = {
 };
 
 function ImagePlaceholder(props: ImagePlaceholderProps) {
-    const {placeholder, onLoad, imageType, sourceUri, ...restProps} = props;
+    const {placeholder, onLoad, imageType, sourceUri = '', ...restProps} = props;
     const styles = useThemeStyles();
     const [showPlaceholder, setShowPlaceholder] = useState(true);
     const [showOriginalImage, setShowOriginalImage] = useState(true);
@@ -36,7 +37,7 @@ function ImagePlaceholder(props: ImagePlaceholderProps) {
                 />
             ) : (
                 <RNImage
-                    style={[styles.w100, styles.h100]}
+                    style={[styles.w100, styles.h100, restProps.style]}
                     resizeMode="cover"
                     source={placeholder}
                     // source={Expensicons.PNGBusinessMediumSquare}
@@ -45,10 +46,18 @@ function ImagePlaceholder(props: ImagePlaceholderProps) {
         </View>
     );
 
+    const imageUri = sourceUri.replace('http://res.cloudinary.com', 'https://res.cloudinary.com');
+
+    // Log.info('');
+    // Log.info('================================');
+    // Log.info(`imgUri on the ImagePlaceholder: ${imageUri}`);
+    // Log.info('================================');
+    // Log.info('');
+
     const originalImageContent = (
         <Image
             {...restProps}
-            source={{uri: sourceUri}}
+            source={{uri: imageUri}}
             onLoad={() => {
                 setShowPlaceholder(false);
             }}

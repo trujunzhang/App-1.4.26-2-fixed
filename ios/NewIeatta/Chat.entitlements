@@ -10,9 +10,9 @@
 	</array>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:new.expensify.com</string>
-		<string>applinks:staging.new.expensify.com</string>
-		<string>webcredentials:new.expensify.com</string>
+		<string>applinks:new.ieatta.com</string>
+		<string>applinks:staging.new.ieatta.com</string>
+		<string>webcredentials:new.ieatta.com</string>
 	</array>
 	<key>com.apple.developer.usernotifications.communication</key>
 	<true/>

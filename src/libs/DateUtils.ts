@@ -1,14 +1,17 @@
 import {
     addDays,
     addHours,
+    addMilliseconds,
     addMinutes,
     eachDayOfInterval,
     eachMonthOfInterval,
     endOfDay,
+    endOfMonth,
     endOfWeek,
     format,
     formatDistanceToNow,
-    getDayOfYear,
+    getDate,
+    getDay,
     isAfter,
     isBefore,
     isSameDay,
@@ -18,13 +21,15 @@ import {
     parse,
     set,
     setDefaultOptions,
+    startOfDay,
     startOfWeek,
     subDays,
     subMilliseconds,
     subMinutes,
 } from 'date-fns';
 import {formatInTimeZone, format as tzFormat, utcToZonedTime, zonedTimeToUtc} from 'date-fns-tz';
-import {enGB, es} from 'date-fns/locale';
+import enGB from 'date-fns/locale/en-GB';
+import es from 'date-fns/locale/es';
 import throttle from 'lodash/throttle';
 import Onyx from 'react-native-onyx';
 import type {ValueOf} from 'type-fest';
@@ -253,7 +258,7 @@ function getZoneAbbreviation(datetime: string | Date, selectedTimezone: Selected
  *
  * @returns Sunday, July 9, 2023
  */
-function formatToLongDateWithWeekday(datetime: string): string {
+function formatToLongDateWithWeekday(datetime: string | Date): string {
     return format(new Date(datetime), CONST.DATE.LONG_DATE_FORMAT_WITH_WEEKDAY);
 }
 
@@ -262,8 +267,8 @@ function formatToLongDateWithWeekday(datetime: string): string {
  *
  * @returns Sunday
  */
-function formatToDayOfWeek(datetime: string): string {
-    return format(new Date(datetime), CONST.DATE.WEEKDAY_TIME_FORMAT);
+function formatToDayOfWeek(datetime: Date): string {
+    return format(datetime, CONST.DATE.WEEKDAY_TIME_FORMAT);
 }
 
 /**
@@ -316,7 +321,6 @@ function getMonthNames(preferredLocale: Locale): string[] {
         end: new Date(fullYear, 11, 31), // December 31st of the current year
     });
 
-    // eslint-disable-next-line rulesdir/prefer-underscore-method
     return monthsArray.map((monthDate) => format(monthDate, CONST.DATE.MONTH_FORMAT));
 }
 
@@ -332,7 +336,6 @@ function getDaysOfWeek(preferredLocale: Locale): string[] {
     const endOfCurrentWeek = endOfWeek(new Date(), {weekStartsOn});
     const daysOfWeek = eachDayOfInterval({start: startOfCurrentWeek, end: endOfCurrentWeek});
 
-    // eslint-disable-next-line rulesdir/prefer-underscore-method
     return daysOfWeek.map((date) => format(date, 'eeee'));
 }
 
@@ -357,27 +360,40 @@ function getMicroseconds(): number {
     return Date.now() * CONST.MICROSECONDS_PER_MS;
 }
 
+function getDBTimeFromDate(date: Date): string {
+    return date.toISOString().replace('T', ' ').replace('Z', '');
+}
+
 /**
- * Returns the current time in milliseconds in the format expected by the database
+ * Convert the given timestamp to the "yyyy-MM-dd HH:mm:ss" format, as expected by the database
+ *
+ * @param [timestamp] the given timestamp (if omitted, defaults to the current time)
  */
 function getDBTime(timestamp: string | number = ''): string {
     const datetime = timestamp ? new Date(timestamp) : new Date();
-    return datetime.toISOString().replace('T', ' ').replace('Z', '');
+    return getDBTimeFromDate(datetime);
 }
 
 /**
  * Returns the current time plus skew in milliseconds in the format expected by the database
  */
-function getDBTimeWithSkew(): string {
+function getDBTimeWithSkew(timestamp: string | number = ''): string {
     if (networkTimeSkew > 0) {
-        return getDBTime(new Date().valueOf() + networkTimeSkew);
+        return getDBTime(new Date(timestamp).valueOf() + networkTimeSkew);
     }
-    return getDBTime();
+    return getDBTime(timestamp);
 }
 
 function subtractMillisecondsFromDateTime(dateTime: string, milliseconds: number): string {
     const date = zonedTimeToUtc(dateTime, 'UTC');
     const newTimestamp = subMilliseconds(date, milliseconds).valueOf();
+
+    return getDBTime(newTimestamp);
+}
+
+function addMillisecondsFromDateTime(dateTime: string, milliseconds: number): string {
+    const date = zonedTimeToUtc(dateTime, 'UTC');
+    const newTimestamp = addMilliseconds(date, milliseconds).valueOf();
 
     return getDBTime(newTimestamp);
 }
@@ -646,15 +662,6 @@ function areDatesIdentical(dateTimeStringFirst: string, dateTimeStringSecond: st
 const isTimeAtLeastOneMinuteInFuture = ({timeString, dateTimeString}: {timeString?: string; dateTimeString: string}): boolean => {
     let dateToCheck = dateTimeString;
     if (timeString) {
-        //  return false;
-        // Parse the hour and minute from the time input
-        const [hourStr] = timeString.split(/[:\s]+/);
-        const hour = parseInt(hourStr, 10);
-
-        if (hour === 0) {
-            return false;
-        }
-
         dateToCheck = combineDateAndTime(timeString, dateTimeString);
     }
 
@@ -675,9 +682,8 @@ const getDayValidationErrorKey = (inputDate: Date): string => {
     if (!inputDate) {
         return '';
     }
-    const currentYear = getDayOfYear(new Date());
-    const inputYear = getDayOfYear(inputDate);
-    if (inputYear < currentYear) {
+
+    if (isAfter(startOfDay(new Date()), startOfDay(inputDate))) {
         return 'common.error.invalidDateShouldBeFuture';
     }
     return '';
@@ -730,6 +736,34 @@ function formatToSupportedTimezone(timezoneInput: Timezone): Timezone {
     };
 }
 
+/**
+ * Return the date with full format if the created date is the current date.
+ * Otherwise return the created date.
+ */
+function enrichMoneyRequestTimestamp(created: string): string {
+    const now = new Date();
+    const createdDate = parse(created, CONST.DATE.FNS_FORMAT_STRING, now);
+    return isSameDay(createdDate, now) ? getDBTimeFromDate(now) : created;
+}
+/**
+ * Returns the last business day of given date month
+ *
+ * param {Date} inputDate
+ * returns {number}
+ */
+function getLastBusinessDayOfMonth(inputDate: Date): number {
+    let currentDate = endOfMonth(inputDate);
+    const dayOfWeek = getDay(currentDate);
+
+    if (dayOfWeek === 0) {
+        currentDate = subDays(currentDate, 2);
+    } else if (dayOfWeek === 6) {
+        currentDate = subDays(currentDate, 1);
+    }
+
+    return getDate(currentDate);
+}
+
 const DateUtils = {
     formatToDayOfWeek,
     formatToLongDateWithWeekday,
@@ -747,6 +781,7 @@ const DateUtils = {
     getDBTimeWithSkew,
     setLocale,
     subtractMillisecondsFromDateTime,
+    addMillisecondsFromDateTime,
     getDateStringFromISOTimestamp,
     getThirtyMinutesFromNow,
     getEndOfToday,
@@ -774,6 +809,8 @@ const DateUtils = {
     getWeekEndsOn,
     isTimeAtLeastOneMinuteInFuture,
     formatToSupportedTimezone,
+    enrichMoneyRequestTimestamp,
+    getLastBusinessDayOfMonth,
 };
 
 export default DateUtils;

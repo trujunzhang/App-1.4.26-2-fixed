@@ -5,6 +5,7 @@ import Navigation from '@libs/Navigation/Navigation';
 import navigationRef from '@libs/Navigation/navigationRef';
 import shouldPreventDeeplinkPrompt from '@libs/Navigation/shouldPreventDeeplinkPrompt';
 import * as App from '@userActions/App';
+import * as Session from '@userActions/Session';
 import CONFIG from '@src/CONFIG';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';
@@ -57,12 +58,19 @@ function DeeplinkWrapper({children, isAuthenticated, autoAuthState}: DeeplinkWra
     }, [hasShownPrompt, isAuthenticated]);
 
     useEffect(() => {
-        // According to the design, we don't support unlink in Desktop app https://github.com/Expensify/App/issues/19681#issuecomment-1610353099
+        // According to the design, we don't support unlink in Desktop app https://github.com/Ieatta/App/issues/19681#issuecomment-1610353099
         const routeRegex = new RegExp(CONST.REGEX.ROUTES.UNLINK_LOGIN);
         const isUnsupportedDeeplinkRoute = routeRegex.test(window.location.pathname);
 
         // Making a few checks to exit early before checking authentication status
-        if (!isMacOSWeb() || isUnsupportedDeeplinkRoute || hasShownPrompt || CONFIG.ENVIRONMENT === CONST.ENVIRONMENT.DEV || autoAuthState === CONST.AUTO_AUTH_STATE.NOT_STARTED) {
+        if (
+            !isMacOSWeb() ||
+            isUnsupportedDeeplinkRoute ||
+            hasShownPrompt ||
+            CONFIG.ENVIRONMENT === CONST.ENVIRONMENT.DEV ||
+            autoAuthState === CONST.AUTO_AUTH_STATE.NOT_STARTED ||
+            Session.isAnonymousUser()
+        ) {
             return;
         }
         // We want to show the prompt immediately if the user is already authenticated.

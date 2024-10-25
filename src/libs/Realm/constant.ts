@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-restricted-syntax,import/prefer-default-export
+// eslint-disable-next-line no-restricted-syntax,import/prefer-default-export,rulesdir/no-inline-named-export
 export enum RealmCollections {
     Profiles = 'Profile',
     Restaurants = 'Restaurant',
@@ -6,5 +6,13 @@ export enum RealmCollections {
     PeopleInEvent = 'PeopleInEvent',
     Recipes = 'Recipe',
     Photos = 'Photo',
+    SqlPhotos = 'SqlPhoto',
     Reviews = 'Review',
+}
+
+// eslint-disable-next-line rulesdir/no-inline-named-export,no-restricted-syntax
+export enum RealmWriteMode {
+    Never = 'never',
+    Modified = 'modified',
+    All = 'all',
 }

@@ -1,10 +1,10 @@
 import React from 'react';
-import type {StyleProp, TextStyle, ViewStyle} from 'react-native';
-import useThemeStyles from '@hooks/useThemeStyles';
+import type {ForwardedRef} from 'react';
+import type {NativeSyntheticEvent, StyleProp, TextInputKeyPressEventData, TextInputSelectionChangeEventData, TextStyle, ViewStyle} from 'react-native';
 import CONST from '@src/CONST';
 import type {TextSelection} from './Composer/types';
 import TextInput from './TextInput';
-import type {BaseTextInputRef} from './TextInput/BaseTextInput/types';
+import type {BaseTextInputProps, BaseTextInputRef} from './TextInput/BaseTextInput/types';
 
 type AmountTextInputProps = {
     /** Formatted amount in local currency  */
@@ -20,7 +20,7 @@ type AmountTextInputProps = {
     selection?: TextSelection;
 
     /** Function to call when selection in text input is changed */
-    onSelectionChange?: () => void;
+    onSelectionChange?: (event: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => void;
 
     /** Style for the input */
     style?: StyleProp<TextStyle>;
@@ -29,21 +29,24 @@ type AmountTextInputProps = {
     touchableInputWrapperStyle?: StyleProp<ViewStyle>;
 
     /** Function to call to handle key presses in the text input */
-    onKeyPress?: () => void;
-};
+    onKeyPress?: (event: NativeSyntheticEvent<KeyboardEvent>) => void;
+
+    /** Style for the TextInput container */
+    containerStyle?: StyleProp<ViewStyle>;
+} & Pick<BaseTextInputProps, 'autoFocus'>;
 
 function AmountTextInput(
-    {formattedAmount, onChangeAmount, placeholder, selection, onSelectionChange, style, touchableInputWrapperStyle, onKeyPress}: AmountTextInputProps,
-    ref: BaseTextInputRef,
+    {formattedAmount, onChangeAmount, placeholder, selection, onSelectionChange, style, touchableInputWrapperStyle, onKeyPress, containerStyle, ...rest}: AmountTextInputProps,
+    ref: ForwardedRef<BaseTextInputRef>,
 ) {
-    const styles = useThemeStyles();
     return (
         <TextInput
             disableKeyboard
             autoGrow
             hideFocusedState
-            inputStyle={[styles.iouAmountTextInput, styles.p0, styles.noLeftBorderRadius, styles.noRightBorderRadius, style]}
-            textInputContainerStyles={[styles.borderNone, styles.noLeftBorderRadius, styles.noRightBorderRadius]}
+            shouldInterceptSwipe
+            inputStyle={style}
+            textInputContainerStyles={containerStyle}
             onChangeText={onChangeAmount}
             ref={ref}
             value={formattedAmount}
@@ -53,8 +56,14 @@ function AmountTextInput(
             selection={selection}
             onSelectionChange={onSelectionChange}
             role={CONST.ROLE.PRESENTATION}
-            onKeyPress={onKeyPress}
+            onKeyPress={onKeyPress as (event: NativeSyntheticEvent<TextInputKeyPressEventData>) => void}
             touchableInputWrapperStyle={touchableInputWrapperStyle}
+            // On iPad, even if the soft keyboard is hidden, the keyboard suggestion is still shown.
+            // Setting both autoCorrect and spellCheck to false will hide the suggestion.
+            autoCorrect={false}
+            spellCheck={false}
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...rest}
         />
     );
 }

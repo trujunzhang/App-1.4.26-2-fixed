@@ -10,9 +10,10 @@ Geolocation.setRNConfiguration({
 const getCurrentPosition: GetCurrentPosition = (success, error, config) => {
     Geolocation.getCurrentPosition(success, error, config);
 };
+
 const watchCurrentPosition: WatchCurrentPosition = (success, error, config) => {
     Geolocation.watchPosition(success, error, config);
 };
 
-export default getCurrentPosition;
 export {watchCurrentPosition};
+export default getCurrentPosition;

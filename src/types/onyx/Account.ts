@@ -1,10 +1,20 @@
 import type {ValueOf} from 'type-fest';
 import type CONST from '@src/CONST';
+import type DismissedReferralBanners from './DismissedReferralBanners';
 import type * as OnyxCommon from './OnyxCommon';
 
 type TwoFactorAuthStep = ValueOf<typeof CONST.TWO_FACTOR_AUTH_STEPS> | '';
 
 type Account = {
+    /** Whether SAML is enabled for the current account */
+    isSAMLEnabled?: boolean;
+
+    /** Whether SAML is required for the current account */
+    isSAMLRequired?: boolean;
+
+    /** Is this account having trouble receiving emails? */
+    hasEmailDeliveryFailure?: boolean;
+
     /** URL to the assigned guide's appointment booking calendar */
     guideCalendarLink?: string;
 
@@ -26,9 +36,6 @@ type Account = {
     /** The message to be displayed when code requested */
     message?: string;
 
-    /** Accounts that are on a domain with an Approved Accountant */
-    doesDomainHaveApprovedAccountant?: boolean;
-
     /** Form that is being loaded */
     loadingForm?: ValueOf<typeof CONST.FORMS>;
 
@@ -47,13 +54,11 @@ type Account = {
     /** Whether a sign is loading */
     isLoading?: boolean;
 
-    /** The active policy ID. Initiating a SmartScan will create an expense on this policy by default. */
-    activePolicyID?: string;
-
-    errors?: OnyxCommon.Errors;
+    errors?: OnyxCommon.Errors | null;
     success?: string;
     codesAreCopied?: boolean;
     twoFactorAuthStep?: TwoFactorAuthStep;
+    dismissedReferralBanners?: DismissedReferralBanners;
 };
 
 export default Account;

@@ -16,7 +16,7 @@ jobs:
       - name: Check if user is deployer
         id: isDeployer
         run: |
-          if gh api /orgs/Expensify/teams/mobile-deployers/memberships/${{ github.actor }} --silent; then
+          if gh api /orgs/Ieatta/teams/mobile-deployers/memberships/${{ github.actor }} --silent; then
             echo "IS_DEPLOYER=true" >> "$GITHUB_OUTPUT"
           else
             echo "IS_DEPLOYER=false" >> "$GITHUB_OUTPUT"
@@ -110,7 +110,7 @@ jobs:
         run: |
           gh pr create \
             --title "🍒 Cherry pick PR #${{ github.event.inputs.PULL_REQUEST_NUMBER }} to staging 🍒" \
-            --body "🍒 Cherry pick https://github.com/Expensify/App/pull/${{ github.event.inputs.PULL_REQUEST_NUMBER }} to staging 🍒" \
+            --body "🍒 Cherry pick https://github.com/Ieatta/App/pull/${{ github.event.inputs.PULL_REQUEST_NUMBER }} to staging 🍒" \
             --label "Engineering,Hourly" \
             --base "staging"
           sleep 5
@@ -133,7 +133,7 @@ jobs:
               attachments: [{
                 color: "#DB4545",
                 pretext: `<!subteam^S4TJJ3PSL>`,
-                text: `💥 Failed to CP https://github.com/Expensify/App/pull/${{ github.event.inputs.PULL_REQUEST_NUMBER }} to staging 💥`,
+                text: `💥 Failed to CP https://github.com/Ieatta/App/pull/${{ github.event.inputs.PULL_REQUEST_NUMBER }} to staging 💥`,
               }]
             }
         env:

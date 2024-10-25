@@ -1,7 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
 import {FBCollections} from '@libs/Firebase/constant';
-import type {IFBEvent, IFBPeopleInEvent, IFBPhoto, IFBRecipe, IFBRestaurant, IFBReview, IFBUser} from '@src/types/firebase';
-import type {DeleteData, GetData, IeattaModelsWithoutUser, SetData} from './types';
+import type {IeattaModelsWithoutUser, IFBEvent, IFBPeopleInEvent, IFBPhoto, IFBRecipe, IFBRestaurant, IFBReview, IFBUser} from '@src/types/firebase';
+import type {DeleteData, GetData, SetData} from './types';
 import type IFirebaseHelper from './types';
 
 class FirebaseHelper implements IFirebaseHelper {

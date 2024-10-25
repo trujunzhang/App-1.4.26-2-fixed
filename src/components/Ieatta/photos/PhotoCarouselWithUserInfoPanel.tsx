@@ -1,47 +1,40 @@
 import _ from 'lodash';
 import lodashGet from 'lodash/get';
-import moment from 'moment';
-import PropTypes from 'prop-types';
-import React, {useCallback, useMemo, useState} from 'react';
-import {Image as RNImage, View} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {View} from 'react-native';
 import Avatar from '@components/Avatar';
-import {IeattaStars} from '@components/Icon/IeattaStars';
 import {PhotoCarouselPageView} from '@components/Ieatta/components/PhotosCarousel';
-import {defaultProps, propTypes} from '@components/Ieatta/components/PhotosCarousel/propsType';
 import ReviewItemFragment from '@components/Ieatta/detailedPage/common/DetailedReviewItem/ReviewItemFragment';
 import IeattaUserDetailsTooltip from '@components/Ieatta/detailedPage/common/IeattaUserDetailsTooltip';
 import OfflineWithFeedback from '@components/OfflineWithFeedback';
 import {usePersonalDetails} from '@components/OnyxProvider';
 import PressableWithoutFeedback from '@components/Pressable/PressableWithoutFeedback';
 import Text from '@components/Text';
-import withCurrentUserPersonalDetails from '@components/withCurrentUserPersonalDetails';
 import useThemeStyles from '@hooks/useThemeStyles';
-import compose from '@libs/compose';
 import ControlSelection from '@libs/ControlSelection';
+import type {PhotoType} from '@libs/Firebase/constant';
 import {formatDateForPhoto} from '@libs/Firebase/utils/timeago_helper';
-import Log from '@libs/Log';
-import Navigation from '@libs/Navigation/Navigation';
-import review from '@pages/edit/review';
-import {photoPropTypes} from '@pages/proptypes';
-import personalDetailsPropType from '@expPages/personalDetailsPropType';
+import {getPhotoWithId} from '@libs/ieatta/photoUtils';
 import variables from '@styles/variables';
 import CONST from '@src/CONST';
-import ROUTES from '@src/ROUTES';
 import type {IFBPhoto} from '@src/types/firebase';
 import type {PersonalDetails} from '@src/types/onyx';
 
 type PhotoCarouselWithUserInfoPanelProps = {
-    initialPhotoId: string;
+    relatedId: string;
+    photoType: PhotoType | string;
+
+    pageIndex: number;
     pageViewId: string;
     photosInPage: IFBPhoto[];
+
+    photoHeight?: number;
 };
 
-function PhotoCarouselWithUserInfoPanel({initialPhotoId, pageViewId, photosInPage}: PhotoCarouselWithUserInfoPanelProps) {
+function PhotoCarouselWithUserInfoPanel({relatedId, photoType, pageIndex, pageViewId, photosInPage, photoHeight}: PhotoCarouselWithUserInfoPanelProps) {
     const styles = useThemeStyles();
     const personalDetails = usePersonalDetails() ?? CONST.EMPTY_OBJECT;
-    const initialPhoto = _.find(photosInPage, (photo) => {
-        return photo.uniqueId === initialPhotoId;
-    });
+    const initialPhoto = photosInPage[pageIndex];
     const initialUser: PersonalDetails | null = personalDetails[lodashGet(initialPhoto, 'creatorId', '')] ?? null;
     const [person, setPerson] = useState({
         key: lodashGet(initialUser, 'userID', ''),
@@ -72,6 +65,7 @@ function PhotoCarouselWithUserInfoPanel({initialPhotoId, pageViewId, photosInPag
                     <Avatar
                         key={`avatar-${person.key}`}
                         containerStyles={[styles.actionAvatar]}
+                        shouldShowAsAvatar
                         avatarUrl={person.avatarUrl}
                         type={CONST.ICON_TYPE_AVATAR}
                         name={person.text}
@@ -85,16 +79,16 @@ function PhotoCarouselWithUserInfoPanel({initialPhotoId, pageViewId, photosInPag
         <View
             style={[
                 {
-                    width: variables.popoverPhotoCarouselItemWidth,
                     height: variables.popoverPhotoCarouselItemHeight,
                 },
             ]}
         >
             <PhotoCarouselPageView
-                key={pageViewId}
-                initialPhotoId={initialPhotoId}
-                photoWidth={variables.popoverPhotoCarouselItemWidth}
-                photoHeight={variables.popoverPhotoCarouselItemHeight}
+                key={`${pageViewId}-${pageIndex}`}
+                relatedId={relatedId}
+                photoType={photoType}
+                pageIndex={pageIndex}
+                photoHeight={photoHeight}
                 photos={photosInPage}
                 onPhotoChanged={onPhotoChanged}
             />
@@ -145,7 +139,6 @@ function PhotoCarouselWithUserInfoPanel({initialPhotoId, pageViewId, photosInPag
                                 isSingleLine
                             />
                         </PressableWithoutFeedback>
-                        {/* <ReviewItemDate created={created} /> */}
                     </View>
                 </View>
             </View>
@@ -156,8 +149,8 @@ function PhotoCarouselWithUserInfoPanel({initialPhotoId, pageViewId, photosInPag
 
     return (
         <View style={[styles.flexRow, styles.sectionComponentContainer]}>
-            {leftPanel}
-            {rightPanel}
+            <View style={[styles.flex1]}>{leftPanel}</View>
+            <View style={[styles.flex1]}>{rightPanel}</View>
         </View>
     );
 }

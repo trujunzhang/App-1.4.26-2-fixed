@@ -5,7 +5,7 @@ title: "[Performance] "
 labels: Engineering, Daily
 ---
 
-If you haven’t already, check out our [contributing guidelines](https://github.com/Expensify/ReactNativeChat/blob/main/contributingGuides/CONTRIBUTING.md) for onboarding and email contributors@expensify.com to request to join our Slack channel!
+If you haven’t already, check out our [contributing guidelines](https://github.com/Ieatta/ReactNativeChat/blob/main/contributingGuides/CONTRIBUTING.md) for onboarding and email contributors@ieatta.com to request to join our Slack channel!
 ___
 
 ## What performance issue do we need to solve?
@@ -39,10 +39,10 @@ Which of our officially supported platforms is this issue occurring on?
 **Reproducible in staging?:**
 **Reproducible in production?:**
 **Email or phone of affected tester (no customers):**
-**Logs:** https://stackoverflow.com/c/expensify/questions/4856
+**Logs:** https://stackoverflow.com/c/ieatta/questions/4856
 **Notes/Photos/Videos:** Any additional supporting documentation
-**Expensify/Expensify Issue URL:**
+**Ieatta/Ieatta Issue URL:**
 **Issue reported by:**
 **Slack conversation:**
 
-[View all open jobs on Upwork](https://www.upwork.com/ab/jobs/search/?q=Expensify%20React%20Native&sort=recency&user_location_match=2)
+[View all open jobs on Upwork](https://www.upwork.com/ab/jobs/search/?q=Ieatta%20React%20Native&sort=recency&user_location_match=2)

@@ -1,17 +1,19 @@
 import {createContext} from 'react';
 // eslint-disable-next-line no-restricted-imports
-import type {GestureResponderEvent, Text as RNText} from 'react-native';
+import type {GestureResponderEvent} from 'react-native';
 import type {OnyxEntry} from 'react-native-onyx';
 import * as DeviceCapabilities from '@libs/DeviceCapabilities';
 import * as ReportUtils from '@libs/ReportUtils';
-import * as ReportActionContextMenu from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
 import CONST from '@src/CONST';
+import * as ReportActionContextMenu from '@src/expPages/home/report/ContextMenu/ReportActionContextMenu';
+import type {ContextMenuAnchor} from '@src/expPages/home/report/ContextMenu/ReportActionContextMenu';
 import type {Report, ReportAction} from '@src/types/onyx';
 
 type ShowContextMenuContextProps = {
-    anchor: RNText | null;
+    anchor: ContextMenuAnchor;
     report: OnyxEntry<Report>;
     action: OnyxEntry<ReportAction>;
+    transactionThreadReport: OnyxEntry<Report>;
     checkIfContextMenuActive: () => void;
 };
 
@@ -19,6 +21,7 @@ const ShowContextMenuContext = createContext<ShowContextMenuContextProps>({
     anchor: null,
     report: null,
     action: null,
+    transactionThreadReport: null,
     checkIfContextMenuActive: () => {},
 });
 
@@ -36,7 +39,7 @@ ShowContextMenuContext.displayName = 'ShowContextMenuContext';
  */
 function showContextMenuForReport(
     event: GestureResponderEvent | MouseEvent,
-    anchor: RNText | null,
+    anchor: ContextMenuAnchor,
     reportID: string,
     action: OnyxEntry<ReportAction>,
     checkIfContextMenuActive: () => void,

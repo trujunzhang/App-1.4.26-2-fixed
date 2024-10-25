@@ -6,7 +6,6 @@ import ImagePlaceholder from '@components/ImagePlaceholder';
 import Text from '@components/Text';
 import useThemeStyles from '@hooks/useThemeStyles';
 import {calcRateForRestaurant} from '@libs/Firebase/utils/rate_utils';
-import TailwindColors from '@styles/tailwindcss/colors';
 import variables from '@styles/variables';
 import type {MenuViewProps} from './RestaurantMenuRow/types';
 
@@ -72,9 +71,8 @@ function RestaurantMenuWebView({recipe}: MenuViewProps) {
             style={[
                 styles.flexColumn,
                 styles.gap2,
+                styles.restaurantMenuWebItem,
                 {
-                    width: variables.menuInRestaurantWebItemWidth,
-                    height: variables.menuInRestaurantWebItemHeight,
                     // borderWidth: 5,
                     borderTopLeftRadius: 20,
                     borderTopRightRadius: 20,

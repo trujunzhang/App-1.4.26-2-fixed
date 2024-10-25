@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 /* eslint-disable no-invalid-this */
 // eslint-disable-next-line no-restricted-imports
-import _ from 'underscore';
+import _ from 'lodash';
 import type {IFirebaseQuerySnapshot} from '@libs/Firebase/types';
 import Log from '@libs/Log';
 import {upsetPersonalDetail} from '@userActions/Firebase/UserFB';

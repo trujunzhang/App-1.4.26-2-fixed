@@ -1,9 +1,9 @@
 import events from 'events';
 // eslint-disable-next-line no-restricted-imports
-import _ from 'underscore';
+import _ from 'lodash';
 import {PhotoType, ReviewType} from '@libs/Firebase/constant';
 import {PageSection, RowPressableType} from '@libs/Firebase/list/constant';
-import type {IPageRow} from '@libs/Firebase/list/types/page-row';
+import type {IPageRow, ModalNames} from '@libs/Firebase/list/types/page-row';
 import type {IReviewOnSearchAndSortChanged} from '@libs/Firebase/list/types/rows/review';
 import type {IFBRecipe, IFBReview} from '@src/types/firebase';
 import {buildPhotos} from './photo';
@@ -16,12 +16,19 @@ type BuildRecipeRowsParams = {
     reviewChanged: IReviewOnSearchAndSortChanged;
 };
 
-const buildRecipeHorizontalRows = (isSmallScreenWidth: boolean, recipes: IFBRecipe[]): IPageRow[] => {
-    const buildRecipeRow = (item: IFBRecipe, index: number) => {
+type BuildRecipeHorizontalRowsParams = {
+    isSmallScreenWidth: boolean;
+    recipes: IFBRecipe[];
+    modalName: ModalNames;
+};
+
+const buildRecipeHorizontalRows = ({isSmallScreenWidth, recipes, modalName}: BuildRecipeHorizontalRowsParams): IPageRow[] => {
+    const buildRecipeRow = (item: IFBRecipe, index: number): IPageRow => {
         return {
             rowType: isSmallScreenWidth ? PageSection.RECIPE_ROW : PageSection.RECIPE_ROW_WEB,
             rowData: item,
             rowKey: `${item?.uniqueId}` ?? 'PageSection.RECIPE_ROW',
+            modalName,
             pressType: RowPressableType.SECONDARY_PRESS,
         };
     };
@@ -32,23 +39,25 @@ const buildRecipeHorizontalRows = (isSmallScreenWidth: boolean, recipes: IFBReci
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 const buildRecipeRows = (isSmallScreenWidth: boolean, {recipeId, recipe, reviews, reviewChanged}: BuildRecipeRowsParams): IPageRow[] => {
     // info
-    const infoRow = isSmallScreenWidth
+    const infoPageRow: IPageRow = isSmallScreenWidth
         ? {
               rowType: PageSection.PANEL_RECIPE_INFO,
               rowData: recipe,
               rowKey: `${recipe?.uniqueId}` ?? 'PageSection.PANEL_RECIPE_INFO',
+              modalName: 'header',
               pressType: RowPressableType.NO_EVENT,
           }
         : {
               rowType: PageSection.PANEL_RECIPE_INFO_WEB,
               rowData: recipe,
               rowKey: `${recipe?.uniqueId}` ?? 'PageSection.PANEL_RECIPE_INFO_WEB',
+              modalName: 'header',
               pressType: RowPressableType.NO_EVENT,
           };
 
     return [
         // info
-        infoRow,
+        infoPageRow,
         // photo
         ...buildPhotos(isSmallScreenWidth, recipeId, PhotoType.Recipe),
         // review
@@ -56,5 +65,4 @@ const buildRecipeRows = (isSmallScreenWidth: boolean, {recipeId, recipe, reviews
     ];
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export {buildRecipeHorizontalRows, buildRecipeRows};

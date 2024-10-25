@@ -1,10 +1,12 @@
 /* eslint-disable no-restricted-imports */
 // eslint-disable-next-line no-restricted-imports
+import _ from 'lodash';
 import lodashGet from 'lodash/get';
-import _ from 'underscore';
-import type {ChoiceOrderedUserItem, SectionListDataType} from '@components/Ieatta/components/Selections/SelectionList/types';
+import type {ChoiceOrderedUserItem} from '@components/Ieatta/components/Selections/types';
+import type {SectionListDataType} from '@components/SelectionList/types';
 import CONST from '@src/CONST';
-import type {IFBUser} from '@src/types/firebase';
+import type {IFBPhoto, IFBReview, IFBUser} from '@src/types/firebase';
+import type {PersonalDetails, PersonalDetailsList} from '@src/types/onyx';
 import {isEmptyObject} from '@src/types/utils/EmptyObject';
 
 type ConvertToRadioItemParamsForUsers = {
@@ -14,6 +16,11 @@ type ConvertToRadioItemParamsForUsers = {
     userIdsInPeopleInEvents: string[];
     userDict: Record<string, IFBUser>;
 };
+
+function getPersonDetailFromCreatorId(personalDetails: PersonalDetailsList, modal: IFBPhoto | IFBReview | undefined) {
+    const creatorId = lodashGet(modal, 'creatorId', '');
+    return personalDetails[creatorId];
+}
 
 function convertToRadioItemForUsers({
     orderedUsersTitle,
@@ -70,5 +77,4 @@ function toUserDict(users: IFBUser[]) {
     return userDict;
 }
 
-// eslint-disable-next-line import/prefer-default-export
-export {convertToRadioItemForUsers, toUserDict};
+export {convertToRadioItemForUsers, toUserDict, getPersonDetailFromCreatorId};

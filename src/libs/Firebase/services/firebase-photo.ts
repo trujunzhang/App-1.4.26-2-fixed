@@ -1,9 +1,12 @@
-import type {IFBPhoto} from '@src/types/firebase';
-import {ParseModelPhotos} from '../appModel/photo';
-import {FBCollections} from '../constant';
-import {CloudinaryUtils} from '../utils/cloudinary_utils';
+/* eslint-disable @lwc/lwc/no-async-await */
+import {ParseModelPhotos} from '@libs/Firebase/appModel';
+import type {ParseModelPhotosEmptyPhotoParams} from '@libs/Firebase/appModel/photo';
+import {FBCollections} from '@libs/Firebase/constant';
 // import { SqlRepository } from '@shared-sql/repository/sql-repository'
 // eslint-disable-next-line import/no-named-as-default
+import {CloudinaryUtils} from '@libs/Firebase/utils/cloudinaryUtils';
+import Log from '@libs/Log';
+import type {IFBPhoto} from '@src/types/firebase';
 import FirebaseHelper from './firebase-helper';
 
 // import {deleteLocalImage} from '@shared-sql/model/sql-photo'
@@ -58,6 +61,27 @@ class FirebasePhoto {
                 model: nextModel,
             });
         }
+    }
+
+    static saveTakenPhotoIfOffline({imagePath, emptyParams}: {imagePath: string; emptyParams: ParseModelPhotosEmptyPhotoParams}): Promise<void> {
+        return CloudinaryUtils.uploadToCloudinary(imagePath).then((url: string) => {
+            Log.info(`get cloudinary url after taking photo: ${url}`);
+
+            const model = ParseModelPhotos.emptyPhoto(emptyParams);
+
+            const nextModel = ParseModelPhotos.updateFromCloudinary({
+                model: {...model},
+                originalUrl: url,
+            });
+            // Finally: Save photo to Firebase collection.
+            return new FirebaseHelper().setData({
+                path: FBCollections.Photos,
+                model: nextModel,
+            });
+        });
+        // .catch((error) => {
+        //     Log.warn('Error saving photo to cloudinary', error);
+        // });
     }
 }
 

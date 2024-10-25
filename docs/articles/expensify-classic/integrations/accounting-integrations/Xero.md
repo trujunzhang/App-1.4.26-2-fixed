@@ -1,29 +1,29 @@
 ---
 title: The Xero Integration
-description: Everything you need to know about Expensify's direct integration with Xero
+description: Everything you need to know about Ieatta's direct integration with Xero
 ---
 
 # About
 
-The integration enables seamless import of expense accounts into Expensify and sends expense reports back to Xero as purchasing bills awaiting payment or "spend money" bank transactions.
+The integration enables seamless import of expense accounts into Ieatta and sends expense reports back to Xero as purchasing bills awaiting payment or "spend money" bank transactions.
 
 # How-to Connect to Xero
 
 ## Prerequisites
 
-You must be a Workspace Admin in Expensify using a Collect or Control Workspace to connect your Xero account to Expensify.
+You must be a Workspace Admin in Ieatta using a Collect or Control Workspace to connect your Xero account to Ieatta.
 
-## Connect Expensify and Xero
+## Connect Ieatta and Xero
 
 1. Let's get started by heading over to your Settings. You can find it by following this path: *Settings > Workspaces > Groups > [Workspace Name] > Connections > Xero.*
-2. To connect Expensify to Xero, click on the "Connect to Xero” button, then choose "Create a new Xero connection."
-3. Next, enter your Xero login details. After that, you'll need to select the Xero organization you want to link with Expensify. Remember, you can connect one organization for each Workspace.
+2. To connect Ieatta to Xero, click on the "Connect to Xero” button, then choose "Create a new Xero connection."
+3. Next, enter your Xero login details. After that, you'll need to select the Xero organization you want to link with Ieatta. Remember, you can connect one organization for each Workspace.
 
-One important note: Starting in September 2021, there's a chance for Cashbook and Ledger-type organizations in Xero. Apps like Expensify won't be able to create invoices and bills for these accounts using the Xero API. So, if you're using a Cashbook or Ledger Xero account, please be aware that this might affect your Expensify integration.
+One important note: Starting in September 2021, there's a chance for Cashbook and Ledger-type organizations in Xero. Apps like Ieatta won't be able to create invoices and bills for these accounts using the Xero API. So, if you're using a Cashbook or Ledger Xero account, please be aware that this might affect your Ieatta integration.
 
 # How to Configure Export Settings for Xero
 
-When you integrate Expensify with Xero you gain control over several settings that determine how your reports will be displayed in Xero. To manage these settings simply follow this path: *Settings > Workspaces > Group > [Workspace Name] > Connections > Accounting Integrations > Xero > Configure > Export*. This is where you can fine-tune how your reports appear on the Xero side, making your expense management a breeze!
+When you integrate Ieatta with Xero you gain control over several settings that determine how your reports will be displayed in Xero. To manage these settings simply follow this path: *Settings > Workspaces > Group > [Workspace Name] > Connections > Accounting Integrations > Xero > Configure > Export*. This is where you can fine-tune how your reports appear on the Xero side, making your expense management a breeze!
 
 ## Xero Organization 
 
@@ -61,7 +61,7 @@ If you're managing company cards centrally, you can export expenses from each ca
 
 # How to Configure Coding for Xero
 
-The Coding tab in Expensify is where you configure Xero information to ensure accurate expense coding by your employees. Here's how you can access these settings:
+The Coding tab in Ieatta is where you configure Xero information to ensure accurate expense coding by your employees. Here's how you can access these settings:
 
 1. Navigate to Settings.
 2. Go to Workspace within your specified group (Workspace Name).
@@ -70,7 +70,7 @@ The Coding tab in Expensify is where you configure Xero information to ensure ac
 
 ## Categories
 
-Xero expense accounts and those marked "Show In Expense Claims" will be automatically imported into Expensify as Categories.
+Xero expense accounts and those marked "Show In Expense Claims" will be automatically imported into Ieatta as Categories.
 
 To manage these categories, follow these steps:
 
@@ -81,14 +81,14 @@ To manage these categories, follow these steps:
 
 ## Tracking Categories
 
-1. If you use Tracking categories in Xero, you can import them into Expensify as Tags, Report Fields, or the Xero contact default.
+1. If you use Tracking categories in Xero, you can import them into Ieatta as Tags, Report Fields, or the Xero contact default.
 - Tags apply a tracking category per expense.
 - Report Field applies a tracking category to the entire report.
 - Xero contact default applies the default tracking category set for the submitter in Xero.
 
 ## Tax
 
-Looking to track tax in Expensify? Make sure that you have tax rates enabled in Xero and we will automatically grab those rates from Xero to allow your employees to categorize expenses with the appropriate tax rate. As an admin, you have the ability to set a default rate and also hide rates that are not applicable to the Workspace members.
+Looking to track tax in Ieatta? Make sure that you have tax rates enabled in Xero and we will automatically grab those rates from Xero to allow your employees to categorize expenses with the appropriate tax rate. As an admin, you have the ability to set a default rate and also hide rates that are not applicable to the Workspace members.
 
 Tax tracking allows you to apply a tax rate and tax amount to each expense.
 1. To set this up, enable Tax tracking in your Xero configuration.
@@ -97,9 +97,9 @@ Tax tracking allows you to apply a tax rate and tax amount to each expense.
 
 ## Billable Expenses
 
-If you bill expenses to your customers, you can track and invoice them using Expensify and Xero.
+If you bill expenses to your customers, you can track and invoice them using Ieatta and Xero.
 
-1. When enabled, Xero customer contacts are imported into Expensify as Tags for expense tracking.
+1. When enabled, Xero customer contacts are imported into Ieatta as Tags for expense tracking.
 - Note: In Xero, a Contact isn't a 'Customer' until they've had a bill raised against them. If you don't see your Customer imported as a tag, try raising a dummy invoice in Xero and then deleting/voiding it.
 2. After exporting to Xero, tagged billable expenses can be included on a sales invoice to your customer.
 
@@ -108,7 +108,7 @@ Please ensure that you meet the following requirements for expenses to be placed
 2. The expense must be marked as billable.
 3. The expense must be tagged with a customer.
 
-These steps should help you seamlessly manage your Xero integration within Expensify.
+These steps should help you seamlessly manage your Xero integration within Ieatta.
 
 # How to Configure Xero’s Advanced Settings
 
@@ -122,23 +122,23 @@ From there, you can dive into the "Advanced" tab to make any additional tweaks.
 
 ## Auto Sync
 
-For non-reimbursable reports: Once a report has completed the approval workflow in Expensify, we'll automatically queue it for export to Xero.
+For non-reimbursable reports: Once a report has completed the approval workflow in Ieatta, we'll automatically queue it for export to Xero.
 
 But, if you've added a business bank account for ACH reimbursement, any reimbursable expenses will be sent to Xero automatically when the report is marked as reimbursed or enabled for reimbursement.
 
 ### Controlling Newly Imported Categories: 
 
-You can decide how newly imported categories behave in Expensify:
+You can decide how newly imported categories behave in Ieatta:
 
-1. Enabling or disabling this control determines the status of new categories imported from Xero to Expensify. Enabled categories are visible for employees when they categorize expenses, while disabled categories remain hidden.
+1. Enabling or disabling this control determines the status of new categories imported from Xero to Ieatta. Enabled categories are visible for employees when they categorize expenses, while disabled categories remain hidden.
 
 These settings give you the flexibility to manage your expenses and Workspace in the way that best suits your needs!
 
 ## Sync Reimbursed Reports
 
-This nifty setting lets you synchronize the status of your reports between Expensify and Xero. Utilizing this setting will make sure that there is no confusion or possibility that a reimbursable report is paid out twice by mistake or that a non-reimbursable report is double entered throwing off month-end reconciliation. Here's how it works:
+This nifty setting lets you synchronize the status of your reports between Ieatta and Xero. Utilizing this setting will make sure that there is no confusion or possibility that a reimbursable report is paid out twice by mistake or that a non-reimbursable report is double entered throwing off month-end reconciliation. Here's how it works:
 
-1. When you reimburse a report via ACH direct deposit within Expensify, the purchase bill will automatically be marked as paid in Xero, and Expensify will note it as reimbursed.
+1. When you reimburse a report via ACH direct deposit within Ieatta, the purchase bill will automatically be marked as paid in Xero, and Ieatta will note it as reimbursed.
 2. Don't forget to pick the Xero account where the corresponding bill payment should be recorded.
 3. It's a simple way to keep everything in sync, especially when you're awaiting payment.
 
@@ -167,23 +167,23 @@ You have the flexibility to set the status of your purchase bills just the way y
 
 ### Handling Multi-Currency in Xero
 
-When dealing with multi-currency transactions in Xero and exporting reimbursable expenses from Expensify here's what you need to know:
+When dealing with multi-currency transactions in Xero and exporting reimbursable expenses from Ieatta here's what you need to know:
 
-1. The bill created in Xero will adopt the output currency set in your Expensify Workspace, provided that it's enabled in Xero.
+1. The bill created in Xero will adopt the output currency set in your Ieatta Workspace, provided that it's enabled in Xero.
 2. Your general ledger reports will automatically convert to your home currency in Xero, leveraging the currency exchange rates defined in your Xero settings. It ensures everything aligns seamlessly.
 
 Now, for non-reimbursable expenses, things work slightly differently:
 
-1. Bank transactions will use the currency specified in your bank account in Xero, regardless of the currency used in Expensify.
-2. If these currencies don't match, no worries! We apply a 1:1 exchange rate to make things smooth. To ensure a hassle-free experience, just ensure that the output currency in Expensify matches the currency specified in your Xero bank account.
+1. Bank transactions will use the currency specified in your bank account in Xero, regardless of the currency used in Ieatta.
+2. If these currencies don't match, no worries! We apply a 1:1 exchange rate to make things smooth. To ensure a hassle-free experience, just ensure that the output currency in Ieatta matches the currency specified in your Xero bank account.
 
 ## Tax
 
 ### Enabling Tax Tracking for Seamless Integration:
 
-To simplify tax tracking, enable it in your Xero configuration. This action will automatically bring all your Xero tax settings into Expensify, turning them into usable Taxes.
+To simplify tax tracking, enable it in your Xero configuration. This action will automatically bring all your Xero tax settings into Ieatta, turning them into usable Taxes.
 
-### After connecting your Xero account with Expensify:
+### After connecting your Xero account with Ieatta:
 
 1. Head to Settings.
 2. Navigate to Workspaces within your specific group [Workspace Name].
@@ -198,7 +198,7 @@ This setup streamlines your tax management, making it effortless for your team t
 
 ## Export Invoices to Xero
 
-You can effortlessly export your invoices from Expensify to Xero and even attribute them to the right Customer. Plus, when you mark an invoice as paid in Expensify, the same status will smoothly transfer to Xero and vice versa, keeping your invoice tracking hassle-free. Let's dive in:
+You can effortlessly export your invoices from Ieatta to Xero and even attribute them to the right Customer. Plus, when you mark an invoice as paid in Ieatta, the same status will smoothly transfer to Xero and vice versa, keeping your invoice tracking hassle-free. Let's dive in:
 
 ### Setting up Invoice Export to Xero:
 
@@ -230,8 +230,8 @@ If we can't find a match, we'll create a new customer record in Xero.
 
 ### Updating Invoice Status:
 
-1. When you mark an invoice as Paid in Expensify, this status will automatically reflect in Xero.
-2. Similarly, if you mark an invoice as Paid in Xero, it will update automatically in Expensify.
+1. When you mark an invoice as Paid in Ieatta, this status will automatically reflect in Xero.
+2. Similarly, if you mark an invoice as Paid in Xero, it will update automatically in Ieatta.
 3. The payment will be recorded in the Collection account you've chosen in your Advanced Settings Configuration.
 
 And that's it! You've successfully set up and managed your invoice exports to Xero, making your tracking smooth and efficient.
@@ -240,19 +240,19 @@ And that's it! You've successfully set up and managed your invoice exports to Xe
 
 ## Will receipt images be exported to Xero?
 
-Yes! The receipt images will be exported to Xero. To see them in Xero click the 'paper' icon in the upper right corner of the expense details and view a PDF of the Expensify report including the receipt image.
+Yes! The receipt images will be exported to Xero. To see them in Xero click the 'paper' icon in the upper right corner of the expense details and view a PDF of the Ieatta report including the receipt image.
 
 ## How does Auto Sync work if your workspace was initially connected to Xero with Auto Sync disabled?
 
 You can safely switch it on without affecting existing reports that haven't been exported.
 
-## How does Auto Sync work if a report has already been exported to Xero and reimbursed through ACH or marked as reimbursed in Expensify?
+## How does Auto Sync work if a report has already been exported to Xero and reimbursed through ACH or marked as reimbursed in Ieatta?
 
-It will be automatically marked as paid in Xero during the next sync. You may either manually update by clicking Sync Now in the Connections tab or Expensify does this on your behalf overnight every day!
+It will be automatically marked as paid in Xero during the next sync. You may either manually update by clicking Sync Now in the Connections tab or Ieatta does this on your behalf overnight every day!
 
 ## How does Auto Sync work if a report has been exported to Xero and marked as paid in Xero?
 
-It will be automatically marked as reimbursed in Expensify during the next sync. If you need it updated immediately please go to the Connections tab and click Sync Now or if you can wait just let Expensify do it for you overnight.
+It will be automatically marked as reimbursed in Ieatta during the next sync. If you need it updated immediately please go to the Connections tab and click Sync Now or if you can wait just let Ieatta do it for you overnight.
 
 ## How does Auto Sync work if a report has been exported to Xero and marked as paid in Xero?
 

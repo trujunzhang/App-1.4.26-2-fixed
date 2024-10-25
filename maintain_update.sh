@@ -1,6 +1,7 @@
+#!/bin/bash
 
+function lib_tools {
 different_fold_files=(
-
      # config
      "config/webpack/webpack.common.js"
 
@@ -35,5 +36,8 @@ different_fold_files=(
      "tests/unit/getRoutePathForDebugTest.js"
      "tests/unit/firebase"
      "tests/unit/Style.spec.js"
-
 )
+
+echo "${different_fold_files[@]}"
+
+}

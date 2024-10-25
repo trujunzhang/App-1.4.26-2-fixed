@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import type {ViewStyle} from 'react-native';
+import useDismissedReferralBanners from '@hooks/useDismissedReferralBanners';
 import useLocalize from '@hooks/useLocalize';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
@@ -6,29 +8,51 @@ import CONST from '@src/CONST';
 import Navigation from '@src/libs/Navigation/Navigation';
 import ROUTES from '@src/ROUTES';
 import Icon from './Icon';
-import {Info} from './Icon/Expensicons';
+import {Close} from './Icon/Expensicons';
 import {PressableWithoutFeedback} from './Pressable';
 import Text from './Text';
+import Tooltip from './Tooltip';
 
 type ReferralProgramCTAProps = {
     referralContentType:
-        | typeof CONST.REFERRAL_PROGRAM.CONTENT_TYPES.MONEY_REQUEST
+        | typeof CONST.REFERRAL_PROGRAM.CONTENT_TYPES.SUBMIT_EXPENSE
         | typeof CONST.REFERRAL_PROGRAM.CONTENT_TYPES.START_CHAT
-        | typeof CONST.REFERRAL_PROGRAM.CONTENT_TYPES.SEND_MONEY
+        | typeof CONST.REFERRAL_PROGRAM.CONTENT_TYPES.PAY_SOMEONE
         | typeof CONST.REFERRAL_PROGRAM.CONTENT_TYPES.REFER_FRIEND;
+    style?: ViewStyle;
+    onDismiss?: () => void;
 };
 
-function ReferralProgramCTA({referralContentType}: ReferralProgramCTAProps) {
+function ReferralProgramCTA({referralContentType, style, onDismiss}: ReferralProgramCTAProps) {
     const {translate} = useLocalize();
     const styles = useThemeStyles();
     const theme = useTheme();
+    const {isDismissed, setAsDismissed} = useDismissedReferralBanners({referralContentType});
+
+    const handleDismissCallToAction = () => {
+        setAsDismissed();
+        onDismiss?.();
+    };
+
+    const shouldShowBanner = referralContentType && !isDismissed;
+
+    useEffect(() => {
+        if (shouldShowBanner) {
+            return;
+        }
+        onDismiss?.();
+    }, [onDismiss, shouldShowBanner]);
+
+    if (!shouldShowBanner) {
+        return null;
+    }
 
     return (
         <PressableWithoutFeedback
             onPress={() => {
-                Navigation.navigate(ROUTES.REFERRAL_DETAILS_MODAL.getRoute(referralContentType));
+                Navigation.navigate(ROUTES.REFERRAL_DETAILS_MODAL.getRoute(referralContentType, Navigation.getActiveRouteWithoutParams()));
             }}
-            style={[styles.p5, styles.w100, styles.br2, styles.highlightBG, styles.flexRow, styles.justifyContentBetween, styles.alignItemsCenter, {gap: 10}]}
+            style={[styles.br2, styles.highlightBG, styles.flexRow, styles.justifyContentBetween, styles.alignItemsCenter, {gap: 10, padding: 10}, styles.pl5, style]}
             accessibilityLabel="referral"
             role={CONST.ACCESSIBILITY_ROLE.BUTTON}
         >
@@ -41,12 +65,24 @@ function ReferralProgramCTA({referralContentType}: ReferralProgramCTAProps) {
                     {translate(`referralProgram.${referralContentType}.buttonText2`)}
                 </Text>
             </Text>
-            <Icon
-                src={Info}
-                height={20}
-                width={20}
-                fill={theme.icon}
-            />
+            <Tooltip text={translate('common.close')}>
+                <PressableWithoutFeedback
+                    onPress={handleDismissCallToAction}
+                    onMouseDown={(e) => {
+                        e.preventDefault();
+                    }}
+                    style={[styles.touchableButtonImage]}
+                    role={CONST.ACCESSIBILITY_ROLE.BUTTON}
+                    accessibilityLabel={translate('common.close')}
+                >
+                    <Icon
+                        src={Close}
+                        height={20}
+                        width={20}
+                        fill={theme.icon}
+                    />
+                </PressableWithoutFeedback>
+            </Tooltip>
         </PressableWithoutFeedback>
     );
 }

@@ -1,7 +1,7 @@
+import lodashGet from 'lodash/get';
 import React from 'react';
-import {Image as RNImage, View} from 'react-native';
+import {View} from 'react-native';
 import Avatar from '@components/Avatar';
-import Button from '@components/Button';
 import DisplayNames from '@components/DisplayNames';
 import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
@@ -11,7 +11,6 @@ import {PressableWithFeedback} from '@components/Pressable';
 import Text from '@components/Text';
 import Tooltip from '@components/Tooltip';
 import useLocalize from '@hooks/useLocalize';
-import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import Navigation from '@libs/Navigation/Navigation';
 import TailwindColors from '@styles/tailwindcss/colors';
@@ -43,39 +42,16 @@ function OrderedUserRow({peopleInEvent, user, recipesCount}: OrderedUserRowProps
         />
     );
 
-    const addButtonxxx = (
-        <Tooltip text={translate('add.recipe.button')}>
-            <PressableWithFeedback
-                onPress={() => {
-                    Navigation.navigate(ROUTES.ADD_RECIPES_IN_EVENT.getRoute({restaurantId: peopleInEvent.restaurantId, peopleInEventId: peopleInEvent.uniqueId}));
-                }}
-                style={styles.signInIconButton}
-                role={CONST.ROLE.BUTTON}
-                accessibilityLabel="add.recipe.button"
-            >
-                <View
-                    style={[styles.flexRow, styles.alignItemsCenter, styles.ml2]}
-                    accessible={false}
-                >
-                    <Icon
-                        testID="Add Icon"
-                        fill={TailwindColors.red500}
-                        src={Expensicons.Plus}
-                    />
-                </View>
-            </PressableWithFeedback>
-        </Tooltip>
-    );
-
     return (
         <View style={[styles.flexRow, styles.alignItemsCenter, styles.justifyContentBetween, styles.sidebarLink, styles.sidebarLinkInnerLHN]}>
             <View style={[styles.chatLinkRowPressable, styles.flexGrow1, styles.optionItemAvatarNameWrapper, styles.optionRow, styles.justifyContentCenter]}>
                 <View style={[styles.flexRow, styles.alignItemsCenter]}>
-                    <IeattaUserDetailsTooltip userId={user.userID}>
+                    <IeattaUserDetailsTooltip userId={lodashGet(user, 'userID', '')}>
                         <View>
                             <Avatar
                                 containerStyles={[styles.actionAvatar]}
-                                avatarUrl={user.originalUrl}
+                                shouldShowAsAvatar
+                                avatarUrl={user.avatarThumbnail}
                                 type={CONST.ICON_TYPE_AVATAR}
                                 name={user.displayName}
                             />
@@ -84,7 +60,7 @@ function OrderedUserRow({peopleInEvent, user, recipesCount}: OrderedUserRowProps
 
                     <View style={[styles.ph4, styles.flexColumn]}>
                         <View style={[styles.flexRow, styles.alignItemsCenter, styles.mw100, styles.overflowHidden]}>
-                            <IeattaUserDetailsTooltip userId={user.userID}>
+                            <IeattaUserDetailsTooltip userId={lodashGet(user, 'userID', '')}>
                                 <View>
                                     <DisplayNames
                                         accessibilityLabel={translate('accessibilityHints.chatUserDisplayNames')}

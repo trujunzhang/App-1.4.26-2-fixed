@@ -2,12 +2,13 @@ import React from 'react';
 import type {StyleProp, ViewStyle} from 'react-native';
 import {View} from 'react-native';
 import useThemeStyles from '@hooks/useThemeStyles';
+import type {MaybePhraseKey} from '@libs/Localize';
 import Button from './Button';
 import FormAlertWrapper from './FormAlertWrapper';
 
 type FormAlertWithSubmitButtonProps = {
     /** Error message to display above button */
-    message?: string;
+    message?: MaybePhraseKey;
 
     /** Whether the button is disabled */
     isDisabled?: boolean;
@@ -43,7 +44,7 @@ type FormAlertWithSubmitButtonProps = {
     buttonStyles?: StyleProp<ViewStyle>;
 
     /** Whether to show the alert text */
-    isAlertVisible: boolean;
+    isAlertVisible?: boolean;
 
     /** Text for the button */
     buttonText: string;
@@ -65,10 +66,10 @@ function FormAlertWithSubmitButton({
     enabledWhenOffline = false,
     disablePressOnEnter = false,
     isSubmitActionDangerous = false,
-    footerContent = null,
+    footerContent,
     buttonStyles,
     buttonText,
-    isAlertVisible,
+    isAlertVisible = false,
     onSubmit,
     useSmallerSubmitButtonSize = false,
     errorMessageStyle,
@@ -78,8 +79,7 @@ function FormAlertWithSubmitButton({
 
     return (
         <FormAlertWrapper
-            // containerStyles={[styles.mh5, styles.mb5, styles.justifyContentEnd, containerStyles]}
-            containerStyles={[styles.mh5, styles.mb5, styles.justifyContentStart, containerStyles]}
+            containerStyles={[styles.justifyContentEnd, containerStyles]}
             isAlertVisible={isAlertVisible}
             isMessageHtml={isMessageHtml}
             message={message}
@@ -96,6 +96,7 @@ function FormAlertWithSubmitButton({
                             style={style}
                             danger={isSubmitActionDangerous}
                             medium={useSmallerSubmitButtonSize}
+                            large={!useSmallerSubmitButtonSize}
                         />
                     ) : (
                         <Button
@@ -108,6 +109,7 @@ function FormAlertWithSubmitButton({
                             isLoading={isLoading}
                             danger={isSubmitActionDangerous}
                             medium={useSmallerSubmitButtonSize}
+                            large={!useSmallerSubmitButtonSize}
                         />
                     )}
                     {footerContent}
@@ -120,3 +122,5 @@ function FormAlertWithSubmitButton({
 FormAlertWithSubmitButton.displayName = 'FormAlertWithSubmitButton';
 
 export default FormAlertWithSubmitButton;
+
+export type {FormAlertWithSubmitButtonProps};

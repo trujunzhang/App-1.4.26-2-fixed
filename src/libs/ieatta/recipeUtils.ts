@@ -1,7 +1,7 @@
 import _ from 'lodash';
-import type {ChoiceRecipeItem, SectionListDataType} from '@components/Ieatta/components/Selections/SelectionList/types';
+import {ChoiceRecipeItem} from '@components/Ieatta/components/Selections/types';
+import {SectionListDataType} from '@components/SelectionList/types';
 import type {IFBRecipe} from '@src/types/firebase';
-import {isEmptyObject} from '@src/types/utils/EmptyObject';
 
 type ConvertToRadioItemParamsForRecipes = {
     title: string;

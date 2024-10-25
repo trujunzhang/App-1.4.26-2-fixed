@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import type {StyleProp, ViewStyle} from 'react-native';
 import {View} from 'react-native';
 import useThemeStyles from '@hooks/useThemeStyles';
+import type {MaybePhraseKey} from '@libs/Localize';
 import variables from '@styles/variables';
 import Checkbox from './Checkbox';
 import FormHelpMessage from './FormHelpMessage';
@@ -40,7 +41,7 @@ type CheckboxWithLabelProps = RequiredLabelProps & {
     style?: StyleProp<ViewStyle>;
 
     /** Error text to display */
-    errorText?: string;
+    errorText?: MaybePhraseKey;
 
     /** Value for checkbox. This prop is intended to be set by FormProvider only */
     value?: boolean;
@@ -66,7 +67,7 @@ function CheckboxWithLabel(
 ) {
     const styles = useThemeStyles();
     // We need to pick the first value that is strictly a boolean
-    // https://github.com/Expensify/App/issues/16885#issuecomment-1520846065
+    // https://github.com/Ieatta/App/issues/16885#issuecomment-1520846065
     const [isChecked, setIsChecked] = useState(() => [value, defaultValue, isCheckedProp].find((item) => typeof item === 'boolean'));
 
     const toggleCheckbox = () => {
@@ -107,3 +108,5 @@ function CheckboxWithLabel(
 CheckboxWithLabel.displayName = 'CheckboxWithLabel';
 
 export default React.forwardRef(CheckboxWithLabel);
+
+export type {CheckboxWithLabelProps};

@@ -46,7 +46,7 @@ The steps should be broken out by individual actions taking place with the writt
 Below are some examples to illustrate the writing style that covers this:
 - Bug: White space appears under compose box when scrolling up in any conversation
 - Proposed Test Steps:
-  - Go to URL https://staging.new.expensify.com/
+  - Go to URL https://staging.new.ieatta.com/
   - Log in with any account
   - Navigate to any conversation
   - Focus on the compose box and scroll up
@@ -56,7 +56,7 @@ Below are some examples to illustrate the writing style that covers this:
 - Bug: A blank page is shown for an archived room with a message in it
 - Proposed Test Steps:
   - Create a workspace if you don't have any
-  - Go to members page and remove the other admin ( Expensify setup specialist )
+  - Go to members page and remove the other admin (Ieatta setup specialist)
   - Search the announce room and send a message
   - Pin the room and delete the workspace
   - Wait for a few seconds (Reload if the chat is still visible)
@@ -64,5 +64,5 @@ Below are some examples to illustrate the writing style that covers this:
 
 ---
 
-Once the above proposal has been posted and agreed upon, a member of the Expensify team will then take care of getting it added to the appropriate test suite! If you have any further questions surrounding proposing regression tests, please feel free to ping anyone in the issue for further help. 
+Once the above proposal has been posted and agreed upon, a member of the Ieatta team will then take care of getting it added to the appropriate test suite! If you have any further questions surrounding proposing regression tests, please feel free to ping anyone in the issue for further help. 
 

@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import _ from 'underscore';
+import _ from 'lodash';
 import type {IFBPeopleInEvent} from '@src/types/firebase';
 
 function getUserIdsInPeopleInEvents(peopleInEvents: IFBPeopleInEvent[]) {

@@ -2,7 +2,7 @@ import type Report from './Report';
 
 type Task = {
     /** Title of the Task */
-    title: string;
+    title?: string;
 
     /** Description of the Task */
     description?: string;
@@ -22,6 +22,12 @@ type Task = {
 
     /** Report id only when a task was created from a report */
     parentReportID?: string;
+
+    /** Chat report with assignee of task */
+    assigneeChatReport?: Report;
+
+    /** If set, skip confirmation when creating the task */
+    skipConfirmation?: boolean;
 };
 
 export default Task;

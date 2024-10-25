@@ -6,3 +6,4 @@ export * from './Recipe';
 export * from './Restaurant';
 export * from './Review';
 export * from './User';
+export * from './SqlPhoto';

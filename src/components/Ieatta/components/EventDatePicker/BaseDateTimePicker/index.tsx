@@ -1,28 +1,21 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import lodashDefer from 'lodash/defer';
 import type {Moment} from 'moment';
 import moment from 'moment';
-import type {ForwardedRef, ReactElement, ReactNode, RefObject} from 'react';
-import React, {forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
+import React from 'react';
 import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
-import type {ScrollView} from 'react-native';
-import {Button, View} from 'react-native';
-import Icon from '@components/Icon';
-import * as Expensicons from '@components/Icon/Expensicons';
+import {View} from 'react-native';
 import {PressableWithFeedback} from '@components/Pressable';
 import Text from '@components/Text';
 import Tooltip from '@components/Tooltip';
 import useLocalize from '@hooks/useLocalize';
-import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import CONST from '@src/CONST';
 import type {BaseDateTimePickerProps} from './types';
 
 function BaseDateTimePicker({initialDate, label, onDateTimeChange}: BaseDateTimePickerProps) {
-    const theme = useTheme();
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 

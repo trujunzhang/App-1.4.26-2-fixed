@@ -1,14 +1,10 @@
+// eslint-disable-next-line no-restricted-imports
+import _ from 'lodash';
 import React from 'react';
 import {useCollectionOnce} from 'react-firebase-hooks/firestore';
-import {View} from 'react-native';
-// eslint-disable-next-line no-restricted-imports
-import _ from 'underscore';
 import RestaurantMenuList from '@components/Ieatta/detailedPage/restaurant/menu/RestaurantMenuList';
-import Text from '@components/Text';
-import useThemeStyles from '@hooks/useThemeStyles';
 import {FBCollections} from '@libs/Firebase/constant';
-import {queryEventOrMenuInRestaurant} from '@libs/Firebase/services/firebase-query';
-import TailwindColors from '@styles/tailwindcss/colors';
+import * as FirebaseQuery from '@libs/Firebase/services/firebase-query';
 import type {IFBRecipe} from '@src/types/firebase';
 import type {RestaurantMenuRowProps} from './types';
 
@@ -20,16 +16,21 @@ function RestaurantMenuRow({menuRow}: RestaurantMenuRowProps) {
      | List(recipes)
      |--------------------------------------------------
      */
-    const [recipeSnapshot, loader] = useCollectionOnce(
-        queryEventOrMenuInRestaurant({
+    const [recipeSnapshot, loadingForRecipes] = useCollectionOnce<IFBRecipe>(
+        FirebaseQuery.queryEventOrMenuInRestaurant({
             path: FBCollections.Recipes,
             restaurantId,
         }),
     );
 
-    const recipesInRestaurant = recipeSnapshot === undefined ? [] : _.map(recipeSnapshot.docs, (item) => item.data() as IFBRecipe);
+    const recipesInRestaurant = recipeSnapshot === undefined ? [] : _.map(recipeSnapshot.docs, (item) => item.data());
 
-    return <RestaurantMenuList recipes={recipesInRestaurant} />;
+    return (
+        <RestaurantMenuList
+            recipes={recipesInRestaurant}
+            loadingForRecipes={loadingForRecipes}
+        />
+    );
 }
 
 export default RestaurantMenuRow;

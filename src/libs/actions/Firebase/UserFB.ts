@@ -3,19 +3,10 @@ import lodashGet from 'lodash/get';
 import {number} from 'prop-types';
 import Onyx from 'react-native-onyx';
 // eslint-disable-next-line no-restricted-imports
-import _ from 'underscore';
-import * as API from '@libs/API';
-import * as ErrorUtils from '@libs/ErrorUtils';
 import {generateLoggedUserId} from '@libs/Firebase/utils/md5_utils';
 import Log from '@libs/Log';
-import Navigation from '@libs/Navigation/Navigation';
-import * as SequentialQueue from '@libs/Network/SequentialQueue';
-import * as Pusher from '@libs/Pusher/pusher';
-import PusherUtils from '@libs/PusherUtils';
-import * as ReportActionsUtils from '@libs/ReportActionsUtils';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
-import ROUTES from '@src/ROUTES';
 import type {IFBUser} from '@src/types/firebase';
 import type PersonalDetails from '@src/types/onyx/PersonalDetails';
 
@@ -51,13 +42,14 @@ Onyx.connect({
  * @returns {PersonalDetails}
  */
 function buildPersonalDetails(user: IFBUser, accountID: number): PersonalDetails {
+    const originalUrl = lodashGet(user, 'originalUrl', '');
     return {
         accountID,
         userID: user.id,
         login: user.email,
-        avatar: user.originalUrl ?? '',
-        avatarThumbnail: user.originalUrl,
-        originalUrl: user.originalUrl,
+        avatar: originalUrl,
+        avatarThumbnail: originalUrl,
+        // originalUrl,
         displayName: user.username,
         firstName: user.firstName,
         lastName: user.lastName,

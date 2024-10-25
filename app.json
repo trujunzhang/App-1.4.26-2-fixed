@@ -1,5 +1,6 @@
 {
     "expo": {
+        "jsEngine": "jsc",
         "name": "ieatta",
         "slug": "ieatta",
         "version": "1.0.0",
@@ -13,6 +14,7 @@
         },
         "assetBundlePatterns": ["**/*"],
         "ios": {
+            "jsEngine": "jsc",
             "supportsTablet": true,
             "bundleIdentifier": "com.ieatta.track",
             "googleServicesFile": "./ios/ieatta/GoogleService-Info.plist"
@@ -28,7 +30,7 @@
         "web": {
             "favicon": "./assets/favicon.png"
         },
-        "plugins": ["@react-native-firebase/app", "@react-native-firebase/perf", "expo-build-properties", "react-native-vision-camera"],
+        "plugins": [],
         "extra": {
             "eas": {
                 "projectId": "d089da50-1783-11e8-b0a2-a58f1992427f"

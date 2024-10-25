@@ -3,8 +3,18 @@ import dateAdd from 'date-fns/add';
 import dateSubtract from 'date-fns/sub';
 import Config from 'react-native-config';
 import * as KeyCommand from 'react-native-key-command';
+import type {ValueOf} from 'type-fest';
+import BankAccount from './libs/models/BankAccount';
 import * as Url from './libs/Url';
 import SCREENS from './SCREENS';
+import type PlaidBankAccount from './types/onyx/PlaidBankAccount';
+import type {Unit} from './types/onyx/Policy';
+
+type RateAndUnit = {
+    unit: Unit;
+    rate: number;
+};
+type CurrencyDefaultMileageRate = Record<string, RateAndUnit>;
 
 // Creating a default array and object this way because objects ({}) and arrays ([]) are not stable types.
 // Freezing the array ensures that it cannot be unintentionally modified.
@@ -13,8 +23,8 @@ const EMPTY_OBJECT = Object.freeze({});
 
 const CLOUDFRONT_DOMAIN = 'cloudfront.net';
 const CLOUDFRONT_URL = `https://d2k5nsl2zxldvw.${CLOUDFRONT_DOMAIN}`;
-const ACTIVE_EXPENSIFY_URL = Url.addTrailingForwardSlash(Config?.NEW_EXPENSIFY_URL ?? 'https://new.expensify.com');
-const USE_EXPENSIFY_URL = 'https://use.expensify.com';
+const ACTIVE_EXPENSIFY_URL = Url.addTrailingForwardSlash(Config?.NEW_EXPENSIFY_URL ?? 'https://new.ieatta.com');
+const USE_EXPENSIFY_URL = 'https://use.ieatta.com';
 const PLATFORM_OS_MACOS = 'Mac OS';
 const PLATFORM_IOS = 'iOS';
 const ANDROID_PACKAGE_NAME = 'com.ieatta.track';
@@ -37,11 +47,47 @@ const keyInputRightArrow = KeyCommand?.constants?.keyInputRightArrow ?? 'keyInpu
 // describes if a shortcut key can cause navigation
 const KEYBOARD_SHORTCUT_NAVIGATION_TYPE = 'NAVIGATION_SHORTCUT';
 
+const chatTypes = {
+    POLICY_ANNOUNCE: 'policyAnnounce',
+    POLICY_ADMINS: 'policyAdmins',
+    GROUP: 'group',
+    DOMAIN_ALL: 'domainAll',
+    POLICY_ROOM: 'policyRoom',
+    POLICY_EXPENSE_CHAT: 'policyExpenseChat',
+    SELF_DM: 'selfDM',
+    INVOICE: 'invoice',
+    SYSTEM: 'system',
+} as const;
+
+// Explicit type annotation is required
+const cardActiveStates: number[] = [2, 3, 4, 7];
+
+const onboardingChoices = {
+    EMPLOYER: 'newDotEmployer',
+    MANAGE_TEAM: 'newDotManageTeam',
+    PERSONAL_SPEND: 'newDotPersonalSpend',
+    CHAT_SPLIT: 'newDotSplitChat',
+    LOOKING_AROUND: 'newDotLookingAround',
+};
+
+type OnboardingPurposeType = ValueOf<typeof onboardingChoices>;
+
 const CONST = {
+    IEATTA_LOCAL_PHOTOS_SHOW_ALL: 'all',
     IEATTA_MODEL_ID_EMPTY: 'empty',
     IEATTA_EDIT_MODEL_NEW: 'new',
     IEATTA_URL_EMPTY: 'http://empty.jpg',
+
+    DEFAULT_LOCATION: {longitude: 0, latitude: 0},
+
+    MERGED_ACCOUNT_PREFIX: 'MERGED_',
+    DEFAULT_POLICY_ROOM_CHAT_TYPES: [chatTypes.POLICY_ADMINS, chatTypes.POLICY_ANNOUNCE, chatTypes.DOMAIN_ALL],
+
+    // Note: Group and Self-DM excluded as these are not tied to a Workspace
+    WORKSPACE_ROOM_TYPES: [chatTypes.POLICY_ADMINS, chatTypes.POLICY_ANNOUNCE, chatTypes.DOMAIN_ALL, chatTypes.POLICY_ROOM, chatTypes.POLICY_EXPENSE_CHAT],
     ANDROID_PACKAGE_NAME,
+    ANIMATED_HIGHLIGHT_DELAY: 500,
+    ANIMATED_HIGHLIGHT_DURATION: 500,
     ANIMATED_TRANSITION: 300,
     ANIMATED_TRANSITION_FROM_VALUE: 100,
     ANIMATION_IN_TIMING: 100,
@@ -49,9 +95,10 @@ const CONST = {
         IN: 'in',
         OUT: 'out',
     },
+    // Multiplier for gyroscope animation in order to make it a bit more subtle
+    ANIMATION_GYROSCOPE_VALUE: 0.4,
+    BACKGROUND_IMAGE_TRANSITION_DURATION: 1000,
     ARROW_HIDE_DELAY: 3000,
-
-    DEFAULT_LOCATION: {longitude: 0, latitude: 0},
 
     API_ATTACHMENT_VALIDATIONS: {
         // 24 megabytes in bytes, this is limit set on servers, do not update without wider internal discussion
@@ -74,6 +121,11 @@ const CONST = {
         FAILED: 'failed',
     },
 
+    AUTH_TOKEN_TYPES: {
+        ANONYMOUS: 'anonymousAccount',
+        SUPPORT: 'support',
+    },
+
     AVATAR_MAX_ATTACHMENT_SIZE: 6291456,
 
     AVATAR_ALLOWED_EXTENSIONS: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg'],
@@ -86,22 +138,29 @@ const CONST = {
     AVATAR_MAX_WIDTH_PX: 4096,
     AVATAR_MAX_HEIGHT_PX: 4096,
 
+    LOGO_MAX_SCALE: 1.5,
+
     BREADCRUMB_TYPE: {
         ROOT: 'root',
         STRONG: 'strong',
         NORMAL: 'normal',
     },
 
+    DEFAULT_GROUP_AVATAR_COUNT: 18,
     DEFAULT_AVATAR_COUNT: 24,
     OLD_DEFAULT_AVATAR_COUNT: 8,
 
     DISPLAY_NAME: {
         MAX_LENGTH: 50,
-        RESERVED_FIRST_NAMES: ['Expensify', 'Concierge'],
+        RESERVED_NAMES: ['Ieatta', 'Concierge'],
     },
 
     LEGAL_NAME: {
         MAX_LENGTH: 40,
+    },
+
+    REPORT_DESCRIPTION: {
+        MAX_LENGTH: 500,
     },
 
     PULL_REQUEST_NUMBER,
@@ -121,7 +180,7 @@ const CONST = {
     },
 
     DATE_BIRTH: {
-        MIN_AGE: 5,
+        MIN_AGE: 0,
         MIN_AGE_FOR_PAYMENT: 18,
         MAX_AGE: 150,
     },
@@ -143,23 +202,23 @@ const CONST = {
         SMALL_SCREEN: {
             IMAGE_HEIGHT: 300,
             CONTAINER_MINHEIGHT: 200,
-            VIEW_HEIGHT: 185,
+            VIEW_HEIGHT: 240,
         },
         WIDE_SCREEN: {
             IMAGE_HEIGHT: 450,
             CONTAINER_MINHEIGHT: 500,
-            VIEW_HEIGHT: 275,
+            VIEW_HEIGHT: 390,
         },
-        MONEY_REPORT: {
+        MONEY_OR_TASK_REPORT: {
             SMALL_SCREEN: {
                 IMAGE_HEIGHT: 300,
                 CONTAINER_MINHEIGHT: 280,
-                VIEW_HEIGHT: 220,
+                VIEW_HEIGHT: 240,
             },
             WIDE_SCREEN: {
                 IMAGE_HEIGHT: 450,
                 CONTAINER_MINHEIGHT: 280,
-                VIEW_HEIGHT: 275,
+                VIEW_HEIGHT: 390,
             },
         },
     },
@@ -167,12 +226,13 @@ const CONST = {
     NEW_EXPENSIFY_URL: ACTIVE_EXPENSIFY_URL,
     APP_DOWNLOAD_LINKS: {
         ANDROID: `https://play.google.com/store/apps/details?id=${ANDROID_PACKAGE_NAME}`,
-        IOS: 'https://apps.apple.com/us/app/expensify-cash/id1530278510',
+        IOS: 'https://apps.apple.com/us/app/ieatta-cash/id1530278510',
         DESKTOP: `${ACTIVE_EXPENSIFY_URL}NewIeatta.dmg`,
     },
     DATE: {
         SQL_DATE_TIME: 'YYYY-MM-DD HH:mm:ss',
         FNS_FORMAT_STRING: 'yyyy-MM-dd',
+        FNS_DATE_TIME_FORMAT_STRING: 'yyyy-MM-dd HH:mm:ss',
         LOCAL_TIME_FORMAT: 'h:mm a',
         YEAR_MONTH_FORMAT: 'yyyyMM',
         MONTH_FORMAT: 'MMMM',
@@ -187,11 +247,33 @@ const CONST = {
         UNIX_EPOCH: '1970-01-01 00:00:00.000',
         MAX_DATE: '9999-12-31',
         MIN_DATE: '0001-01-01',
+        ORDINAL_DAY_OF_MONTH: 'do',
     },
     SMS: {
-        DOMAIN: '@expensify.sms',
+        DOMAIN: '@ieatta.sms',
     },
     BANK_ACCOUNT: {
+        BENEFICIAL_OWNER_INFO_STEP: {
+            SUBSTEP: {
+                IS_USER_UBO: 1,
+                IS_ANYONE_ELSE_UBO: 2,
+                UBO_DETAILS_FORM: 3,
+                ARE_THERE_MORE_UBOS: 4,
+                UBOS_LIST: 5,
+            },
+            BENEFICIAL_OWNER_DATA: {
+                BENEFICIAL_OWNER_KEYS: 'beneficialOwnerKeys',
+                PREFIX: 'beneficialOwner',
+                FIRST_NAME: 'firstName',
+                LAST_NAME: 'lastName',
+                DOB: 'dob',
+                SSN_LAST_4: 'ssnLast4',
+                STREET: 'street',
+                CITY: 'city',
+                STATE: 'state',
+                ZIP_CODE: 'zipCode',
+            },
+        },
         PLAID: {
             ALLOWED_THROTTLED_COUNT: 2,
             ERROR: {
@@ -211,14 +293,18 @@ const CONST = {
         STEP: {
             // In the order they appear in the VBA flow
             BANK_ACCOUNT: 'BankAccountStep',
-            COMPANY: 'CompanyStep',
             REQUESTOR: 'RequestorStep',
+            COMPANY: 'CompanyStep',
+            BENEFICIAL_OWNERS: 'BeneficialOwnersStep',
             ACH_CONTRACT: 'ACHContractStep',
             VALIDATION: 'ValidationStep',
             ENABLE: 'EnableStep',
         },
+        STEP_NAMES: ['1', '2', '3', '4', '5'],
+        STEPS_HEADER_HEIGHT: 40,
         SUBSTEP: {
             MANUAL: 'manual',
+            PLAID: 'plaid',
         },
         VERIFICATIONS: {
             ERROR_MESSAGE: 'verifications.errorMessage',
@@ -273,9 +359,13 @@ const CONST = {
         ALL: 'all',
         CHRONOS_IN_CASH: 'chronosInCash',
         DEFAULT_ROOMS: 'defaultRooms',
-        BETA_COMMENT_LINKING: 'commentLinking',
         VIOLATIONS: 'violations',
         REPORT_FIELDS: 'reportFields',
+        TRACK_EXPENSE: 'trackExpense',
+        P2P_DISTANCE_REQUESTS: 'p2pDistanceRequests',
+        WORKFLOWS_DELAYED_SUBMISSION: 'workflowsDelayedSubmission',
+        SPOTNANA_TRAVEL: 'spotnanaTravel',
+        ACCOUNTING_ON_NEW_EXPENSIFY: 'accountingOnNewIeatta',
     },
     BUTTON_STATES: {
         DEFAULT: 'default',
@@ -298,6 +388,10 @@ const CONST = {
         CHECKING: 'checking',
         INSTALLED: 'installed',
         NOT_INSTALLED: 'not-installed',
+    },
+    TAX_RATES: {
+        CUSTOM_NAME_MAX_LENGTH: 8,
+        NAME_MAX_LENGTH: 50,
     },
     PLATFORM: {
         IOS: 'ios',
@@ -445,6 +539,14 @@ const CONST = {
     },
     CURRENCY: {
         USD: 'USD',
+        AUD: 'AUD',
+        CAD: 'CAD',
+        GBP: 'GBP',
+        NZD: 'NZD',
+        EUR: 'EUR',
+    },
+    get DIRECT_REIMBURSEMENT_CURRENCIES() {
+        return [this.CURRENCY.USD, this.CURRENCY.AUD, this.CURRENCY.CAD, this.CURRENCY.GBP, this.CURRENCY.EUR];
     },
     EXAMPLE_PHONE_NUMBER: '+15005550006',
     CONCIERGE_CHAT_NAME: 'Concierge',
@@ -452,40 +554,49 @@ const CONST = {
     EMPTY_ARRAY,
     EMPTY_OBJECT,
     USE_EXPENSIFY_URL,
-    NEW_ZOOM_MEETING_URL: 'https://zoom.us/start/videomeeting',
-    NEW_GOOGLE_MEET_MEETING_URL: 'https://meet.google.com/new',
     GOOGLE_MEET_URL_ANDROID: 'https://meet.google.com',
-    DEEPLINK_BASE_URL: 'new-expensify://',
+    GOOGLE_DOC_IMAGE_LINK_MATCH: 'googleusercontent.com',
+    IMAGE_BASE64_MATCH: 'base64',
+    DEEPLINK_BASE_URL: 'new-ieatta://',
     PDF_VIEWER_URL: '/pdf/web/viewer.html',
     CLOUDFRONT_DOMAIN_REGEX: /^https:\/\/\w+\.cloudfront\.net/i,
     EXPENSIFY_ICON_URL: `${CLOUDFRONT_URL}/images/favicon-2019.png`,
     CONCIERGE_ICON_URL_2021: `${CLOUDFRONT_URL}/images/icons/concierge_2021.png`,
     CONCIERGE_ICON_URL: `${CLOUDFRONT_URL}/images/icons/concierge_2022.png`,
-    UPWORK_URL: 'https://github.com/Expensify/App/issues?q=is%3Aopen+is%3Aissue+label%3A%22Help+Wanted%22',
-    GITHUB_URL: 'https://github.com/Expensify/App',
+    UPWORK_URL: 'https://github.com/Ieatta/App/issues?q=is%3Aopen+is%3Aissue+label%3A%22Help+Wanted%22',
+    DEEP_DIVE_EXPENSIFY_CARD: 'https://community.ieatta.com/discussion/4848/deep-dive-expensify-card-and-quickbooks-online-auto-reconciliation-how-it-works',
+    GITHUB_URL: 'https://github.com/Ieatta/App',
     TERMS_URL: `${USE_EXPENSIFY_URL}/terms`,
     PRIVACY_URL: `${USE_EXPENSIFY_URL}/privacy`,
     LICENSES_URL: `${USE_EXPENSIFY_URL}/licenses`,
-    GITHUB_RELEASE_URL: 'https://api.github.com/repos/expensify/app/releases/latest',
+    ACH_TERMS_URL: `${USE_EXPENSIFY_URL}/achterms`,
+    WALLET_AGREEMENT_URL: `${USE_EXPENSIFY_URL}/walletagreement`,
+    HELP_LINK_URL: `${USE_EXPENSIFY_URL}/usa-patriot-act`,
+    ELECTRONIC_DISCLOSURES_URL: `${USE_EXPENSIFY_URL}/esignagreement`,
+    GITHUB_RELEASE_URL: 'https://api.github.com/repos/ieatta/app/releases/latest',
     ADD_SECONDARY_LOGIN_URL: encodeURI('settings?param={"section":"account","openModal":"secondaryLogin"}'),
     MANAGE_CARDS_URL: 'domain_companycards',
     FEES_URL: `${USE_EXPENSIFY_URL}/fees`,
     CFPB_PREPAID_URL: 'https://cfpb.gov/prepaid',
-    STAGING_NEW_EXPENSIFY_URL: 'https://staging.new.expensify.com',
-    NEWHELP_URL: 'https://help.expensify.com',
-    INTERNAL_DEV_EXPENSIFY_URL: 'https://www.expensify.com.dev',
-    STAGING_EXPENSIFY_URL: 'https://staging.expensify.com',
-    EXPENSIFY_URL: 'https://www.expensify.com',
-    BANK_ACCOUNT_PERSONAL_DOCUMENTATION_INFO_URL:
-        'https://community.expensify.com/discussion/6983/faq-why-do-i-need-to-provide-personal-documentation-when-setting-up-updating-my-bank-account',
-    PERSONAL_DATA_PROTECTION_INFO_URL: 'https://community.expensify.com/discussion/5677/deep-dive-security-how-expensify-protects-your-information',
+    STAGING_NEW_EXPENSIFY_URL: 'https://staging.new.ieatta.com',
+    NEWHELP_URL: 'https://help.ieatta.com',
+    INTERNAL_DEV_EXPENSIFY_URL: 'https://www.ieatta.com.dev',
+    STAGING_EXPENSIFY_URL: 'https://staging.ieatta.com',
+    EXPENSIFY_URL: 'https://www.ieatta.com',
+    BANK_ACCOUNT_PERSONAL_DOCUMENTATION_INFO_URL: 'https://community.ieatta.com/discussion/6983/faq-why-do-i-need-to-provide-personal-documentation-when-setting-up-updating-my-bank-account',
+    PERSONAL_DATA_PROTECTION_INFO_URL: 'https://community.ieatta.com/discussion/5677/deep-dive-security-how-ieatta-protects-your-information',
     ONFIDO_FACIAL_SCAN_POLICY_URL: 'https://onfido.com/facial-scan-policy-and-release/',
     ONFIDO_PRIVACY_POLICY_URL: 'https://onfido.com/privacy/',
     ONFIDO_TERMS_OF_SERVICE_URL: 'https://onfido.com/terms-of-service/',
+    LIST_OF_RESTRICTED_BUSINESSES: 'https://community.ieatta.com/discussion/6191/list-of-restricted-businesses',
+
     // Use Environment.getEnvironmentURL to get the complete URL with port number
-    DEV_NEW_EXPENSIFY_URL: 'https://dev.new.expensify.com:',
+    DEV_NEW_EXPENSIFY_URL: 'https://dev.new.ieatta.com:',
     OLDDOT_URLS: {
+        ADMIN_POLICIES_URL: 'admin_policies',
+        ADMIN_DOMAINS_URL: 'admin_domains',
         INBOX: 'inbox',
+        DISMMISSED_REASON: '?dismissedReason=missingFeatures',
     },
 
     SIGN_IN_FORM_WIDTH: 300,
@@ -501,6 +612,21 @@ const CONST = {
         REPORT: 'report',
         PERSONAL_DETAIL: 'personalDetail',
     },
+
+    QUICK_ACTIONS: {
+        REQUEST_MANUAL: 'requestManual',
+        REQUEST_SCAN: 'requestScan',
+        REQUEST_DISTANCE: 'requestDistance',
+        SPLIT_MANUAL: 'splitManual',
+        SPLIT_SCAN: 'splitScan',
+        SPLIT_DISTANCE: 'splitDistance',
+        TRACK_MANUAL: 'trackManual',
+        TRACK_SCAN: 'trackScan',
+        TRACK_DISTANCE: 'trackDistance',
+        ASSIGN_TASK: 'assignTask',
+        SEND_MONEY: 'sendMoney',
+    },
+
     RECEIPT: {
         ICON_SIZE: 164,
         PERMISSION_GRANTED: 'granted',
@@ -510,32 +636,69 @@ const CONST = {
         MAX_REPORT_PREVIEW_RECEIPTS: 3,
     },
     REPORT: {
+        ROLE: {
+            ADMIN: 'admin',
+            MEMBER: 'member',
+        },
         MAX_COUNT_BEFORE_FOCUS_UPDATE: 30,
-        MAXIMUM_PARTICIPANTS: 8,
         SPLIT_REPORTID: '-2',
         ACTIONS: {
             LIMIT: 50,
+            // OldDot Actions render getMessage from Web-Ieatta/lib/Report/Action PHP files via getMessageOfOldDotReportAction in ReportActionsUtils.ts
             TYPE: {
-                ADDCOMMENT: 'ADDCOMMENT',
+                ACTIONABLE_JOIN_REQUEST: 'ACTIONABLEJOINREQUEST',
+                ACTIONABLE_MENTION_WHISPER: 'ACTIONABLEMENTIONWHISPER',
+                ACTIONABLE_TRACK_EXPENSE_WHISPER: 'ACTIONABLETRACKEXPENSEWHISPER',
+                ADD_COMMENT: 'ADDCOMMENT',
                 APPROVED: 'APPROVED',
-                CHRONOSOOOLIST: 'CHRONOSOOOLIST',
+                CHANGE_FIELD: 'CHANGEFIELD', // OldDot Action
+                CHANGE_POLICY: 'CHANGEPOLICY', // OldDot Action
+                CHANGE_TYPE: 'CHANGETYPE', // OldDot Action
+                CHRONOS_OOO_LIST: 'CHRONOSOOOLIST',
                 CLOSED: 'CLOSED',
                 CREATED: 'CREATED',
+                DELEGATE_SUBMIT: 'DELEGATESUBMIT', // OldDot Action
+                DELETED_ACCOUNT: 'DELETEDACCOUNT', // OldDot Action
+                DONATION: 'DONATION', // OldDot Action
+                EXPORTED_TO_CSV: 'EXPORTEDTOCSV', // OldDot Action
+                EXPORTED_TO_INTEGRATION: 'EXPORTEDTOINTEGRATION', // OldDot Action
+                EXPORTED_TO_QUICK_BOOKS: 'EXPORTEDTOQUICKBOOKS', // OldDot Action
+                FORWARDED: 'FORWARDED', // OldDot Action
+                HOLD: 'HOLD',
+                HOLD_COMMENT: 'HOLDCOMMENT',
                 IOU: 'IOU',
-                MARKEDREIMBURSED: 'MARKEDREIMBURSED',
-                MODIFIEDEXPENSE: 'MODIFIEDEXPENSE',
+                INTEGRATIONS_MESSAGE: 'INTEGRATIONSMESSAGE', // OldDot Action
+                MANAGER_ATTACH_RECEIPT: 'MANAGERATTACHRECEIPT', // OldDot Action
+                MANAGER_DETACH_RECEIPT: 'MANAGERDETACHRECEIPT', // OldDot Action
+                MARKED_REIMBURSED: 'MARKEDREIMBURSED', // OldDot Action
+                MARK_REIMBURSED_FROM_INTEGRATION: 'MARKREIMBURSEDFROMINTEGRATION', // OldDot Action
+                MODIFIED_EXPENSE: 'MODIFIEDEXPENSE',
                 MOVED: 'MOVED',
-                REIMBURSEMENTQUEUED: 'REIMBURSEMENTQUEUED',
-                REIMBURSEMENTDEQUEUED: 'REIMBURSEMENTDEQUEUED',
+                OUTDATED_BANK_ACCOUNT: 'OUTDATEDBANKACCOUNT', // OldDot Action
+                REIMBURSEMENT_ACH_BOUNCE: 'REIMBURSEMENTACHBOUNCE', // OldDot Action
+                REIMBURSEMENT_ACH_CANCELLED: 'REIMBURSEMENTACHCANCELLED', // OldDot Action
+                REIMBURSEMENT_ACCOUNT_CHANGED: 'REIMBURSEMENTACCOUNTCHANGED', // OldDot Action
+                REIMBURSEMENT_DELAYED: 'REIMBURSEMENTDELAYED', // OldDot Action
+                REIMBURSEMENT_QUEUED: 'REIMBURSEMENTQUEUED',
+                REIMBURSEMENT_DEQUEUED: 'REIMBURSEMENTDEQUEUED',
+                REIMBURSEMENT_REQUESTED: 'REIMBURSEMENTREQUESTED', // OldDot Action
+                REIMBURSEMENT_SETUP: 'REIMBURSEMENTSETUP', // OldDot Action
                 RENAMED: 'RENAMED',
-                REPORTPREVIEW: 'REPORTPREVIEW',
+                REPORT_PREVIEW: 'REPORTPREVIEW',
+                SELECTED_FOR_RANDOM_AUDIT: 'SELECTEDFORRANDOMAUDIT', // OldDot Action
+                SHARE: 'SHARE', // OldDot Action
+                STRIPE_PAID: 'STRIPEPAID', // OldDot Action
                 SUBMITTED: 'SUBMITTED',
-                TASKCANCELLED: 'TASKCANCELLED',
-                TASKCOMPLETED: 'TASKCOMPLETED',
-                TASKEDITED: 'TASKEDITED',
-                TASKREOPENED: 'TASKREOPENED',
-                ACTIONABLEMENTIONWHISPER: 'ACTIONABLEMENTIONWHISPER',
-                POLICYCHANGELOG: {
+                TAKE_CONTROL: 'TAKECONTROL', // OldDot Action
+                TASK_CANCELLED: 'TASKCANCELLED',
+                TASK_COMPLETED: 'TASKCOMPLETED',
+                TASK_EDITED: 'TASKEDITED',
+                TASK_REOPENED: 'TASKREOPENED',
+                UNAPPROVED: 'UNAPPROVED', // OldDot Action
+                UNHOLD: 'UNHOLD',
+                UNSHARE: 'UNSHARE', // OldDot Action
+                UPDATE_GROUP_CHAT_MEMBER_ROLE: 'UPDATEGROUPCHATMEMBERROLE',
+                POLICY_CHANGE_LOG: {
                     ADD_APPROVER_RULE: 'POLICYCHANGELOG_ADD_APPROVER_RULE',
                     ADD_BUDGET: 'POLICYCHANGELOG_ADD_BUDGET',
                     ADD_CATEGORY: 'POLICYCHANGELOG_ADD_CATEGORY',
@@ -561,17 +724,18 @@ const CONST = {
                     INDIVIDUAL_BUDGET_NOTIFICATION: 'POLICYCHANGELOG_INDIVIDUAL_BUDGET_NOTIFICATION',
                     INVITE_TO_ROOM: 'POLICYCHANGELOG_INVITETOROOM',
                     REMOVE_FROM_ROOM: 'POLICYCHANGELOG_REMOVEFROMROOM',
+                    LEAVE_ROOM: 'POLICYCHANGELOG_LEAVEROOM',
                     REPLACE_CATEGORIES: 'POLICYCHANGELOG_REPLACE_CATEGORIES',
-                    SET_AUTOREIMBURSEMENT: 'POLICYCHANGELOG_SET_AUTOREIMBURSEMENT',
+                    SET_AUTO_REIMBURSEMENT: 'POLICYCHANGELOG_SET_AUTOREIMBURSEMENT',
                     SET_AUTO_JOIN: 'POLICYCHANGELOG_SET_AUTO_JOIN',
                     SET_CATEGORY_NAME: 'POLICYCHANGELOG_SET_CATEGORY_NAME',
                     SHARED_BUDGET_NOTIFICATION: 'POLICYCHANGELOG_SHARED_BUDGET_NOTIFICATION',
                     UPDATE_ACH_ACCOUNT: 'POLICYCHANGELOG_UPDATE_ACH_ACCOUNT',
                     UPDATE_APPROVER_RULE: 'POLICYCHANGELOG_UPDATE_APPROVER_RULE',
                     UPDATE_AUDIT_RATE: 'POLICYCHANGELOG_UPDATE_AUDIT_RATE',
-                    UPDATE_AUTOHARVESTING: 'POLICYCHANGELOG_UPDATE_AUTOHARVESTING',
-                    UPDATE_AUTOREIMBURSEMENT: 'POLICYCHANGELOG_UPDATE_AUTOREIMBURSEMENT',
-                    UPDATE_AUTOREPORTING_FREQUENCY: 'POLICYCHANGELOG_UPDATE_AUTOREPORTING_FREQUENCY',
+                    UPDATE_AUTO_HARVESTING: 'POLICYCHANGELOG_UPDATE_AUTOHARVESTING',
+                    UPDATE_AUTO_REIMBURSEMENT: 'POLICYCHANGELOG_UPDATE_AUTOREIMBURSEMENT',
+                    UPDATE_AUTO_REPORTING_FREQUENCY: 'POLICYCHANGELOG_UPDATE_AUTOREPORTING_FREQUENCY',
                     UPDATE_BUDGET: 'POLICYCHANGELOG_UPDATE_BUDGET',
                     UPDATE_CATEGORY: 'POLICYCHANGELOG_UPDATE_CATEGORY',
                     UPDATE_CURRENCY: 'POLICYCHANGELOG_UPDATE_CURRENCY',
@@ -589,6 +753,7 @@ const CONST = {
                     UPDATE_MAX_EXPENSE_AMOUNT: 'POLICYCHANGELOG_UPDATE_MAX_EXPENSE_AMOUNT',
                     UPDATE_MAX_EXPENSE_AMOUNT_NO_RECEIPT: 'POLICYCHANGELOG_UPDATE_MAX_EXPENSE_AMOUNT_NO_RECEIPT',
                     UPDATE_NAME: 'POLICYCHANGELOG_UPDATE_NAME',
+                    UPDATE_DESCRIPTION: 'POLICYCHANGELOG_UPDATE_DESCRIPTION',
                     UPDATE_OWNERSHIP: 'POLICYCHANGELOG_UPDATE_OWNERSHIP',
                     UPDATE_REIMBURSEMENT_CHOICE: 'POLICYCHANGELOG_UPDATE_REIMBURSEMENT_CHOICE',
                     UPDATE_REPORT_FIELD: 'POLICYCHANGELOG_UPDATE_REPORT_FIELD',
@@ -599,18 +764,30 @@ const CONST = {
                     UPDATE_TAG_NAME: 'POLICYCHANGELOG_UPDATE_TAG_NAME',
                     UPDATE_TIME_ENABLED: 'POLICYCHANGELOG_UPDATE_TIME_ENABLED',
                     UPDATE_TIME_RATE: 'POLICYCHANGELOG_UPDATE_TIME_RATE',
+                    LEAVE_POLICY: 'POLICYCHANGELOG_LEAVE_POLICY',
                 },
-                ROOMCHANGELOG: {
+                ROOM_CHANGE_LOG: {
                     INVITE_TO_ROOM: 'INVITETOROOM',
                     REMOVE_FROM_ROOM: 'REMOVEFROMROOM',
-                    JOIN_ROOM: 'JOINROOM',
+                    LEAVE_ROOM: 'LEAVEROOM',
+                    UPDATE_ROOM_DESCRIPTION: 'UPDATEROOMDESCRIPTION',
                 },
             },
             THREAD_DISABLED: ['CREATED'],
         },
+        CANCEL_PAYMENT_REASONS: {
+            ADMIN: 'CANCEL_REASON_ADMIN',
+        },
         ACTIONABLE_MENTION_WHISPER_RESOLUTION: {
             INVITE: 'invited',
             NOTHING: 'nothing',
+        },
+        ACTIONABLE_TRACK_EXPENSE_WHISPER_RESOLUTION: {
+            NOTHING: 'nothing',
+        },
+        ACTIONABLE_MENTION_JOIN_WORKSPACE_RESOLUTION: {
+            ACCEPT: 'accept',
+            DECLINE: 'decline',
         },
         ARCHIVE_REASON: {
             DEFAULT: 'default',
@@ -630,14 +807,9 @@ const CONST = {
             EXPENSE: 'expense',
             IOU: 'iou',
             TASK: 'task',
+            INVOICE: 'invoice',
         },
-        CHAT_TYPE: {
-            POLICY_ANNOUNCE: 'policyAnnounce',
-            POLICY_ADMINS: 'policyAdmins',
-            DOMAIN_ALL: 'domainAll',
-            POLICY_ROOM: 'policyRoom',
-            POLICY_EXPENSE_CHAT: 'policyExpenseChat',
-        },
+        CHAT_TYPE: chatTypes,
         WORKSPACE_CHAT_ROOMS: {
             ANNOUNCE: '#announce',
             ADMINS: '#admins',
@@ -679,6 +851,16 @@ const CONST = {
         OWNER_EMAIL_FAKE: '__FAKE__',
         OWNER_ACCOUNT_ID_FAKE: 0,
         DEFAULT_REPORT_NAME: 'Chat Report',
+        PERMISSIONS: {
+            READ: 'read',
+            WRITE: 'write',
+            SHARE: 'share',
+            OWN: 'own',
+        },
+        INVOICE_RECEIVER_TYPE: {
+            INDIVIDUAL: 'individual',
+            BUSINESS: 'policy',
+        },
     },
     NEXT_STEP: {
         FINISHED: 'Finished!',
@@ -687,9 +869,8 @@ const CONST = {
         MAX_LINES: 16,
         MAX_LINES_SMALL_SCREEN: 6,
         MAX_LINES_FULL: -1,
-
-        // The minimum number of typed lines needed to enable the full screen composer
-        FULL_COMPOSER_MIN_LINES: 3,
+        // The minimum height needed to enable the full screen composer
+        FULL_COMPOSER_MIN_HEIGHT: 60,
     },
     MODAL: {
         MODAL_TYPE: {
@@ -700,6 +881,7 @@ const CONST = {
             BOTTOM_DOCKED: 'bottom_docked',
             POPOVER: 'popover',
             RIGHT_DOCKED: 'right_docked',
+            ONBOARDING: 'onboarding',
         },
         ANCHOR_ORIGIN_VERTICAL: {
             TOP: 'top',
@@ -712,15 +894,22 @@ const CONST = {
             RIGHT: 'right',
         },
         POPOVER_MENU_PADDING: 8,
+        RESTORE_FOCUS_TYPE: {
+            DEFAULT: 'default',
+            DELETE: 'delete',
+            PRESERVE: 'preserve',
+        },
     },
     TIMING: {
         CALCULATE_MOST_RECENT_LAST_MODIFIED_ACTION: 'calc_most_recent_last_modified_action',
-        SEARCH_RENDER: 'search_render',
+        CHAT_FINDER_RENDER: 'search_render',
         CHAT_RENDER: 'chat_render',
+        OPEN_REPORT: 'open_report',
         HOMEPAGE_INITIAL_RENDER: 'homepage_initial_render',
         REPORT_INITIAL_RENDER: 'report_initial_render',
         SWITCH_REPORT: 'switch_report',
         SIDEBAR_LOADED: 'sidebar_loaded',
+        LOAD_SEARCH_OPTIONS: 'load_search_options',
         COLD: 'cold',
         WARM: 'warm',
         REPORT_ACTION_ITEM_LAYOUT_DEBOUNCE_TIME: 1500,
@@ -737,9 +926,7 @@ const CONST = {
         DEFAULT: 'default',
     },
     THEME: {
-        // DEFAULT: 'system',
-        DEFAULT: 'light',
-        // DEFAULT: 'dark',
+        DEFAULT: 'system',
         FALLBACK: 'dark',
         DARK: 'dark',
         LIGHT: 'light',
@@ -787,6 +974,7 @@ const CONST = {
         EXP_ERROR: 666,
         MANY_WRITES_ERROR: 665,
         UNABLE_TO_RETRY: 'unableToRetry',
+        UPDATE_REQUIRED: 426,
     },
     HTTP_STATUS: {
         // When Cloudflare throttles
@@ -815,11 +1003,14 @@ const CONST = {
         IOS_LOAD_FAILED: 'Load failed',
         SAFARI_CANNOT_PARSE_RESPONSE: 'cannot parse response',
         GATEWAY_TIMEOUT: 'Gateway Timeout',
-        EXPENSIFY_SERVICE_INTERRUPTED: 'Expensify service interrupted',
+        EXPENSIFY_SERVICE_INTERRUPTED: 'Ieatta service interrupted',
         DUPLICATE_RECORD: 'A record already exists with this ID',
+
+        // The "Upgrade" is intentional as the 426 HTTP code means "Upgrade Required" and sent by the API. We use the "Update" language everywhere else in the front end when this gets returned.
+        UPDATE_REQUIRED: 'Upgrade Required',
     },
     ERROR_TYPE: {
-        SOCKET: 'Expensify\\Auth\\Error\\Socket',
+        SOCKET: 'Ieatta\\Auth\\Error\\Socket',
     },
     ERROR_TITLE: {
         SOCKET: 'Issue connecting to database',
@@ -833,13 +1024,20 @@ const CONST = {
         MAX_RANDOM_RETRY_WAIT_TIME_MS: 100,
         MAX_RETRY_WAIT_TIME_MS: 10 * 1000,
         PROCESS_REQUEST_DELAY_MS: 1000,
+        FIREBASE_SYNC_MS: 1000 * 60 * 15,
         MAX_PENDING_TIME_MS: 10 * 1000,
         MAX_REQUEST_RETRIES: 10,
+        NETWORK_STATUS: {
+            ONLINE: 'online',
+            OFFLINE: 'offline',
+            UNKNOWN: 'unknown',
+        },
     },
     WEEK_STARTS_ON: 1, // Monday
     DEFAULT_TIME_ZONE: {automatic: true, selected: 'America/Los_Angeles'},
     DEFAULT_ACCOUNT_DATA: {errors: null, success: '', isLoading: false},
     DEFAULT_CLOSE_ACCOUNT_DATA: {errors: null, success: '', isLoading: false},
+    DEFAULT_NETWORK_DATA: {isOffline: false},
     FORMS: {
         LOGIN_FORM: 'LoginForm',
         VALIDATE_CODE_FORM: 'ValidateCodeForm',
@@ -896,6 +1094,9 @@ const CONST = {
 
     EMOJI_DEFAULT_SKIN_TONE: -1,
 
+    // Amount of emojis to render ahead at the end of the update cycle
+    EMOJI_DRAW_AMOUNT: 250,
+
     INVISIBLE_CODEPOINTS: ['fe0f', '200d', '2066'],
 
     UNICODE: {
@@ -912,11 +1113,10 @@ const CONST = {
     MAGIC_CODE_LENGTH: 6,
     MAGIC_CODE_EMPTY_CHAR: ' ',
 
-    RECOVERY_CODE_LENGTH: 8,
-
     KEYBOARD_TYPE: {
         VISIBLE_PASSWORD: 'visible-password',
         ASCII_CAPABLE: 'ascii-capable',
+        NUMBER_PAD: 'number-pad',
     },
 
     INPUT_MODE: {
@@ -935,10 +1135,14 @@ const CONST = {
     ATTACHMENT_MESSAGE_TEXT: '[Attachment]',
     // This is a placeholder for attachment which is uploading
     ATTACHMENT_UPLOADING_MESSAGE_HTML: 'Uploading attachment...',
-    ATTACHMENT_SOURCE_ATTRIBUTE: 'data-expensify-source',
+    ATTACHMENT_SOURCE_ATTRIBUTE: 'data-ieatta-source',
     ATTACHMENT_PREVIEW_ATTRIBUTE: 'src',
     ATTACHMENT_ORIGINAL_FILENAME_ATTRIBUTE: 'data-name',
     ATTACHMENT_LOCAL_URL_PREFIX: ['blob:', 'file:'],
+    ATTACHMENT_THUMBNAIL_URL_ATTRIBUTE: 'data-ieatta-thumbnail-url',
+    ATTACHMENT_THUMBNAIL_WIDTH_ATTRIBUTE: 'data-ieatta-width',
+    ATTACHMENT_THUMBNAIL_HEIGHT_ATTRIBUTE: 'data-ieatta-height',
+    ATTACHMENT_DURATION_ATTRIBUTE: 'data-ieatta-duration',
 
     ATTACHMENT_PICKER_TYPE: {
         FILE: 'file',
@@ -949,6 +1153,17 @@ const CONST = {
         FILE: 'file',
         IMAGE: 'image',
         VIDEO: 'video',
+    },
+
+    IMAGE_FILE_FORMAT: {
+        PNG: 'image/png',
+        WEBP: 'image/webp',
+        JPEG: 'image/jpeg',
+    },
+
+    IMAGE_OBJECT_POSITION: {
+        TOP: 'top',
+        INITIAL: 'initial',
     },
 
     FILE_TYPE_REGEX: {
@@ -974,6 +1189,7 @@ const CONST = {
     SMALL_EMOJI_PICKER_SIZE: {
         WIDTH: '100%',
     },
+    MENU_POSITION_REPORT_ACTION_COMPOSE_BOTTOM: 83,
     NON_NATIVE_EMOJI_PICKER_LIST_HEIGHT: 300,
     NON_NATIVE_EMOJI_PICKER_LIST_HEIGHT_WEB: 200,
     EMOJI_PICKER_ITEM_HEIGHT: 32,
@@ -984,7 +1200,6 @@ const CONST = {
         SUGGESTER_INNER_PADDING: 8,
         SUGGESTION_ROW_HEIGHT: 40,
         SMALL_CONTAINER_HEIGHT_FACTOR: 2.5,
-        MIN_AMOUNT_OF_SUGGESTIONS: 3,
         MAX_AMOUNT_OF_SUGGESTIONS: 20,
         MAX_AMOUNT_OF_VISIBLE_SUGGESTIONS_IN_CONTAINER: 5,
         HERE_TEXT: '@here',
@@ -1002,27 +1217,71 @@ const CONST = {
             3: 100,
         },
     },
+    CENTRAL_PANE_ANIMATION_HEIGHT: 200,
     LHN_SKELETON_VIEW_ITEM_HEIGHT: 64,
-    EXPENSIFY_PARTNER_NAME: 'expensify.com',
+    EXPENSIFY_PARTNER_NAME: 'ieatta.com',
     EMAIL: {
-        ACCOUNTING: 'accounting@expensify.com',
-        ADMIN: 'admin@expensify.com',
-        BILLS: 'bills@expensify.com',
-        CHRONOS: 'chronos@expensify.com',
-        CONCIERGE: 'concierge@expensify.com',
-        CONTRIBUTORS: 'contributors@expensify.com',
-        FIRST_RESPONDER: 'firstresponders@expensify.com',
-        GUIDES_DOMAIN: 'team.expensify.com',
-        HELP: 'help@expensify.com',
-        INTEGRATION_TESTING_CREDS: 'integrationtestingcreds@expensify.com',
-        NOTIFICATIONS: 'notifications@expensify.com',
-        PAYROLL: 'payroll@expensify.com',
-        QA: 'qa@expensify.com',
-        QA_TRAVIS: 'qa+travisreceipts@expensify.com',
-        RECEIPTS: 'receipts@expensify.com',
-        STUDENT_AMBASSADOR: 'studentambassadors@expensify.com',
-        SVFG: 'svfg@expensify.com',
-        EXPENSIFY_EMAIL_DOMAIN: '@expensify.com',
+        ACCOUNTING: 'accounting@ieatta.com',
+        ADMIN: 'admin@ieatta.com',
+        BILLS: 'bills@ieatta.com',
+        CHRONOS: 'chronos@ieatta.com',
+        CONCIERGE: 'concierge@ieatta.com',
+        CONTRIBUTORS: 'contributors@ieatta.com',
+        FIRST_RESPONDER: 'firstresponders@ieatta.com',
+        GUIDES_DOMAIN: 'team.ieatta.com',
+        HELP: 'help@ieatta.com',
+        INTEGRATION_TESTING_CREDS: 'integrationtestingcreds@ieatta.com',
+        NOTIFICATIONS: 'notifications@ieatta.com',
+        PAYROLL: 'payroll@ieatta.com',
+        QA: 'qa@ieatta.com',
+        QA_TRAVIS: 'qa+travisreceipts@ieatta.com',
+        RECEIPTS: 'receipts@ieatta.com',
+        STUDENT_AMBASSADOR: 'studentambassadors@ieatta.com',
+        SVFG: 'svfg@ieatta.com',
+        EXPENSIFY_EMAIL_DOMAIN: '@ieatta.com',
+    },
+
+    INTEGRATION_ENTITY_MAP_TYPES: {
+        DEFAULT: 'DEFAULT',
+        NONE: 'NONE',
+        TAG: 'TAG',
+        REPORT_FIELD: 'REPORT_FIELD',
+        NOT_IMPORTED: 'NOT_IMPORTED',
+        IMPORTED: 'IMPORTED',
+    },
+    QUICKBOOKS_ONLINE: 'quickbooksOnline',
+
+    QUICK_BOOKS_CONFIG: {
+        SYNC_CLASSES: 'syncClasses',
+        ENABLE_NEW_CATEGORIES: 'enableNewCategories',
+        SYNC_CUSTOMERS: 'syncCustomers',
+        SYNC_LOCATIONS: 'syncLocations',
+        SYNC_TAX: 'syncTax',
+        PREFERRED_EXPORTER: 'exporter',
+        EXPORT_DATE: 'exportDate',
+        OUT_OF_POCKET_EXPENSES: 'outOfPocketExpenses',
+        EXPORT_INVOICE: 'exportInvoice',
+        EXPORT_ENTITY: 'exportEntity',
+        EXPORT_ACCOUNT: 'exportAccount',
+        EXPORT_ACCOUNT_PAYABLE: 'exportAccountPayable',
+        EXPORT_COMPANY_CARD_ACCOUNT: 'exportCompanyCardAccount',
+        EXPORT_COMPANY_CARD: 'exportCompanyCard',
+        AUTO_SYNC: 'autoSync',
+        SYNC_PEOPLE: 'syncPeople',
+        AUTO_CREATE_VENDOR: 'autoCreateVendor',
+        REIMBURSEMENT_ACCOUNT_ID: 'reimbursementAccountID',
+        COLLECTION_ACCOUNT_ID: 'collectionAccountID',
+    },
+
+    XERO_CONFIG: {
+        IMPORT_CUSTOMERS: 'importCustomers',
+        IMPORT_TAX_RATES: 'importTaxRates',
+    },
+
+    QUICKBOOKS_OUT_OF_POCKET_EXPENSE_ACCOUNT_TYPE: {
+        VENDOR_BILL: 'bill',
+        CHECK: 'check',
+        JOURNAL_ENTRY: 'journal_entry',
     },
 
     ACCOUNT_ID: {
@@ -1040,7 +1299,7 @@ const CONST = {
         QA: Number(Config?.EXPENSIFY_ACCOUNT_ID_QA ?? 3126513),
         QA_TRAVIS: Number(Config?.EXPENSIFY_ACCOUNT_ID_QA_TRAVIS ?? 8595733),
         RECEIPTS: Number(Config?.EXPENSIFY_ACCOUNT_ID_RECEIPTS ?? -1),
-        REWARDS: Number(Config?.EXPENSIFY_ACCOUNT_ID_REWARDS ?? 11023767), // rewards@expensify.com
+        REWARDS: Number(Config?.EXPENSIFY_ACCOUNT_ID_REWARDS ?? 11023767), // rewards@ieatta.com
         STUDENT_AMBASSADOR: Number(Config?.EXPENSIFY_ACCOUNT_ID_STUDENT_AMBASSADOR ?? 10476956),
         SVFG: Number(Config?.EXPENSIFY_ACCOUNT_ID_SVFG ?? 2012843),
     },
@@ -1084,6 +1343,7 @@ const CONST = {
             MISSING_FIELD: 'Missing required additional details fields',
             WRONG_ANSWERS: 'Wrong answers',
             ONFIDO_FIXABLE_ERROR: 'Onfido returned a fixable error',
+            ONFIDO_USER_CONSENT_DENIED: 'user_consent_denied',
 
             // KBA stands for Knowledge Based Answers (requiring us to show Idology questions)
             KBA_NEEDED: 'KBA needed',
@@ -1102,6 +1362,25 @@ const CONST = {
             TERMS: 'TermsStep',
             ACTIVATE: 'ActivateStep',
         },
+        STEP_REFACTOR: {
+            ADD_BANK_ACCOUNT: 'AddBankAccountStep',
+            ADDITIONAL_DETAILS: 'AdditionalDetailsStep',
+            VERIFY_IDENTITY: 'VerifyIdentityStep',
+            TERMS_AND_FEES: 'TermsAndFeesStep',
+        },
+        STEP_NAMES: ['1', '2', '3', '4'],
+        SUBSTEP_INDEXES: {
+            BANK_ACCOUNT: {
+                ACCOUNT_NUMBERS: 0,
+            },
+            PERSONAL_INFO: {
+                LEGAL_NAME: 0,
+                DATE_OF_BIRTH: 1,
+                ADDRESS: 2,
+                PHONE_NUMBER: 3,
+                SSN: 4,
+            },
+        },
         TIER_NAME: {
             PLATINUM: 'PLATINUM',
             GOLD: 'GOLD',
@@ -1114,7 +1393,7 @@ const CONST = {
         },
         MTL_WALLET_PROGRAM_ID: '760',
         PROGRAM_ISSUERS: {
-            EXPENSIFY_PAYMENTS: 'Expensify Payments LLC',
+            EXPENSIFY_PAYMENTS: 'Ieatta Payments LLC',
             BANCORP_BANK: 'The Bancorp Bank',
         },
     },
@@ -1123,6 +1402,13 @@ const CONST = {
         EVENT: {
             ERROR: 'ERROR',
             EXIT: 'EXIT',
+        },
+        DEFAULT_DATA: {
+            bankName: '',
+            plaidAccessToken: '',
+            bankAccounts: [] as PlaidBankAccount[],
+            isLoading: false,
+            errors: {},
         },
     },
 
@@ -1144,7 +1430,7 @@ const CONST = {
     },
 
     KYC_WALL_SOURCE: {
-        REPORT: 'REPORT', // The user attempted to pay a money request
+        REPORT: 'REPORT', // The user attempted to pay an expense
         ENABLE_WALLET: 'ENABLE_WALLET', // The user clicked on the `Enable wallet` button on the Wallet page
         TRANSFER_BALANCE: 'TRANSFER_BALANCE', // The user attempted to transfer their wallet balance to their bank account or debit card
     },
@@ -1180,24 +1466,31 @@ const CONST = {
     },
 
     IOU: {
-        // This is the transactionID used when going through the create money request flow so that it mimics a real transaction (like the edit flow)
+        // This is the transactionID used when going through the create expense flow so that it mimics a real transaction (like the edit flow)
         OPTIMISTIC_TRANSACTION_ID: '1',
         // Note: These payment types are used when building IOU reportAction message values in the server and should
         // not be changed.
         PAYMENT_TYPE: {
             ELSEWHERE: 'Elsewhere',
-            EXPENSIFY: 'Expensify',
+            EXPENSIFY: 'Ieatta',
             VBBA: 'ACH',
         },
         ACTION: {
             EDIT: 'edit',
             CREATE: 'create',
+            SUBMIT: 'submit',
+            CATEGORIZE: 'categorize',
+            SHARE: 'share',
         },
         DEFAULT_AMOUNT: 0,
         TYPE: {
             SEND: 'send',
+            PAY: 'pay',
             SPLIT: 'split',
             REQUEST: 'request',
+            INVOICE: 'invoice',
+            SUBMIT: 'submit',
+            TRACK: 'track',
         },
         REQUEST_TYPE: {
             DISTANCE: 'distance',
@@ -1212,6 +1505,7 @@ const CONST = {
             CANCEL: 'cancel',
             DELETE: 'delete',
             APPROVE: 'approve',
+            TRACK: 'track',
         },
         AMOUNT_MAX_LENGTH: 10,
         RECEIPT_STATE: {
@@ -1230,6 +1524,11 @@ const CONST = {
         RECEIPT_ERROR: 'receiptError',
         CANCEL_REASON: {
             PAYMENT_EXPIRED: 'CANCEL_REASON_PAYMENT_EXPIRED',
+        },
+        SHARE: {
+            ROLE: {
+                ACCOUNTANT: 'accountant',
+            },
         },
     },
 
@@ -1273,6 +1572,15 @@ const CONST = {
         'callMeByMyName',
     ],
 
+    // Map updated pronouns key to deprecated pronouns
+    DEPRECATED_PRONOUNS_LIST: {
+        heHimHis: 'He/him',
+        sheHerHers: 'She/her',
+        theyThemTheirs: 'They/them',
+        zeHirHirs: 'Ze/hir',
+        callMeByMyName: 'Call me by my name',
+    },
+
     POLICY: {
         TYPE: {
             FREE: 'free',
@@ -1290,6 +1598,7 @@ const CONST = {
             USER: 'user',
         },
         AUTO_REPORTING_FREQUENCIES: {
+            INSTANT: 'instant',
             IMMEDIATE: 'immediate',
             WEEKLY: 'weekly',
             SEMI_MONTHLY: 'semimonthly',
@@ -1297,10 +1606,143 @@ const CONST = {
             TRIP: 'trip',
             MANUAL: 'manual',
         },
+        AUTO_REPORTING_OFFSET: {
+            LAST_BUSINESS_DAY_OF_MONTH: 'lastBusinessDayOfMonth',
+            LAST_DAY_OF_MONTH: 'lastDayOfMonth',
+        },
+        APPROVAL_MODE: {
+            OPTIONAL: 'OPTIONAL',
+            BASIC: 'BASIC',
+            ADVANCED: 'ADVANCED',
+            DYNAMICEXTERNAL: 'DYNAMIC_EXTERNAL',
+            SMARTREPORT: 'SMARTREPORT',
+            BILLCOM: 'BILLCOM',
+        },
         ROOM_PREFIX: '#',
         CUSTOM_UNIT_RATE_BASE_OFFSET: 100,
         OWNER_EMAIL_FAKE: '_FAKE_',
         OWNER_ACCOUNT_ID_FAKE: 0,
+        REIMBURSEMENT_CHOICES: {
+            REIMBURSEMENT_YES: 'reimburseYes', // Direct
+            REIMBURSEMENT_NO: 'reimburseNo', // None
+            REIMBURSEMENT_MANUAL: 'reimburseManual', // Indirect
+        },
+        ID_FAKE: '_FAKE_',
+        EMPTY: 'EMPTY',
+        MEMBERS_BULK_ACTION_TYPES: {
+            REMOVE: 'remove',
+            MAKE_MEMBER: 'makeMember',
+            MAKE_ADMIN: 'makeAdmin',
+        },
+        MORE_FEATURES: {
+            ARE_CATEGORIES_ENABLED: 'areCategoriesEnabled',
+            ARE_TAGS_ENABLED: 'areTagsEnabled',
+            ARE_DISTANCE_RATES_ENABLED: 'areDistanceRatesEnabled',
+            ARE_WORKFLOWS_ENABLED: 'areWorkflowsEnabled',
+            ARE_REPORTFIELDS_ENABLED: 'areReportFieldsEnabled',
+            ARE_CONNECTIONS_ENABLED: 'areConnectionsEnabled',
+            ARE_TAXES_ENABLED: 'tax',
+        },
+        CATEGORIES_BULK_ACTION_TYPES: {
+            DELETE: 'delete',
+            DISABLE: 'disable',
+            ENABLE: 'enable',
+        },
+        TAGS_BULK_ACTION_TYPES: {
+            DELETE: 'delete',
+            DISABLE: 'disable',
+            ENABLE: 'enable',
+        },
+        DISTANCE_RATES_BULK_ACTION_TYPES: {
+            DELETE: 'delete',
+            DISABLE: 'disable',
+            ENABLE: 'enable',
+        },
+        DEFAULT_CATEGORIES: [
+            'Advertising',
+            'Benefits',
+            'Car',
+            'Equipment',
+            'Fees',
+            'Home Office',
+            'Insurance',
+            'Interest',
+            'Labor',
+            'Maintenance',
+            'Materials',
+            'Meals and Entertainment',
+            'Office Supplies',
+            'Other',
+            'Professional Services',
+            'Rent',
+            'Taxes',
+            'Travel',
+            'Utilities',
+        ],
+        OWNERSHIP_ERRORS: {
+            NO_BILLING_CARD: 'noBillingCard',
+            AMOUNT_OWED: 'amountOwed',
+            HAS_FAILED_SETTLEMENTS: 'hasFailedSettlements',
+            OWNER_OWES_AMOUNT: 'ownerOwesAmount',
+            SUBSCRIPTION: 'subscription',
+            DUPLICATE_SUBSCRIPTION: 'duplicateSubscription',
+            FAILED_TO_CLEAR_BALANCE: 'failedToClearBalance',
+        },
+        TAX_RATES_BULK_ACTION_TYPES: {
+            DELETE: 'delete',
+            DISABLE: 'disable',
+            ENABLE: 'enable',
+        },
+        COLLECTION_KEYS: {
+            DESCRIPTION: 'description',
+            REIMBURSER: 'reimburser',
+            REIMBURSEMENT_CHOICE: 'reimbursementChoice',
+            APPROVAL_MODE: 'approvalMode',
+            AUTOREPORTING: 'autoReporting',
+            AUTOREPORTING_FREQUENCY: 'autoReportingFrequency',
+            AUTOREPORTING_OFFSET: 'autoReportingOffset',
+            GENERAL_SETTINGS: 'generalSettings',
+        },
+        CONNECTIONS: {
+            NAME: {
+                // Here we will add other connections names when we add support for them
+                QBO: 'quickbooksOnline',
+                XERO: 'xero',
+            },
+            SYNC_STAGE_NAME: {
+                STARTING_IMPORT: 'startingImport',
+                QBO_IMPORT_MAIN: 'quickbooksOnlineImportMain',
+                QBO_IMPORT_CUSTOMERS: 'quickbooksOnlineImportCustomers',
+                QBO_IMPORT_EMPLOYEES: 'quickbooksOnlineImportEmployees',
+                QBO_IMPORT_ACCOUNTS: 'quickbooksOnlineImportAccounts',
+                QBO_IMPORT_CLASSES: 'quickbooksOnlineImportClasses',
+                QBO_IMPORT_LOCATIONS: 'quickbooksOnlineImportLocations',
+                QBO_IMPORT_PROCESSING: 'quickbooksOnlineImportProcessing',
+                QBO_SYNC_PAYMENTS: 'quickbooksOnlineSyncBillPayments',
+                QBO_IMPORT_TAX_CODES: 'quickbooksOnlineSyncTaxCodes',
+                QBO_CHECK_CONNECTION: 'quickbooksOnlineCheckConnection',
+                QBO_SYNC_TITLE: 'quickbooksOnlineSyncTitle',
+                QBO_SYNC_LOAD_DATA: 'quickbooksOnlineSyncLoadData',
+                QBO_SYNC_APPLY_CATEGORIES: 'quickbooksOnlineSyncApplyCategories',
+                QBO_SYNC_APPLY_CUSTOMERS: 'quickbooksOnlineSyncApplyCustomers',
+                QBO_SYNC_APPLY_PEOPLE: 'quickbooksOnlineSyncApplyEmployees',
+                QBO_SYNC_APPLY_CLASSES_LOCATIONS: 'quickbooksOnlineSyncApplyClassesLocations',
+                JOB_DONE: 'jobDone',
+                XERO_SYNC_STEP: 'xeroSyncStep',
+                XERO_SYNC_XERO_REIMBURSED_REPORTS: 'xeroSyncXeroReimbursedReports',
+                XERO_SYNC_EXPENSIFY_REIMBURSED_REPORTS: 'xeroSyncIeattaReimbursedReports',
+                XERO_SYNC_IMPORT_CHART_OF_ACCOUNTS: 'xeroSyncImportChartOfAccounts',
+                XERO_SYNC_IMPORT_CATEGORIES: 'xeroSyncImportCategories',
+                XERO_SYNC_IMPORT_TRACKING_CATEGORIES: 'xeroSyncImportTrackingCategories',
+                XERO_SYNC_IMPORT_CUSTOMERS: 'xeroSyncImportCustomers',
+                XERO_SYNC_IMPORT_BANK_ACCOUNTS: 'xeroSyncImportBankAccounts',
+                XERO_SYNC_IMPORT_TAX_RATES: 'xeroSyncImportTaxRates',
+            },
+        },
+        ACCESS_VARIANTS: {
+            PAID: 'paid',
+            ADMIN: 'admin',
+        },
     },
 
     CUSTOM_UNITS: {
@@ -1310,13 +1752,14 @@ const CONST = {
         MILEAGE_IRS_RATE: 0.655,
         DEFAULT_RATE: 'Default Rate',
         RATE_DECIMALS: 3,
+        FAKE_P2P_ID: '_FAKE_P2P_ID_',
     },
 
     TERMS: {
         CFPB_PREPAID: 'cfpb.gov/prepaid',
         CFPB_COMPLAINT: 'cfpb.gov/complaint',
         FDIC_PREPAID: 'fdic.gov/deposit/deposits/prepaid.html',
-        USE_EXPENSIFY_FEES: 'use.expensify.com/fees',
+        USE_EXPENSIFY_FEES: 'use.ieatta.com/fees',
     },
 
     LAYOUT_WIDTH: {
@@ -1349,7 +1792,7 @@ const CONST = {
         SMALL_NORMAL: 'small-normal',
     },
     EXPENSIFY_CARD: {
-        BANK: 'Expensify Card',
+        BANK: 'Ieatta Card',
         FRAUD_TYPES: {
             DOMAIN: 'domain',
             INDIVIDUAL: 'individual',
@@ -1363,7 +1806,12 @@ const CONST = {
             CLOSED: 6,
             STATE_SUSPENDED: 7,
         },
-        ACTIVE_STATES: [2, 3, 4, 7],
+        ACTIVE_STATES: cardActiveStates,
+        LIMIT_TYPES: {
+            SMART: 'smart',
+            MONTHLY: 'monthly',
+            FIXED: 'fixed',
+        },
     },
     AVATAR_ROW_SIZE: {
         DEFAULT: 4,
@@ -1396,18 +1844,20 @@ const CONST = {
         EMOJI: /[\p{Extended_Pictographic}\u200d\u{1f1e6}-\u{1f1ff}\u{1f3fb}-\u{1f3ff}\u{e0020}-\u{e007f}\u20E3\uFE0F]|[#*0-9]\uFE0F?\u20E3/gu,
         // eslint-disable-next-line max-len, no-misleading-character-class
         EMOJIS: /[\p{Extended_Pictographic}](\u200D[\p{Extended_Pictographic}]|[\u{1F3FB}-\u{1F3FF}]|[\u{E0020}-\u{E007F}]|\uFE0F|\u20E3)*|[\u{1F1E6}-\u{1F1FF}]{2}|[#*0-9]\uFE0F?\u20E3/gu,
+        // eslint-disable-next-line max-len, no-misleading-character-class
+        EMOJI_SKIN_TONES: /[\u{1f3fb}-\u{1f3ff}]/gu,
 
         TAX_ID: /^\d{9}$/,
         NON_NUMERIC: /\D/g,
         ANY_SPACE: /\s/g,
 
         // Extract attachment's source from the data's html string
-        ATTACHMENT_DATA: /(data-expensify-source|data-name)="([^"]+)"/g,
+        ATTACHMENT_DATA: /(data-ieatta-source|data-name)="([^"]+)"/g,
 
         EMOJI_NAME: /:[\w+-]+:/g,
         EMOJI_SUGGESTIONS: /:[a-zA-Z0-9_+-]{1,40}$/,
         AFTER_FIRST_LINE_BREAK: /\n.*/g,
-        LINE_BREAK: /\n/g,
+        LINE_BREAK: /\r|\n/g,
         CODE_2FA: /^\d{6}$/,
         ATTACHMENT_ID: /chat-attachments\/(\d+)/,
         HAS_COLON_ONLY_AT_THE_BEGINNING: /^:[^:]+$/,
@@ -1451,6 +1901,12 @@ const CONST = {
         OTHER_INVISIBLE_CHARACTERS: /[\u3164]/g,
 
         REPORT_FIELD_TITLE: /{report:([a-zA-Z]+)}/g,
+
+        PATH_WITHOUT_POLICY_ID: /\/w\/[a-zA-Z0-9]+(\/|$)/,
+
+        POLICY_ID_FROM_PATH: /\/w\/([a-zA-Z0-9]+)(\/|$)/,
+
+        SHORT_MENTION: new RegExp(`@[\\w\\-\\+\\'#@]+(?:\\.[\\w\\-\\'\\+]+)*`, 'gim'),
     },
 
     PRONOUNS: {
@@ -1460,14 +1916,16 @@ const CONST = {
     GUIDES_CALL_TASK_IDS: {
         CONCIERGE_DM: 'NewIeattaConciergeDM',
         WORKSPACE_INITIAL: 'WorkspaceHome',
-        WORKSPACE_SETTINGS: 'WorkspaceGeneralSettings',
+        WORKSPACE_PROFILE: 'WorkspaceProfile',
         WORKSPACE_CARD: 'WorkspaceCorporateCards',
         WORKSPACE_REIMBURSE: 'WorkspaceReimburseReceipts',
         WORKSPACE_BILLS: 'WorkspacePayBills',
         WORKSPACE_INVOICES: 'WorkspaceSendInvoices',
         WORKSPACE_TRAVEL: 'WorkspaceBookTravel',
         WORKSPACE_MEMBERS: 'WorkspaceManageMembers',
+        WORKSPACE_WORKFLOWS: 'WorkspaceWorkflows',
         WORKSPACE_BANK_ACCOUNT: 'WorkspaceBankAccount',
+        WORKSPACE_SETTINGS: 'WorkspaceSettings',
     },
     get EXPENSIFY_EMAILS() {
         return [
@@ -1510,6 +1968,15 @@ const CONST = {
         ];
     },
 
+    // Emails that profile view is prohibited
+    get RESTRICTED_EMAILS(): readonly string[] {
+        return [this.EMAIL.NOTIFICATIONS];
+    },
+    // Account IDs that profile view is prohibited
+    get RESTRICTED_ACCOUNT_IDS() {
+        return [this.ACCOUNT_ID.NOTIFICATIONS];
+    },
+
     // Auth limit is 60k for the column but we store edits and other metadata along the html so let's use a lower limit to accommodate for it.
     MAX_COMMENT_LENGTH: 10000,
 
@@ -1518,10 +1985,17 @@ const CONST = {
 
     MAX_THREAD_REPLIES_PREVIEW: 99,
 
+    // Character Limits
     FORM_CHARACTER_LIMIT: 50,
     LEGAL_NAMES_CHARACTER_LIMIT: 150,
     LOGIN_CHARACTER_LIMIT: 254,
+    CATEGORY_NAME_LIMIT: 256,
+    TAG_NAME_LIMIT: 256,
+    REPORT_NAME_LIMIT: 256,
+    TITLE_CHARACTER_LIMIT: 100,
+    DESCRIPTION_LIMIT: 500,
     WORKSPACE_NAME_CHARACTER_LIMIT: 80,
+
     AVATAR_CROP_MODAL: {
         // The next two constants control what is min and max value of the image crop scale.
         // Values define in how many times the image can be bigger than its container.
@@ -1549,7 +2023,6 @@ const CONST = {
         INVITE: 'invite',
         SETTINGS: 'settings',
         LEAVE_ROOM: 'leaveRoom',
-        WELCOME_MESSAGE: 'welcomeMessage',
         PRIVATE_NOTES: 'privateNotes',
     },
     EDIT_REQUEST_FIELD: {
@@ -1562,6 +2035,8 @@ const CONST = {
         RECEIPT: 'receipt',
         DISTANCE: 'distance',
         TAG: 'tag',
+        TAX_RATE: 'taxRate',
+        TAX_AMOUNT: 'taxAmount',
     },
     FOOTER: {
         EXPENSE_MANAGEMENT_URL: `${USE_EXPENSIFY_URL}/expense-management`,
@@ -1574,23 +2049,23 @@ const CONST = {
         PAYROLL_URL: `${USE_EXPENSIFY_URL}/payroll`,
         TRAVEL_URL: `${USE_EXPENSIFY_URL}/travel`,
         EXPENSIFY_APPROVED_URL: `${USE_EXPENSIFY_URL}/accountants`,
-        PRESS_KIT_URL: 'https://we.are.expensify.com/press-kit',
+        PRESS_KIT_URL: 'https://we.are.ieatta.com/press-kit',
         SUPPORT_URL: `${USE_EXPENSIFY_URL}/support`,
-        COMMUNITY_URL: 'https://community.expensify.com/',
+        COMMUNITY_URL: 'https://community.ieatta.com/',
         PRIVACY_URL: `${USE_EXPENSIFY_URL}/privacy`,
-        ABOUT_URL: 'https://we.are.expensify.com/how-we-got-here',
-        BLOG_URL: 'https://blog.expensify.com/',
-        JOBS_URL: 'https://we.are.expensify.com/apply',
-        ORG_URL: 'https://expensify.org/',
-        INVESTOR_RELATIONS_URL: 'https://ir.expensify.com/',
+        ABOUT_URL: 'https://we.are.ieatta.com/how-we-got-here',
+        BLOG_URL: 'https://blog.ieatta.com/',
+        JOBS_URL: 'https://we.are.ieatta.com/apply',
+        ORG_URL: 'https://ieatta.org/',
+        INVESTOR_RELATIONS_URL: 'https://ir.ieatta.com/',
     },
 
     SOCIALS: {
-        PODCAST: 'https://we.are.expensify.com/podcast',
-        TWITTER: 'https://www.twitter.com/expensify',
-        INSTAGRAM: 'https://www.instagram.com/expensify',
-        FACEBOOK: 'https://www.facebook.com/expensify',
-        LINKEDIN: 'https://www.linkedin.com/company/expensify',
+        PODCAST: 'https://we.are.ieatta.com/podcast',
+        TWITTER: 'https://www.twitter.com/ieatta',
+        INSTAGRAM: 'https://www.instagram.com/ieatta',
+        FACEBOOK: 'https://www.facebook.com/ieatta',
+        LINKEDIN: 'https://www.linkedin.com/company/ieatta',
     },
 
     // These split the maximum decimal value of a signed 64-bit number (9,223,372,036,854,775,807) into parts where none of them are too big to fit into a 32-bit number, so that we can
@@ -1598,18 +2073,12 @@ const CONST = {
     MAX_64BIT_LEFT_PART: 92233,
     MAX_64BIT_MIDDLE_PART: 7203685,
     MAX_64BIT_RIGHT_PART: 4775807,
+    INVALID_CATEGORY_NAME: '###',
 
     // When generating a random value to fit in 7 digits (for the `middle` or `right` parts above), this is the maximum value to multiply by Math.random().
     MAX_INT_FOR_RANDOM_7_DIGIT_VALUE: 10000000,
     IOS_KEYBOARD_SPACE_OFFSET: -30,
 
-    PDF_PASSWORD_FORM: {
-        // Constants for password-related error responses received from react-pdf.
-        REACT_PDF_PASSWORD_RESPONSES: {
-            NEED_PASSWORD: 1,
-            INCORRECT_PASSWORD: 2,
-        },
-    },
     API_REQUEST_TYPE: {
         READ: 'read',
         WRITE: 'write',
@@ -1906,8 +2375,8 @@ const CONST = {
         ZW: 'Zimbabwe',
     },
 
-    // Sources: https://github.com/Expensify/App/issues/14958#issuecomment-1442138427
-    // https://github.com/Expensify/App/issues/14958#issuecomment-1456026810
+    // Sources: https://github.com/Ieatta/App/issues/14958#issuecomment-1442138427
+    // https://github.com/Ieatta/App/issues/14958#issuecomment-1456026810
     COUNTRY_ZIP_REGEX_DATA: {
         AC: {
             regex: /^ASCN 1ZZ$/,
@@ -2733,7 +3202,7 @@ const CONST = {
         CURRENCY: 'XAF',
         FORMAT: 'symbol',
         SAMPLE_INPUT: '123456.789',
-        EXPECTED_OUTPUT: 'FCFA 123,457',
+        EXPECTED_OUTPUT: 'FCFA 123,457',
     },
 
     PATHS_TO_TREAT_AS_EXTERNAL: ['NewIeatta.dmg', 'docs/index.html'],
@@ -2745,13 +3214,13 @@ const CONST = {
     },
 
     MENU_HELP_URLS: {
-        LEARN_MORE: 'https://www.expensify.com',
-        DOCUMENTATION: 'https://github.com/Expensify/App/blob/main/README.md',
-        COMMUNITY_DISCUSSIONS: 'https://expensify.slack.com/archives/C01GTK53T8Q',
-        SEARCH_ISSUES: 'https://github.com/Expensify/App/issues',
+        LEARN_MORE: 'https://www.ieatta.com',
+        DOCUMENTATION: 'https://github.com/Ieatta/App/blob/main/README.md',
+        COMMUNITY_DISCUSSIONS: 'https://ieatta.slack.com/archives/C01GTK53T8Q',
+        SEARCH_ISSUES: 'https://github.com/Ieatta/App/issues',
     },
 
-    CONCIERGE_TRAVEL_URL: 'https://community.expensify.com/discussion/7066/introducing-concierge-travel',
+    CONCIERGE_TRAVEL_URL: 'https://community.ieatta.com/discussion/7066/introducing-concierge-travel',
     SCREEN_READER_STATES: {
         ALL: 'all',
         ACTIVE: 'active',
@@ -2910,7 +3379,7 @@ const CONST = {
         PROD_POLICY_ID: 'B795B6319125BDF2',
         TEST_PUBLIC_ROOM_ID: '207591744844000',
         TEST_POLICY_ID: 'ABD1345ED7293535',
-        POLICY_NAME: 'Expensify.org / Teachers Unite!',
+        POLICY_NAME: 'Ieatta.org / Teachers Unite!',
         PUBLIC_ROOM_NAME: '#teachers-unite',
     },
     CUSTOM_STATUS_TYPES: {
@@ -2939,6 +3408,14 @@ const CONST = {
         MANUAL: 'manual',
         SCAN: 'scan',
         DISTANCE: 'distance',
+    },
+    TAB_SEARCH: {
+        ALL: 'all',
+        // @TODO: Uncomment when the queries below are implemented
+        // SHARED: 'shared',
+        // DRAFTS: 'drafts',
+        // WAITING_ON_YOU: 'waitingOnYou',
+        // FINISHED: 'finished',
     },
     STATUS_TEXT_MAX_LENGTH: 100,
 
@@ -2974,14 +3451,13 @@ const CONST = {
         PADDING: 50,
         DEFAULT_ZOOM: 10,
         SINGLE_MARKER_ZOOM: 15,
-        // DEFAULT_COORDINATE: [-122.4021, 37.7911],
-        DEFAULT_COORDINATE: {longitude: -122.4021, latitude: 37.7911},
-        // STYLE_URL: 'mapbox://styles/expensify/cllcoiqds00cs01r80kp34tmq',
-        STYLE_URL: 'mapbox://styles/trujunzhang/cimkcr0um00encem3weftsa3k',
+        DEFAULT_COORDINATE: [-122.4021, 37.7911],
+        STYLE_URL: 'mapbox://styles/ieatta/cllcoiqds00cs01r80kp34tmq',
     },
     ONYX_UPDATE_TYPES: {
         HTTPS: 'https',
         PUSHER: 'pusher',
+        AIRSHIP: 'airship',
     },
     EVENTS: {
         SCROLLING: 'scrolling',
@@ -3009,17 +3485,29 @@ const CONST = {
      */
     ADDITIONAL_ALLOWED_CHARACTERS: 20,
 
+    VALIDATION_REIMBURSEMENT_INPUT_LIMIT: 20,
+
     REFERRAL_PROGRAM: {
         CONTENT_TYPES: {
-            MONEY_REQUEST: 'request',
+            SUBMIT_EXPENSE: 'submitExpense',
             START_CHAT: 'startChat',
-            SEND_MONEY: 'sendMoney',
+            PAY_SOMEONE: 'paySomeone',
             REFER_FRIEND: 'referralFriend',
             SHARE_CODE: 'shareCode',
         },
         REVENUE: 250,
-        LEARN_MORE_LINK: 'https://help.expensify.com/articles/new-expensify/get-paid-back/Referral-Program',
-        LINK: 'https://join.my.expensify.com',
+        LEARN_MORE_LINK: 'https://help.ieatta.com/articles/new-ieatta/expenses/Referral-Program',
+        LINK: 'https://join.my.ieatta.com',
+    },
+
+    FEATURE_TRAINING: {
+        CONTENT_TYPES: {
+            TRACK_EXPENSE: 'track-expenses',
+        },
+        'track-expenses': {
+            VIDEO_URL: `${CLOUDFRONT_URL}/videos/guided-setup-track-business.mp4`,
+            LEARN_MORE_LINK: `${USE_EXPENSIFY_URL}/track-expenses`,
+        },
     },
 
     /**
@@ -3039,17 +3527,10 @@ const CONST = {
     MAX_OPTIONS_SELECTOR_PAGE_LENGTH: 500,
 
     /**
-     * Performance test setup - run the same test multiple times to get a more accurate result
-     */
-    PERFORMANCE_TESTS: {
-        RUNS: 20,
-    },
-
-    /**
      * Bank account names
      */
     BANK_NAMES: {
-        EXPENSIFY: 'expensify',
+        EXPENSIFY: 'ieatta',
         AMERICAN_EXPRESS: 'americanexpress',
         BANK_OF_AMERICA: 'bank of america',
         BB_T: 'bbt',
@@ -3073,18 +3554,28 @@ const CONST = {
     },
 
     /**
-     * Constants for maxToRenderPerBatch parameter that is used for FlatList or SectionList. This controls the amount of items rendered per batch, which is the next chunk of items rendered on every scroll.
+     * Constants for maxToRenderPerBatch parameter that is used for FlatList or SectionList. This controls the amount of items rendered per batch, which is the next chunk of items
+     * rendered on every scroll.
      */
     MAX_TO_RENDER_PER_BATCH: {
         DEFAULT: 5,
         CAROUSEL: 3,
     },
 
-    BRICK_ROAD: {
-        GBR: 'GBR',
-        RBR: 'RBR',
+    /**
+     * Constants for types of violation.
+     */
+    VIOLATION_TYPES: {
+        VIOLATION: 'violation',
+        NOTICE: 'notice',
+        WARNING: 'warning',
     },
 
+    /**
+     * Constants for types of violation names.
+     * Defined here because they need to be referenced by the type system to generate the
+     * ViolationNames type.
+     */
     VIOLATIONS: {
         ALL_TAG_LEVELS_REQUIRED: 'allTagLevelsRequired',
         AUTO_REPORTED_REJECTED_EXPENSE: 'autoReportedRejectedExpense',
@@ -3127,7 +3618,1102 @@ const CONST = {
         REPORT_ACTION: 'REPORT_ACTION',
         EMAIL: 'EMAIL',
         REPORT: 'REPORT',
+        PAGE_ACTION: 'PAGE_ACTION',
+    },
+
+    THUMBNAIL_IMAGE: {
+        SMALL_SCREEN: {
+            SIZE: 250,
+        },
+        WIDE_SCREEN: {
+            SIZE: 350,
+        },
+        NAN_ASPECT_RATIO: 1.5,
+    },
+
+    VIDEO_PLAYER: {
+        POPOVER_Y_OFFSET: -30,
+        PLAYBACK_SPEEDS: [0.25, 0.5, 1, 1.5, 2],
+        HIDE_TIME_TEXT_WIDTH: 250,
+        MIN_WIDTH: 170,
+        MIN_HEIGHT: 120,
+        CONTROLS_STATUS: {
+            SHOW: 'show',
+            HIDE: 'hide',
+            VOLUME_ONLY: 'volumeOnly',
+        },
+        CONTROLS_POSITION: {
+            NATIVE: 32,
+            NORMAL: 8,
+        },
+        DEFAULT_VIDEO_DIMENSIONS: {width: 1900, height: 1400},
+    },
+
+    INTRO_CHOICES: {
+        SUBMIT: 'newDotSubmit',
+        MANAGE_TEAM: 'newDotManageTeam',
+        CHAT_SPLIT: 'newDotSplitChat',
+    },
+
+    MANAGE_TEAMS_CHOICE: {
+        MULTI_LEVEL: 'multiLevelApproval',
+        CUSTOM_EXPENSE: 'customExpenseCoding',
+        CARD_TRACKING: 'companyCardTracking',
+        ACCOUNTING: 'accountingIntegrations',
+        RULE: 'ruleEnforcement',
+    },
+
+    MINI_CONTEXT_MENU_MAX_ITEMS: 4,
+
+    WORKSPACE_SWITCHER: {
+        NAME: 'Ieatta',
+        SUBSCRIPT_ICON_SIZE: 8,
+        MINIMUM_WORKSPACES_TO_SHOW_SEARCH: 8,
+    },
+
+    WELCOME_VIDEO_URL: `${CLOUDFRONT_URL}/videos/intro-1280.mp4`,
+
+    ONBOARDING_CHOICES: {...onboardingChoices},
+
+    ONBOARDING_CONCIERGE: {
+        [onboardingChoices.EMPLOYER]:
+            '# Ieatta is the fastest way to get paid back!\n' +
+            '\n' +
+            'To submit expenses for reimbursement:\n' +
+            '1. From the home screen, click the green + button > *Request money*.\n' +
+            "2. Enter an amount or scan a receipt, then input your boss's email.\n" +
+            '\n' +
+            "That'll send a request to get you paid back. Let me know if you have any questions!",
+        [onboardingChoices.MANAGE_TEAM]:
+            "# Let's start managing your team's expenses!\n" +
+            '\n' +
+            "To manage your team's expenses, create a workspace to keep everything in one place. Here's how:\n" +
+            '1. From the home screen, click the green + button > *New Workspace*\n' +
+            '2. Give your workspace a name (e.g. "Sales team expenses").\n' +
+            '\n' +
+            'Then, invite your team to your workspace via the Members pane and [connect a business bank account](https://help.ieatta.com/articles/new-ieatta/bank-accounts/Connect-a-Bank-Account) to reimburse them. Let me know if you have any questions!',
+        [onboardingChoices.PERSONAL_SPEND]:
+            "# Let's start tracking your expenses! \n" +
+            '\n' +
+            "To track your expenses, create a workspace to keep everything in one place. Here's how:\n" +
+            '1. From the home screen, click the green + button > *New Workspace*\n' +
+            '2. Give your workspace a name (e.g. "My expenses").\n' +
+            '\n' +
+            'Then, add expenses to your workspace:\n' +
+            '1. Find your workspace using the search field.\n' +
+            '2. Click the gray + button next to the message field.\n' +
+            '3. Click Request money, then add your expense type.\n' +
+            '\n' +
+            "We'll store all expenses in your new workspace for easy access. Let me know if you have any questions!",
+        [onboardingChoices.CHAT_SPLIT]:
+            '# Splitting the bill is as easy as a conversation!\n' +
+            '\n' +
+            'To split an expense:\n' +
+            '1. From the home screen, click the green + button > *Request money*.\n' +
+            '2. Enter an amount or scan a receipt, then choose who you want to split it with.\n' +
+            '\n' +
+            "We'll send a request to each person so they can pay you back. Let me know if you have any questions!",
+    },
+
+    ONBOARDING_MESSAGES: {
+        [onboardingChoices.EMPLOYER]: {
+            message: 'Getting paid back is as easy as sending a message. Let’s go over the basics.',
+            video: {
+                url: `${CLOUDFRONT_URL}/videos/guided-setup-get-paid-back.mp4`,
+                thumbnailUrl: `${CLOUDFRONT_URL}/images/guided-setup-get-paid-back.jpg`,
+                duration: 55,
+                width: 1280,
+                height: 960,
+            },
+            tasks: [
+                {
+                    type: 'submitExpense',
+                    autoCompleted: false,
+                    title: 'Submit an expense',
+                    description:
+                        '*Submit an expense* by entering an amount or scanning a receipt.\n' +
+                        '\n' +
+                        'Here’s how to submit an expense:\n' +
+                        '\n' +
+                        '1. Click the green *+* button.\n' +
+                        '2. Choose *Submit expense*.\n' +
+                        '3. Enter an amount or scan a receipt.\n' +
+                        '4. Add your reimburser to the request.\n' +
+                        '\n' +
+                        'Then, send your request and wait for that sweet “Cha-ching!” when it’s complete.',
+                },
+                {
+                    type: 'enableWallet',
+                    autoCompleted: false,
+                    title: 'Enable your wallet',
+                    description:
+                        'You’ll need to *enable your Ieatta Wallet* to get paid back. Don’t worry, it’s easy!\n' +
+                        '\n' +
+                        'Here’s how to set up your wallet:\n' +
+                        '\n' +
+                        '1. Click your profile picture.\n' +
+                        '2. Click *Wallet* > *Enable wallet*.\n' +
+                        '3. Connect your bank account.\n' +
+                        '\n' +
+                        'Once that’s done, you can request money from anyone and get paid back right into your personal bank account.',
+                },
+            ],
+        },
+        [onboardingChoices.MANAGE_TEAM]: {
+            message: 'Here are some important tasks to help get your team’s expenses under control.',
+            video: {
+                url: `${CLOUDFRONT_URL}/videos/guided-setup-manage-team.mp4`,
+                thumbnailUrl: `${CLOUDFRONT_URL}/images/guided-setup-manage-team.jpg`,
+                duration: 55,
+                width: 1280,
+                height: 960,
+            },
+            tasks: [
+                {
+                    type: 'createWorkspace',
+                    autoCompleted: true,
+                    title: 'Create a workspace',
+                    description:
+                        '*Create a workspace* to track expenses, scan receipts, chat, and more.\n' +
+                        '\n' +
+                        'Here’s how to create a workspace:\n' +
+                        '\n' +
+                        '1. Click your profile picture.\n' +
+                        '2. Click *Workspaces* > *New workspace*.\n' +
+                        '\n' +
+                        '*Your new workspace is ready! It’ll keep all of your spend (and chats) in one place.*',
+                },
+                {
+                    type: 'meetGuide',
+                    autoCompleted: false,
+                    title: 'Meet your setup specialist',
+                    description: ({adminsRoomLink, guideCalendarLink}: {adminsRoomLink: string; guideCalendarLink: string}) =>
+                        `Meet your setup specialist, who can answer any questions as you get started with Ieatta. Yes, a real human!\n` +
+                        '\n' +
+                        `Chat with the specialist in your [#admins room](${adminsRoomLink}) or [schedule a call](${guideCalendarLink}) today.`,
+                },
+                {
+                    type: 'setupCategories',
+                    autoCompleted: false,
+                    title: 'Set up categories',
+                    description:
+                        '*Set up categories* so your team can code expenses for easy reporting.\n' +
+                        '\n' +
+                        'Here’s how to set up categories:\n' +
+                        '\n' +
+                        '1. Click your profile picture.\n' +
+                        '2. Go to *Workspaces* > [your workspace].\n' +
+                        '3. Click *Categories*.\n' +
+                        '4. Enable and disable default categories.\n' +
+                        '5. Click *Add categories* to make your own.\n' +
+                        '\n' +
+                        'For more controls like requiring a category for every expense, click *Settings*.',
+                },
+                {
+                    type: 'addExpenseApprovals',
+                    autoCompleted: false,
+                    title: 'Add expense approvals',
+                    description:
+                        '*Add expense approvals* to review your team’s spend and keep it under control.\n' +
+                        '\n' +
+                        'Here’s how to add expense approvals:\n' +
+                        '\n' +
+                        '1. Click your profile picture.\n' +
+                        '2. Go to *Workspaces* > [your workspace].\n' +
+                        '3. Click *More features*.\n' +
+                        '4. Enable *Workflows*.\n' +
+                        '5. In *Workflows*, enable *Add approvals*.\n' +
+                        '\n' +
+                        'You’ll be set as the expense approver. You can change this to any admin once you invite your team.',
+                },
+                {
+                    type: 'inviteTeam',
+                    autoCompleted: false,
+                    title: 'Invite your team',
+                    description:
+                        '*Invite your team* to Ieatta so they can start tracking expenses today.\n' +
+                        '\n' +
+                        'Here’s how to invite your team:\n' +
+                        '\n' +
+                        '1. Click your profile picture.\n' +
+                        '2. Go to *Workspaces* > [your workspace].\n' +
+                        '3. Click *Members* > *Invite member*.\n' +
+                        '4. Enter emails or phone numbers. \n' +
+                        '5. Add an invite message if you want.\n' +
+                        '\n' +
+                        'That’s it! Happy expensing :)',
+                },
+            ],
+        },
+        [onboardingChoices.PERSONAL_SPEND]: {
+            message: 'Here’s how to track your spend in a few clicks.',
+            video: {
+                url: `${CLOUDFRONT_URL}/videos/guided-setup-track-personal.mp4`,
+                thumbnailUrl: `${CLOUDFRONT_URL}/images/guided-setup-track-personal.jpg`,
+                duration: 55,
+                width: 1280,
+                height: 960,
+            },
+            tasks: [
+                {
+                    type: 'trackExpense',
+                    autoCompleted: false,
+                    title: 'Track an expense',
+                    description:
+                        '*Track an expense* in any currency, whether you have a receipt or not.\n' +
+                        '\n' +
+                        'Here’s how to track an expense:\n' +
+                        '\n' +
+                        '1. Click the green *+* button.\n' +
+                        '2. Choose *Track expense*.\n' +
+                        '3. Enter an amount or scan a receipt.\n' +
+                        '4. Click *Track*.\n' +
+                        '\n' +
+                        'And you’re done! Yep, it’s that easy.',
+                },
+            ],
+        },
+        [onboardingChoices.CHAT_SPLIT]: {
+            message: 'Splitting bills with friends is as easy as sending a message. Here’s how.',
+            video: {
+                url: `${CLOUDFRONT_URL}/videos/guided-setup-chat-split-bills.mp4`,
+                thumbnailUrl: `${CLOUDFRONT_URL}/images/guided-setup-chat-split-bills.jpg`,
+                duration: 55,
+                width: 1280,
+                height: 960,
+            },
+            tasks: [
+                {
+                    type: 'startChat',
+                    autoCompleted: false,
+                    title: 'Start a chat',
+                    description:
+                        '*Start a chat* with a friend or group using their email or phone number.\n' +
+                        '\n' +
+                        'Here’s how to start a chat:\n' +
+                        '\n' +
+                        '1. Click the green *+* button.\n' +
+                        '2. Choose *Start chat*.\n' +
+                        '3. Enter emails or phone numbers.\n' +
+                        '\n' +
+                        'If any of your friends aren’t using Ieatta already, they’ll be invited automatically.\n' +
+                        '\n' +
+                        'Every chat will also turn into an email or text that they can respond to directly.',
+                },
+                {
+                    type: 'splitExpense',
+                    autoCompleted: false,
+                    title: 'Split an expense',
+                    description:
+                        '*Split an expense* right in your chat with one or more friends.\n' +
+                        '\n' +
+                        'Here’s how to request money:\n' +
+                        '\n' +
+                        '1. Click the green *+* button.\n' +
+                        '2. Choose *Split expense*.\n' +
+                        '3. Scan a receipt or enter an amount.\n' +
+                        '4. Add your friend(s) to the request.\n' +
+                        '\n' +
+                        'Feel free to add more details if you want, or just send it off. Let’s get you paid back!',
+                },
+                {
+                    type: 'enableWallet',
+                    autoCompleted: false,
+                    title: 'Enable your wallet',
+                    description:
+                        'You’ll need to *enable your Ieatta Wallet* to get paid back. Don’t worry, it’s easy!\n' +
+                        '\n' +
+                        'Here’s how to enable your wallet:\n' +
+                        '\n' +
+                        '1. Click your profile picture.\n' +
+                        '2. *Click Wallet* > *Enable wallet*.\n' +
+                        '3. Add your bank account.\n' +
+                        '\n' +
+                        'Once that’s done, you can request money from anyone and get paid right into your personal bank account.',
+                },
+            ],
+        },
+        [onboardingChoices.LOOKING_AROUND]: {
+            message: "Ieatta is best known for expense and corporate card management, but we do a lot more than that. Let me know what you're interested in and I'll help get you started.",
+            tasks: [],
+        },
+    },
+
+    REPORT_FIELD_TITLE_FIELD_ID: 'text_title',
+
+    MOBILE_PAGINATION_SIZE: 15,
+    WEB_PAGINATION_SIZE: 50,
+
+    /** Dimensions for illustration shown in Confirmation Modal */
+    CONFIRM_CONTENT_SVG_SIZE: {
+        HEIGHT: 220,
+        WIDTH: 130,
+    },
+
+    DEBUG_CONSOLE: {
+        LEVELS: {
+            INFO: 'INFO',
+            ERROR: 'ERROR',
+            RESULT: 'RESULT',
+            DEBUG: 'DEBUG',
+        },
+    },
+    REIMBURSEMENT_ACCOUNT: {
+        DEFAULT_DATA: {
+            achData: {
+                state: BankAccount.STATE.SETUP,
+            },
+            isLoading: false,
+            errorFields: {},
+            errors: {},
+            maxAttemptsReached: false,
+            shouldShowResetModal: false,
+        },
+        SUBSTEP_INDEX: {
+            BANK_ACCOUNT: {
+                ACCOUNT_NUMBERS: 0,
+            },
+            PERSONAL_INFO: {
+                LEGAL_NAME: 0,
+                DATE_OF_BIRTH: 1,
+                SSN: 2,
+                ADDRESS: 3,
+            },
+            BUSINESS_INFO: {
+                BUSINESS_NAME: 0,
+                TAX_ID_NUMBER: 1,
+                COMPANY_WEBSITE: 2,
+                PHONE_NUMBER: 3,
+                COMPANY_ADDRESS: 4,
+                COMPANY_TYPE: 5,
+                INCORPORATION_DATE: 6,
+                INCORPORATION_STATE: 7,
+            },
+            UBO: {
+                LEGAL_NAME: 0,
+                DATE_OF_BIRTH: 1,
+                SSN: 2,
+                ADDRESS: 3,
+            },
+        },
+    },
+    CURRENCY_TO_DEFAULT_MILEAGE_RATE: JSON.parse(`{
+        "AED": {
+            "rate": 396,
+            "unit": "km"
+        },
+        "AFN": {
+            "rate": 8369,
+            "unit": "km"
+        },
+        "ALL": {
+            "rate": 11104,
+            "unit": "km"
+        },
+        "AMD": {
+            "rate": 56842,
+            "unit": "km"
+        },
+        "ANG": {
+            "rate": 193,
+            "unit": "km"
+        },
+        "AOA": {
+            "rate": 67518,
+            "unit": "km"
+        },
+        "ARS": {
+            "rate": 9873,
+            "unit": "km"
+        },
+        "AUD": {
+            "rate": 85,
+            "unit": "km"
+        },
+        "AWG": {
+            "rate": 195,
+            "unit": "km"
+        },
+        "AZN": {
+            "rate": 183,
+            "unit": "km"
+        },
+        "BAM": {
+            "rate": 177,
+            "unit": "km"
+        },
+        "BBD": {
+            "rate": 216,
+            "unit": "km"
+        },
+        "BDT": {
+            "rate": 9130,
+            "unit": "km"
+        },
+        "BGN": {
+            "rate": 177,
+            "unit": "km"
+        },
+        "BHD": {
+            "rate": 40,
+            "unit": "km"
+        },
+        "BIF": {
+            "rate": 210824,
+            "unit": "km"
+        },
+        "BMD": {
+            "rate": 108,
+            "unit": "km"
+        },
+        "BND": {
+            "rate": 145,
+            "unit": "km"
+        },
+        "BOB": {
+            "rate": 745,
+            "unit": "km"
+        },
+        "BRL": {
+            "rate": 594,
+            "unit": "km"
+        },
+        "BSD": {
+            "rate": 108,
+            "unit": "km"
+        },
+        "BTN": {
+            "rate": 7796,
+            "unit": "km"
+        },
+        "BWP": {
+            "rate": 1180,
+            "unit": "km"
+        },
+        "BYN": {
+            "rate": 280,
+            "unit": "km"
+        },
+        "BYR": {
+            "rate": 2159418,
+            "unit": "km"
+        },
+        "BZD": {
+            "rate": 217,
+            "unit": "km"
+        },
+        "CAD": {
+            "rate": 70,
+            "unit": "km"
+        },
+        "CDF": {
+            "rate": 213674,
+            "unit": "km"
+        },
+        "CHF": {
+            "rate": 100,
+            "unit": "km"
+        },
+        "CLP": {
+            "rate": 77249,
+            "unit": "km"
+        },
+        "CNY": {
+            "rate": 702,
+            "unit": "km"
+        },
+        "COP": {
+            "rate": 383668,
+            "unit": "km"
+        },
+        "CRC": {
+            "rate": 65899,
+            "unit": "km"
+        },
+        "CUC": {
+            "rate": 108,
+            "unit": "km"
+        },
+        "CUP": {
+            "rate": 2776,
+            "unit": "km"
+        },
+        "CVE": {
+            "rate": 6112,
+            "unit": "km"
+        },
+        "CZK": {
+            "rate": 2356,
+            "unit": "km"
+        },
+        "DJF": {
+            "rate": 19151,
+            "unit": "km"
+        },
+        "DKK": {
+            "rate": 673,
+            "unit": "km"
+        },
+        "DOP": {
+            "rate": 6144,
+            "unit": "km"
+        },
+        "DZD": {
+            "rate": 14375,
+            "unit": "km"
+        },
+        "EEK": {
+            "rate": 1576,
+            "unit": "km"
+        },
+        "EGP": {
+            "rate": 1696,
+            "unit": "km"
+        },
+        "ERN": {
+            "rate": 1617,
+            "unit": "km"
+        },
+        "ETB": {
+            "rate": 4382,
+            "unit": "km"
+        },
+        "EUR": {
+            "rate": 3,
+            "unit": "km"
+        },
+        "FJD": {
+            "rate": 220,
+            "unit": "km"
+        },
+        "FKP": {
+            "rate": 77,
+            "unit": "km"
+        },
+        "GBP": {
+            "rate": 45,
+            "unit": "mi"
+        },
+        "GEL": {
+            "rate": 359,
+            "unit": "km"
+        },
+        "GHS": {
+            "rate": 620,
+            "unit": "km"
+        },
+        "GIP": {
+            "rate": 77,
+            "unit": "km"
+        },
+        "GMD": {
+            "rate": 5526,
+            "unit": "km"
+        },
+        "GNF": {
+            "rate": 1081319,
+            "unit": "km"
+        },
+        "GTQ": {
+            "rate": 832,
+            "unit": "km"
+        },
+        "GYD": {
+            "rate": 22537,
+            "unit": "km"
+        },
+        "HKD": {
+            "rate": 837,
+            "unit": "km"
+        },
+        "HNL": {
+            "rate": 2606,
+            "unit": "km"
+        },
+        "HRK": {
+            "rate": 684,
+            "unit": "km"
+        },
+        "HTG": {
+            "rate": 8563,
+            "unit": "km"
+        },
+        "HUF": {
+            "rate": 33091,
+            "unit": "km"
+        },
+        "IDR": {
+            "rate": 1555279,
+            "unit": "km"
+        },
+        "ILS": {
+            "rate": 356,
+            "unit": "km"
+        },
+        "INR": {
+            "rate": 7805,
+            "unit": "km"
+        },
+        "IQD": {
+            "rate": 157394,
+            "unit": "km"
+        },
+        "IRR": {
+            "rate": 4539961,
+            "unit": "km"
+        },
+        "ISK": {
+            "rate": 13518,
+            "unit": "km"
+        },
+        "JMD": {
+            "rate": 15794,
+            "unit": "km"
+        },
+        "JOD": {
+            "rate": 77,
+            "unit": "km"
+        },
+        "JPY": {
+            "rate": 11748,
+            "unit": "km"
+        },
+        "KES": {
+            "rate": 11845,
+            "unit": "km"
+        },
+        "KGS": {
+            "rate": 9144,
+            "unit": "km"
+        },
+        "KHR": {
+            "rate": 437658,
+            "unit": "km"
+        },
+        "KMF": {
+            "rate": 44418,
+            "unit": "km"
+        },
+        "KPW": {
+            "rate": 97043,
+            "unit": "km"
+        },
+        "KRW": {
+            "rate": 121345,
+            "unit": "km"
+        },
+        "KWD": {
+            "rate": 32,
+            "unit": "km"
+        },
+        "KYD": {
+            "rate": 90,
+            "unit": "km"
+        },
+        "KZT": {
+            "rate": 45396,
+            "unit": "km"
+        },
+        "LAK": {
+            "rate": 1010829,
+            "unit": "km"
+        },
+        "LBP": {
+            "rate": 164153,
+            "unit": "km"
+        },
+        "LKR": {
+            "rate": 21377,
+            "unit": "km"
+        },
+        "LRD": {
+            "rate": 18709,
+            "unit": "km"
+        },
+        "LSL": {
+            "rate": 1587,
+            "unit": "km"
+        },
+        "LTL": {
+            "rate": 348,
+            "unit": "km"
+        },
+        "LVL": {
+            "rate": 71,
+            "unit": "km"
+        },
+        "LYD": {
+            "rate": 486,
+            "unit": "km"
+        },
+        "MAD": {
+            "rate": 967,
+            "unit": "km"
+        },
+        "MDL": {
+            "rate": 1910,
+            "unit": "km"
+        },
+        "MGA": {
+            "rate": 406520,
+            "unit": "km"
+        },
+        "MKD": {
+            "rate": 5570,
+            "unit": "km"
+        },
+        "MMK": {
+            "rate": 152083,
+            "unit": "km"
+        },
+        "MNT": {
+            "rate": 306788,
+            "unit": "km"
+        },
+        "MOP": {
+            "rate": 863,
+            "unit": "km"
+        },
+        "MRO": {
+            "rate": 38463,
+            "unit": "km"
+        },
+        "MRU": {
+            "rate": 3862,
+            "unit": "km"
+        },
+        "MUR": {
+            "rate": 4340,
+            "unit": "km"
+        },
+        "MVR": {
+            "rate": 1667,
+            "unit": "km"
+        },
+        "MWK": {
+            "rate": 84643,
+            "unit": "km"
+        },
+        "MXN": {
+            "rate": 2219,
+            "unit": "km"
+        },
+        "MYR": {
+            "rate": 444,
+            "unit": "km"
+        },
+        "MZN": {
+            "rate": 7772,
+            "unit": "km"
+        },
+        "NAD": {
+            "rate": 1587,
+            "unit": "km"
+        },
+        "NGN": {
+            "rate": 42688,
+            "unit": "km"
+        },
+        "NIO": {
+            "rate": 3772,
+            "unit": "km"
+        },
+        "NOK": {
+            "rate": 917,
+            "unit": "km"
+        },
+        "NPR": {
+            "rate": 12474,
+            "unit": "km"
+        },
+        "NZD": {
+            "rate": 151,
+            "unit": "km"
+        },
+        "OMR": {
+            "rate": 42,
+            "unit": "km"
+        },
+        "PAB": {
+            "rate": 108,
+            "unit": "km"
+        },
+        "PEN": {
+            "rate": 401,
+            "unit": "km"
+        },
+        "PGK": {
+            "rate": 380,
+            "unit": "km"
+        },
+        "PHP": {
+            "rate": 5234,
+            "unit": "km"
+        },
+        "PKR": {
+            "rate": 16785,
+            "unit": "km"
+        },
+        "PLN": {
+            "rate": 415,
+            "unit": "km"
+        },
+        "PYG": {
+            "rate": 704732,
+            "unit": "km"
+        },
+        "QAR": {
+            "rate": 393,
+            "unit": "km"
+        },
+        "RON": {
+            "rate": 443,
+            "unit": "km"
+        },
+        "RSD": {
+            "rate": 10630,
+            "unit": "km"
+        },
+        "RUB": {
+            "rate": 8074,
+            "unit": "km"
+        },
+        "RWF": {
+            "rate": 107182,
+            "unit": "km"
+        },
+        "SAR": {
+            "rate": 404,
+            "unit": "km"
+        },
+        "SBD": {
+            "rate": 859,
+            "unit": "km"
+        },
+        "SCR": {
+            "rate": 2287,
+            "unit": "km"
+        },
+        "SDG": {
+            "rate": 41029,
+            "unit": "km"
+        },
+        "SEK": {
+            "rate": 917,
+            "unit": "km"
+        },
+        "SGD": {
+            "rate": 145,
+            "unit": "km"
+        },
+        "SHP": {
+            "rate": 77,
+            "unit": "km"
+        },
+        "SLL": {
+            "rate": 1102723,
+            "unit": "km"
+        },
+        "SOS": {
+            "rate": 62604,
+            "unit": "km"
+        },
+        "SRD": {
+            "rate": 1526,
+            "unit": "km"
+        },
+        "STD": {
+            "rate": 2223309,
+            "unit": "km"
+        },
+        "STN": {
+            "rate": 2232,
+            "unit": "km"
+        },
+        "SVC": {
+            "rate": 943,
+            "unit": "km"
+        },
+        "SYP": {
+            "rate": 82077,
+            "unit": "km"
+        },
+        "SZL": {
+            "rate": 1585,
+            "unit": "km"
+        },
+        "THB": {
+            "rate": 3328,
+            "unit": "km"
+        },
+        "TJS": {
+            "rate": 1230,
+            "unit": "km"
+        },
+        "TMT": {
+            "rate": 378,
+            "unit": "km"
+        },
+        "TND": {
+            "rate": 295,
+            "unit": "km"
+        },
+        "TOP": {
+            "rate": 245,
+            "unit": "km"
+        },
+        "TRY": {
+            "rate": 845,
+            "unit": "km"
+        },
+        "TTD": {
+            "rate": 732,
+            "unit": "km"
+        },
+        "TWD": {
+            "rate": 3055,
+            "unit": "km"
+        },
+        "TZS": {
+            "rate": 250116,
+            "unit": "km"
+        },
+        "UAH": {
+            "rate": 2985,
+            "unit": "km"
+        },
+        "UGX": {
+            "rate": 395255,
+            "unit": "km"
+        },
+        "USD": {
+            "rate": 67,
+            "unit": "mi"
+        },
+        "UYU": {
+            "rate": 4777,
+            "unit": "km"
+        },
+        "UZS": {
+            "rate": 1131331,
+            "unit": "km"
+        },
+        "VEB": {
+            "rate": 679346,
+            "unit": "km"
+        },
+        "VEF": {
+            "rate": 26793449,
+            "unit": "km"
+        },
+        "VES": {
+            "rate": 194381905,
+            "unit": "km"
+        },
+        "VND": {
+            "rate": 2487242,
+            "unit": "km"
+        },
+        "VUV": {
+            "rate": 11748,
+            "unit": "km"
+        },
+        "WST": {
+            "rate": 272,
+            "unit": "km"
+        },
+        "XAF": {
+            "rate": 59224,
+            "unit": "km"
+        },
+        "XCD": {
+            "rate": 291,
+            "unit": "km"
+        },
+        "XOF": {
+            "rate": 59224,
+            "unit": "km"
+        },
+        "XPF": {
+            "rate": 10783,
+            "unit": "km"
+        },
+        "YER": {
+            "rate": 27037,
+            "unit": "km"
+        },
+        "ZAR": {
+            "rate": 1588,
+            "unit": "km"
+        },
+        "ZMK": {
+            "rate": 566489,
+            "unit": "km"
+        },
+        "ZMW": {
+            "rate": 2377,
+            "unit": "km"
+        }
+    }`) as CurrencyDefaultMileageRate,
+
+    EXIT_SURVEY: {
+        REASONS: {
+            FEATURE_NOT_AVAILABLE: 'featureNotAvailable',
+            DONT_UNDERSTAND: 'dontUnderstand',
+            PREFER_CLASSIC: 'preferClassic',
+        },
+    },
+
+    QUICKBOOKS_EXPORT_DATE: {
+        LAST_EXPENSE: 'LAST_EXPENSE',
+        REPORT_EXPORTED: 'REPORT_EXPORTED',
+        REPORT_SUBMITTED: 'REPORT_SUBMITTED',
+    },
+
+    QUICKBOOKS_EXPORT_COMPANY_CARD_ACCOUNT_TYPE: {
+        CREDIT_CARD: 'credit_card',
+        DEBIT_CARD: 'debit_card',
+        VENDOR_BILL: 'bill',
+    },
+
+    SESSION_STORAGE_KEYS: {
+        INITIAL_URL: 'INITIAL_URL',
+    },
+
+    DOT_SEPARATOR: '•',
+
+    DEFAULT_TAX: {
+        defaultExternalID: 'id_TAX_EXEMPT',
+        defaultValue: '0%',
+        foreignTaxDefault: 'id_TAX_EXEMPT',
+        name: 'Tax',
+        taxes: {
+            id_TAX_EXEMPT: {
+                name: 'Tax exempt',
+                value: '0%',
+            },
+            id_TAX_RATE_1: {
+                name: 'Tax Rate 1',
+                value: '5%',
+            },
+        },
+    },
+
+    MAX_TAX_RATE_INTEGER_PLACES: 4,
+    MAX_TAX_RATE_DECIMAL_PLACES: 4,
+
+    SEARCH_TRANSACTION_TYPE: {
+        CASH: 'cash',
+        CARD: 'card',
+        DISTANCE: 'distance',
     },
 } as const;
+
+type Country = keyof typeof CONST.ALL_COUNTRIES;
+
+type IOUType = ValueOf<typeof CONST.IOU.TYPE>;
+type IOUAction = ValueOf<typeof CONST.IOU.ACTION>;
+
+export type {Country, IOUAction, IOUType, RateAndUnit, OnboardingPurposeType};
 
 export default CONST;

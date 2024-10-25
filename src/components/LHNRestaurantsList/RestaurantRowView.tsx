@@ -1,5 +1,5 @@
-import React, {useCallback, useRef, useState} from 'react';
-import {Image as RNImage, StyleSheet, View} from 'react-native';
+import React from 'react';
+import {Image as RNImage, View} from 'react-native';
 import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
 import {IeattaStars} from '@components/Icon/IeattaStars';

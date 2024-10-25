@@ -1,21 +1,26 @@
 /* eslint-disable @dword-design/import-alias/prefer-alias */
 // eslint-disable-next-line no-restricted-imports
-import _ from 'underscore';
+import _ from 'lodash';
 import {PhotoType, ReviewType} from '@libs/Firebase/constant';
-import {PageSection, RowPressableType} from '@libs/Firebase/list/constant';
+import {PageSection, RowPressableType, SkeletonViewType} from '@libs/Firebase/list/constant';
 import TailwindColors from '@styles/tailwindcss/colors';
 import type {IFBEvent, IFBRestaurant, IFBReview} from '@src/types/firebase';
 import type {IPageRow} from '../types/page-row';
-import type {ISectionEmptyRow, ISectionTitleRow} from '../types/rows/common';
+import type {ISectionEmptyRow, ISectionTitleRow, ISkeletonViewRow} from '../types/rows/common';
 import type {IEventsInRestaurantRow, IMenusInRestaurantRow, IRestaurantSidebarRow} from '../types/rows/restaurant';
 import type {IReviewOnSearchAndSortChanged} from '../types/rows/review';
 import {buildPhotos} from './photo';
 import {buildReviews} from './review';
 
+type BuildEventsInRestaurantParams = {
+    events: IFBEvent[];
+    loadingForEvents: boolean;
+};
 type BuildRestaurantRowsParams = {
     restaurantId: string;
     restaurant: IFBRestaurant | undefined;
-    events: IFBEvent[];
+    // events: IFBEvent[];
+    eventsInRestaurant: BuildEventsInRestaurantParams;
     reviews: IFBReview[];
     reviewChanged: IReviewOnSearchAndSortChanged;
 };
@@ -25,7 +30,8 @@ type BuildRestaurantSidebarParams = {
     currentRestaurantID: string;
 };
 
-const buildEvents = (isSmallScreenWidth: boolean, events: IFBEvent[]) => {
+const buildEvents = (isSmallScreenWidth: boolean, eventsInRestaurant: BuildEventsInRestaurantParams): IPageRow[] => {
+    const {events, loadingForEvents} = eventsInRestaurant;
     const titleRow: ISectionTitleRow = {
         title: isSmallScreenWidth ? 'sections.titles.eventsRecorded' : 'sections.titles.events',
         // 'Events Recorded'
@@ -33,12 +39,27 @@ const buildEvents = (isSmallScreenWidth: boolean, events: IFBEvent[]) => {
         titleColor: isSmallScreenWidth ? undefined : TailwindColors.red600,
         isSmallScreenWidth,
     };
-    const titleSection = {
+    const titleSection: IPageRow = {
         rowType: PageSection.COMMON_TITLE,
         rowData: titleRow,
         rowKey: 'PageSection.COMMON_TITLE-<Events Recorded>',
+        modalName: 'title',
         pressType: RowPressableType.NO_EVENT,
     };
+
+    if (loadingForEvents) {
+        const rowData: ISkeletonViewRow = {skeletonViewType: SkeletonViewType.EVENTS_IN_RESTAURANT};
+        return [
+            titleSection,
+            {
+                rowType: PageSection.SECTION_SKELETON_VIEW,
+                rowData,
+                rowKey: 'PageSection.SECTION_SKELETON_VIEW-<Loading>',
+                modalName: 'skeleton',
+                pressType: RowPressableType.NO_EVENT,
+            },
+        ];
+    }
     if (events.length === 0) {
         const rowData: ISectionEmptyRow = {emptyHint: 'sections.empty.noEvents'};
         return [
@@ -47,12 +68,13 @@ const buildEvents = (isSmallScreenWidth: boolean, events: IFBEvent[]) => {
                 rowType: PageSection.RESTAURANT_EVENT_EMPTY,
                 rowData,
                 rowKey: 'PageSection.RESTAURANT_EVENT_EMPTY-<no Events>',
+                modalName: 'empty',
                 pressType: RowPressableType.NO_EVENT,
             },
         ];
     }
 
-    const buildEventRow = (item: IFBEvent, index: number) => {
+    const buildEventRow = (item: IFBEvent, index: number): IPageRow => {
         const rowData: IEventsInRestaurantRow = {
             event: item,
             shouldShowDivide: index !== events.length - 1,
@@ -61,6 +83,7 @@ const buildEvents = (isSmallScreenWidth: boolean, events: IFBEvent[]) => {
             rowType: isSmallScreenWidth ? PageSection.RESTAURANT_EVENT : PageSection.RESTAURANT_EVENT_WEB,
             rowData,
             rowKey: `${item?.uniqueId}` ?? 'PageSection.RESTAURANT_EVENT',
+            modalName: 'event',
             pressType: RowPressableType.SECONDARY_PRESS,
         };
     };
@@ -70,7 +93,7 @@ const buildEvents = (isSmallScreenWidth: boolean, events: IFBEvent[]) => {
     return [titleSection, ...rows];
 };
 
-const buildAddress = (isSmallScreenWidth: boolean, restaurant: IFBRestaurant | undefined) => {
+const buildAddress = (isSmallScreenWidth: boolean, restaurant: IFBRestaurant | undefined): IPageRow[] => {
     const address = restaurant?.address;
     if (!isSmallScreenWidth || address === null || address === undefined || address === '') {
         return [];
@@ -86,12 +109,14 @@ const buildAddress = (isSmallScreenWidth: boolean, restaurant: IFBRestaurant | u
             rowType: PageSection.COMMON_TITLE,
             rowData: titleRow,
             rowKey: 'PageSection.COMMON_TITLE-<Current Address>',
+            modalName: 'title',
             pressType: RowPressableType.NO_EVENT,
         },
         {
             rowType: PageSection.RESTAURANT_ADDRESS,
             rowData: address,
             rowKey: 'PageSection.RESTAURANT_ADDRESS',
+            modalName: 'address',
             pressType: RowPressableType.NO_EVENT,
         },
     ];
@@ -101,7 +126,7 @@ const buildAddress = (isSmallScreenWidth: boolean, restaurant: IFBRestaurant | u
  | Menus
  |--------------------------------------------------
  */
-const buildMenus = (isSmallScreenWidth: boolean, restaurantId: string) => {
+const buildMenus = (isSmallScreenWidth: boolean, restaurantId: string): IPageRow[] => {
     const menuRow: IMenusInRestaurantRow = {
         restaurantId,
         isSmallScreenWidth,
@@ -111,19 +136,21 @@ const buildMenus = (isSmallScreenWidth: boolean, restaurantId: string) => {
             rowType: PageSection.RESTAURANT_MENU_TITLE,
             rowData: menuRow,
             rowKey: 'PageSection.RESTAURANT_MENU_TITLE',
+            modalName: 'title',
             pressType: RowPressableType.NO_EVENT,
         },
         {
             rowType: PageSection.RESTAURANT_MENU_ROW,
             rowData: menuRow,
             rowKey: 'PageSection.RESTAURANT_MENU_ROW',
+            modalName: 'recipe',
             pressType: RowPressableType.NO_EVENT,
         },
     ];
 };
 
 const buildRestaurantSidebar = (isSmallScreenWidth: boolean, {restaurants, currentRestaurantID}: BuildRestaurantSidebarParams): IPageRow[] => {
-    const buildRestaurantRow = (item: IFBRestaurant, index: number) => {
+    const buildRestaurantRow = (item: IFBRestaurant, index: number): IPageRow => {
         const rowData: IRestaurantSidebarRow = {
             restaurant: item,
             isFocused: !isSmallScreenWidth && item.uniqueId === currentRestaurantID,
@@ -132,6 +159,7 @@ const buildRestaurantSidebar = (isSmallScreenWidth: boolean, {restaurants, curre
             rowType: isSmallScreenWidth ? PageSection.SIDEBAR_RESTAURANT_CARD : PageSection.SIDEBAR_RESTAURANT_ROW,
             rowData,
             rowKey: `${item?.uniqueId}` ?? 'PageSection.SIDEBAR_RESTAURANT_ROW',
+            modalName: 'restaurant',
             pressType: RowPressableType.SECONDARY_PRESS,
         };
     };
@@ -139,31 +167,33 @@ const buildRestaurantSidebar = (isSmallScreenWidth: boolean, {restaurants, curre
     return _.map(restaurants, buildRestaurantRow);
 };
 
-const buildRestaurantRows = (isSmallScreenWidth: boolean, {restaurantId, restaurant, events, reviews, reviewChanged}: BuildRestaurantRowsParams): IPageRow[] => {
+const buildRestaurantRows = (isSmallScreenWidth: boolean, {restaurantId, restaurant, eventsInRestaurant, reviews, reviewChanged}: BuildRestaurantRowsParams): IPageRow[] => {
     // info
-    const infoRow = isSmallScreenWidth
+    const infoPageRow: IPageRow = isSmallScreenWidth
         ? {
               rowType: PageSection.PANEL_RESTAURANT_INFO,
               rowData: restaurant,
               rowKey: `${restaurant?.uniqueId}` ?? 'PageSection.PANEL_RESTAURANT_INFO',
+              modalName: 'header',
               pressType: RowPressableType.NO_EVENT,
           }
         : {
               rowType: PageSection.PANEL_RESTAURANT_INFO_WEB,
               rowData: restaurant,
               rowKey: `${restaurant?.uniqueId}` ?? 'PageSection.PANEL_RESTAURANT_INFO_WEB',
+              modalName: 'header',
               pressType: RowPressableType.NO_EVENT,
           };
 
     return [
         // info
-        infoRow,
+        infoPageRow,
         // address
-        ...buildAddress(isSmallScreenWidth, restaurant),
+        // ...buildAddress(isSmallScreenWidth, restaurant),
         // event
-        ...buildEvents(isSmallScreenWidth, events),
+        // ...buildEvents(isSmallScreenWidth, eventsInRestaurant),
         // menu
-        ...buildMenus(isSmallScreenWidth, restaurantId),
+        // ...buildMenus(isSmallScreenWidth, restaurantId),
         // photo
         ...buildPhotos(isSmallScreenWidth, restaurantId, PhotoType.Restaurant),
         // review
@@ -171,8 +201,6 @@ const buildRestaurantRows = (isSmallScreenWidth: boolean, {restaurantId, restaur
     ];
 };
 
-export {
-    // eslint-disable-next-line import/prefer-default-export
-    buildRestaurantSidebar,
-    buildRestaurantRows,
-};
+export {buildRestaurantSidebar, buildRestaurantRows};
+
+export type {BuildEventsInRestaurantParams};

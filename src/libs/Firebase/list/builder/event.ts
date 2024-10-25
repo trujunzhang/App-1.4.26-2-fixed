@@ -1,7 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+
 /* eslint-disable @dword-design/import-alias/prefer-alias */
 // eslint-disable-next-line no-restricted-imports
+import _ from 'lodash';
 import lodashGet from 'lodash/get';
-import _ from 'underscore';
 import {PhotoType, ReviewType} from '@libs/Firebase/constant';
 import {PageSection, RowPressableType} from '@libs/Firebase/list/constant';
 import {filterRecipes} from '@libs/ieatta/eventUtils';
@@ -44,14 +48,15 @@ const buildUsers = (
         eventId: lodashGet(event, 'uniqueId', ''),
         restaurantId: lodashGet(event, 'restaurantId', ''),
     };
-    const titleSection = {
+    const titleSection: IPageRow = {
         rowType: PageSection.EVENT_ORDERED_USER_TITLE,
         rowData: titleRow,
         rowKey: 'PageSection.EVENT_ORDERED_USER_TITLE<People Ordered>',
+        modalName: 'title',
         pressType: RowPressableType.NO_EVENT,
     };
 
-    const buildUserRow = (item: IFBPeopleInEvent, index: number) => {
+    const buildUserRow = (item: IFBPeopleInEvent, index: number): IPageRow | null => {
         const user: PersonalDetails | null = personalDetails[item.userId];
         if (user === null) {
             return null;
@@ -66,6 +71,7 @@ const buildUsers = (
             rowType: isSmallScreenWidth ? PageSection.EVENT_USER : PageSection.EVENT_USER_WEB,
             rowData,
             rowKey: `${item?.uniqueId}` ?? 'PageSection.EVENT_USER',
+            modalName: 'ordered user',
             pressType: RowPressableType.NO_EVENT,
         };
     };
@@ -80,6 +86,7 @@ const buildUsers = (
                 rowType: PageSection.EVENT_USER_EMPTY,
                 rowData,
                 rowKey: 'PageSection.EVENT_USER_EMPTY<no People ordered>',
+                modalName: 'empty',
                 pressType: RowPressableType.NO_EVENT,
             },
         ];
@@ -101,23 +108,25 @@ const buildEventRows = (
         event,
         restaurant,
     };
-    const infoRow = isSmallScreenWidth
+    const infoPageRow: IPageRow = isSmallScreenWidth
         ? {
               rowType: PageSection.PANEL_EVENT_INFO,
               rowData: infoPanelRow,
               rowKey: `${event?.uniqueId}` ?? 'PageSection.PANEL_EVENT_INFO',
+              modalName: 'header',
               pressType: RowPressableType.NO_EVENT,
           }
         : {
               rowType: PageSection.PANEL_EVENT_INFO_WEB,
               rowData: infoPanelRow,
               rowKey: `${event?.uniqueId}` ?? 'PageSection.PANEL_EVENT_INFO_WEB',
+              modalName: 'header',
               pressType: RowPressableType.NO_EVENT,
           };
 
     return [
         // info
-        infoRow,
+        infoPageRow,
         // users
         ...buildUsers(isSmallScreenWidth, event, peopleInEvents, recipeDictInRestaurant, personalDetails),
         // waiters

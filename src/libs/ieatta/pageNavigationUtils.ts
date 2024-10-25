@@ -1,29 +1,30 @@
+import {setRestaurantIdInSidebar} from '@libs/actions/ieatta/restaurant';
 import {FBCollections} from '@libs/Firebase/constant';
 import {PageSection} from '@libs/Firebase/list/constant';
 import type {IPageRow} from '@libs/Firebase/list/types/page-row';
-import type {IEditModelButtonRow, IRestaurantTitleInEventRow} from '@libs/Firebase/list/types/rows/common';
-import type {IPhotoCarouselItemRow} from '@libs/Firebase/list/types/rows/photo';
+import type {IDisplayNameTitleRow, IEditModelButtonRow} from '@libs/Firebase/list/types/rows/common';
+import type {IPhotoCarouselItemRow, IPhotoItemRow} from '@libs/Firebase/list/types/rows/photo';
 import type {IEventsInRestaurantRow, IRestaurantSidebarRow} from '@libs/Firebase/list/types/rows/restaurant';
 import type {IReviewSubmitRow} from '@libs/Firebase/list/types/rows/review';
 import Navigation from '@libs/Navigation/Navigation';
-import {showPhotosPage} from '@pages/photos/online/pageview/web/ContextMenu/PhotosPageContextMenu';
+import * as PhotosPageContextMenu from '@pages/photos/online/Popover/ContextMenu/PhotosPageContextMenu';
 import ROUTES from '@src/ROUTES';
 import type {IFBRecipe} from '@src/types/firebase';
 import {navigationToEditEvent, navigationToEditRecipe, navigationToEditRestaurant, navigationToEditReview} from './editFormUtils';
 
 function pageItemNavigateForEditButtonOnDetailedPage(rowData: IEditModelButtonRow) {
-    const {relatedId, modelPath} = rowData;
+    const {restaurantId, relatedId, modelPath} = rowData;
     switch (modelPath) {
         case FBCollections.Restaurants: {
             navigationToEditRestaurant(relatedId);
             break;
         }
         case FBCollections.Events: {
-            navigationToEditEvent(relatedId);
+            navigationToEditEvent({eventId: relatedId, restaurantId});
             break;
         }
         case FBCollections.Recipes: {
-            navigationToEditRecipe(relatedId);
+            navigationToEditRecipe({recipeId: relatedId, restaurantId});
             break;
         }
         default: {
@@ -40,11 +41,18 @@ function pageItemNavigateTo(item: IPageRow) {
  | photo carousel
  |--------------------------------------------------
  */
+        case PageSection.PHOTO_GRID_ITEM_WITH_EVENT: {
+            const carouselItem: IPhotoCarouselItemRow = rowData as IPhotoCarouselItemRow;
+            const {relatedId, photoType, photo} = carouselItem;
+            const selected = photo.uniqueId;
+            Navigation.navigate(ROUTES.PHOTOS_PAGE_VIEW.getRoute({relatedId, photoType, selected}));
+            break;
+        }
         case PageSection.PHOTO_CAROUSEL_ITEM_WITH_EVENT: {
             const carouselItem: IPhotoCarouselItemRow = rowData as IPhotoCarouselItemRow;
             const {relatedId, photoType, photo} = carouselItem;
-            const initialPage = photo.uniqueId;
-            showPhotosPage(initialPage, relatedId, photoType);
+            const initialPhotoId = photo.uniqueId;
+            PhotosPageContextMenu.showPhotosPage({initialPhotoId, relatedId, photoType});
             break;
         }
 
@@ -57,9 +65,25 @@ function pageItemNavigateTo(item: IPageRow) {
             pageItemNavigateForEditButtonOnDetailedPage(rowData);
             break;
         }
-        case PageSection.RESTAURANT_TITLE_IN_EVENT_PAGE: {
-            const {restaurantId} = rowData as IRestaurantTitleInEventRow;
-            Navigation.navigate(ROUTES.RESTAURANT_WITH_ID.getRoute(restaurantId));
+        case PageSection.DISPLAY_NAME_TITLE_ROW: {
+            const {relatedId, modelPath} = rowData as IDisplayNameTitleRow;
+            switch (modelPath) {
+                case FBCollections.Restaurants: {
+                    Navigation.navigate(ROUTES.RESTAURANT_WITH_ID.getRoute(relatedId));
+                    break;
+                }
+                case FBCollections.Events: {
+                    Navigation.navigate(ROUTES.EVENT_WITH_ID.getRoute(relatedId));
+                    break;
+                }
+                case FBCollections.Recipes: {
+                    Navigation.navigate(ROUTES.RECIPE_WITH_ID.getRoute(relatedId));
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
             break;
         }
         case PageSection.COMMON_TITLE: {
@@ -74,6 +98,12 @@ function pageItemNavigateTo(item: IPageRow) {
             break;
         }
         case PageSection.SECTION_PHOTO_ROW: {
+            break;
+        }
+        case PageSection.SECTION_PHOTO_ITEM: {
+            const photoRow = rowData as IPhotoItemRow;
+            const {relatedId, photoType, photo} = photoRow;
+            Navigation.navigate(ROUTES.PHOTOS_PAGE_VIEW.getRoute({relatedId, photoType, selected: photo.uniqueId}));
             break;
         }
 
@@ -108,8 +138,13 @@ function pageItemNavigateTo(item: IPageRow) {
         case PageSection.RESTAURANT_EVENT_EMPTY: {
             break;
         }
-        case PageSection.SIDEBAR_RESTAURANT_CARD:
         case PageSection.SIDEBAR_RESTAURANT_ROW: {
+            const {restaurant} = rowData as IRestaurantSidebarRow;
+            setRestaurantIdInSidebar(restaurant.uniqueId);
+            Navigation.navigate(ROUTES.RESTAURANT_WITH_ID.getRoute(restaurant.uniqueId));
+            break;
+        }
+        case PageSection.SIDEBAR_RESTAURANT_CARD: {
             const {restaurant} = rowData as IRestaurantSidebarRow;
             Navigation.navigate(ROUTES.RESTAURANT_WITH_ID.getRoute(restaurant.uniqueId));
             break;
@@ -133,10 +168,9 @@ function pageItemNavigateTo(item: IPageRow) {
             break;
         }
         default: {
-            return null;
+            break;
         }
     }
-    // Navigation.navigate(ROUTES.RESTAURANT_WITH_ID.getRoute(restaurant.uniqueId));
 }
 
 // eslint-disable-next-line import/prefer-default-export

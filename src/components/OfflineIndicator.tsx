@@ -32,10 +32,10 @@ function OfflineIndicator({style, containerStyles}: OfflineIndicatorProps) {
         }
 
         return isSmallScreenWidth ? styles.offlineIndicatorMobile : styles.offlineIndicator;
-    }, [containerStyles, isSmallScreenWidth, styles.offlineIndicatorMobile, styles.offlineIndicator]);
+    }, [containerStyles, isSmallScreenWidth, styles.offlineIndicator]);
 
     if (!isOffline) {
-        // return null;
+        return null;
     }
 
     return (

@@ -2,7 +2,7 @@
 
 /* eslint-disable rulesdir/no-inline-named-export */
 import lodashGet from 'lodash/get';
-import type {PersonalDetails} from '@src/types/onyx';
+import type {CurrentUserPersonalDetails} from '@components/withCurrentUserPersonalDetails';
 
 export interface IAuthUser {
     uid: string;
@@ -11,9 +11,10 @@ export interface IAuthUser {
     photoURL: string;
 }
 
-export const getAuthUserFromPersonalDetails = (personalDetails: PersonalDetails): IAuthUser => {
+export const getAuthUserFromPersonalDetails = (personalDetails: CurrentUserPersonalDetails): IAuthUser => {
     return {
-        uid: personalDetails.userID,
+        // uid: personalDetails.userID,
+        uid: lodashGet(personalDetails, 'userID', ''),
         email: lodashGet(personalDetails, 'email', ''),
         displayName: lodashGet(personalDetails, 'displayName', ''),
         photoURL: lodashGet(personalDetails, 'avatarThumbnail', ''),

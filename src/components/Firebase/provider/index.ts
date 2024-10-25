@@ -7,7 +7,7 @@ export default function FirebaseProvider({children, isAuthenticated}: FirebasePr
         let unsubscribes = () => {};
 
         if (isAuthenticated) {
-            const repositories = new FirebaseRepositories();
+            const repositories = new FirebaseRepositories(null);
 
             const unsubscribeUsers = repositories.listenUsers();
 

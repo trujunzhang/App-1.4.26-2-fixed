@@ -1,3 +1,6 @@
+import type {ValueOf} from 'type-fest';
+import {watchCurrentPosition} from '@libs/getCurrentPosition/index.android';
+
 type GeolocationSuccessCallback = (position: {
     coords: {
         latitude: number;
@@ -11,8 +14,10 @@ type GeolocationSuccessCallback = (position: {
     timestamp: number;
 }) => void;
 
+type GeolocationErrorCodeType = ValueOf<typeof GeolocationErrorCode> | null;
+
 type GeolocationErrorCallback = (error: {
-    code: (typeof GeolocationErrorCode)[keyof typeof GeolocationErrorCode];
+    code: GeolocationErrorCodeType;
     message: string;
     PERMISSION_DENIED: typeof GeolocationErrorCode.PERMISSION_DENIED;
     POSITION_UNAVAILABLE: typeof GeolocationErrorCode.POSITION_UNAVAILABLE;
@@ -53,4 +58,4 @@ type WatchCurrentPosition = (success: GeolocationSuccessCallback, error: Geoloca
 
 export {GeolocationErrorCode};
 
-export type {GeolocationSuccessCallback, GeolocationErrorCallback, GeolocationOptions, GetCurrentPosition, WatchCurrentPosition};
+export type {GeolocationSuccessCallback, GeolocationErrorCallback, GeolocationOptions, GetCurrentPosition, WatchCurrentPosition, GeolocationErrorCodeType};

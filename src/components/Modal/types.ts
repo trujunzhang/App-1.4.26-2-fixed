@@ -1,4 +1,3 @@
-import React from 'react';
 import type {ViewStyle} from 'react-native';
 import type {ModalProps} from 'react-native-modal';
 import type {ValueOf} from 'type-fest';
@@ -12,6 +11,8 @@ type PopoverAnchorPosition = {
 };
 
 type BaseModalProps = Partial<ModalProps> & {
+    headerContent?: React.ReactNode;
+
     /** Decides whether the modal should cover fullscreen. FullScreen modal has backdrop */
     fullscreen?: boolean;
 
@@ -21,10 +22,11 @@ type BaseModalProps = Partial<ModalProps> & {
     /** Should we announce the Modal visibility changes? */
     shouldSetModalVisibility?: boolean;
 
-    headerContent?: React.ReactNode;
-
     /** Callback method fired when the user requests to close the modal */
     onClose: () => void;
+
+    /** Function to call when the user presses on the modal backdrop */
+    onBackdropPress?: () => void;
 
     /** State that determines whether to display the modal or not */
     isVisible: boolean;
@@ -62,6 +64,24 @@ type BaseModalProps = Partial<ModalProps> & {
      * See: https://github.com/react-native-modal/react-native-modal/pull/116
      * */
     hideModalContentWhileAnimating?: boolean;
+
+    /** Whether handle navigation back when modal show. */
+    shouldHandleNavigationBack?: boolean;
+
+    /** Should we use a custom backdrop for the modal? (This prevents focus issues on desktop) */
+    shouldUseCustomBackdrop?: boolean;
+
+    /**
+     * Whether the modal should enable the new focus manager.
+     * We are attempting to migrate to a new refocus manager, adding this property for gradual migration.
+     * */
+    shouldEnableNewFocusManagement?: boolean;
+
+    /** How to re-focus after the modal is dismissed */
+    restoreFocusType?: ValueOf<typeof CONST.MODAL.RESTORE_FOCUS_TYPE>;
+
+    /** Should we apply padding style in modal itself. If this value is false, we will handle it in ScreenWrapper */
+    shouldUseModalPaddingStyle?: boolean;
 };
 
 export default BaseModalProps;

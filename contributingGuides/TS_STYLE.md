@@ -1,8 +1,8 @@
-# Expensify TypeScript Style Guide
+# Ieatta TypeScript Style Guide
 
 ## Table of Contents
 
-- [Other Expensify Resources on TypeScript](#other-expensify-resources-on-typescript)
+- [Other Ieatta Resources on TypeScript](#other-ieatta-resources-on-typescript)
 - [General Rules](#general-rules)
 - [Guidelines](#guidelines)
   - [1.1 Naming Conventions](#naming-conventions)
@@ -32,10 +32,10 @@
 - [Migration Guidelines](#migration-guidelines)
 - [Learning Resources](#learning-resources)
 
-## Other Expensify Resources on TypeScript
+## Other Ieatta Resources on TypeScript
 
-- [Expensify TypeScript React Native CheatSheet](./TS_CHEATSHEET.md)
-- [Expensify TypeScript PropTypes Conversion Table](./PROPTYPES_CONVERSION_TABLE.md)
+- [Ieatta TypeScript React Native CheatSheet](./TS_CHEATSHEET.md)
+- [Ieatta TypeScript PropTypes Conversion Table](./PROPTYPES_CONVERSION_TABLE.md)
 
 ## General Rules
 
@@ -642,7 +642,7 @@ type Foo = {
 
 ## Exception to Rules
 
-Most of the rules are enforced in ESLint or checked by TypeScript. If you think your particular situation warrants an exception, post the context in the `#expensify-open-source` Slack channel with your message prefixed with `TS EXCEPTION:`. The internal engineer assigned to the PR should be the one that approves each exception, however all discussion regarding granting exceptions should happen in the public channel instead of the GitHub PR page so that the TS migration team can access them easily.
+Most of the rules are enforced in ESLint or checked by TypeScript. If you think your particular situation warrants an exception, post the context in the `#ieatta-open-source` Slack channel with your message prefixed with `TS EXCEPTION:`. The internal engineer assigned to the PR should be the one that approves each exception, however all discussion regarding granting exceptions should happen in the public channel instead of the GitHub PR page so that the TS migration team can access them easily.
 
 When an exception is granted, link the relevant Slack conversation in your PR. Suppress ESLint or TypeScript warnings/errors with comments if necessary.
 
@@ -650,7 +650,7 @@ This rule will apply until the migration is done. After the migration, discussio
 
 ## Communication Items
 
-> Comment in the `#expensify-open-source` Slack channel if any of the following situations are encountered. Each comment should be prefixed with `TS ATTENTION:`. Internal engineers will access each situation and prescribe solutions to each case. Internal engineers should refer to general solutions to each situation that follows each list item.
+> Comment in the `#ieatta-open-source` Slack channel if any of the following situations are encountered. Each comment should be prefixed with `TS ATTENTION:`. Internal engineers will access each situation and prescribe solutions to each case. Internal engineers should refer to general solutions to each situation that follows each list item.
 
 - I think types definitions in a third party library or JavaScript's built-in module are incomplete or incorrect
 
@@ -684,7 +684,7 @@ _.each(arr, () => {});
 
 // GOOD
 var arr = [];
-arr.forEach(() => {});
+arr.forEach(function loopArr() {});
 
 // BAD
 lodashGet(object, ['foo'], 'bar');
@@ -717,7 +717,7 @@ object?.foo ?? 'bar';
   ```tsx
   return (
       <MenuItem
-          // @ts-expect-error TODO: Remove this once MenuItem (https://github.com/Expensify/App/issues/25144) is migrated to TypeScript.
+          // @ts-expect-error TODO: Remove this once MenuItem (https://github.com/Ieatta/App/issues/25144) is migrated to TypeScript.
           wrapperStyle={styles.mr3}
           key={text}
           icon={icon}
@@ -727,7 +727,7 @@ object?.foo ?? 'bar';
   );
   ```
 
-  **You will also need to reference the blocking issue in your PR.** You can find all the TS issues [here](https://github.com/orgs/Expensify/projects/46).
+  **You will also need to reference the blocking issue in your PR.** You can find all the TS issues [here](https://github.com/orgs/Ieatta/projects/46).
 
 ## Learning Resources
 

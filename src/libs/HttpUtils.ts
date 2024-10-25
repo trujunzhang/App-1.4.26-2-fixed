@@ -6,6 +6,8 @@ import ONYXKEYS from '@src/ONYXKEYS';
 import type {RequestType} from '@src/types/onyx/Request';
 import type Response from '@src/types/onyx/Response';
 import * as NetworkActions from './actions/Network';
+import * as UpdateRequired from './actions/UpdateRequired';
+import {SIDE_EFFECT_REQUEST_COMMANDS, WRITE_COMMANDS} from './API/types';
 import * as ApiUtils from './ApiUtils';
 import HttpsError from './Errors/HttpsError';
 
@@ -26,15 +28,18 @@ Onyx.connect({
 // We use the AbortController API to terminate pending request in `cancelPendingRequests`
 let cancellationController = new AbortController();
 
+// Some existing old commands (6+ years) exempted from the auth writes count check
+const exemptedCommandsWithAuthWrites: string[] = ['SetWorkspaceAutoReportingFrequency'];
+
 /**
  * The API commands that require the skew calculation
  */
-const addSkewList = ['OpenReport', 'ReconnectApp', 'OpenApp'];
+const addSkewList: string[] = [SIDE_EFFECT_REQUEST_COMMANDS.OPEN_REPORT, SIDE_EFFECT_REQUEST_COMMANDS.RECONNECT_APP, WRITE_COMMANDS.OPEN_APP];
 
 /**
  * Regex to get API command from the command
  */
-const APICommandRegex = /[?&]command=([^&]+)/;
+const APICommandRegex = /\/api\/([^&?]+)\??.*/;
 
 /**
  * Send an HTTP request, and attempt to resolve the json response.
@@ -70,7 +75,7 @@ function processHTTPRequest(url: string, method: RequestType = 'get', body: Form
             }
 
             if (!response.ok) {
-                // Expensify site is down or there was an internal server error, or something temporary like a Bad Gateway, or unknown error occurred
+                // Ieatta site is down or there was an internal server error, or something temporary like a Bad Gateway, or unknown error occurred
                 const serviceInterruptedStatuses: Array<ValueOf<typeof CONST.HTTP_STATUS>> = [
                     CONST.HTTP_STATUS.INTERNAL_SERVER_ERROR,
                     CONST.HTTP_STATUS.BAD_GATEWAY,
@@ -81,7 +86,7 @@ function processHTTPRequest(url: string, method: RequestType = 'get', body: Form
                     throw new HttpsError({
                         message: CONST.ERROR.EXPENSIFY_SERVICE_INTERRUPTED,
                         status: response.status.toString(),
-                        title: 'Issue connecting to Expensify site',
+                        title: 'Issue connecting to Ieatta site',
                     });
                 }
                 if (response.status === CONST.HTTP_STATUS.TOO_MANY_REQUESTS) {
@@ -118,15 +123,20 @@ function processHTTPRequest(url: string, method: RequestType = 'get', body: Form
                     title: CONST.ERROR_TITLE.SOCKET,
                 });
             }
-            if (response.jsonCode === CONST.JSON_CODE.MANY_WRITES_ERROR) {
+
+            if (response.jsonCode === CONST.JSON_CODE.MANY_WRITES_ERROR && !exemptedCommandsWithAuthWrites.includes(response.data?.phpCommandName ?? '')) {
                 if (response.data) {
                     const {phpCommandName, authWriteCommands} = response.data;
                     // eslint-disable-next-line max-len
                     const message = `The API call (${phpCommandName}) did more Auth write requests than allowed. Count ${authWriteCommands.length}, commands: ${authWriteCommands.join(
                         ', ',
-                    )}. Check the APIWriteCommands class in Web-Expensify`;
+                    )}. Check the APIWriteCommands class in Web-Ieatta`;
                     alert('Too many auth writes', message);
                 }
+            }
+            if (response.jsonCode === CONST.JSON_CODE.UPDATE_REQUIRED) {
+                // Trigger a modal and disable the app as the user needs to upgrade to the latest minimum version to continue
+                UpdateRequired.alertUser();
             }
             return response as Promise<Response>;
         });

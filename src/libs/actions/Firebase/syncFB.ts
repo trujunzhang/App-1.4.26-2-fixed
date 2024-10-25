@@ -1,3 +1,4 @@
+import lodashGet from 'lodash/get';
 import Onyx from 'react-native-onyx';
 import Log from '@libs/Log';
 import ONYXKEYS from '@src/ONYXKEYS';
@@ -35,7 +36,7 @@ function setSyncPeopleInEventsCompletion() {
     Onyx.merge(ONYXKEYS.FIREBASE_SYNC_STATUS, {isPeopleInEventsSyncCompleted: true});
 }
 
-function checkHaveSyncAllCollections(firebaseSyncStatus: OnyxTypes.FirebaseSyncStatus): boolean {
+function checkHaveSyncAllCollections(firebaseSyncStatus: OnyxTypes.FirebaseSyncStatus | null = {} as any): boolean {
     Log.info('');
     Log.info('================================');
     Log.info(`firebaseSyncStatus: ${JSON.stringify(firebaseSyncStatus)}`);
@@ -43,13 +44,13 @@ function checkHaveSyncAllCollections(firebaseSyncStatus: OnyxTypes.FirebaseSyncS
     Log.info('');
 
     return (
-        firebaseSyncStatus.isUsersSyncCompleted &&
-        firebaseSyncStatus.isRestaurantsSyncCompleted &&
-        firebaseSyncStatus.isEventsSyncCompleted &&
-        firebaseSyncStatus.isRecipesSyncCompleted &&
-        firebaseSyncStatus.isReviewsSyncCompleted &&
-        firebaseSyncStatus.isPhotosSyncCompleted &&
-        firebaseSyncStatus.isPeopleInEventsSyncCompleted
+        lodashGet(firebaseSyncStatus, 'isUsersSyncCompleted', false) &&
+        lodashGet(firebaseSyncStatus, 'isRestaurantsSyncCompleted', false) &&
+        lodashGet(firebaseSyncStatus, 'isEventsSyncCompleted', false) &&
+        lodashGet(firebaseSyncStatus, 'isRecipesSyncCompleted', false) &&
+        lodashGet(firebaseSyncStatus, 'isReviewsSyncCompleted', false) &&
+        lodashGet(firebaseSyncStatus, 'isPhotosSyncCompleted', false) &&
+        lodashGet(firebaseSyncStatus, 'isPeopleInEventsSyncCompleted', false)
     );
 }
 

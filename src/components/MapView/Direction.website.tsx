@@ -3,7 +3,7 @@
 // For the web version, we use the Mapbox Web library called react-map-gl, while for the native mobile version,
 // we utilize a different Mapbox library @rnmapbox/maps tailored for mobile development.
 import React from 'react';
-import {Layer, Source} from 'react-map-gl';
+// import {Layer, Source} from 'react-map-gl';
 import {View} from 'react-native';
 import useThemeStyles from '@hooks/useThemeStyles';
 import type {DirectionProps} from './MapViewTypes';
@@ -18,28 +18,28 @@ function Direction({coordinates}: DirectionProps) {
     }
     return (
         <View>
-            {coordinates && (
-                <Source
-                    id="route"
-                    type="geojson"
-                    data={{
-                        type: 'Feature',
-                        properties: {},
-                        geometry: {
-                            type: 'LineString',
-                            coordinates,
-                        },
-                    }}
-                >
-                    <Layer
-                        id="route"
-                        type="line"
-                        source="route"
-                        paint={layerPointStyle}
-                        layout={layerLayoutStyle}
-                    />
-                </Source>
-            )}
+            {/*{coordinates && (*/}
+            {/*    <Source*/}
+            {/*        id="route"*/}
+            {/*        type="geojson"*/}
+            {/*        data={{*/}
+            {/*            type: 'Feature',*/}
+            {/*            properties: {},*/}
+            {/*            geometry: {*/}
+            {/*                type: 'LineString',*/}
+            {/*                coordinates,*/}
+            {/*            },*/}
+            {/*        }}*/}
+            {/*    >*/}
+            {/*        <Layer*/}
+            {/*            id="route"*/}
+            {/*            type="line"*/}
+            {/*            source="route"*/}
+            {/*            paint={layerPointStyle}*/}
+            {/*            layout={layerLayoutStyle}*/}
+            {/*        />*/}
+            {/*    </Source>*/}
+            {/*)}*/}
         </View>
     );
 }

@@ -39,7 +39,17 @@ function CurrentRestaurantIDContextProvider(props: CurrentRestaurantIDContextPro
      */
     const updateCurrentRestaurantID = useCallback(
         (state: NavigationState) => {
-            setCurrentRestaurantID(Navigation.getTopmostRestaurantId(state) ?? '');
+            const restaurantID = Navigation.getTopmostRestaurantId(state) ?? '';
+
+            /*
+             * Make sure we don't make the restaurantID undefined when switching between the chat list and settings tab.
+             * This helps prevent unnecessary re-renders.
+             */
+            const params = state?.routes?.[state.index]?.params;
+            if (params && 'screen' in params && typeof params.screen === 'string' && params.screen.indexOf('Settings_') !== -1) {
+                return;
+            }
+            setCurrentRestaurantID(restaurantID);
         },
         [setCurrentRestaurantID],
     );

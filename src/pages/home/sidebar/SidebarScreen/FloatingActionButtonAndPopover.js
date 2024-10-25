@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import React, {forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState} from 'react';
 import {View} from 'react-native';
 import {withOnyx} from 'react-native-onyx';
-import FloatingActionButton from '@components/FloatingActionButton';
 import * as Expensicons from '@components/Icon/Expensicons';
+import AddRestaurantActionButton from '@components/Ieatta/components/AddRestaurantActionButton';
 import PopoverMenu from '@components/PopoverMenu';
 import withLocalize, {withLocalizePropTypes} from '@components/withLocalize';
 import withNavigation from '@components/withNavigation';
@@ -14,13 +14,8 @@ import usePrevious from '@hooks/usePrevious';
 import useThemeStyles from '@hooks/useThemeStyles';
 import compose from '@libs/compose';
 import Navigation from '@libs/Navigation/Navigation';
-import * as ReportUtils from '@libs/ReportUtils';
-import * as App from '@userActions/App';
-import * as IOU from '@userActions/IOU';
-import * as Policy from '@userActions/Policy';
 import * as Session from '@userActions/Session';
 import * as Task from '@userActions/Task';
-import * as Welcome from '@userActions/Welcome';
 import CONST from '@src/CONST';
 import NAVIGATORS from '@src/NAVIGATORS';
 import ONYXKEYS from '@src/ONYXKEYS';
@@ -150,7 +145,7 @@ function FloatingActionButtonAndPopover(props) {
             return;
         }
 
-        Welcome.show({routes, showCreateMenu});
+        // Welcome.show({routes, showCreateMenu});
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.isLoading]);
 
@@ -183,23 +178,6 @@ function FloatingActionButtonAndPopover(props) {
                         text: props.translate('sidebarScreen.fabNewChat'),
                         onSelected: () => interceptAnonymousUser(() => Navigation.navigate(ROUTES.NEW)),
                     },
-                    {
-                        icon: Expensicons.MoneyCircle,
-                        text: props.translate('iou.requestMoney'),
-                        onSelected: () =>
-                            interceptAnonymousUser(() =>
-                                Navigation.navigate(
-                                    // When starting to create a money request from the global FAB, there is not an existing report yet. A random optimistic reportID is generated and used
-                                    // for all of the routes in the creation flow.
-                                    ROUTES.MONEY_REQUEST_CREATE.getRoute(CONST.IOU.TYPE.REQUEST, CONST.IOU.OPTIMISTIC_TRANSACTION_ID, ReportUtils.generateReportID()),
-                                ),
-                            ),
-                    },
-                    {
-                        icon: Expensicons.Send,
-                        text: props.translate('iou.sendMoney'),
-                        onSelected: () => interceptAnonymousUser(() => IOU.startMoneyRequest(CONST.IOU.TYPE.SEND)),
-                    },
                     ...[
                         {
                             icon: Expensicons.Task,
@@ -212,25 +190,11 @@ function FloatingActionButtonAndPopover(props) {
                         text: props.translate('sidebarScreen.saveTheWorld'),
                         onSelected: () => interceptAnonymousUser(() => Navigation.navigate(ROUTES.TEACHERS_UNITE)),
                     },
-                    ...(!props.isLoading && !Policy.hasActiveFreePolicy(props.allPolicies)
-                        ? [
-                              {
-                                  displayInDefaultIconColor: true,
-                                  contentFit: 'contain',
-                                  icon: Expensicons.NewWorkspace,
-                                  iconWidth: 46,
-                                  iconHeight: 40,
-                                  text: props.translate('workspace.new.newWorkspace'),
-                                  description: props.translate('workspace.new.getTheExpensifyCardAndMore'),
-                                  onSelected: () => interceptAnonymousUser(() => App.createWorkspaceWithPolicyDraftAndNavigateToIt()),
-                              },
-                          ]
-                        : []),
                 ]}
                 withoutOverlay
                 anchorRef={anchorRef}
             />
-            <FloatingActionButton
+            <AddRestaurantActionButton
                 accessibilityLabel={props.translate('sidebarScreen.fabNewChatExplained')}
                 role={CONST.ROLE.BUTTON}
                 isActive={isCreateMenuActive}

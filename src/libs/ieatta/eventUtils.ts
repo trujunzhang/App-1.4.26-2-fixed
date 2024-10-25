@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import _ from 'underscore';
+import _ from 'lodash';
 import type {IFBEvent, IFBPhoto, IFBRecipe} from '@src/types/firebase';
 
 function filterWaiters(event: IFBEvent | undefined, waitersInRestaurant: IFBPhoto[]) {
@@ -13,7 +13,7 @@ function filterWaiters(event: IFBEvent | undefined, waitersInRestaurant: IFBPhot
     return waiters;
 }
 
-function toRecipeDictInRestaurant(recipesInRestaurant: IFBRecipe[]) {
+function toRecipeDictInRestaurant(recipesInRestaurant: IFBRecipe[]): Record<string, IFBRecipe> {
     const recipeDictInRestaurant: Record<string, IFBRecipe> = Object.assign({}, ..._.map(recipesInRestaurant, (recipe) => ({[recipe.uniqueId]: recipe})));
 
     return recipeDictInRestaurant;

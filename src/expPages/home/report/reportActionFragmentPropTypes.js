@@ -21,7 +21,7 @@ export default PropTypes.shape({
     /** The target of a link fragment e.g. '_blank' */
     target: PropTypes.string,
 
-    /** The destination of a link fragment e.g. 'https://www.expensify.com' */
+    /** The destination of a link fragment e.g. 'https://www.ieatta.com' */
     href: PropTypes.string,
 
     /** An additional avatar url - not the main avatar url but used within a message. */

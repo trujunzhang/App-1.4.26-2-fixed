@@ -10,8 +10,8 @@ import useStyleUtils from '@hooks/useStyleUtils';
 import useThemeStyles from '@hooks/useThemeStyles';
 import useWindowDimensions from '@hooks/useWindowDimensions';
 import * as DeviceCapabilities from '@libs/DeviceCapabilities';
-import * as ReportActionContextMenu from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
 import CONST from '@src/CONST';
+import * as ReportActionContextMenu from '@src/expPages/home/report/ContextMenu/ReportActionContextMenu';
 import type {BaseAnchorForCommentsOnlyProps, LinkProps} from './types';
 
 /*

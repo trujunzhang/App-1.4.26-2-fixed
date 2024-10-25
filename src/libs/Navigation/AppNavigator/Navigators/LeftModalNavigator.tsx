@@ -32,8 +32,12 @@ function LeftModalNavigator({navigation}: LeftModalNavigatorProps) {
             <View style={styles.LHPNavigatorContainer(isSmallScreenWidth)}>
                 <Stack.Navigator screenOptions={screenOptions}>
                     <Stack.Screen
-                        name={SCREENS.LEFT_MODAL.SEARCH}
-                        component={ModalStackNavigators.SearchModalStackNavigator}
+                        name={SCREENS.LEFT_MODAL.CHAT_FINDER}
+                        component={ModalStackNavigators.ChatFinderModalStackNavigator}
+                    />
+                    <Stack.Screen
+                        name={SCREENS.LEFT_MODAL.WORKSPACE_SWITCHER}
+                        component={ModalStackNavigators.WorkspaceSwitcherModalStackNavigator}
                     />
                 </Stack.Navigator>
             </View>

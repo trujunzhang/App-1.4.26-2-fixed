@@ -1,3 +1,3 @@
 User-agent: *
 
-Sitemap: https://help.expensify.com/sitemap.xml
+Sitemap: https://help.ieatta.com/sitemap.xml

@@ -1,9 +1,7 @@
-import PropTypes from 'prop-types';
 import {PhotoType, ReviewType} from '@libs/Firebase/constant';
 import Log from '@libs/Log';
 import Navigation from '@navigation/Navigation';
-import {showPhotosPage} from '@pages/photos/online/pageview/web/ContextMenu/PhotosPageContextMenu';
-import reportPropTypes from '@expPages/reportPropTypes';
+import {showPhotosPage} from '@pages/photos/online/Popover/ContextMenu/PhotosPageContextMenu';
 import Config from '@src/CONFIG';
 import ROUTES from '@src/ROUTES';
 import type {IFBEvent, IFBPeopleInEvent, IFBPhoto, IFBRecipe, IFBRestaurant, IFBReview, IFBUser} from '@src/types/firebase';
@@ -114,10 +112,10 @@ export default function getRoutePathForDebug(developingRouteName: string, props:
             return ROUTES.EDIT_RESTAURANT.getRoute(restaurantId);
         }
         case ROUTES.EDIT_EVENT.route: {
-            return ROUTES.EDIT_EVENT.getRoute(eventId);
+            return ROUTES.EDIT_EVENT.getRoute({eventId, restaurantId});
         }
         case ROUTES.EDIT_RECIPE.route: {
-            return ROUTES.EDIT_RECIPE.getRoute(recipeId);
+            return ROUTES.EDIT_RECIPE.getRoute({recipeId, restaurantId});
         }
         case ROUTES.EDIT_REVIEW.route: {
             return ROUTES.EDIT_REVIEW.getRoute({reviewId, relatedId: restaurantId, reviewType: ReviewType.Restaurant});
@@ -136,9 +134,26 @@ export default function getRoutePathForDebug(developingRouteName: string, props:
 | photo carousel
 |--------------------------------------------------
 */
-        case ROUTES.PHOTOS_PAGE.route: {
-            // showPhotosPage(photoId, restaurantId, PhotoType.Restaurant);
-            return null;
+
+        // case ROUTES.PHOTOS_PAGE_WEB.route: {
+        //     showPhotosPage({initialPhotoId: photoId, relatedId: restaurantId, photoType: PhotoType.Restaurant});
+        //     return null;
+        // }
+        case ROUTES.PHOTOS_GRID_VIEW.route: {
+            return ROUTES.PHOTOS_GRID_VIEW.getRoute({relatedId: restaurantId, photoType: PhotoType.Restaurant});
+        }
+
+        case ROUTES.PHOTOS_PAGE_VIEW.route: {
+            return ROUTES.PHOTOS_PAGE_VIEW.getRoute({relatedId: restaurantId, photoType: PhotoType.Restaurant, selected: photoId});
+        }
+
+        /**
+|--------------------------------------------------
+| photo carousel
+|--------------------------------------------------
+*/
+        case ROUTES.TAKE_PHOTO.route: {
+            return ROUTES.TAKE_PHOTO.getRoute({relatedId: restaurantId, photoType: PhotoType.Restaurant});
         }
 
         default: {

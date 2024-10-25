@@ -1,9 +1,7 @@
 import {RealmProvider} from '@realm/react';
-import type {ReactElement, ReactNode} from 'react';
-import React, {useEffect, useMemo, useState} from 'react';
-// Import your models
-import {Event, PeopleInEvent, Photo, Profile, Recipe, Restaurant, RestaurantGeoPoint, Review} from '@libs/Realm/models';
-import CONST from '@src/CONST';
+import type {ReactNode} from 'react';
+import React, {useEffect} from 'react';
+import {Event, PeopleInEvent, Photo, Profile, Recipe, Restaurant, RestaurantGeoPoint, Review, SqlPhoto} from '@libs/Realm/models';
 
 type RealmLocalProviderProps = {
     /** Actual content wrapped by this component */
@@ -16,7 +14,7 @@ export default function RealmLocalProvider({children}: RealmLocalProviderProps) 
     return (
         <RealmProvider
             schemaVersion={1}
-            schema={[Event, PeopleInEvent, Profile, Recipe, Review, Restaurant, RestaurantGeoPoint.schema, Photo]}
+            schema={[Event, PeopleInEvent, Profile, Recipe, Review, Restaurant, RestaurantGeoPoint.schema, Photo, SqlPhoto]}
         >
             {children}
         </RealmProvider>

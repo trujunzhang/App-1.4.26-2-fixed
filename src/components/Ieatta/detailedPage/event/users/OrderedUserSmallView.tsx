@@ -18,7 +18,10 @@ function OrderedUserSmallView({rowData}: OrderedUserViewProps) {
                 user={user}
                 recipesCount={recipes.length}
             />
-            <RestaurantMenuList recipes={recipes} />
+            <RestaurantMenuList
+                recipes={recipes}
+                modalName="ordered recipe"
+            />
         </View>
     );
 }

@@ -1,40 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import lodashDefer from 'lodash/defer';
-import moment from 'moment';
-import type {ForwardedRef, ReactElement, ReactNode, RefObject} from 'react';
-import React, {forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
-import type {ScrollView} from 'react-native';
-import {Button, Image as RNImage, View} from 'react-native';
-import Icon from '@components/Icon';
-import * as Expensicons from '@components/Icon/Expensicons';
+import type {ForwardedRef} from 'react';
+import React, {forwardRef} from 'react';
+import {Image as RNImage, View} from 'react-native';
 import {IeattaStars} from '@components/Icon/IeattaStars';
 import PressableWithoutFeedback from '@components/Pressable/PressableWithoutFeedback';
-import Text from '@components/Text';
+import type {BaseTextInputProps, BaseTextInputRef} from '@components/TextInput/BaseTextInput/types';
 import useLocalize from '@hooks/useLocalize';
-import useScrollContext from '@hooks/useScrollContext';
-import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
-import CONST from '@src/CONST';
 
 type RebaseEventDatePickerProps = {
     /** BasePicker label */
-    label?: string | null;
-
+    // label?: string | null;
     /** Input value */
-    value: string;
-
+    // value: string;
     /** The ID used to uniquely identify the input in a Form */
-    inputID?: string;
-
+    // inputID?: string;
     /** Saves a draft of the input value when used in a form */
-    shouldSaveDraft?: boolean;
-
+    // shouldSaveDraft?: boolean;
     /** A callback method that is called when the value changes and it receives the selected value as an argument */
-    onInputChange: (value: number, index?: number) => void;
-};
+    // onInputChange: (value: number, index?: number) => void;
+} & BaseTextInputProps;
 
-function ReviewRatingPanel({inputID, value, onInputChange, label = '', shouldSaveDraft = false}: RebaseEventDatePickerProps, ref: ForwardedRef<any>) {
-    const theme = useTheme();
+function ReviewRatingPanel({inputID, value = '1', onInputChange, label = '', shouldSaveDraft = false}: RebaseEventDatePickerProps, ref: ForwardedRef<BaseTextInputRef>) {
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 
@@ -43,7 +30,7 @@ function ReviewRatingPanel({inputID, value, onInputChange, label = '', shouldSav
      * We are overriding this behavior to make BasePicker work with Form
      */
     const onValueChange = (rating: number) => {
-        onInputChange(rating);
+        onInputChange?.(`${rating}`);
     };
 
     const ratingBg = (
@@ -98,23 +85,21 @@ function ReviewRatingPanel({inputID, value, onInputChange, label = '', shouldSav
     );
 
     return (
-        <>
-            <View style={[styles.flex1, styles.flexRow, styles.alignItemsCenter, styles.gap2]}>
-                <View style={[styles.flex1, styles.flexRow, styles.justifyContentCenter]}>
-                    <View
-                        style={[
-                            {
-                                width: (54 + 4) * 5,
-                                height: 34,
-                            },
-                        ]}
-                    >
-                        {ratingBg}
-                        {ratingButtons}
-                    </View>
+        <View style={[styles.flex1, styles.flexRow, styles.alignItemsCenter, styles.gap2]}>
+            <View style={[styles.flex1, styles.flexRow, styles.justifyContentCenter]}>
+                <View
+                    style={[
+                        {
+                            width: (54 + 4) * 5,
+                            height: 34,
+                        },
+                    ]}
+                >
+                    {ratingBg}
+                    {ratingButtons}
                 </View>
             </View>
-        </>
+        </View>
     );
 }
 

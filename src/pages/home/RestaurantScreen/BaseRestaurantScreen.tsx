@@ -1,34 +1,34 @@
-import type {NavigationProp} from '@react-navigation/native';
-import React, {useMemo} from 'react';
-import {clearTestState} from 'realm';
 // eslint-disable-next-line no-restricted-imports
-import _ from 'underscore';
-import DetailedPageData from '@components/Ieatta/detailedPage/DetailedPageData';
+import _ from 'lodash';
+import React, {useMemo} from 'react';
+import DetailedPageLayout from '@components/Ieatta/detailedPage/DetailedPageLayout';
 import useWindowDimensions from '@hooks/useWindowDimensions';
+import type {RestartScreenNavigationProps} from '@libs/Firebase/helper/RestaurantUtils';
+import type {BuildEventsInRestaurantParams} from '@libs/Firebase/list/builder/restaurant';
 import {buildRestaurantRows} from '@libs/Firebase/list/builder/restaurant';
 import type {IReviewOnSearchAndSortChanged} from '@libs/Firebase/list/types/rows/review';
-import type {RootStackParamList} from '@libs/Navigation/types';
 import type {IFBEvent, IFBRestaurant, IFBReview} from '@src/types/firebase';
 
-type BaseRestaurantScreenProps = IReviewOnSearchAndSortChanged & {
-    fetchMoreReviews: () => void;
-    restaurantId: string;
-    restaurant: IFBRestaurant | undefined;
-    events: IFBEvent[];
-    reviews: IFBReview[];
-    navigation: NavigationProp<RootStackParamList>;
-    shouldShowLoading?: boolean;
-    loadingContent?: React.ReactNode;
-};
+type BaseRestaurantScreenProps = RestartScreenNavigationProps &
+    IReviewOnSearchAndSortChanged & {
+        fetchMoreReviews: () => void;
+        restaurantId: string;
+        restaurant: IFBRestaurant | undefined;
+        // events: IFBEvent[];
+        eventsInRestaurant: BuildEventsInRestaurantParams;
+        reviews: IFBReview[];
+        shouldShowLoading?: boolean;
+        loadingContent?: React.ReactNode;
+    };
 
-// eslint-disable-next-line react/prop-types
 function BaseRestaurantScreen({
+    navigation,
     fetchMoreReviews,
     restaurantId,
     restaurant,
-    events,
+    // events,
+    eventsInRestaurant,
     reviews,
-    navigation,
     shouldShowLoading = false,
     loadingContent = null,
     onReviewSortChanged,
@@ -44,18 +44,19 @@ function BaseRestaurantScreen({
             buildRestaurantRows(isSmallScreenWidth, {
                 restaurantId,
                 restaurant,
-                events,
+                // events,
+                eventsInRestaurant,
                 reviews,
                 reviewChanged: {
                     onReviewSortChanged,
                     onReviewSearchChanged,
                 },
             }),
-        [isSmallScreenWidth, restaurantId, restaurant, events, reviews, onReviewSortChanged, onReviewSearchChanged],
+        [isSmallScreenWidth, restaurant, eventsInRestaurant, reviews, onReviewSortChanged, onReviewSearchChanged],
     );
 
     return (
-        <DetailedPageData
+        <DetailedPageLayout
             shouldShowNotFoundPage={shouldShowNotFoundPage}
             rowsData={rowsData}
             fetchMoreReviews={fetchMoreReviews}

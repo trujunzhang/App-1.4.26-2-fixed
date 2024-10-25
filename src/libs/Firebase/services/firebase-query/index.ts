@@ -5,6 +5,7 @@ import type {DocumentReference, Query} from 'firebase/firestore';
 import {collection, doc, limit, orderBy, query, where} from 'firebase/firestore';
 import {db} from '@libs/Firebase/config/firebase';
 import {FBCollections, PhotoType} from '@libs/Firebase/constant';
+import type {IFBPeopleInEvent} from '@src/types/firebase';
 import type {
     QueryAllUsers,
     QueryEventOrMenuInRestaurant,
@@ -70,6 +71,8 @@ const queryForPhotos: QueryForPhotos = ({relatedId, photoType, size = -1}: Query
             break;
         }
         case PhotoType.Waiter: {
+            queryConstraints.push(where('photoType', '==', photoType));
+            queryConstraints.push(where('restaurantId', '==', relatedId));
             break;
         }
         case PhotoType.Recipe: {
@@ -98,7 +101,7 @@ const queryAllUsers: QueryAllUsers = (): Query => {
 | PeopleInEvents
 |--------------------------------------------------
 */
-const queryForPeopleInEvents = ({restaurantId, eventId}: QueryForPeopleInEventsParameter): Query => {
+const queryForPeopleInEvents: QueryForPeopleInEvents = ({restaurantId, eventId}: QueryForPeopleInEventsParameter): Query => {
     return query(collection(db, FBCollections.PeopleInEvent), where('restaurantId', '==', restaurantId), where('eventId', '==', eventId));
 };
 

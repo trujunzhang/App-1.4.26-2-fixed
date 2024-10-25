@@ -1,6 +1,6 @@
-import type {BaseReportActionContextMenuProps} from '@expPages/home/report/ContextMenu/BaseReportActionContextMenu';
+import type {BaseReportActionContextMenuProps} from '@src/expPages/home/report/ContextMenu/BaseReportActionContextMenu';
 
-type MiniReportActionContextMenuProps = Omit<BaseReportActionContextMenuProps, 'isMini'> & {
+type MiniReportActionContextMenuProps = Omit<BaseReportActionContextMenuProps, 'isMini' | 'betas' | 'reportActions' | 'transaction'> & {
     /** Should the reportAction this menu is attached to have the appearance of being grouped with the previous reportAction? */
     displayAsGroup?: boolean;
 };

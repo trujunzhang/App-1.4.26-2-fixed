@@ -27,22 +27,22 @@ This document lists specific guidelines for all PR reviews and aims to clarify i
 # Testing the changes
 
 1. Make sure there are no console errors related to the PR. If you find console errors in a branch you’re reviewing, check if they also exist in `main`.
-    1. If they do, proceed as normal (report them in #expensify-open-source if you think they need to be fixed).
+    1. If they do, proceed as normal (report them in #ieatta-open-source if you think they need to be fixed).
     2. If the errors do not exist in `main`, report it to the PR author - they need to be fixed before the PR can be merged.
 2. Test the changes on **all platforms**. Follow this guide (needs link) to set up each platform.
-    - If you’re unable to boot a platform for any reason, ask for help in the #expensify-open-source Slack channel. Your issue might already have been addressed there, so be sure to search first.
+    - If you’re unable to boot a platform for any reason, ask for help in the #ieatta-open-source Slack channel. Your issue might already have been addressed there, so be sure to search first.
 
 # Reviewing the code
 
 ## Good code patterns to require
 
 1. Check that functions have comments when appropriate.
-    - If the function has params or returns something, use [JSDocs syntax]((https://github.com/Expensify/App/blob/main/contributingGuides/STYLE.md#jsdocs)) to describe them.
+    - If the function has params or returns something, use [JSDocs syntax]((https://github.com/Ieatta/App/blob/main/contributingGuides/STYLE.md#jsdocs)) to describe them.
         - Indicate the param name(s), data type passed and / or returned, and purpose if not immediately obvious.
     - Obvious functions (with no params / return value) should not have comments.
     - **In short: _Add comments & docs, only when useful._**
 2. All copy / text shown to users in the product should be stored in the `src/languages/*` files for localization.
-3. Platform-specific files should follow the proper naming convention (see [Platform-Specific File Extensions](https://github.com/expensify/app#platform-specific-file-extensions))
+3. Platform-specific files should follow the proper naming convention (see [Platform-Specific File Extensions](https://github.com/ieatta/app#platform-specific-file-extensions))
     - Example: `MyComponent/index.android.js`
 
 ## Code patterns to improve
@@ -54,7 +54,7 @@ This document lists specific guidelines for all PR reviews and aims to clarify i
 ## Code patterns to avoid
 
 1. Make sure any `setTimeout`s are absolutely necessary, not just a workaround for a situation that isn’t fully understood (e.g. a race condition).
-2. Ensure Onyx is used appropriately. ([docs](https://github.com/expensify/react-native-onyx#merging-data))
+2. Ensure Onyx is used appropriately. ([docs](https://github.com/ieatta/react-native-onyx#merging-data))
 
 ## Considerations around code reuse
 

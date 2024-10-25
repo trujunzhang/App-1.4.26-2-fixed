@@ -1,6 +1,5 @@
-import type {ImageContentFit} from 'expo-image';
 import type {RefObject} from 'react';
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 import type {ModalProps} from 'react-native-modal';
 import useArrowKeyFocusManager from '@hooks/useArrowKeyFocusManager';
@@ -9,40 +8,26 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import useWindowDimensions from '@hooks/useWindowDimensions';
 import CONST from '@src/CONST';
 import type {AnchorPosition} from '@src/styles';
-import type IconAsset from '@src/types/utils/IconAsset';
+import type AnchorAlignment from '@src/types/utils/AnchorAlignment';
+import FocusableMenuItem from './FocusableMenuItem';
+import * as Expensicons from './Icon/Expensicons';
+import type {MenuItemProps} from './MenuItem';
 import MenuItem from './MenuItem';
-import type {AnchorAlignment} from './Popover/types';
 import PopoverWithMeasuredContent from './PopoverWithMeasuredContent';
 import Text from './Text';
 
-// eslint-disable-next-line rulesdir/no-inline-named-export
-export type PopoverMenuItem = {
-    /** An icon element displayed on the left side */
-    icon: IconAsset;
-
+type PopoverMenuItem = MenuItemProps & {
     /** Text label */
     text: string;
 
     /** A callback triggered when this item is selected */
-    onSelected: () => void;
+    onSelected?: () => void;
 
-    /** A description text to show under the title */
-    description?: string;
+    /** Sub menu items to be rendered after a menu item is selected */
+    subMenuItems?: PopoverMenuItem[];
 
-    /** The fill color to pass into the icon. */
-    iconFill?: string;
-
-    /** Icon Width */
-    iconWidth?: number;
-
-    /** Icon Height */
-    iconHeight?: number;
-
-    /** Icon should be displayed in its own color */
-    displayInDefaultIconColor?: boolean;
-
-    /** Determines how the icon should be resized to fit its container */
-    contentFit?: ImageContentFit;
+    /** Determines whether the menu item is disabled or not */
+    disabled?: boolean;
 };
 
 type PopoverModalProps = Pick<ModalProps, 'animationIn' | 'animationOut' | 'animationInTiming'>;
@@ -70,7 +55,7 @@ type PopoverMenuProps = Partial<PopoverModalProps> & {
     anchorPosition: AnchorPosition;
 
     /** Ref of the anchor */
-    anchorRef: RefObject<HTMLDivElement>;
+    anchorRef: RefObject<View | HTMLDivElement>;
 
     /** Where the popover should be positioned relative to the anchor points. */
     anchorAlignment?: AnchorAlignment;
@@ -108,12 +93,53 @@ function PopoverMenu({
     const styles = useThemeStyles();
     const {isSmallScreenWidth} = useWindowDimensions();
     const selectedItemIndex = useRef<number | null>(null);
-    const [focusedIndex, setFocusedIndex] = useArrowKeyFocusManager({initialFocusedIndex: -1, maxIndex: menuItems.length - 1, isActive: isVisible});
+
+    const [currentMenuItems, setCurrentMenuItems] = useState(menuItems);
+    const [enteredSubMenuIndexes, setEnteredSubMenuIndexes] = useState<number[]>([]);
+
+    const [focusedIndex, setFocusedIndex] = useArrowKeyFocusManager({initialFocusedIndex: -1, maxIndex: currentMenuItems.length - 1, isActive: isVisible});
 
     const selectItem = (index: number) => {
-        const selectedItem = menuItems[index];
-        onItemSelected(selectedItem, index);
-        selectedItemIndex.current = index;
+        const selectedItem = currentMenuItems[index];
+        if (selectedItem?.subMenuItems) {
+            setCurrentMenuItems([...selectedItem.subMenuItems]);
+            setEnteredSubMenuIndexes([...enteredSubMenuIndexes, index]);
+        } else {
+            selectedItemIndex.current = index;
+            onItemSelected(selectedItem, index);
+        }
+    };
+
+    const getPreviousSubMenu = () => {
+        let currentItems = menuItems;
+        for (let i = 0; i < enteredSubMenuIndexes.length - 1; i++) {
+            const nextItems = currentItems[enteredSubMenuIndexes[i]].subMenuItems;
+            if (!nextItems) {
+                return currentItems;
+            }
+            currentItems = nextItems;
+        }
+        return currentItems;
+    };
+
+    const renderBackButtonItem = () => {
+        const previousMenuItems = getPreviousSubMenu();
+        const previouslySelectedItem = previousMenuItems[enteredSubMenuIndexes[enteredSubMenuIndexes.length - 1]];
+
+        return (
+            <MenuItem
+                key={previouslySelectedItem.text}
+                icon={Expensicons.BackArrow}
+                iconFill="gray"
+                title={previouslySelectedItem.text}
+                shouldCheckActionAllowedOnPress={false}
+                description={previouslySelectedItem.description}
+                onPress={() => {
+                    setCurrentMenuItems(previousMenuItems);
+                    enteredSubMenuIndexes.splice(-1);
+                }}
+            />
+        );
     };
 
     useKeyboardShortcut(
@@ -131,17 +157,29 @@ function PopoverMenu({
     const onModalHide = () => {
         setFocusedIndex(-1);
         if (selectedItemIndex.current !== null) {
-            menuItems[selectedItemIndex.current].onSelected();
+            currentMenuItems[selectedItemIndex.current].onSelected?.();
             selectedItemIndex.current = null;
         }
     };
+
+    useEffect(() => {
+        if (menuItems.length === 0) {
+            return;
+        }
+        setEnteredSubMenuIndexes([]);
+        setCurrentMenuItems(menuItems);
+    }, [menuItems]);
 
     return (
         <PopoverWithMeasuredContent
             anchorPosition={anchorPosition}
             anchorRef={anchorRef}
             anchorAlignment={anchorAlignment}
-            onClose={onClose}
+            onClose={() => {
+                setCurrentMenuItems(menuItems);
+                setEnteredSubMenuIndexes([]);
+                onClose();
+            }}
             isVisible={isVisible}
             onModalHide={onModalHide}
             animationIn={animationIn}
@@ -154,8 +192,9 @@ function PopoverMenu({
         >
             <View style={isSmallScreenWidth ? {} : styles.createMenuContainer}>
                 {!!headerText && <Text style={[styles.createMenuHeaderText, styles.ml3]}>{headerText}</Text>}
-                {menuItems.map((item, menuIndex) => (
-                    <MenuItem
+                {enteredSubMenuIndexes.length > 0 && renderBackButtonItem()}
+                {currentMenuItems.map((item, menuIndex) => (
+                    <FocusableMenuItem
                         key={item.text}
                         icon={item.icon}
                         iconWidth={item.iconWidth}
@@ -165,9 +204,22 @@ function PopoverMenu({
                         title={item.text}
                         shouldCheckActionAllowedOnPress={false}
                         description={item.description}
+                        numberOfLinesDescription={item.numberOfLinesDescription}
                         onPress={() => selectItem(menuIndex)}
                         focused={focusedIndex === menuIndex}
                         displayInDefaultIconColor={item.displayInDefaultIconColor}
+                        shouldShowRightIcon={item.shouldShowRightIcon}
+                        iconRight={item.iconRight}
+                        shouldPutLeftPaddingWhenNoIcon={item.shouldPutLeftPaddingWhenNoIcon}
+                        label={item.label}
+                        isLabelHoverable={item.isLabelHoverable}
+                        floatRightAvatars={item.floatRightAvatars}
+                        floatRightAvatarSize={item.floatRightAvatarSize}
+                        shouldShowSubscriptRightAvatar={item.shouldShowSubscriptRightAvatar}
+                        disabled={item.disabled}
+                        onFocus={() => setFocusedIndex(menuIndex)}
+                        success={item.success}
+                        containerStyle={item.containerStyle}
                     />
                 ))}
             </View>
@@ -178,3 +230,4 @@ function PopoverMenu({
 PopoverMenu.displayName = 'PopoverMenu';
 
 export default React.memo(PopoverMenu);
+export type {PopoverMenuItem, PopoverMenuProps};

@@ -1,5 +1,5 @@
+/* eslint-disable import/prefer-default-export */
 import type {IRestaurantSidebarRow} from '@libs/Firebase/list/types/rows/restaurant';
-import type {IFBRestaurant} from '@src/types/firebase';
 
 type RestaurantItemProps = {
     rowData: IRestaurantSidebarRow;

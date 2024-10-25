@@ -1,6 +1,6 @@
 import type {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
-import ReportScreen from '@expPages/home/ReportScreen';
+import ReportScreen from '@src/expPages/home/ReportScreen';
 import type SCREENS from '@src/SCREENS';
 import type {CentralPaneNavigatorParamList} from '../types';
 import ReportScreenIDSetter from './ReportScreenIDSetter';
@@ -12,11 +12,10 @@ function ReportScreenWrapper({route, navigation}: ReportScreenWrapperProps) {
     // until the reportID is loaded and set in the route param
     return (
         <>
-            <ReportScreen
-                // @ts-expect-error Error will be resolved after ReportScreen migration to TypeScript
-                route={route}
-                navigation={navigation}
-            />
+            {/*<ReportScreen*/}
+            {/*    route={route}*/}
+            {/*    navigation={navigation}*/}
+            {/*/>*/}
             <ReportScreenIDSetter
                 route={route}
                 navigation={navigation}

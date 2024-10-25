@@ -4,11 +4,11 @@
 
 ## Terms
 
-The **client app**, or **client**: this refers to the application that is attempting to access a user's resources hosted by a third party. In this case, this is the Expensify app.
+The **client app**, or **client**: this refers to the application that is attempting to access a user's resources hosted by a third party. In this case, this is the Ieatta app.
 
-The **third party**: this is any other service that the client app (Expensify) wants to interact with on behalf of a user. In this case, Apple or Google. Since this flow is specifically concerned with authentication, it may also be called the **third-party authentication provider**.
+The **third party**: this is any other service that the client app (Ieatta) wants to interact with on behalf of a user. In this case, Apple or Google. Since this flow is specifically concerned with authentication, it may also be called the **third-party authentication provider**.
 
-**Third-party sign-in**: a general phrase to refer to either "Sign in with Apple" or "Sign in with Google" (or any future similar features). Any authentication method that involves authentication with a service not provided by Expensify.
+**Third-party sign-in**: a general phrase to refer to either "Sign in with Apple" or "Sign in with Google" (or any future similar features). Any authentication method that involves authentication with a service not provided by Ieatta.
 
 ## How third-party sign-in works
 
@@ -41,7 +41,7 @@ The redirect URI must match a URI in the Google or Apple client ID configuration
 
 Pop-up mode opens a pop-up window to show the third-party sign-in form. But it also changes how tokens are given to the client app. Instead of an HTTPS request, they are returned by the JS libraries in memory, either via a callback (Google) or a promise (Apple).
 
-Apple and Google both check that the client app is running on an allowed domain. The sign-in process will fail otherwise. Google allows localhost, but Apple does not, and so testing Apple in development environments requires hosting the client app on a domain that the Apple client ID (or "service ID", in Apple's case) has been configured with.
+Apple and Google both check that the client app is running on an allowed domain. The sign-in process will fail otherwise. Google allows `localhost`, but Apple does not, and so testing Apple in development environments requires hosting the client app on a domain that the Apple client ID (or "service ID", in Apple's case) has been configured with.
 
 In the case of Apple, sometimes it will silently fail at the very end of the sign-in process, where the only sign that something is wrong is that the pop-up fails to close. In this case, it's very likely that configuration mismatch is the issue.
 
@@ -70,9 +70,9 @@ These are the specific issues we've seen:
 1. [Google stopped allowing its sign-in page to render inside embedded browser frameworks](https://security.googleblog.com/2019/04/better-protection-against-man-in-middle.html) such as Electron. This means we can't open the sign-in flow inside the an Electron window. However, opening the sign-in form in the user's default web browser did work.
 2. On the other hand, opening the Sign in with Apple form in the user's default browser instead of Electron does _not_ work, and renders an Apple page with an empty body instead of the sign-in form.
 
-We decided to instead redirect the user to a dedicated page in the web app to sign in. Apple and Google each have their own routes, `/sign-in-with-apple` and `/sign-in-with-google`, where the user is shown another button to click to start the sign-in process on web (since it shows a pop-up, the user must click the button directly, otherwise the pop-up would be blocked). After signing in, the user will be shown a deep link prompt in the browser to open the desktop app, where they will be signed in using a short-lived token from the Expensify API.
+We decided to instead redirect the user to a dedicated page in the web app to sign in. Apple and Google each have their own routes, `/sign-in-with-apple` and `/sign-in-with-google`, where the user is shown another button to click to start the sign-in process on web (since it shows a pop-up, the user must click the button directly, otherwise the pop-up would be blocked). After signing in, the user will be shown a deep link prompt in the browser to open the desktop app, where they will be signed in using a short-lived token from the Ieatta API.
 
-Due to Expensify's expectation that a user will be using the same account on web and desktop, we do not go through this process if the user was already signed in, but instead the web app prompts the user to go back to desktop again, which will also sign them in on the desktop app.
+Due to Ieatta's expectation that a user will be using the same account on web and desktop, we do not go through this process if the user was already signed in, but instead the web app prompts the user to go back to desktop again, which will also sign them in on the desktop app.
 
 ## Additional design constraints
 
@@ -87,8 +87,8 @@ This means the button is limited in design: there are no offline or hover states
 Unlike Google, Apple does not allow `localhost` as a domain to host a pop-up or redirect to. In order to test Sign in with Apple on web or desktop, this means we have to:
 
 1. Use SSH tunneling to host the app on an HTTPS domain
-2. Create a test Apple Service ID configuration in the Apple developer console, to allow testing the sign-in flow from its start until the point Apple sends its token to the Expensify app.
-3. Use token interception on Android to test the web and desktop sign-in flow from the point where the front-end Expensify app has received a token, until the point where the user is signed in to Expensify using that token.
+2. Create a test Apple Service ID configuration in the Apple developer console, to allow testing the sign-in flow from its start until the point Apple sends its token to the Ieatta app.
+3. Use token interception on Android to test the web and desktop sign-in flow from the point where the front-end Ieatta app has received a token, until the point where the user is signed in to Ieatta using that token.
 
 These steps are covered in more detail in the "testing" section below.
 
@@ -98,33 +98,12 @@ Due to some technical constraints, Apple and Google sign-in may require addition
 
 ## Apple
 
-### iOS/Android
-
-The iOS and Android implementations do not require extra steps to test, aside from signing into an Apple account on the iOS device before being able to use Sign in with Apple.
-
-### Web and desktop
-
-#### Render the web Sign In with Apple button in development
-
-The Google Sign In button renders differently in development mode. To prevent confusion
-for developers about a possible regression, we decided to not render third party buttons in
-development mode.
-
-To show the Apple Sign In button in development mode, you can comment out the following code in the 
-LoginForm.js file:
-
-```js
-if (CONFIG.ENVIRONMENT === CONST.ENVIRONMENT.DEV) {
-  return;
-}
-```
-
 #### Port requirements
 
-The Sign in with Apple process will break after the user signs in if the pop-up process is not started from a page at an HTTPS domain registered with Apple. To fix this, you could make a new configuration with your own HTTPS domain, but then the Apple configuration won't match that of Expensify's backend.
+The Sign in with Apple process will break after the user signs in if the pop-up process is not started from a page at an HTTPS domain registered with Apple. To fix this, you could make a new configuration with your own HTTPS domain, but then the Apple configuration won't match that of Ieatta's backend.
 
 So to be able to test this, we have two parts:
-1. Create a valid Sign in with Apple token using valid configuration for the Expensify app, by creating and intercepting one on Android
+1. Create a valid Sign in with Apple token using valid configuration for the Ieatta app, by creating and intercepting one on Android
 2. Host the development web app at an HTTPS domain using SSH tunneling, and in the web app use a custom Apple config with this HTTPS domain registered
 
 Requirements:
@@ -135,7 +114,7 @@ Requirements:
 
 **Note**: complete this step before changing other configuration to test Apple on web and desktop, as updating those will cause Android to stop working while the configuration is changed.
 
-On an Android build, alter the `AppleSignIn` component to log the token generated, instead of sending it to the Expensify API:
+On an Android build, alter the `AppleSignIn` component to log the token generated, instead of sending it to the Ieatta API:
 
 ```js
 //          .then((token) => Session.beginAppleSignIn(token))
@@ -146,28 +125,28 @@ If you need to check that you received the correct data, check it on [jwt.io](ht
 
 Hardcode this token into `Session.beginAppleSignIn`, and but also verify a valid token was passed into the function, for example:
 
-```
+```js
 function beginAppleSignIn(idToken) {
-+   // Show that a token was passed in, without logging the token, for privacy
-+   window.alert(`ORIGINAL ID TOKEN LENGTH: ${idToken.length}`);
-+   const hardcodedToken = '...';
+   // Show that a token was passed in, without logging the token, for privacy
+   window.alert(`ORIGINAL ID TOKEN LENGTH: ${idToken.length}`);
+   const hardcodedToken = '...';
     const {optimisticData, successData, failureData} = signInAttemptState();
-+   API.write('SignInWithApple', {idToken: hardcodedToken}, {optimisticData, successData, failureData});
--   API.write('SignInWithApple', {idToken}, {optimisticData, successData, failureData});
+   API.write('SignInWithApple', {idToken: hardcodedToken}, {optimisticData, successData, failureData});
+   API.write('SignInWithApple', {idToken}, {optimisticData, successData, failureData});
 }
 ```
 
 #### Configure the SSH tunneling
 
-You can use any SSH tunneling service that allows you to configure custom subdomains so that we have a consistent address to use. We'll use ngrok in these examples, but ngrok requires a paid account for this. If you need a free option, try serveo.net.
+You can use any SSH tunneling service that allows you to configure custom subdomains so that we have a consistent address to use. We'll use ngrok in these examples, but ngrok requires a paid account for this. If you need a free option, try [serveo.net](https://serveo.net).
 
-After you've set ngrok up to be able to run on your machine (requires configuring a key with the command line tool, instructions provided by the ngrok website after you create an account), test hosting the web app on a custom subdomain. This example assumes the development web app is running at `dev.new.expensify.com:8082`:
+After you've set ngrok up to be able to run on your machine (requires configuring a key with the command line tool, instructions provided by the ngrok website after you create an account), test hosting the web app on a custom subdomain. This example assumes the development web app is running at `dev.new.ieatta.com:8082`:
 
+```shell
+ngrok http 8082 --host-header="dev.new.ieatta.com:8082" --subdomain=mysubdomain
 ```
-ngrok http 8082 --host-header="dev.new.expensify.com:8082" --subdomain=mysubdomain
-```
 
-The `--host-header` flag is there to avoid webpack errors with header validation. In addition, add `allowedHosts: 'all'` to the dev server config in `webpack.dev.js`:
+The `--host-header` flag is there to avoid webpack errors with header validation. In addition, add `allowedHosts: 'all'` to the dev server config in `webpack.dev.ts`:
 
 ```js
 devServer: {
@@ -204,7 +183,7 @@ Desktop will require the same configuration, with these additional steps:
 
 #### Configure web app URL in .env
 
-Add `NEW_EXPENSIFY_URL` to .env, and set it to the HTTPS URL where the web app can be found, for example:
+Add `NEW_EXPENSIFY_URL` to `.env`, and set it to the HTTPS URL where the web app can be found, for example:
 
 ```
 NEW_EXPENSIFY_URL=https://subdomain.ngrok-free.app
@@ -212,11 +191,11 @@ NEW_EXPENSIFY_URL=https://subdomain.ngrok-free.app
 
 This is required because the desktop app needs to know the address of the web app, and must open it at the HTTPS domain configured to work with Sign in with Apple.
 
-Note that changing this value to a domain that isn't configured for use with Expensify will cause Android to break, as it is still using the real client ID, but now has an incorrect value for `redirectURI`.
+Note that changing this value to a domain that isn't configured for use with Ieatta will cause Android to break, as it is still using the real client ID, but now has an incorrect value for `redirectURI`.
 
 #### Set Environment to something other than "Development"
 
-The DeepLinkWrapper component will not handle deep links in the development environment. To be able to test deep linking, you must set the environment to something other than "Development".
+The `DeepLinkWrapper` component will not handle deep links in the development environment. To be able to test deep linking, you must set the environment to something other than "Development".
 
 Within the `.env` file, set `envName` to something other than "Development", for example:
 
@@ -224,7 +203,7 @@ Within the `.env` file, set `envName` to something other than "Development", for
 envName=Staging
 ```
 
-Alternatively, within the `DeepLinkWrapper/index.website.js` file you can set the `CONFIG.ENVIRONMENT` to something other than "Development".
+Alternatively, within the `DeepLinkWrapper/index.website.js` file, you can set the `CONFIG.ENVIRONMENT` to something other than "Development".
 
 #### Handle deep links in dev on MacOS
 
@@ -232,7 +211,7 @@ If developing on MacOS, the development desktop app can't handle deeplinks corre
 
 1. Create a "real" build of the desktop app, which can handle deep links, open the build folder, and install the dmg there:
 
-```
+```shell
 npm run desktop-build
 open desktop-build
 # Then double-click "NewIeatta.dmg" in Finder window
@@ -240,32 +219,49 @@ open desktop-build
 
 2. Even with this build, the deep link may not be handled by the correct app, as the development Electron config seems to intercept it sometimes. To manage this, install [SwiftDefaultApps](https://github.com/Lord-Kamina/SwiftDefaultApps), which adds a preference pane that can be used to configure which app should handle deep links.
 
-## Google
+### Test the Apple / Google SSO buttons in development environment
 
-### Web
-
-#### Render the web Sign In with Google button in Development
-
-The Google Sign In button renders differently in development mode. To prevent confusion
+The Apple/Google Sign In button renders differently in development mode. To prevent confusion
 for developers about a possible regression, we decided to not render third party buttons in
 development mode.
 
-To show the Google Sign In button in development mode, you can comment out the following code in the 
-LoginForm.js file:
+Here's how you can re-enable the SSO buttons in development mode:
 
-```js
-if (CONFIG.ENVIRONMENT === CONST.ENVIRONMENT.DEV) {
-  return;
-}
-```
-
-#### Port requirements
-
-Google allows the web app to be hosted at localhost, but according to the
-current Google console configuration for the Expensify client ID, it must be
-hosted on port 8082.
-
-### Desktop
+- Remove this [condition](https://github.com/Ieatta/App/blob/c2a718c9100e704c89ad9564301348bc53a49777/src/pages/signin/LoginForm/BaseLoginForm.tsx#L300) so that we always render the SSO button components
+    ```diff
+    diff --git a/src/pages/signin/LoginForm/BaseLoginForm.tsx b/src/pages/signin/LoginForm/BaseLoginForm.tsx
+    index 4286a26033..850f8944ca 100644
+    --- a/src/pages/signin/LoginForm/BaseLoginForm.tsx
+    +++ b/src/pages/signin/LoginForm/BaseLoginForm.tsx
+    @@ -288,7 +288,7 @@ function BaseLoginForm({account, credentials, closeAccount, blurOnSubmit = false
+                                // for developers about possible regressions, we won't render buttons in development mode.
+                                // For more information about these differences and how to test in development mode,
+                                // see`Ieatta/App/contributingGuides/APPLE_GOOGLE_SIGNIN.md`
+    -                            CONFIG.ENVIRONMENT !== CONST.ENVIRONMENT.DEV && (
+    +                            (
+                                    <View style={[getSignInWithStyles()]}>
+                                        <Text
+                                            accessibilityElementsHidden
+    ```
+- Update the webpack.dev.ts [config](https://github.com/Ieatta/App/blob/1d6bb1d14cff3dd029868a0a7c8ee14ae78c527b/config/webpack/webpack.dev.js#L47-L49) to change `host` from `dev.new.ieatta.com` to `localhost` and server type from `https` to `http`. The reason for this is that Google Sign In allows localhost, but `dev.new.ieatta.com` is not a registered Google Sign In domain.
+    ```diff
+    diff --git a/config/webpack/webpack.dev.ts b/config/webpack/webpack.dev.ts
+    index e28383eff5..b14f6f34aa 100644
+    --- a/config/webpack/webpack.dev.js
+    +++ b/config/webpack/webpack.dev.js
+    @@ -44,9 +44,9 @@ module.exports = (env = {}) =>
+                    ...proxySettings,
+                    historyApiFallback: true,
+                    port,
+    -                host: 'dev.new.ieatta.com',
+    +                host: 'localhost',
+                    server: {
+    -                    type: 'https',
+    +                    type: 'http',
+                        options: {
+                            key: path.join(__dirname, 'key.pem'),
+                            cert: path.join(__dirname, 'certificate.pem'),
+    ```
 
 #### Set Environment to something other than "Development"
 

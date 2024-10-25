@@ -1,11 +1,10 @@
 import moment from 'moment';
-import PropTypes from 'prop-types';
 import React from 'react';
 import {Image as RNImage, View} from 'react-native';
-import Divider from '@components/Divider';
 import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
 import {IeattaStars} from '@components/Icon/IeattaStars';
+import Divider from '@components/Ieatta/components/Divider';
 import PageFlashListItemWithEvent from '@components/Ieatta/detailedPage/PageFlashListItemWithEvent';
 import Text from '@components/Text';
 import useThemeStyles from '@hooks/useThemeStyles';
@@ -27,6 +26,7 @@ type EventInfoPanelProps = {
 function EventInfoPanel({restaurant, event}: EventInfoPanelProps) {
     const styles = useThemeStyles();
     const rowData: IEditModelButtonRow = {
+        restaurantId: event.restaurantId,
         relatedId: event.uniqueId,
         modelPath: FBCollections.Events,
         buttonTag: 'edit.event.button',
@@ -62,6 +62,7 @@ function EventInfoPanel({restaurant, event}: EventInfoPanelProps) {
                     rowType: PageSection.DETAILED_EDIT_MODEL_BUTTON,
                     rowData,
                     rowKey: 'PageSection.DETAILED_EDIT_MODEL_BUTTON<Event>',
+                    modalName: 'edit-button',
                     pressType: RowPressableType.SINGLE_PRESS,
                 }}
             />

@@ -73,13 +73,13 @@ const openRouteInDesktopApp: OpenRouteInDesktopApp = (shortLivedAuthToken = '', 
         params.set('email', email);
         params.set('shortLivedAuthToken', shortLivedAuthToken);
     }
-    const expensifyUrl = new URL(CONFIG.EXPENSIFY.NEW_EXPENSIFY_URL);
-    const expensifyDeeplinkUrl = `${CONST.DEEPLINK_BASE_URL}${expensifyUrl.host}/transition?${params.toString()}`;
+    const ieattaUrl = new URL(CONFIG.EXPENSIFY.NEW_EXPENSIFY_URL);
+    const ieattaDeeplinkUrl = `${CONST.DEEPLINK_BASE_URL}${ieattaUrl.host}/transition?${params.toString()}`;
 
     const browser = getBrowser();
 
     // This check is necessary for Safari, otherwise, if the user
-    // does NOT have the Expensify desktop app installed, it's gonna
+    // does NOT have the Ieatta desktop app installed, it's gonna
     // show an error in the page saying that the address is invalid.
     // It is also necessary for Firefox, otherwise the window.location.href redirect
     // will abort the fetch request from NetInfo, which will cause the app to go offline temporarily.
@@ -88,7 +88,7 @@ const openRouteInDesktopApp: OpenRouteInDesktopApp = (shortLivedAuthToken = '', 
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
         if (iframe.contentWindow) {
-            iframe.contentWindow.location.href = expensifyDeeplinkUrl;
+            iframe.contentWindow.location.href = ieattaDeeplinkUrl;
         }
         // Since we're creating an iframe for Safari to handle deeplink,
         // we need to give Safari some time to open the pop-up window.
@@ -97,7 +97,7 @@ const openRouteInDesktopApp: OpenRouteInDesktopApp = (shortLivedAuthToken = '', 
             document.body.removeChild(iframe);
         }, 0);
     } else {
-        window.location.href = expensifyDeeplinkUrl;
+        window.location.href = ieattaDeeplinkUrl;
     }
 };
 

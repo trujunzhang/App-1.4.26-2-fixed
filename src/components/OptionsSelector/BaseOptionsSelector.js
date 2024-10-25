@@ -1,14 +1,20 @@
+import lodashDebounce from 'lodash/debounce';
+import lodashFind from 'lodash/find';
+import lodashFindIndex from 'lodash/findIndex';
 import lodashGet from 'lodash/get';
+import lodashIsEqual from 'lodash/isEqual';
+import lodashMap from 'lodash/map';
+import lodashValues from 'lodash/values';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import {ScrollView, View} from 'react-native';
-import _ from 'underscore';
+import {View} from 'react-native';
 import ArrowKeyFocusManager from '@components/ArrowKeyFocusManager';
 import Button from '@components/Button';
 import FixedFooter from '@components/FixedFooter';
 import FormHelpMessage from '@components/FormHelpMessage';
 import OptionsList from '@components/OptionsList';
 import ReferralProgramCTA from '@components/ReferralProgramCTA';
+import ScrollView from '@components/ScrollView';
 import ShowMoreButton from '@components/ShowMoreButton';
 import TextInput from '@components/TextInput';
 import withLocalize, {withLocalizePropTypes} from '@components/withLocalize';
@@ -68,7 +74,6 @@ class BaseOptionsSelector extends Component {
         this.updateFocusedIndex = this.updateFocusedIndex.bind(this);
         this.scrollToIndex = this.scrollToIndex.bind(this);
         this.selectRow = this.selectRow.bind(this);
-        this.handleReferralModal = this.handleReferralModal.bind(this);
         this.selectFocusedOption = this.selectFocusedOption.bind(this);
         this.addToSelection = this.addToSelection.bind(this);
         this.updateSearchValue = this.updateSearchValue.bind(this);
@@ -77,21 +82,21 @@ class BaseOptionsSelector extends Component {
         this.calculateAllVisibleOptionsCount = this.calculateAllVisibleOptionsCount.bind(this);
         this.handleFocusIn = this.handleFocusIn.bind(this);
         this.handleFocusOut = this.handleFocusOut.bind(this);
-        this.debouncedUpdateSearchValue = _.debounce(this.updateSearchValue, CONST.TIMING.SEARCH_OPTION_LIST_DEBOUNCE_TIME);
+        this.debouncedUpdateSearchValue = lodashDebounce(this.updateSearchValue, CONST.TIMING.SEARCH_OPTION_LIST_DEBOUNCE_TIME);
         this.relatedTarget = null;
-        this.accessibilityRoles = _.values(CONST.ROLE);
+        this.accessibilityRoles = lodashValues(CONST.ROLE);
         this.isWebOrDesktop = [CONST.PLATFORM.DESKTOP, CONST.PLATFORM.WEB].includes(getPlatform());
 
         const allOptions = this.flattenSections();
         const sections = this.sliceSections();
         const focusedIndex = this.getInitiallyFocusedIndex(allOptions);
+        this.focusedOption = allOptions[focusedIndex];
 
         this.state = {
             sections,
             allOptions,
             focusedIndex,
             shouldDisableRowSelection: false,
-            shouldShowReferralModal: false,
             errorMessage: '',
             paginationPage: 1,
             disableEnterShortCut: false,
@@ -115,19 +120,22 @@ class BaseOptionsSelector extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.disableEnterShortCut !== this.state.disableEnterShortCut) {
-            if (this.state.disableEnterShortCut) {
-                this.unsubscribeEnter();
-            } else {
+            // Unregister the shortcut before registering a new one to avoid lingering shortcut listener
+            this.unsubscribeEnter();
+            if (!this.state.disableEnterShortCut) {
                 this.subscribeToEnterShortcut();
             }
         }
 
         if (prevProps.isFocused !== this.props.isFocused) {
+            // Unregister the shortcut before registering a new one to avoid lingering shortcut listener
+            this.unSubscribeFromKeyboardShortcut();
             if (this.props.isFocused) {
+                this.subscribeActiveElement();
                 this.subscribeToEnterShortcut();
                 this.subscribeToCtrlEnterShortcut();
             } else {
-                this.unSubscribeFromKeyboardShortcut();
+                this.unSubscribeActiveElement();
             }
         }
 
@@ -148,7 +156,11 @@ class BaseOptionsSelector extends Component {
             });
         }
 
-        if (_.isEqual(this.props.sections, prevProps.sections)) {
+        if (prevState.focusedIndex !== this.state.focusedIndex) {
+            this.focusedOption = this.state.allOptions[this.state.focusedIndex];
+        }
+
+        if (lodashIsEqual(this.props.sections, prevProps.sections)) {
             return;
         }
 
@@ -164,13 +176,14 @@ class BaseOptionsSelector extends Component {
         }
         const newFocusedIndex = this.props.selectedOptions.length;
         const isNewFocusedIndex = newFocusedIndex !== this.state.focusedIndex;
-
+        const prevFocusedOption = lodashFind(newOptions, (option) => this.focusedOption && option.keyForList === this.focusedOption.keyForList);
+        const prevFocusedOptionIndex = prevFocusedOption ? lodashFindIndex(newOptions, (option) => this.focusedOption && option.keyForList === this.focusedOption.keyForList) : undefined;
         // eslint-disable-next-line react/no-did-update-set-state
         this.setState(
             {
                 sections: newSections,
                 allOptions: newOptions,
-                focusedIndex: _.isNumber(this.props.focusedIndex) ? this.props.focusedIndex : newFocusedIndex,
+                focusedIndex: prevFocusedOptionIndex || (typeof this.props.focusedIndex === 'number' ? this.props.focusedIndex : newFocusedIndex),
             },
             () => {
                 // If we just toggled an option on a multi-selection page or cleared the search input, scroll to top
@@ -196,6 +209,19 @@ class BaseOptionsSelector extends Component {
         this.unSubscribeFromKeyboardShortcut();
     }
 
+    handleFocusIn() {
+        const activeElement = document.activeElement;
+        this.setState({
+            disableEnterShortCut: activeElement && this.accessibilityRoles.includes(activeElement.role) && activeElement.role !== CONST.ROLE.PRESENTATION,
+        });
+    }
+
+    handleFocusOut() {
+        this.setState({
+            disableEnterShortCut: false,
+        });
+    }
+
     /**
      * @param {Array<Object>} allOptions
      * @returns {Number}
@@ -209,17 +235,13 @@ class BaseOptionsSelector extends Component {
         } else {
             defaultIndex = this.props.selectedOptions.length;
         }
-        if (_.isUndefined(this.props.initiallyFocusedOptionKey)) {
+        if (this.props.initiallyFocusedOptionKey === undefined) {
             return defaultIndex;
         }
 
-        const indexOfInitiallyFocusedOption = _.findIndex(allOptions, (option) => option.keyForList === this.props.initiallyFocusedOptionKey);
+        const indexOfInitiallyFocusedOption = lodashFindIndex(allOptions, (option) => option.keyForList === this.props.initiallyFocusedOptionKey);
 
-        if (indexOfInitiallyFocusedOption >= 0) {
-            return indexOfInitiallyFocusedOption;
-        }
-
-        return defaultIndex;
+        return indexOfInitiallyFocusedOption;
     }
 
     /**
@@ -228,8 +250,8 @@ class BaseOptionsSelector extends Component {
      * @returns {Objects[]}
      */
     sliceSections() {
-        return _.map(this.props.sections, (section) => {
-            if (_.isEmpty(section.data)) {
+        return lodashMap(this.props.sections, (section) => {
+            if (section.data.length === 0) {
                 return section;
             }
 
@@ -249,7 +271,7 @@ class BaseOptionsSelector extends Component {
     calculateAllVisibleOptionsCount() {
         let count = 0;
 
-        _.forEach(this.state.sections, (section) => {
+        this.state.sections.forEach((section) => {
             count += lodashGet(section, 'data.length', 0);
         });
 
@@ -259,28 +281,11 @@ class BaseOptionsSelector extends Component {
     updateSearchValue(value) {
         this.setState({
             paginationPage: 1,
-            errorMessage: value.length > this.props.maxLength ? this.props.translate('common.error.characterLimitExceedCounter', {length: value.length, limit: this.props.maxLength}) : '',
+            errorMessage: value.length > this.props.maxLength ? ['common.error.characterLimitExceedCounter', {length: value.length, limit: this.props.maxLength}] : '',
             value,
         });
 
         this.props.onChangeText(value);
-    }
-
-    handleReferralModal() {
-        this.setState((prevState) => ({shouldShowReferralModal: !prevState.shouldShowReferralModal}));
-    }
-
-    handleFocusIn() {
-        const activeElement = document.activeElement;
-        this.setState({
-            disableEnterShortCut: activeElement && this.accessibilityRoles.includes(activeElement.role) && activeElement.role !== CONST.ROLE.PRESENTATION,
-        });
-    }
-
-    handleFocusOut() {
-        this.setState({
-            disableEnterShortCut: false,
-        });
     }
 
     subscribeActiveElement() {
@@ -291,6 +296,7 @@ class BaseOptionsSelector extends Component {
         document.addEventListener('focusout', this.handleFocusOut);
     }
 
+    // eslint-disable-next-line react/no-unused-class-component-methods
     unSubscribeActiveElement() {
         if (!this.isWebOrDesktop) {
             return;
@@ -346,7 +352,7 @@ class BaseOptionsSelector extends Component {
 
     selectFocusedOption(e) {
         const focusedItemKey = lodashGet(e, ['target', 'attributes', 'id', 'value']);
-        const focusedOption = focusedItemKey ? _.find(this.state.allOptions, (option) => option.keyForList === focusedItemKey) : this.state.allOptions[this.state.focusedIndex];
+        const focusedOption = focusedItemKey ? lodashFind(this.state.allOptions, (option) => option.keyForList === focusedItemKey) : this.state.allOptions[this.state.focusedIndex];
 
         if (!focusedOption || !this.props.isFocused) {
             return;
@@ -370,6 +376,7 @@ class BaseOptionsSelector extends Component {
         }
     }
 
+    // eslint-disable-next-line react/no-unused-class-component-methods
     focus() {
         if (!this.textInput) {
             return;
@@ -391,8 +398,8 @@ class BaseOptionsSelector extends Component {
         const allOptions = [];
         this.disabledOptionsIndexes = [];
         let index = 0;
-        _.each(this.props.sections, (section, sectionIndex) => {
-            _.each(section.data, (option, optionIndex) => {
+        this.props.sections.forEach((section, sectionIndex) => {
+            section.data.forEach((option, optionIndex) => {
                 allOptions.push({
                     ...option,
                     sectionIndex,
@@ -433,17 +440,7 @@ class BaseOptionsSelector extends Component {
             return;
         }
 
-        // Note: react-native's SectionList automatically strips out any empty sections.
-        // So we need to reduce the sectionIndex to remove any empty sections in front of the one we're trying to scroll to.
-        // Otherwise, it will cause an index-out-of-bounds error and crash the app.
-        let adjustedSectionIndex = sectionIndex;
-        for (let i = 0; i < sectionIndex; i++) {
-            if (_.isEmpty(lodashGet(this.state.sections, `[${i}].data`))) {
-                adjustedSectionIndex--;
-            }
-        }
-
-        this.list.scrollToLocation({sectionIndex: adjustedSectionIndex, itemIndex, animated});
+        this.list.scrollToLocation({sectionIndex, itemIndex, animated});
     }
 
     /**
@@ -504,8 +501,8 @@ class BaseOptionsSelector extends Component {
     render() {
         const shouldShowShowMoreButton = this.state.allOptions.length > CONST.MAX_OPTIONS_SELECTOR_PAGE_LENGTH * this.state.paginationPage;
         const shouldShowFooter =
-            !this.props.isReadOnly && (this.props.shouldShowConfirmButton || this.props.footerContent) && !(this.props.canSelectMultipleOptions && _.isEmpty(this.props.selectedOptions));
-        const defaultConfirmButtonText = _.isUndefined(this.props.confirmButtonText) ? this.props.translate('common.confirm') : this.props.confirmButtonText;
+            !this.props.isReadOnly && (this.props.shouldShowConfirmButton || this.props.footerContent) && !(this.props.canSelectMultipleOptions && this.props.selectedOptions.length === 0);
+        const defaultConfirmButtonText = this.props.confirmButtonText === undefined ? this.props.translate('common.confirm') : this.props.confirmButtonText;
         const shouldShowDefaultConfirmButton = !this.props.footerContent && defaultConfirmButtonText;
         const safeAreaPaddingBottomStyle = shouldShowFooter ? undefined : this.props.safeAreaPaddingBottomStyle;
         const listContainerStyles = this.props.listContainerStyles || [this.props.themeStyles.flex1];
@@ -534,6 +531,7 @@ class BaseOptionsSelector extends Component {
                 spellCheck={false}
                 shouldInterceptSwipe={this.props.shouldTextInputInterceptSwipe}
                 isLoading={this.props.isLoadingNewOptions}
+                iconLeft={this.props.textIconLeft}
                 testID="options-selector-input"
             />
         );
@@ -544,6 +542,7 @@ class BaseOptionsSelector extends Component {
                 onSelectRow={this.props.onSelectRow ? this.selectRow : undefined}
                 sections={this.state.sections}
                 focusedIndex={this.state.focusedIndex}
+                disableFocusOptions={this.props.disableFocusOptions}
                 selectedOptions={this.props.selectedOptions}
                 canSelectMultipleOptions={this.props.canSelectMultipleOptions}
                 shouldShowMultipleOptionSelectorAsButton={this.props.shouldShowMultipleOptionSelectorAsButton}
@@ -576,7 +575,7 @@ class BaseOptionsSelector extends Component {
                 shouldPreventDefaultFocusOnSelectRow={this.props.shouldPreventDefaultFocusOnSelectRow}
                 nestedScrollEnabled={this.props.nestedScrollEnabled}
                 bounces={!this.props.shouldTextInputAppearBelowOptions || !this.props.shouldAllowScrollingChildren}
-                renderFooterContent={() =>
+                renderFooterContent={
                     shouldShowShowMoreButton && (
                         <ShowMoreButton
                             containerStyle={{...this.props.themeStyles.mt2, ...this.props.themeStyles.mb5}}
@@ -671,6 +670,7 @@ class BaseOptionsSelector extends Component {
                         {shouldShowDefaultConfirmButton && (
                             <Button
                                 success
+                                large
                                 style={[this.props.themeStyles.w100]}
                                 text={defaultConfirmButtonText}
                                 onPress={this.props.onConfirmSelection}

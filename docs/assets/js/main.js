@@ -72,7 +72,7 @@ function navigateBack() {
 
 function injectFooterCopywrite() {
     const footer = document.getElementById('footer-copywrite-date');
-    footer.innerHTML = `&copy;2008-${new Date().getFullYear()} Expensify, Inc.`;
+    footer.innerHTML = `&copy;2008-${new Date().getFullYear()} Ieatta, Inc.`;
 }
 
 function closeSidebar() {
@@ -138,7 +138,7 @@ function insertElementAfter(referenceNode, newNode) {
 }
 
 // Update the ICON for search input.
-/* Change the path of the Google Search Button icon into Expensify icon */
+/* Change the path of the Google Search Button icon into Ieatta icon */
 function updateGoogleSearchIcon() {
     const node = document.querySelector('.gsc-search-button.gsc-search-button-v2 svg path');
     node.setAttribute(
@@ -165,6 +165,37 @@ window.addEventListener('load', () => {
     insertElementAfter(searchInput, searchLabel);
 });
 
+const tocbotOptions = {
+    // Where to render the table of contents.
+    tocSelector: '.article-toc',
+
+    // Where to grab the headings to build the table of contents.
+    contentSelector: '',
+
+    // Disable the collapsible functionality of the library by
+    // setting the maximum number of heading levels (6)
+    collapseDepth: 6,
+    headingSelector: 'h1, h2, h3, summary',
+
+    // Main class to add to lists.
+    listClass: 'lhn-items',
+
+    // Main class to add to links.
+    linkClass: 'link',
+
+    // Class to add to active links,
+    // the link corresponding to the top most heading on the page.
+    activeLinkClass: 'selected-article',
+
+    // Headings offset between the headings and the top of the document (requires scrollSmooth enabled)
+    headingsOffset: 80,
+    scrollSmoothOffset: -80,
+    scrollSmooth: true,
+
+    // If there is a fixed article scroll container, set to calculate titles' offset
+    scrollContainer: 'content-area',
+};
+
 window.addEventListener('DOMContentLoaded', () => {
     injectFooterCopywrite();
 
@@ -179,38 +210,51 @@ window.addEventListener('DOMContentLoaded', () => {
         buttonCloseSidebar.addEventListener('click', closeSidebar);
     }
 
+    const ieattaClassicTab = document.getElementById('platform-tab-ieatta-classic');
+    const newIeattaTab = document.getElementById('platform-tab-new-ieatta');
+
+    const ieattaClassicContent = document.getElementById('ieatta-classic');
+    const newIeattaContent = document.getElementById('new-ieatta');
+
+    let contentSelector = '.article-toc-content';
+    if (ieattaClassicContent) {
+        contentSelector = '#ieatta-classic';
+    } else if (newIeattaContent) {
+        contentSelector = '#new-ieatta';
+    }
+
     if (window.tocbot) {
         window.tocbot.init({
-            // Where to render the table of contents.
-            tocSelector: '.article-toc',
-
-            // Where to grab the headings to build the table of contents.
-            contentSelector: '.article-toc-content',
-
-            // Disable the collapsible functionality of the library by
-            // setting the maximum number of heading levels (6)
-            collapseDepth: 6,
-            headingSelector: 'h1, h2, h3, summary',
-
-            // Main class to add to lists.
-            listClass: 'lhn-items',
-
-            // Main class to add to links.
-            linkClass: 'link',
-
-            // Class to add to active links,
-            // the link corresponding to the top most heading on the page.
-            activeLinkClass: 'selected-article',
-
-            // Headings offset between the headings and the top of the document (requires scrollSmooth enabled)
-            headingsOffset: 80,
-            scrollSmoothOffset: -80,
-            scrollSmooth: true,
-
-            // If there is a fixed article scroll container, set to calculate titles' offset
-            scrollContainer: 'content-area',
+            ...tocbotOptions,
+            contentSelector,
         });
     }
+
+    // eslint-disable-next-line es/no-optional-chaining
+    ieattaClassicTab?.addEventListener('click', () => {
+        ieattaClassicTab.classList.add('active');
+        ieattaClassicContent.classList.remove('hidden');
+
+        newIeattaTab.classList.remove('active');
+        newIeattaContent.classList.add('hidden');
+        window.tocbot.refresh({
+            ...tocbotOptions,
+            contentSelector: '#ieatta-classic',
+        });
+    });
+
+    // eslint-disable-next-line es/no-optional-chaining
+    newIeattaTab?.addEventListener('click', () => {
+        newIeattaTab.classList.add('active');
+        newIeattaContent.classList.remove('hidden');
+
+        ieattaClassicTab.classList.remove('active');
+        ieattaClassicContent.classList.add('hidden');
+        window.tocbot.refresh({
+            ...tocbotOptions,
+            contentSelector: '#new-ieatta',
+        });
+    });
 
     document.getElementById('header-button').addEventListener('click', toggleHeaderMenu);
 

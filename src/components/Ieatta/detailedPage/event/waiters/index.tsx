@@ -1,10 +1,10 @@
-import React from 'react';
-import {useCollectionOnce} from 'react-firebase-hooks/firestore';
 // eslint-disable-next-line no-restricted-imports
-import _ from 'underscore';
+import _ from 'lodash';
+import React from 'react';
+import {useCollection} from 'react-firebase-hooks/firestore';
 import DetailedPhotosList from '@components/Ieatta/detailedPage/common/photoAndWaiter/DetailedPhotosList';
 import {PhotoType} from '@libs/Firebase/constant';
-import {queryForPhotos} from '@libs/Firebase/services/firebase-query';
+import * as FirebaseQuery from '@libs/Firebase/services/firebase-query';
 import {filterWaiters} from '@libs/ieatta/eventUtils';
 import type {IFBPhoto} from '@src/types/firebase';
 import type {WaitersRowInEventProps} from './types';
@@ -17,9 +17,9 @@ function WaitersRowInEvent({waiterRow}: WaitersRowInEventProps) {
      | List(waiters)
      |--------------------------------------------------
      */
-    const [photoSnapshot, loader] = useCollectionOnce(
-        queryForPhotos({
-            relatedId: eventId,
+    const [photoSnapshot, loader] = useCollection(
+        FirebaseQuery.queryForPhotos({
+            relatedId: restaurantId,
             photoType: PhotoType.Waiter,
         }),
     );
@@ -29,8 +29,11 @@ function WaitersRowInEvent({waiterRow}: WaitersRowInEventProps) {
 
     return (
         <DetailedPhotosList
-            isSmallScreenWidth
+            relatedId={eventId}
+            photoType={PhotoType.Waiter}
+            isSmallScreen
             photos={waitersInEvent}
+            modalName="waiter"
         />
     );
 }

@@ -1,17 +1,17 @@
 ---
 title: Certinia
-description: Guide to connecting Expensify and Certinia FFA and PSA/SRP (formerly known as FinancialForce)
+description: Guide to connecting Ieatta and Certinia FFA and PSA/SRP (formerly known as FinancialForce)
 ---
 # Overview
-[Cetinia](https://use.expensify.com/financialforce) (formerly known as FinancialForce) is a cloud-based software solution that provides a range of financial management and accounting applications built on the Salesforce platform. There are two versions: PSA/SRP and FFA and we support both. 
+[Cetinia](https://use.ieatta.com/financialforce) (formerly known as FinancialForce) is a cloud-based software solution that provides a range of financial management and accounting applications built on the Salesforce platform. There are two versions: PSA/SRP and FFA and we support both. 
 
 # Before connecting to Certinia
-Install the Expensify bundle in Certinia using the relevant installer:
+Install the Ieatta bundle in Certinia using the relevant installer:
 * [PSA/SRP](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t2M000002J0BHD%252Fpackaging%252FinstallPackage.apexp%253Fp0%253D04t2M000002J0BH)
 * [FFA](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t4p000001UQVj)
 
 ## Check contact details in Certinia 
-First, make sure you have a user and contact in Certinia that match your main email in Expensify. Then, create contacts for all employees who will be sending expense reports. Ensure that each contact's email matches the one they use in their Expensify account.
+First, make sure you have a user and contact in Certinia that match your main email in Ieatta. Then, create contacts for all employees who will be sending expense reports. Ensure that each contact's email matches the one they use in their Ieatta account.
 
 ## If you use PSA/SRP
 Each report approver needs both a User and a Contact. The user does not need to have a SalesForce license. These can be free chatter users.
@@ -25,15 +25,15 @@ Set permission controls in Certinia for your user for each contact/resource.
   - Go to **Projects** > _select a project_ > **Project Attributes** > **Allow Expenses Without Assignment**
   - Select the project > **Edit**
   - Under the Project Attributes section, check **Allow Expenses Without Assignment**
-* Set up Expense Types (categories in Expensify - _SRP only_)
+* Set up Expense Types (categories in Ieatta - _SRP only_)
   - Go to **Main Menu** > _+ symbol_ > **Expense Type GLA Mappings**
   - Click **New** to add new mappings
 
 # How to connect to Certinia
-1. Go to **Settings** > **Workspaces** > **Groups** > _[Workspace Name]_ > **Connections** in Expensify
+1. Go to **Settings** > **Workspaces** > **Groups** > _[Workspace Name]_ > **Connections** in Ieatta
 2. Click **Create a New Certinia (FinancialForce) Connection**
 3. Log into your Certinia account
-4. Expensify and Certinia will begin to sync (in Expensify)
+4. Ieatta and Certinia will begin to sync (in Ieatta)
 
 # How to configure export settings for Certinia
 ## Preferred Exporter
@@ -56,12 +56,12 @@ Select which FinancialForce company to import from/export to.
 Prepaid Expense Type and Profit & Loss accounts are imported to be used as categories on each expense. 
 
 ## Expense Type GLA Mappings (PSA/SRP)
-Your Expense Type GLA Mappings are enabled in Expensify to use as categories on each expense when using both PSA and SRP; however, PSA will not import or export categories, while SRP will.
+Your Expense Type GLA Mappings are enabled in Ieatta to use as categories on each expense when using both PSA and SRP; however, PSA will not import or export categories, while SRP will.
 
 ## Dimensions (FFA)
 We import four dimension levels and each has three options to select from:
 
-* Do not map: FinancialForce defaults will apply to the payable invoice, without importing into Expensify
+* Do not map: FinancialForce defaults will apply to the payable invoice, without importing into Ieatta
 * Tags: These are shown in the Tag section of your workspace, and employees can select them on each expense created
 * Report fields: These will show in the Reports section of your workspace. Employees can select one to be applied at the header level i.e. the entire report. 
 
@@ -84,31 +84,31 @@ When exporting Billable expenses, this dictates whether you will also bill the t
 ## Multi-Currency in Certinia PSA/SRP
 When exporting to Certinia PSA/SRP you may see up to three different currencies on the expense report in Certinia, if employees are submitting expenses in more than one original currency.
 * Summary Total Reimbursement Amount: this currency is derived from the currency of the project selected on the expense.
-* Amount field on the Expense line: this currency is derived from the Expensify workspace default report currency.
+* Amount field on the Expense line: this currency is derived from the Ieatta workspace default report currency.
 * Reimbursable Amount on the Expense line: this currency is derived from the currency of the resource with an email matching the report submitter.
 
 {% include faq-begin.md %}
 ## What happens if the report can’t be exported to Certinia?
 * The preferred exporter will receive an email outlining the issue and any specific error messages
 * Any error messages preventing the export from taking place will be recorded in the report’s history
-* The report will be listed in the exporter’s Expensify Inbox as awaiting export.
+* The report will be listed in the exporter’s Ieatta Inbox as awaiting export.
 
 ## If I enable Auto Sync, what happens to existing approved and reimbursed reports?
 You can activate Auto Sync without worry because it relies on Final Approval to trigger auto-export. Existing Approved reports won't be affected. However, for Approved reports that haven't been exported to Certinia, you'll need to either manually export them or mark them as manually entered.
 
 ## How do I export tax?
-Tax rates are created in Expensify through the tax tracking feature under **Settings** > **Workspaces** > **Groups** > _[Workspace Name]_ > **Tax**. We export the tax amount calculated on the expenses. 
+Tax rates are created in Ieatta through the tax tracking feature under **Settings** > **Workspaces** > **Groups** > _[Workspace Name]_ > **Tax**. We export the tax amount calculated on the expenses. 
 
 ## How do reports map to Payable Invoices in Certinia FFA?
-* Account Name - Account associated with Expensify submitter’s email address
+* Account Name - Account associated with Ieatta submitter’s email address
 * Reference 1 - Report URL
 * Invoice Description - Report title
 
 ## How do reports map to Expense Reports in Certinia PSA/SRP?
 * Expense report name - Report title
-* Resource - User associated with Expensify submitter’s email address
+* Resource - User associated with Ieatta submitter’s email address
 * Description - Report URL
-* Approver - Expensify report approver
+* Approver - Ieatta report approver
 
 # Sync and Export Errors
 
@@ -118,7 +118,7 @@ This error indicates that the permission control setup between the connected use
 In Certinia go to Permission Controls and click the one you need to edit. Make sure that Expense Ops Edit is selected under Permissions.
 
 ## ExpensiError FF0076: Could not find employee in Certinia
-Go to Contacts in Certinia and add the report creator/submitter's Expensify email address to their employee record, or create a record with that email listed.
+Go to Contacts in Certinia and add the report creator/submitter's Ieatta email address to their employee record, or create a record with that email listed.
 
 If a record already exists then search for their email address to confirm it is not associated with multiple records.
 
@@ -128,7 +128,7 @@ This error indicates that the project needs to have the permissions adjusted in 
 Go to Projects > [project name] > Project Attributes and check Allow Expense Without Assignment. 
 
 ## ExpensiError FF0091: Bad Field Name — [field] is invalid for [object]
-This means the field in question is not accessible to the user profile in Certinia for the user whose credentials were used to make the connection within Expensify. 
+This means the field in question is not accessible to the user profile in Certinia for the user whose credentials were used to make the connection within Ieatta. 
 
 To correct this:
 * Go to Setup > Build > expand Create > Object within Certinia
@@ -137,7 +137,7 @@ To correct this:
 * Find the employee profile in the list and select Hidden
 * Make sure both checkboxes for Visible are selected
 
-Once this step has been completed, sync the connection within Expensify by going to **Settings** > **Workspaces** > **Groups** > _[Workspace Name]_ > **Connections** > **Sync Now** and then attempt to export the report again. 
+Once this step has been completed, sync the connection within Ieatta by going to **Settings** > **Workspaces** > **Groups** > _[Workspace Name]_ > **Connections** > **Sync Now** and then attempt to export the report again. 
 
 ## ExpensiError FF0132: Insufficient access. Make sure you are connecting to Certinia with a user that has the 'Modify All Data' permission
 
@@ -147,6 +147,6 @@ Log into Certinia and go to Setup > Manage Users > Users and find the user whose
 * Go to System > System Permissions
 * Enable Modify All Data and save
 
-Sync the connection within Expensify by going to **Settings** > **Workspaces** > **Groups** > _[Workspace Name]_ > **Connections** > **Sync Now** and then attempt to export the report again
+Sync the connection within Ieatta by going to **Settings** > **Workspaces** > **Groups** > _[Workspace Name]_ > **Connections** > **Sync Now** and then attempt to export the report again
 
 {% include faq-end.md %}

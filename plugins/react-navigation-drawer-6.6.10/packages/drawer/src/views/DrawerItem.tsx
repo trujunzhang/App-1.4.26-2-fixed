@@ -1,3 +1,20 @@
+/* eslint-disable react/jsx-fragments */
+
+/* eslint-disable @typescript-eslint/consistent-type-imports */
+
+/* eslint-disable no-restricted-imports */
+
+/* eslint-disable react/function-component-definition */
+
+/* eslint-disable @typescript-eslint/no-use-before-define */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable no-else-return */
+
+/* eslint-disable rulesdir/prefer-early-return */
+
+/* eslint-disable react/jsx-props-no-spreading */
 import { PlatformPressable } from '@react-navigation/elements';
 import { Link, useTheme } from '@react-navigation/native';
 import Color from 'color';

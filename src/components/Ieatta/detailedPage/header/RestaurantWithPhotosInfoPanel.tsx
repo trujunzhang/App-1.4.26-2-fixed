@@ -5,7 +5,6 @@ import {IeattaStars} from '@components/Icon/IeattaStars';
 import {PhotoCarouselScrollView} from '@components/Ieatta/components/PhotosCarousel';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
-import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import {FBCollections, PhotoType, ReviewType} from '@libs/Firebase/constant';
 import {calcRateForRestaurant} from '@libs/Firebase/utils/rate_utils';
@@ -25,12 +24,13 @@ type RestaurantWithPhotosInfoPanelProps = {
 
 function RestaurantWithPhotosInfoPanel({restaurant, photos}: RestaurantWithPhotosInfoPanelProps) {
     const styles = useThemeStyles();
-    const theme = useTheme();
     const {translate} = useLocalize();
 
     const timeAgo = formatByTimeAgo(restaurant.updatedAt);
 
-    const onSeeAllPhotoPress = () => {};
+    const onSeeAllPhotoPress = () => {
+        Navigation.navigate(ROUTES.PHOTOS_GRID_VIEW.getRoute({relatedId: restaurant.uniqueId, photoType: PhotoType.Restaurant}));
+    };
 
     const renderInfo = (
         <View style={[styles.flex1, styles.flexColumn, styles.justifyContentEnd]}>
@@ -148,6 +148,9 @@ function RestaurantWithPhotosInfoPanel({restaurant, photos}: RestaurantWithPhoto
                 infoId={restaurant.uniqueId}
                 onWriteReviewPress={() => {
                     navigationToEditReview({relatedId: restaurant.uniqueId, reviewType: ReviewType.Restaurant});
+                }}
+                onAddPhotoPress={() => {
+                    Navigation.navigate(ROUTES.TAKE_PHOTO.getRoute({relatedId: restaurant.uniqueId, photoType: PhotoType.Restaurant}));
                 }}
             />
         </View>

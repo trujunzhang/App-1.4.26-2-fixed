@@ -1,5 +1,5 @@
 import type {LottieViewProps} from 'lottie-react-native';
-import type {ColorValue} from 'react-native';
+import type {ColorValue} from '@styles/utils/types';
 
 type DotLottieAnimation = {
     file: LottieViewProps['source'];

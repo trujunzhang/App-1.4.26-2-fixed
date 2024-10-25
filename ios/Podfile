@@ -2,6 +2,7 @@ require File.join(File.dirname(`node --print "require.resolve('expo/package.json
 # Set the type of Mapbox SDK to use
 # This value is used by $RNMapboxMaps
 $RNMapboxMapsImpl = 'mapbox'
+$VCDisableFrameProcessors = true
 
 use_frameworks! :linkage => :static
 # right after `use_frameworks! :linkage => :static`
@@ -22,7 +23,7 @@ node_require('react-native/scripts/react_native_pods.rb')
 node_require('react-native-permissions/scripts/setup.rb')
 
 # Our min supported iOS version is higher than the default (min_ios_version_supported) to support libraires such as Airship
-platform :ios, 13.4
+platform :ios, 16.0
 prepare_react_native_project!
 
 setup_permissions([
@@ -55,7 +56,7 @@ end
 
 # Configure Mapbox before installing dependencies
 pre_install do |installer|
-  $RNMapboxMaps.pre_install(installer)
+  # $RNMapboxMaps.pre_install(installer)
 end
 
 target 'NewIeatta' do
@@ -82,10 +83,17 @@ target 'NewIeatta' do
 
   config = use_native_modules!
 
+  # Flags change depending on the env values.
+  flags = get_default_flags()
+
+  # ENV Variable enables/disables TurboModules
+  ENV['RCT_NEW_ARCH_ENABLED'] = '1';
+
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
-    :app_path => "#{Pod::Config.instance.installation_root}/.."
+    :app_path => "#{Pod::Config.instance.installation_root}/..",
+    :hermes_enabled => true
   )
 
 
@@ -96,7 +104,7 @@ target 'NewIeatta' do
 
   post_install do |installer|
     # Configure Mapbox after installation
-    $RNMapboxMaps.post_install(installer)
+    # $RNMapboxMaps.post_install(installer)
 
     # https://github.com/facebook/react-native/blob/main/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
@@ -107,6 +115,18 @@ target 'NewIeatta' do
     __apply_Xcode_14_3_RC_post_install_workaround(installer)
 
     installer.pods_project.targets.each do |target|
+
+      if target.name == 'BoringSSL-GRPC'
+        target.source_build_phase.files.each do |file|
+          if file.settings && file.settings['COMPILER_FLAGS']
+            flags = file.settings['COMPILER_FLAGS'].split
+            flags.reject! { |flag| flag == '-GCC_WARN_INHIBIT_ALL_WARNINGS' }
+            file.settings['COMPILER_FLAGS'] = flags.join(' ')
+          end
+        end
+      end
+
+
       if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
         target.build_configurations.each do |config|
           config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'

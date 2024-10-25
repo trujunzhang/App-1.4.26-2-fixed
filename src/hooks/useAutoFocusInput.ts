@@ -13,7 +13,7 @@ export default function useAutoFocusInput(): UseAutoFocusInput {
     const [isInputInitialized, setIsInputInitialized] = useState(false);
     const [isScreenTransitionEnded, setIsScreenTransitionEnded] = useState(false);
 
-    // @ts-expect-error TODO: Remove this when Expensify.js is migrated.
+    // @ts-expect-error TODO: Remove this when Ieatta.js is migrated.
     const {isSplashHidden} = useContext(Ieatta.SplashScreenHiddenContext);
 
     const inputRef = useRef<TextInput | null>(null);
@@ -23,10 +23,14 @@ export default function useAutoFocusInput(): UseAutoFocusInput {
         if (!isScreenTransitionEnded || !isInputInitialized || !inputRef.current || !isSplashHidden) {
             return;
         }
-        InteractionManager.runAfterInteractions(() => {
+        const focusTaskHandle = InteractionManager.runAfterInteractions(() => {
             inputRef.current?.focus();
             setIsScreenTransitionEnded(false);
         });
+
+        return () => {
+            focusTaskHandle.cancel();
+        };
     }, [isScreenTransitionEnded, isInputInitialized, isSplashHidden]);
 
     useFocusEffect(
@@ -35,12 +39,12 @@ export default function useAutoFocusInput(): UseAutoFocusInput {
                 setIsScreenTransitionEnded(true);
             }, CONST.ANIMATED_TRANSITION);
             return () => {
+                setIsScreenTransitionEnded(false);
                 if (!focusTimeoutRef.current) {
                     return;
                 }
                 clearTimeout(focusTimeoutRef.current);
             };
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []),
     );
 

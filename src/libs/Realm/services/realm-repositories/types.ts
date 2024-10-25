@@ -1,11 +1,11 @@
+/* eslint-disable import/prefer-default-export */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {IFirebaseQuerySnapshot} from '@libs/Firebase/types';
 import type {RealmCollections} from '@libs/Realm/constant';
 
 type IRealmRepositories = {
-    listenerQuerySnapshot: (querySnapshot: IFirebaseQuerySnapshot, collect: RealmCollections) => void;
+    listenerQuerySnapshot: (querySnapshot: any, collect: RealmCollections) => void;
 };
 
-export type {
-    // eslint-disable-next-line import/prefer-default-export
-    IRealmRepositories,
-};
+export type {IRealmRepositories};

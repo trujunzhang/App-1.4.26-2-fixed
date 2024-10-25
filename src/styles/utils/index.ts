@@ -1,8 +1,9 @@
 import {StyleSheet} from 'react-native';
-import type {Animated, ColorValue, DimensionValue, ImageStyle, PressableStateCallbackType, StyleProp, TextStyle, ViewStyle} from 'react-native';
+import type {AnimatableNumericValue, Animated, ColorValue, DimensionValue, ImageStyle, PressableStateCallbackType, StyleProp, TextStyle, ViewStyle} from 'react-native';
 import type {OnyxEntry} from 'react-native-onyx';
 import type {EdgeInsets} from 'react-native-safe-area-context';
 import type {ValueOf} from 'type-fest';
+import type ImageSVGProps from '@components/ImageSVG/types';
 import * as Browser from '@libs/Browser';
 import * as UserUtils from '@libs/UserUtils';
 // eslint-disable-next-line no-restricted-imports
@@ -14,6 +15,7 @@ import CONST from '@src/CONST';
 import type {Transaction} from '@src/types/onyx';
 import {defaultStyles} from '..';
 import type {ThemeStyles} from '..';
+import shouldPreventScrollOnAutoCompleteSuggestion from './autoCompleteSuggestion';
 import getCardStyles from './cardStyles';
 import containerComposeStyles from './containerComposeStyles';
 import FontUtils from './FontUtils';
@@ -22,6 +24,7 @@ import createReportActionContextMenuStyleUtils from './generators/ReportActionCo
 import createTooltipStyleUtils from './generators/TooltipStyleUtils';
 import getContextMenuItemStyles from './getContextMenuItemStyles';
 import getNavigationModalCardStyle from './getNavigationModalCardStyles';
+import getSignInBgStyles from './getSignInBgStyles';
 import {compactContentContainerStyles} from './optionRowStyles';
 import positioning from './positioning';
 import type {
@@ -35,11 +38,11 @@ import type {
     EReceiptColorName,
     EreceiptColorStyle,
     ParsableStyle,
+    SVGAvatarColorStyle,
     TextColorStyle,
-    WorkspaceColorStyle,
 } from './types';
 
-const workspaceColorOptions: WorkspaceColorStyle[] = [
+const workspaceColorOptions: SVGAvatarColorStyle[] = [
     {backgroundColor: colors.blue200, fill: colors.blue700},
     {backgroundColor: colors.blue400, fill: colors.blue800},
     {backgroundColor: colors.blue700, fill: colors.blue200},
@@ -267,10 +270,17 @@ function getAvatarBorderStyle(size: AvatarSizeName, type: string): ViewStyle {
 /**
  * Helper method to return workspace avatar color styles
  */
-function getDefaultWorkspaceAvatarColor(workspaceName: string): ViewStyle {
-    const colorHash = UserUtils.hashText(workspaceName.trim(), workspaceColorOptions.length);
+function getDefaultWorkspaceAvatarColor(text: string): ViewStyle {
+    const colorHash = UserUtils.hashText(text.trim(), workspaceColorOptions.length);
 
     return workspaceColorOptions[colorHash];
+}
+
+/**
+ * Helper method to return formatted backgroundColor and fill styles
+ */
+function getBackgroundColorAndFill(backgroundColor: string, fill: string): SVGAvatarColorStyle {
+    return {backgroundColor, fill};
 }
 
 /**
@@ -283,6 +293,20 @@ function getEReceiptColorCode(transaction: OnyxEntry<Transaction>): EReceiptColo
     const colorHash = UserUtils.hashText(transactionID.trim(), eReceiptColors.length);
 
     return eReceiptColors[colorHash];
+}
+
+/**
+ * Helper method to return eReceipt color code for Receipt Thumbnails
+ */
+function getFileExtensionColorCode(fileExtension?: string): EReceiptColorName {
+    switch (fileExtension) {
+        case CONST.IOU.FILE_TYPES.DOC:
+            return CONST.ERECEIPT_COLORS.PINK;
+        case CONST.IOU.FILE_TYPES.HTML:
+            return CONST.ERECEIPT_COLORS.TANGERINE;
+        default:
+            return CONST.ERECEIPT_COLORS.GREEN;
+    }
 }
 
 /**
@@ -379,7 +403,7 @@ function getZoomSizingStyle(
 /**
  * Returns auto grow text input style
  */
-function getWidthStyle(width: number): ViewStyle {
+function getWidthStyle(width: number): ViewStyle & ImageStyle {
     return {
         width,
     };
@@ -388,7 +412,7 @@ function getWidthStyle(width: number): ViewStyle {
 /**
  * Returns a style with backgroundColor and borderColor set to the same color
  */
-function getBackgroundAndBorderStyle(backgroundColor: string | undefined): ViewStyle {
+function getBackgroundAndBorderStyle(backgroundColor: ColorValue | undefined): ViewStyle {
     return {
         backgroundColor,
         borderColor: backgroundColor,
@@ -451,11 +475,58 @@ function getBackgroundColorWithOpacityStyle(backgroundColor: string, opacity: nu
     return {};
 }
 
-function getWidthAndHeightStyle(width: number, height?: number): ViewStyle {
+function getWidthAndHeightStyle(width: number, height?: number): Pick<ViewStyle, 'height' | 'width'> {
     return {
         width,
         height: height ?? width,
     };
+}
+
+function getIconWidthAndHeightStyle(small: boolean, medium: boolean, large: boolean, width: number, height: number, hasText?: boolean): Pick<ImageSVGProps, 'width' | 'height'> {
+    switch (true) {
+        case small:
+            return {width: hasText ? variables.iconSizeExtraSmall : variables.iconSizeSmall, height: hasText ? variables.iconSizeExtraSmall : variables?.iconSizeSmall};
+        case medium:
+            return {width: hasText ? variables.iconSizeSmall : variables.iconSizeNormal, height: hasText ? variables.iconSizeSmall : variables.iconSizeNormal};
+        case large:
+            return {width: hasText ? variables.iconSizeNormal : variables.iconSizeLarge, height: hasText ? variables.iconSizeNormal : variables.iconSizeLarge};
+        default: {
+            return {width, height};
+        }
+    }
+}
+
+function getButtonStyleWithIcon(
+    styles: ThemeStyles,
+    small: boolean,
+    medium: boolean,
+    large: boolean,
+    hasIcon?: boolean,
+    hasText?: boolean,
+    shouldShowRightIcon?: boolean,
+): ViewStyle | undefined {
+    const useDefaultButtonStyles = Boolean(hasIcon && shouldShowRightIcon) || Boolean(!hasIcon && !shouldShowRightIcon);
+    switch (true) {
+        case small: {
+            const verticalStyle = hasIcon ? styles.pl2 : styles.pr2;
+            return useDefaultButtonStyles ? styles.buttonSmall : {...styles.buttonSmall, ...(hasText ? verticalStyle : styles.ph0)};
+        }
+        case medium: {
+            const verticalStyle = hasIcon ? styles.pl3 : styles.pr3;
+            return useDefaultButtonStyles ? styles.buttonMedium : {...styles.buttonMedium, ...(hasText ? verticalStyle : styles.ph0)};
+        }
+        case large: {
+            const verticalStyle = hasIcon ? styles.pl4 : styles.pr4;
+            return useDefaultButtonStyles ? styles.buttonLarge : {...styles.buttonLarge, ...(hasText ? verticalStyle : styles.ph0)};
+        }
+        default: {
+            if (hasIcon && !hasText) {
+                return {...styles.buttonMedium, ...styles.ph0};
+            }
+
+            return undefined;
+        }
+    }
 }
 
 /**
@@ -528,7 +599,6 @@ function getFontFamilyMonospace({fontStyle, fontWeight}: TextStyle): string {
 
     return italicBold || bold || italic || FontUtils.fontFamily.platform.MONOSPACE;
 }
-
 /**
  * Returns the font size for the HTML code tag renderer.
  */
@@ -700,13 +770,13 @@ function getHorizontalStackedOverlayAvatarStyle(oneAvatarSize: AvatarSize, oneAv
 /**
  * Gets the correct size for the empty state background image based on screen dimensions
  */
-function getReportWelcomeBackgroundImageStyle(isSmallScreenWidth: boolean, isMoneyReport = false): ImageStyle {
-    const emptyStateBackground = isMoneyReport ? CONST.EMPTY_STATE_BACKGROUND.MONEY_REPORT : CONST.EMPTY_STATE_BACKGROUND;
+function getReportWelcomeBackgroundImageStyle(isSmallScreenWidth: boolean, isMoneyOrTaskReport = false): ImageStyle {
+    const emptyStateBackground = isMoneyOrTaskReport ? CONST.EMPTY_STATE_BACKGROUND.MONEY_OR_TASK_REPORT : CONST.EMPTY_STATE_BACKGROUND;
 
     if (isSmallScreenWidth) {
         return {
             height: emptyStateBackground.SMALL_SCREEN.IMAGE_HEIGHT,
-            width: '200%',
+            width: '100%',
             position: 'absolute',
         };
     }
@@ -721,8 +791,8 @@ function getReportWelcomeBackgroundImageStyle(isSmallScreenWidth: boolean, isMon
 /**
  * Gets the correct top margin size for the chat welcome message based on screen dimensions
  */
-function getReportWelcomeTopMarginStyle(isSmallScreenWidth: boolean, isMoneyReport = false): ViewStyle {
-    const emptyStateBackground = isMoneyReport ? CONST.EMPTY_STATE_BACKGROUND.MONEY_REPORT : CONST.EMPTY_STATE_BACKGROUND;
+function getReportWelcomeTopMarginStyle(isSmallScreenWidth: boolean, isMoneyOrTaskReport = false): ViewStyle {
+    const emptyStateBackground = isMoneyOrTaskReport ? CONST.EMPTY_STATE_BACKGROUND.MONEY_OR_TASK_REPORT : CONST.EMPTY_STATE_BACKGROUND;
     if (isSmallScreenWidth) {
         return {
             marginTop: emptyStateBackground.SMALL_SCREEN.VIEW_HEIGHT,
@@ -755,21 +825,18 @@ function getLineHeightStyle(lineHeight: number): TextStyle {
 /**
  * Gets the correct size for the empty state container based on screen dimensions
  */
-function getReportWelcomeContainerStyle(isSmallScreenWidth: boolean, isMoneyReport = false): ViewStyle {
-    const emptyStateBackground = isMoneyReport ? CONST.EMPTY_STATE_BACKGROUND.MONEY_REPORT : CONST.EMPTY_STATE_BACKGROUND;
-    if (isSmallScreenWidth) {
-        return {
-            minHeight: emptyStateBackground.SMALL_SCREEN.CONTAINER_MINHEIGHT,
-            display: 'flex',
-            justifyContent: 'space-between',
-        };
-    }
-
-    return {
-        minHeight: emptyStateBackground.WIDE_SCREEN.CONTAINER_MINHEIGHT,
+function getReportWelcomeContainerStyle(isSmallScreenWidth: boolean, isMoneyOrTaskReport = false, shouldShowAnimatedBackground = true): ViewStyle {
+    const emptyStateBackground = isMoneyOrTaskReport ? CONST.EMPTY_STATE_BACKGROUND.MONEY_OR_TASK_REPORT : CONST.EMPTY_STATE_BACKGROUND;
+    const baseStyles: ViewStyle = {
         display: 'flex',
         justifyContent: 'space-between',
     };
+
+    if (shouldShowAnimatedBackground) {
+        baseStyles.minHeight = isSmallScreenWidth ? emptyStateBackground.SMALL_SCREEN.CONTAINER_MINHEIGHT : emptyStateBackground.WIDE_SCREEN.CONTAINER_MINHEIGHT;
+    }
+
+    return baseStyles;
 }
 
 type GetBaseAutoCompleteSuggestionContainerStyleParams = {
@@ -790,6 +857,8 @@ function getBaseAutoCompleteSuggestionContainerStyle({left, bottom, width}: GetB
     };
 }
 
+const shouldPreventScroll = shouldPreventScrollOnAutoCompleteSuggestion();
+
 /**
  * Gets the correct position for auto complete suggestion container
  */
@@ -797,13 +866,13 @@ function getAutoCompleteSuggestionContainerStyle(itemsHeight: number): ViewStyle
     'worklet';
 
     const borderWidth = 2;
-    const height = itemsHeight + 2 * CONST.AUTO_COMPLETE_SUGGESTER.SUGGESTER_INNER_PADDING;
+    const height = itemsHeight + 2 * CONST.AUTO_COMPLETE_SUGGESTER.SUGGESTER_INNER_PADDING + (shouldPreventScroll ? borderWidth : 0);
 
     // The suggester is positioned absolutely within the component that includes the input and RecipientLocalTime view (for non-expanded mode only). To position it correctly,
     // we need to shift it by the suggester's height plus its padding and, if applicable, the height of the RecipientLocalTime view.
     return {
         overflow: 'hidden',
-        top: -(height + CONST.AUTO_COMPLETE_SUGGESTER.SUGGESTER_PADDING + borderWidth),
+        top: -(height + CONST.AUTO_COMPLETE_SUGGESTER.SUGGESTER_PADDING + (shouldPreventScroll ? 0 : borderWidth)),
         height,
         minHeight: CONST.AUTO_COMPLETE_SUGGESTER.SUGGESTION_ROW_HEIGHT,
     };
@@ -820,6 +889,12 @@ function getEmojiReactionBubbleTextStyle(isContextMenu = false): TextStyle {
     return {
         fontSize: 15,
         lineHeight: 22,
+    };
+}
+
+function getTransformScaleStyle(scaleValue: AnimatableNumericValue): ViewStyle {
+    return {
+        transform: [{scale: scaleValue}],
     };
 }
 
@@ -865,17 +940,11 @@ function getEmojiPickerListHeight(isRenderingShortcutRow: boolean, windowHeight:
 /**
  * Returns padding vertical based on number of lines
  */
-function getComposeTextAreaPadding(numberOfLines: number, isComposerFullSize: boolean): TextStyle {
+function getComposeTextAreaPadding(isComposerFullSize: boolean): TextStyle {
     let paddingValue = 5;
     // Issue #26222: If isComposerFullSize paddingValue will always be 5 to prevent padding jumps when adding multiple lines.
     if (!isComposerFullSize) {
-        if (numberOfLines === 1) {
-            paddingValue = 9;
-        }
-        // In case numberOfLines = 3, there will be a Expand Icon appearing at the top left, so it has to be recalculated so that the textArea can be full height
-        else if (numberOfLines === 3) {
-            paddingValue = 8;
-        }
+        paddingValue = 8;
     }
     return {
         paddingTop: paddingValue,
@@ -925,15 +994,6 @@ function getCheckboxPressableStyle(borderRadius = 6): ViewStyle {
         alignItems: 'center',
         // eslint-disable-next-line object-shorthand
         borderRadius: borderRadius,
-    };
-}
-
-function getMultiselectListStyles(styles: ThemeStyles, isSelected: boolean, isDisabled: boolean): ViewStyle {
-    return {
-        ...(isSelected && styles.checkedContainer),
-        ...(isSelected && styles.borderColorFocus),
-        ...(isDisabled && styles.cursorDisabled),
-        ...(isDisabled && styles.buttonOpacityDisabled),
     };
 }
 
@@ -1018,6 +1078,17 @@ function getTransparentColor(color: string) {
     return `${color}00`;
 }
 
+function getOpacityStyle(opacity: number) {
+    return {opacity};
+}
+
+function getMultiGestureCanvasContainerStyle(canvasWidth: number): ViewStyle {
+    return {
+        width: canvasWidth,
+        overflow: 'hidden',
+    };
+}
+
 const staticStyleUtils = {
     positioning,
     combineStyles,
@@ -1053,12 +1124,13 @@ const staticStyleUtils = {
     getComposeTextAreaPadding,
     getColorStyle,
     getDefaultWorkspaceAvatarColor,
+    getBackgroundColorAndFill,
     getDirectionStyle,
-    getMultiselectListStyles,
     getDropDownButtonHeight,
     getEmojiPickerListHeight,
     getEmojiPickerStyle,
     getEmojiReactionBubbleTextStyle,
+    getTransformScaleStyle,
     getFontFamilyMonospace,
     getCodeFontSize,
     getFontSizeStyle,
@@ -1080,8 +1152,14 @@ const staticStyleUtils = {
     parseStyleFromFunction,
     getEReceiptColorStyles,
     getEReceiptColorCode,
+    getFileExtensionColorCode,
     getNavigationModalCardStyle,
     getCardStyles,
+    getOpacityStyle,
+    getMultiGestureCanvasContainerStyle,
+    getSignInBgStyles,
+    getIconWidthAndHeightStyle,
+    getButtonStyleWithIcon,
 };
 
 const createStyleUtils = (theme: ThemeColors, styles: ThemeStyles) => ({
@@ -1124,7 +1202,7 @@ const createStyleUtils = (theme: ThemeColors, styles: ThemeStyles) => ({
      */
     getAutoGrowHeightInputStyle: (textInputHeight: number, maxHeight: number): ViewStyle => {
         if (textInputHeight > maxHeight) {
-            // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Expensify/App/issues/27337)
+            // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Ieatta/App/issues/27337)
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return
             return {
                 ...styles.pr0,
@@ -1132,7 +1210,7 @@ const createStyleUtils = (theme: ThemeColors, styles: ThemeStyles) => ({
             };
         }
 
-        // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Expensify/App/issues/27337)
+        // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Ieatta/App/issues/27337)
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return {
             ...styles.pr0,
@@ -1152,7 +1230,7 @@ const createStyleUtils = (theme: ThemeColors, styles: ThemeStyles) => ({
             height: avatarSize,
             width: avatarSize,
             borderRadius: avatarSize,
-            backgroundColor: theme.offline,
+            backgroundColor: theme.border,
         };
     },
 
@@ -1162,18 +1240,41 @@ const createStyleUtils = (theme: ThemeColors, styles: ThemeStyles) => ({
     getBadgeColorStyle: (isSuccess: boolean, isError: boolean, isPressed = false, isAdHoc = false): ViewStyle => {
         if (isSuccess) {
             if (isAdHoc) {
-                // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Expensify/App/issues/27337)
+                // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Ieatta/App/issues/27337)
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
                 return isPressed ? styles.badgeAdHocSuccessPressed : styles.badgeAdHocSuccess;
             }
-            // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Expensify/App/issues/27337)
+            // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Ieatta/App/issues/27337)
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return
             return isPressed ? styles.badgeSuccessPressed : styles.badgeSuccess;
         }
         if (isError) {
-            // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Expensify/App/issues/27337)
+            // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Ieatta/App/issues/27337)
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return
             return isPressed ? styles.badgeDangerPressed : styles.badgeDanger;
+        }
+        return {};
+    },
+
+    getIconColorStyle: (isSuccess: boolean, isError: boolean): string => {
+        if (isSuccess) {
+            return theme.iconSuccessFill;
+        }
+        if (isError) {
+            return theme.iconDangerFill;
+        }
+        return theme.icon;
+    },
+
+    getEnvironmentBadgeStyle: (isSuccess: boolean, isError: boolean, isAdhoc: boolean): ViewStyle => {
+        if (isAdhoc) {
+            return styles.badgeAdHocSuccess;
+        }
+        if (isSuccess) {
+            return styles.badgeEnvironmentSuccess;
+        }
+        if (isError) {
+            return styles.badgeEnvironmentDanger;
         }
         return {};
     },
@@ -1220,13 +1321,13 @@ const createStyleUtils = (theme: ThemeColors, styles: ThemeStyles) => ({
     /**
      * Returns link styles based on whether the link is disabled or not
      */
-    getDisabledLinkStyles: (isDisabled = false): ViewStyle => {
+    getDisabledLinkStyles: (isDisabled = false): TextStyle => {
         const disabledLinkStyles = {
             color: theme.textSupporting,
             ...styles.cursorDisabled,
         };
 
-        // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Expensify/App/issues/27337)
+        // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Ieatta/App/issues/27337)
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return {
             ...styles.link,
@@ -1250,13 +1351,7 @@ const createStyleUtils = (theme: ThemeColors, styles: ThemeStyles) => ({
     /**
      * Get the styles of the text next to dot indicators
      */
-    getDotIndicatorTextStyles: (isErrorText = true): TextStyle =>
-        isErrorText
-            ? {
-                  ...styles.offlineFeedback.text,
-                  color: styles.formError.color,
-              }
-            : {...styles.offlineFeedback.text},
+    getDotIndicatorTextStyles: (isErrorText = true): TextStyle => (isErrorText ? {...styles.offlineFeedback.text, color: styles.formError.color} : {...styles.offlineFeedback.text}),
 
     getEmojiReactionBubbleStyle: (isHovered: boolean, hasUserReacted: boolean, isContextMenu = false): ViewStyle => {
         let backgroundColor = theme.border;
@@ -1299,7 +1394,7 @@ const createStyleUtils = (theme: ThemeColors, styles: ThemeStyles) => ({
 
     getGoogleListViewStyle: (shouldDisplayBorder: boolean): ViewStyle => {
         if (shouldDisplayBorder) {
-            // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Expensify/App/issues/27337)
+            // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Ieatta/App/issues/27337)
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return
             return {
                 ...styles.borderTopRounded,
@@ -1324,18 +1419,22 @@ const createStyleUtils = (theme: ThemeColors, styles: ThemeStyles) => ({
      *
      * @param buttonState - One of {'default', 'hovered', 'pressed'}
      * @param isMenuIcon - whether this icon is apart of a list
+     * @param isPane - whether this icon is in a pane, e.g. Account or Workspace Settings
      */
-    getIconFillColor: (buttonState: ButtonStateName = CONST.BUTTON_STATES.DEFAULT, isMenuIcon = false): string => {
+    getIconFillColor: (buttonState: ButtonStateName = CONST.BUTTON_STATES.DEFAULT, isMenuIcon = false, isPane = false): string => {
         switch (buttonState) {
             case CONST.BUTTON_STATES.ACTIVE:
             case CONST.BUTTON_STATES.PRESSED:
+                if (isPane) {
+                    return theme.iconMenu;
+                }
                 return theme.iconHovered;
             case CONST.BUTTON_STATES.COMPLETE:
                 return theme.iconSuccessFill;
             case CONST.BUTTON_STATES.DEFAULT:
             case CONST.BUTTON_STATES.DISABLED:
             default:
-                if (isMenuIcon) {
+                if (isMenuIcon && !isPane) {
                     return theme.iconMenu;
                 }
                 return theme.icon;
@@ -1345,7 +1444,7 @@ const createStyleUtils = (theme: ThemeColors, styles: ThemeStyles) => ({
     /**
      * Returns style object for the user mention component based on whether the mention is ours or not.
      */
-    getMentionStyle: (isOurMention: boolean): ViewStyle => {
+    getMentionStyle: (isOurMention: boolean): TextStyle => {
         const backgroundColor = isOurMention ? theme.ourMentionBG : theme.mentionBG;
         return {
             backgroundColor,
@@ -1363,13 +1462,14 @@ const createStyleUtils = (theme: ThemeColors, styles: ThemeStyles) => ({
      * Generate the wrapper styles for the mini ReportActionContextMenu.
      */
     getMiniReportActionContextMenuWrapperStyle: (isReportActionItemGrouped: boolean): ViewStyle =>
-        // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Expensify/App/issues/27337)
+        // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Ieatta/App/issues/27337)
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         ({
             ...(isReportActionItemGrouped ? positioning.tn8 : positioning.tn4),
             ...positioning.r4,
             ...styles.cursorDefault,
             ...styles.userSelectNone,
+            overflowAnchor: 'none',
             position: 'absolute',
             zIndex: 8,
         }),
@@ -1377,8 +1477,8 @@ const createStyleUtils = (theme: ThemeColors, styles: ThemeStyles) => ({
     /**
      * Generate the styles for the ReportActionItem wrapper view.
      */
-    getReportActionItemStyle: (isHovered = false): ViewStyle =>
-        // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Expensify/App/issues/27337)
+    getReportActionItemStyle: (isHovered = false, isClickable = false): ViewStyle =>
+        // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Ieatta/App/issues/27337)
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         ({
             display: 'flex',
@@ -1388,7 +1488,7 @@ const createStyleUtils = (theme: ThemeColors, styles: ThemeStyles) => ({
                 : // Warning: Setting this to a non-transparent color will cause unread indicator to break on Android
                   theme.transparent,
             opacity: 1,
-            ...styles.cursorInitial,
+            ...(isClickable ? styles.cursorPointer : styles.cursorInitial),
         }),
 
     /**
@@ -1413,7 +1513,7 @@ const createStyleUtils = (theme: ThemeColors, styles: ThemeStyles) => ({
 
     getZoomCursorStyle: (isZoomed: boolean, isDragging: boolean): ViewStyle => {
         if (!isZoomed) {
-            // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Expensify/App/issues/27337)
+            // TODO: Remove this "eslint-disable-next" once the theme switching migration is done and styles are fully typed (GH Issue: https://github.com/Ieatta/App/issues/27337)
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return
             return styles.cursorZoomIn;
         }
@@ -1448,7 +1548,58 @@ const createStyleUtils = (theme: ThemeColors, styles: ThemeStyles) => ({
         return containerStyles;
     },
 
+    getUpdateRequiredViewStyles: (isSmallScreenWidth: boolean): ViewStyle[] => [
+        {
+            alignItems: 'center',
+            justifyContent: 'center',
+            ...(isSmallScreenWidth ? {} : styles.pb40),
+        },
+    ],
+
+    /**
+     * Returns a style that sets the maximum height of the composer based on the number of lines and whether the composer is full size or not.
+     */
+    getComposerMaxHeightStyle: (maxLines: number | undefined, isComposerFullSize: boolean): TextStyle => {
+        if (isComposerFullSize || maxLines == null) {
+            return {};
+        }
+
+        const composerLineHeight = styles.textInputCompose.lineHeight ?? 0;
+
+        return {
+            maxHeight: maxLines * composerLineHeight,
+        };
+    },
+
     getFullscreenCenteredContentStyles: () => [StyleSheet.absoluteFill, styles.justifyContentCenter, styles.alignItemsCenter],
+
+    /**
+     * Returns the styles for the Tools modal
+     */
+    getTestToolsModalStyle: (windowWidth: number): ViewStyle[] => [styles.settingsPageBody, styles.p5, {width: windowWidth * 0.9}],
+
+    getMultiselectListStyles: (isSelected: boolean, isDisabled: boolean): ViewStyle => ({
+        ...(isSelected && styles.checkedContainer),
+        ...(isSelected && styles.borderColorFocus),
+        ...(isDisabled && styles.cursorDisabled),
+        ...(isDisabled && styles.buttonOpacityDisabled),
+    }),
+
+    /**
+     * When adding a new prefix character, adjust this method to add expected character width.
+     * This is because character width isn't known before it's rendered to the screen, and once it's rendered,
+     * it's too late to calculate it's width because the change in padding would cause a visible jump.
+     * Some characters are wider than the others when rendered, e.g. '@' vs '#'. Chosen font-family and font-size
+     * also have an impact on the width of the character, but as long as there's only one font-family and one font-size,
+     * this method will produce reliable results.
+     */
+    getCharacterPadding: (prefix: string): number => prefix.length * 10,
+
+    // TODO: remove it when we'll implement the callback to handle this toggle in Ieatta/Ieatta#368335
+    getWorkspaceWorkflowsOfflineDescriptionStyle: (descriptionTextStyle: TextStyle | TextStyle[]): StyleProp<TextStyle> => ({
+        ...StyleSheet.flatten(descriptionTextStyle),
+        opacity: styles.opacitySemiTransparent.opacity,
+    }),
 });
 
 type StyleUtilsType = ReturnType<typeof createStyleUtils>;

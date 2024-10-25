@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import _ from 'underscore';
+import _ from 'lodash';
 import {ParseModelUsers} from '@libs/Firebase/appModel';
 import Log from '@libs/Log';
 import {saveSession} from '@userActions/Firebase/UserFB';

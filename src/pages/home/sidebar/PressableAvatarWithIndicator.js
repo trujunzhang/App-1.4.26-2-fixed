@@ -1,4 +1,3 @@
-/* eslint-disable rulesdir/onyx-props-must-have-default */
 import lodashGet from 'lodash/get';
 import PropTypes from 'prop-types';
 import React, {useCallback} from 'react';
@@ -9,7 +8,6 @@ import PressableWithoutFeedback from '@components/Pressable/PressableWithoutFeed
 import withCurrentUserPersonalDetails from '@components/withCurrentUserPersonalDetails';
 import useLocalize from '@hooks/useLocalize';
 import compose from '@libs/compose';
-import Log from '@libs/Log';
 import Navigation from '@libs/Navigation/Navigation';
 import * as UserUtils from '@libs/UserUtils';
 import personalDetailsPropType from '@expPages/personalDetailsPropType';

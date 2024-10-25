@@ -1,21 +1,19 @@
 import type {ForwardedRef} from 'react';
 import React, {forwardRef, useEffect, useRef} from 'react';
-import type {GestureResponderEvent, Role} from 'react-native';
-import {Platform, View} from 'react-native';
+// eslint-disable-next-line no-restricted-imports
+import type {GestureResponderEvent, Role, Text, View} from 'react-native';
+import {Platform} from 'react-native';
 import Animated, {createAnimatedPropAdapter, Easing, interpolateColor, processColor, useAnimatedProps, useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
 import Svg, {Path} from 'react-native-svg';
 import useLocalize from '@hooks/useLocalize';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import variables from '@styles/variables';
-import PressableWithFeedback from './Pressable/PressableWithFeedback';
+import {PressableWithoutFeedback} from './Pressable';
 import Tooltip from './Tooltip/PopoverAnchorTooltip';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 AnimatedPath.displayName = 'AnimatedPath';
-
-const AnimatedPressable = Animated.createAnimatedComponent(PressableWithFeedback);
-AnimatedPressable.displayName = 'AnimatedPressable';
 
 type AdapterPropsRecord = {
     type: number;
@@ -29,12 +27,10 @@ type AdapterProps = {
 
 const adapter = createAnimatedPropAdapter(
     (props: AdapterProps) => {
-        // eslint-disable-next-line rulesdir/prefer-underscore-method
         if (Object.keys(props).includes('fill')) {
             // eslint-disable-next-line no-param-reassign
             props.fill = {type: 0, payload: processColor(props.fill)};
         }
-        // eslint-disable-next-line rulesdir/prefer-underscore-method
         if (Object.keys(props).includes('stroke')) {
             // eslint-disable-next-line no-param-reassign
             props.stroke = {type: 0, payload: processColor(props.stroke)};
@@ -57,12 +53,12 @@ type FloatingActionButtonProps = {
     role: Role;
 };
 
-function FloatingActionButton({onPress, isActive, accessibilityLabel, role}: FloatingActionButtonProps, ref: ForwardedRef<HTMLDivElement | View>) {
+function FloatingActionButton({onPress, isActive, accessibilityLabel, role}: FloatingActionButtonProps, ref: ForwardedRef<HTMLDivElement | View | Text>) {
     const {success, buttonDefaultBG, textLight, textDark} = useTheme();
     const styles = useThemeStyles();
     const borderRadius = styles.floatingActionButton.borderRadius;
     const {translate} = useLocalize();
-    const fabPressable = useRef<HTMLDivElement | View | null>(null);
+    const fabPressable = useRef<HTMLDivElement | View | Text | null>(null);
     const sharedValue = useSharedValue(isActive ? 1 : 0);
     const buttonRef = ref;
 
@@ -95,28 +91,29 @@ function FloatingActionButton({onPress, isActive, accessibilityLabel, role}: Flo
         Platform.OS === 'web' ? undefined : adapter,
     );
 
-    return (
-        <Tooltip text={translate('common.new')}>
-            <View style={styles.floatingActionButtonContainer}>
-                <AnimatedPressable
-                    ref={(el) => {
-                        fabPressable.current = el;
+    const toggleFabAction = (event: GestureResponderEvent | KeyboardEvent | undefined) => {
+        // Drop focus to avoid blue focus ring.
+        fabPressable.current?.blur();
+        onPress(event);
+    };
 
-                        if (buttonRef && 'current' in buttonRef) {
-                            buttonRef.current = el;
-                        }
-                    }}
-                    accessibilityLabel={accessibilityLabel}
-                    role={role}
-                    pressDimmingValue={1}
-                    onPress={(e) => {
-                        // Drop focus to avoid blue focus ring.
-                        fabPressable.current?.blur();
-                        onPress(e);
-                    }}
-                    onLongPress={() => {}}
-                    style={[styles.floatingActionButton, animatedStyle]}
-                >
+    return (
+        <Tooltip text={translate('common.create')}>
+            <PressableWithoutFeedback
+                ref={(el) => {
+                    fabPressable.current = el ?? null;
+                    if (buttonRef && 'current' in buttonRef) {
+                        buttonRef.current = el ?? null;
+                    }
+                }}
+                style={[styles.h100, styles.bottomTabBarItem]}
+                accessibilityLabel={accessibilityLabel}
+                onPress={toggleFabAction}
+                onLongPress={() => {}}
+                role={role}
+                shouldUseHapticsOnLongPress={false}
+            >
+                <Animated.View style={[styles.floatingActionButton, animatedStyle]}>
                     <Svg
                         width={variables.iconSizeNormal}
                         height={variables.iconSizeNormal}
@@ -126,8 +123,8 @@ function FloatingActionButton({onPress, isActive, accessibilityLabel, role}: Flo
                             animatedProps={animatedProps}
                         />
                     </Svg>
-                </AnimatedPressable>
-            </View>
+                </Animated.View>
+            </PressableWithoutFeedback>
         </Tooltip>
     );
 }

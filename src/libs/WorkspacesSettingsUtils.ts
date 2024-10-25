@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Onyx from 'react-native-onyx';
 import type {OnyxCollection, OnyxEntry} from 'react-native-onyx';
 import type {ValueOf} from 'type-fest';
@@ -10,8 +9,7 @@ import type {Unit} from '@src/types/onyx/Policy';
 import * as CurrencyUtils from './CurrencyUtils';
 import type {Phrase, PhraseParameters} from './Localize';
 import * as OptionsListUtils from './OptionsListUtils';
-// import {hasCustomUnitsError, hasEmployeeListError, hasPolicyError, hasTaxRateError} from './PolicyUtils';
-import {hasCustomUnitsError, hasPolicyError} from './PolicyUtils';
+import {hasCustomUnitsError, hasEmployeeListError, hasPolicyError, hasTaxRateError} from './PolicyUtils';
 import * as ReportUtils from './ReportUtils';
 
 type CheckingMethod = () => boolean;
@@ -73,11 +71,7 @@ const getBrickRoadForPolicy = (report: Report, altReportActions?: OnyxCollection
         const itemParentReportActions = allReportActions?.[`${ONYXKEYS.COLLECTION.REPORT_ACTIONS}${report.parentReportID}`] ?? {};
         itemParentReportAction = report.parentReportActionID ? itemParentReportActions[report.parentReportActionID] : {};
     }
-    const reportOption = {
-        ...report,
-        isUnread: ReportUtils.isUnread(report),
-        isUnreadWithMention: ReportUtils.isUnreadWithMention(report),
-    };
+    const reportOption = {...report, isUnread: ReportUtils.isUnread(report), isUnreadWithMention: ReportUtils.isUnreadWithMention(report)};
     const shouldShowGreenDotIndicator = ReportUtils.requiresAttentionFromCurrentUser(reportOption, itemParentReportAction);
     return shouldShowGreenDotIndicator ? CONST.BRICK_ROAD_INDICATOR_STATUS.INFO : undefined;
 };
@@ -90,8 +84,8 @@ function hasGlobalWorkspaceSettingsRBR(policies: OnyxCollection<Policy>) {
     const errorCheckingMethods: CheckingMethod[] = [
         () => Object.values(cleanPolicies).some(hasPolicyError),
         () => Object.values(cleanPolicies).some(hasCustomUnitsError),
-        // () => Object.values(cleanPolicies).some(hasTaxRateError),
-        // () => Object.values(cleanPolicies).some(hasEmployeeListError),
+        () => Object.values(cleanPolicies).some(hasTaxRateError),
+        () => Object.values(cleanPolicies).some(hasEmployeeListError),
         () => Object.keys(reimbursementAccount?.errors ?? {}).length > 0,
     ];
 
@@ -99,11 +93,10 @@ function hasGlobalWorkspaceSettingsRBR(policies: OnyxCollection<Policy>) {
 }
 
 function hasWorkspaceSettingsRBR(policy: Policy) {
-    // const policyMemberError = hasEmployeeListError(policy);
-    // const taxRateError = hasTaxRateError(policy);
+    const policyMemberError = hasEmployeeListError(policy);
+    const taxRateError = hasTaxRateError(policy);
 
-    // return Object.keys(reimbursementAccount?.errors ?? {}).length > 0 || hasPolicyError(policy) || hasCustomUnitsError(policy) || policyMemberError || taxRateError;
-    return false;
+    return Object.keys(reimbursementAccount?.errors ?? {}).length > 0 || hasPolicyError(policy) || hasCustomUnitsError(policy) || policyMemberError || taxRateError;
 }
 
 function getChatTabBrickRoad(policyID?: string): BrickRoad | undefined {
@@ -170,17 +163,17 @@ function getWorkspacesBrickRoads(reports: OnyxCollection<Report>, policies: Onyx
     });
 
     Object.values(reports).forEach((report) => {
-        // const policyID = report?.policyID ?? CONST.POLICY.EMPTY;
-        // if (!report || workspacesBrickRoadsMap[policyID] === CONST.BRICK_ROAD_INDICATOR_STATUS.ERROR) {
-        //     return;
-        // }
-        // const workspaceBrickRoad = getBrickRoadForPolicy(report, reportActions);
-        //
-        // if (!workspaceBrickRoad && !!workspacesBrickRoadsMap[policyID]) {
-        //     return;
-        // }
-        //
-        // workspacesBrickRoadsMap[policyID] = workspaceBrickRoad;
+        const policyID = report?.policyID ?? CONST.POLICY.EMPTY;
+        if (!report || workspacesBrickRoadsMap[policyID] === CONST.BRICK_ROAD_INDICATOR_STATUS.ERROR) {
+            return;
+        }
+        const workspaceBrickRoad = getBrickRoadForPolicy(report, reportActions);
+
+        if (!workspaceBrickRoad && !!workspacesBrickRoadsMap[policyID]) {
+            return;
+        }
+
+        workspacesBrickRoadsMap[policyID] = workspaceBrickRoad;
     });
 
     return workspacesBrickRoadsMap;
@@ -231,8 +224,7 @@ function getUnitTranslationKey(unit: Unit): TranslationPaths {
  * @returns ownership change checks page display text's
  */
 function getOwnershipChecksDisplayText(
-    // error: ValueOf<typeof CONST.POLICY.OWNERSHIP_ERRORS>,
-    error: any,
+    error: ValueOf<typeof CONST.POLICY.OWNERSHIP_ERRORS>,
     translate: <TKey extends TranslationPaths>(phraseKey: TKey, ...phraseParameters: PhraseParameters<Phrase<TKey>>) => string,
     policy: OnyxEntry<Policy>,
     accountLogin: string | undefined,
@@ -243,58 +235,54 @@ function getOwnershipChecksDisplayText(
 
     const changeOwner = policy?.errorFields?.changeOwner;
     const subscription = changeOwner?.subscription as unknown as {ownerUserCount: number; totalUserCount: number};
-    const ownerOwesAmount = changeOwner?.ownerOwesAmount as unknown as {
-        ownerEmail: string;
-        amount: number;
-        currency: string;
-    };
+    const ownerOwesAmount = changeOwner?.ownerOwesAmount as unknown as {ownerEmail: string; amount: number; currency: string};
 
-    // switch (error) {
-    //     case CONST.POLICY.OWNERSHIP_ERRORS.AMOUNT_OWED:
-    //         // title = translate('workspace.changeOwner.amountOwedTitle');
-    //         // text = translate('workspace.changeOwner.amountOwedText');
-    //         // buttonText = translate('workspace.changeOwner.amountOwedButtonText');
-    //         break;
-    //     case CONST.POLICY.OWNERSHIP_ERRORS.OWNER_OWES_AMOUNT:
-    //         // title = translate('workspace.changeOwner.ownerOwesAmountTitle');
-    //         // text = translate('workspace.changeOwner.ownerOwesAmountText', {
-    //         //     email: ownerOwesAmount?.ownerEmail,
-    //         //     amount: CurrencyUtils.convertToDisplayString(ownerOwesAmount?.amount, ownerOwesAmount?.currency),
-    //         // });
-    //         // buttonText = translate('workspace.changeOwner.ownerOwesAmountButtonText');
-    //         break;
-    //     case CONST.POLICY.OWNERSHIP_ERRORS.SUBSCRIPTION:
-    //         // title = translate('workspace.changeOwner.subscriptionTitle');
-    //         // text = translate('workspace.changeOwner.subscriptionText', {
-    //         //     usersCount: subscription?.ownerUserCount,
-    //         //     finalCount: subscription?.totalUserCount,
-    //         // });
-    //         // buttonText = translate('workspace.changeOwner.subscriptionButtonText');
-    //         break;
-    //     case CONST.POLICY.OWNERSHIP_ERRORS.DUPLICATE_SUBSCRIPTION:
-    //         // title = translate('workspace.changeOwner.duplicateSubscriptionTitle');
-    //         // text = translate('workspace.changeOwner.duplicateSubscriptionText', {
-    //         //     email: changeOwner?.duplicateSubscription,
-    //         //     workspaceName: policy?.name,
-    //         // });
-    //         // buttonText = translate('workspace.changeOwner.duplicateSubscriptionButtonText');
-    //         break;
-    //     case CONST.POLICY.OWNERSHIP_ERRORS.HAS_FAILED_SETTLEMENTS:
-    //         // title = translate('workspace.changeOwner.hasFailedSettlementsTitle');
-    //         // text = translate('workspace.changeOwner.hasFailedSettlementsText', {email: accountLogin});
-    //         // buttonText = translate('workspace.changeOwner.hasFailedSettlementsButtonText');
-    //         break;
-    //     case CONST.POLICY.OWNERSHIP_ERRORS.FAILED_TO_CLEAR_BALANCE:
-    //         // title = translate('workspace.changeOwner.failedToClearBalanceTitle');
-    //         // text = translate('workspace.changeOwner.failedToClearBalanceText');
-    //         // buttonText = translate('workspace.changeOwner.failedToClearBalanceButtonText');
-    //         break;
-    //     default:
-    //         title = '';
-    //         text = '';
-    //         buttonText = '';
-    //         break;
-    // }
+    switch (error) {
+        case CONST.POLICY.OWNERSHIP_ERRORS.AMOUNT_OWED:
+            title = translate('workspace.changeOwner.amountOwedTitle');
+            text = translate('workspace.changeOwner.amountOwedText');
+            buttonText = translate('workspace.changeOwner.amountOwedButtonText');
+            break;
+        case CONST.POLICY.OWNERSHIP_ERRORS.OWNER_OWES_AMOUNT:
+            title = translate('workspace.changeOwner.ownerOwesAmountTitle');
+            text = translate('workspace.changeOwner.ownerOwesAmountText', {
+                email: ownerOwesAmount?.ownerEmail,
+                amount: CurrencyUtils.convertToDisplayString(ownerOwesAmount?.amount, ownerOwesAmount?.currency),
+            });
+            buttonText = translate('workspace.changeOwner.ownerOwesAmountButtonText');
+            break;
+        case CONST.POLICY.OWNERSHIP_ERRORS.SUBSCRIPTION:
+            title = translate('workspace.changeOwner.subscriptionTitle');
+            text = translate('workspace.changeOwner.subscriptionText', {
+                usersCount: subscription?.ownerUserCount,
+                finalCount: subscription?.totalUserCount,
+            });
+            buttonText = translate('workspace.changeOwner.subscriptionButtonText');
+            break;
+        case CONST.POLICY.OWNERSHIP_ERRORS.DUPLICATE_SUBSCRIPTION:
+            title = translate('workspace.changeOwner.duplicateSubscriptionTitle');
+            text = translate('workspace.changeOwner.duplicateSubscriptionText', {
+                email: changeOwner?.duplicateSubscription,
+                workspaceName: policy?.name,
+            });
+            buttonText = translate('workspace.changeOwner.duplicateSubscriptionButtonText');
+            break;
+        case CONST.POLICY.OWNERSHIP_ERRORS.HAS_FAILED_SETTLEMENTS:
+            title = translate('workspace.changeOwner.hasFailedSettlementsTitle');
+            text = translate('workspace.changeOwner.hasFailedSettlementsText', {email: accountLogin});
+            buttonText = translate('workspace.changeOwner.hasFailedSettlementsButtonText');
+            break;
+        case CONST.POLICY.OWNERSHIP_ERRORS.FAILED_TO_CLEAR_BALANCE:
+            title = translate('workspace.changeOwner.failedToClearBalanceTitle');
+            text = translate('workspace.changeOwner.failedToClearBalanceText');
+            buttonText = translate('workspace.changeOwner.failedToClearBalanceButtonText');
+            break;
+        default:
+            title = '';
+            text = '';
+            buttonText = '';
+            break;
+    }
 
     return {title, text, buttonText};
 }

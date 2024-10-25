@@ -18,7 +18,13 @@ function RestaurantMenuNativeView({recipe}: MenuViewProps) {
         <View style={[styles.ph2, styles.pt1]}>
             <Text
                 numberOfLines={1}
-                style={[styles.textNormal, styles.textStrong]}
+                style={[
+                    styles.base,
+                    styles.fontSemiBold,
+                    {
+                        color: TailwindColors.orange500,
+                    },
+                ]}
             >
                 {recipe.displayName}
             </Text>
@@ -43,7 +49,6 @@ function RestaurantMenuNativeView({recipe}: MenuViewProps) {
                         },
                     ]}
                 >
-                    {' '}
                     {`$${recipe.price}`}
                 </Text>
             </View>
@@ -51,14 +56,7 @@ function RestaurantMenuNativeView({recipe}: MenuViewProps) {
     );
 
     return (
-        <View
-            style={[
-                {
-                    width: variables.menuInRestaurantMobileItemWidth,
-                    height: variables.menuInRestaurantMobileItemHeight,
-                },
-            ]}
-        >
+        <View style={[styles.restaurantMenuNativeItem]}>
             {/* Background Container */}
             <ImagePlaceholder
                 sourceUri={recipe.originalUrl}
@@ -67,14 +65,14 @@ function RestaurantMenuNativeView({recipe}: MenuViewProps) {
                 placeholder={Expensicons.PNGBusinessMediumSquare}
             />
             {/*  Info panel   */}
-            <View style={[styles.pAbsolute, styles.l0, styles.r0, styles.b0]}>
-                <LinearGradient
-                    colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)']}
-                    start={{x: 0, y: 1}}
-                    end={{x: 0, y: 1}}
-                >
-                    {renderPanel}
-                </LinearGradient>
+            <View style={[styles.pAbsolute, styles.l0, styles.r0, styles.b0, {backgroundColor: 'rgba(0,0,0,0.5)'}]}>
+                {/* <LinearGradient */}
+                {/*     colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)']} */}
+                {/*     start={{x: 0, y: 1}} */}
+                {/*     end={{x: 0, y: 1}} */}
+                {/* > */}
+                {renderPanel}
+                {/* </LinearGradient> */}
             </View>
         </View>
     );

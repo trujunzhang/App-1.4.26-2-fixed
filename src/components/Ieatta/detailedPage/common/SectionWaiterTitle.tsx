@@ -2,14 +2,14 @@ import React from 'react';
 import {View} from 'react-native';
 import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
-import Text from '@components/Text';
 import useThemeStyles from '@hooks/useThemeStyles';
 import useWindowDimensions from '@hooks/useWindowDimensions';
 import type {ISectionTitleRow} from '@libs/Firebase/list/types/rows/common';
 import type {IWaiterRow} from '@libs/Firebase/list/types/rows/photo';
-import type {IMenusInRestaurantRow} from '@libs/Firebase/list/types/rows/restaurant';
+import Navigation from '@libs/Navigation/Navigation';
 import TailwindColors from '@styles/tailwindcss/colors';
 import variables from '@styles/variables';
+import ROUTES from '@src/ROUTES';
 import SectionCommonTitle from './SectionCommonTitle';
 
 type SectionWaiterTitleProps = {
@@ -25,21 +25,14 @@ function SectionWaiterTitle({waiterItem}: SectionWaiterTitleProps) {
         isSmallScreenWidth,
     };
 
-    const rightContent = (
-        <View style={[]}>
-            <Icon
-                fill={TailwindColors.blue500}
-                width={variables.iconSizeNormal}
-                height={variables.iconSizeNormal}
-                src={Expensicons.Plus}
-            />
-        </View>
-    );
-
     return (
         <SectionCommonTitle
             titleRow={titleRow}
-            rightContent={rightContent}
+            shouldShowPlusIcon
+            plusIconToolTip="add.waiter.title"
+            onPlusIconPressed={() => {
+                // Navigation.navigate(ROUTES.ADD_WAITERS.getRoute({relatedId, photoType}));
+            }}
         />
     );
 }

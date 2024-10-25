@@ -27,7 +27,9 @@ function RecipeWithPhotosInfoPanel({recipe, photos}: RecipeWithPhotosInfoPanelPr
     const {translate} = useLocalize();
 
     const timeAgo = formatByTimeAgo(recipe.updatedAt);
-    const onSeeAllPhotoPress = () => {};
+    const onSeeAllPhotoPress = () => {
+        Navigation.navigate(ROUTES.PHOTOS_GRID_VIEW.getRoute({relatedId: recipe.uniqueId, photoType: PhotoType.Recipe}));
+    };
 
     const renderInfo = (
         <View style={[styles.flex1, styles.flexColumn, styles.justifyContentEnd]}>
@@ -44,7 +46,7 @@ function RecipeWithPhotosInfoPanel({recipe, photos}: RecipeWithPhotosInfoPanelPr
                             textStyles={[{color: TailwindColors.white}]}
                             text={translate('common.edit')}
                             onPress={() => {
-                                navigationToEditRecipe(recipe.uniqueId);
+                                navigationToEditRecipe({recipeId: recipe.uniqueId, restaurantId: recipe.restaurantId});
                             }}
                         />
                     </View>

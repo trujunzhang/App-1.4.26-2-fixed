@@ -1,4 +1,4 @@
-# Expensify TypeScript React Native CheatSheet
+# Ieatta TypeScript React Native CheatSheet
 
 ## Table of Contents
 

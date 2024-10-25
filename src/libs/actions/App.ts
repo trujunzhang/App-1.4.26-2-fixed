@@ -1,4 +1,4 @@
-// Issue - https://github.com/Expensify/App/issues/26719
+// Issue - https://github.com/Ieatta/App/issues/26719
 import Str from 'expensify-common/lib/str';
 import type {AppStateStatus} from 'react-native';
 import {AppState} from 'react-native';
@@ -6,6 +6,16 @@ import type {OnyxCollection, OnyxEntry, OnyxUpdate} from 'react-native-onyx';
 import Onyx from 'react-native-onyx';
 import type {ValueOf} from 'type-fest';
 import * as API from '@libs/API';
+import type {
+    GetMissingOnyxMessagesParams,
+    HandleRestrictedEventParams,
+    OpenAppParams,
+    OpenOldDotLinkParams,
+    OpenProfileParams,
+    ReconnectAppParams,
+    UpdatePreferredLocaleParams,
+} from '@libs/API/parameters';
+import {SIDE_EFFECT_REQUEST_COMMANDS, WRITE_COMMANDS} from '@libs/API/types';
 import * as Browser from '@libs/Browser';
 import DateUtils from '@libs/DateUtils';
 import Log from '@libs/Log';
@@ -16,6 +26,7 @@ import * as ReportActionsUtils from '@libs/ReportActionsUtils';
 import * as SessionUtils from '@libs/SessionUtils';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
+import type {OnyxKey} from '@src/ONYXKEYS';
 import type {Route} from '@src/ROUTES';
 import ROUTES from '@src/ROUTES';
 import type * as OnyxTypes from '@src/types/onyx';
@@ -67,6 +78,38 @@ Onyx.connect({
     },
 });
 
+const KEYS_TO_PRESERVE: OnyxKey[] = [
+    ONYXKEYS.ACCOUNT,
+    ONYXKEYS.IS_CHECKING_PUBLIC_ROOM,
+    ONYXKEYS.IS_LOADING_APP,
+    ONYXKEYS.IS_SIDEBAR_LOADED,
+    ONYXKEYS.MODAL,
+    ONYXKEYS.NETWORK,
+    ONYXKEYS.SESSION,
+    ONYXKEYS.SHOULD_SHOW_COMPOSE_INPUT,
+    ONYXKEYS.NVP_TRY_FOCUS_MODE,
+    ONYXKEYS.PREFERRED_THEME,
+    ONYXKEYS.NVP_PREFERRED_LOCALE,
+    ONYXKEYS.CREDENTIALS,
+];
+
+Onyx.connect({
+    key: ONYXKEYS.RESET_REQUIRED,
+    callback: (isResetRequired) => {
+        if (!isResetRequired) {
+            return;
+        }
+
+        Onyx.clear(KEYS_TO_PRESERVE).then(() => {
+            // Set this to false to reset the flag for this client
+            Onyx.set(ONYXKEYS.RESET_REQUIRED, false);
+
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            openApp();
+        });
+    },
+});
+
 let resolveIsReadyPromise: () => void;
 const isReadyToOpenApp = new Promise<void>((resolve) => {
     resolveIsReadyPromise = resolve;
@@ -103,20 +146,16 @@ function setLocale(locale: Locale) {
         },
     ];
 
-    type UpdatePreferredLocaleParams = {
-        value: Locale;
-    };
-
     const parameters: UpdatePreferredLocaleParams = {
         value: locale,
     };
 
-    API.write('UpdatePreferredLocale', parameters, {optimisticData});
+    API.write(WRITE_COMMANDS.UPDATE_PREFERRED_LOCALE, parameters, {optimisticData});
 }
 
 function setLocaleAndNavigate(locale: Locale) {
     setLocale(locale);
-    Navigation.goBack(ROUTES.SETTINGS_PREFERENCES);
+    Navigation.goBack();
 }
 
 function setSidebarLoaded() {
@@ -125,7 +164,6 @@ function setSidebarLoaded() {
     }
 
     Onyx.set(ONYXKEYS.IS_SIDEBAR_LOADED, true);
-    Performance.markEnd(CONST.TIMING.SIDEBAR_LOADED);
     Performance.markStart(CONST.TIMING.REPORT_INITIAL_RENDER);
 }
 
@@ -203,13 +241,9 @@ function getOnyxDataForOpenOrReconnect(isOpenApp = false): OnyxData {
  */
 function openApp() {
     getPolicyParamsForOpenOrReconnect().then((policyParams: PolicyParamsForOpenOrReconnect) => {
-        type OpenAppParams = PolicyParamsForOpenOrReconnect & {
-            enablePriorityModeFilter: boolean;
-        };
-
         const params: OpenAppParams = {enablePriorityModeFilter: true, ...policyParams};
 
-        API.read('OpenApp', params, getOnyxDataForOpenOrReconnect(true));
+        API.write(WRITE_COMMANDS.OPEN_APP, params, getOnyxDataForOpenOrReconnect(true));
     });
 }
 
@@ -220,13 +254,7 @@ function openApp() {
 function reconnectApp(updateIDFrom: OnyxEntry<number> = 0) {
     console.debug(`[OnyxUpdates] App reconnecting with updateIDFrom: ${updateIDFrom}`);
     getPolicyParamsForOpenOrReconnect().then((policyParams) => {
-        type ReconnectParams = {
-            mostRecentReportActionLastModified?: string;
-            updateIDFrom?: number;
-        };
-        type ReconnectAppParams = PolicyParamsForOpenOrReconnect & ReconnectParams;
-
-        const params: ReconnectAppParams = {...policyParams};
+        const params: ReconnectAppParams = policyParams;
 
         // When the app reconnects we do a fast "sync" of the LHN and only return chats that have new messages. We achieve this by sending the most recent reportActionID.
         // we have locally. And then only update the user about chats with messages that have occurred after that reportActionID.
@@ -243,7 +271,7 @@ function reconnectApp(updateIDFrom: OnyxEntry<number> = 0) {
             params.updateIDFrom = updateIDFrom;
         }
 
-        // API.write('ReconnectApp', params, getOnyxDataForOpenOrReconnect());
+        API.write(WRITE_COMMANDS.RECONNECT_APP, params, getOnyxDataForOpenOrReconnect());
     });
 }
 
@@ -255,8 +283,6 @@ function reconnectApp(updateIDFrom: OnyxEntry<number> = 0) {
 function finalReconnectAppAfterActivatingReliableUpdates(): Promise<void | OnyxTypes.Response> {
     console.debug(`[OnyxUpdates] Executing last reconnect app with promise`);
     return getPolicyParamsForOpenOrReconnect().then((policyParams) => {
-        type ReconnectAppParams = PolicyParamsForOpenOrReconnect & {mostRecentReportActionLastModified?: string};
-
         const params: ReconnectAppParams = {...policyParams};
 
         // When the app reconnects we do a fast "sync" of the LHN and only return chats that have new messages. We achieve this by sending the most recent reportActionID.
@@ -273,7 +299,7 @@ function finalReconnectAppAfterActivatingReliableUpdates(): Promise<void | OnyxT
         // It was absolutely necessary in order to not break the app while migrating to the new reliable updates pattern. This method will be removed
         // as soon as we have everyone migrated to the reliableUpdate beta.
         // eslint-disable-next-line rulesdir/no-api-side-effects-method
-        // return API.makeRequestWithSideEffects('ReconnectApp', params, getOnyxDataForOpenOrReconnect());
+        return API.makeRequestWithSideEffects(SIDE_EFFECT_REQUEST_COMMANDS.RECONNECT_APP, params, getOnyxDataForOpenOrReconnect());
     });
 }
 
@@ -285,11 +311,6 @@ function finalReconnectAppAfterActivatingReliableUpdates(): Promise<void | OnyxT
 function getMissingOnyxUpdates(updateIDFrom = 0, updateIDTo: number | string = 0): Promise<void | OnyxTypes.Response> {
     console.debug(`[OnyxUpdates] Fetching missing updates updateIDFrom: ${updateIDFrom} and updateIDTo: ${updateIDTo}`);
 
-    type GetMissingOnyxMessagesParams = {
-        updateIDFrom: number;
-        updateIDTo: number | string;
-    };
-
     const parameters: GetMissingOnyxMessagesParams = {
         updateIDFrom,
         updateIDTo,
@@ -299,7 +320,7 @@ function getMissingOnyxUpdates(updateIDFrom = 0, updateIDTo: number | string = 0
     // DO NOT FOLLOW THIS PATTERN!!!!!
     // It was absolutely necessary in order to block OnyxUpdates while fetching the missing updates from the server or else the udpates aren't applied in the proper order.
     // eslint-disable-next-line rulesdir/no-api-side-effects-method
-    return API.makeRequestWithSideEffects('GetMissingOnyxMessages', parameters, getOnyxDataForOpenOrReconnect());
+    return API.makeRequestWithSideEffects(SIDE_EFFECT_REQUEST_COMMANDS.GET_MISSING_ONYX_MESSAGES, parameters, getOnyxDataForOpenOrReconnect());
 }
 
 /**
@@ -335,7 +356,7 @@ function createWorkspaceWithPolicyDraftAndNavigateToIt(policyOwnerEmail = '', po
         .then(() => {
             if (transitionFromOldDot) {
                 // We must call goBack() to remove the /transition route from history
-                Navigation.goBack(ROUTES.HOME);
+                Navigation.goBack();
             }
             Navigation.navigate(ROUTES.WORKSPACE_INITIAL.getRoute(policyID));
         })
@@ -401,7 +422,7 @@ function setUpPoliciesAndNavigate(session: OnyxEntry<OnyxTypes.Session>) {
         Navigation.waitForProtectedRoutes()
             .then(() => {
                 // We must call goBack() to remove the /transition route from history
-                Navigation.goBack(ROUTES.HOME);
+                Navigation.goBack();
                 Navigation.navigate(exitTo);
             })
             .then(endSignOnTransition);
@@ -417,7 +438,7 @@ function redirectThirdPartyDesktopSignIn() {
 
     if (url.pathname === `/${ROUTES.GOOGLE_SIGN_IN}` || url.pathname === `/${ROUTES.APPLE_SIGN_IN}`) {
         Navigation.isNavigationReady().then(() => {
-            Navigation.goBack(ROUTES.HOME);
+            Navigation.goBack();
             Navigation.navigate(ROUTES.DESKTOP_SIGN_IN_REDIRECT);
         });
     }
@@ -436,17 +457,13 @@ function openProfile(personalDetails: OnyxTypes.PersonalDetails) {
 
     newTimezoneData = DateUtils.formatToSupportedTimezone(newTimezoneData);
 
-    type OpenProfileParams = {
-        timezone: string;
-    };
-
     const parameters: OpenProfileParams = {
         timezone: JSON.stringify(newTimezoneData),
     };
 
     // We expect currentUserAccountID to be a number because it doesn't make sense to open profile if currentUserAccountID is not set
     if (typeof currentUserAccountID === 'number') {
-        API.write('OpenProfile', parameters, {
+        API.write(WRITE_COMMANDS.OPEN_PROFILE, parameters, {
             optimisticData: [
                 {
                     onyxMethod: Onyx.METHOD.MERGE,
@@ -489,14 +506,10 @@ function beginDeepLinkRedirect(shouldAuthenticateWithCurrentAccount = true) {
         return;
     }
 
-    type OpenOldDotLinkParams = {
-        shouldRetry: boolean;
-    };
-
     const parameters: OpenOldDotLinkParams = {shouldRetry: false};
 
     // eslint-disable-next-line rulesdir/no-api-side-effects-method
-    API.makeRequestWithSideEffects('OpenOldDotLink', parameters, {}).then((response) => {
+    API.makeRequestWithSideEffects(SIDE_EFFECT_REQUEST_COMMANDS.OPEN_OLD_DOT_LINK, parameters, {}).then((response) => {
         if (!response) {
             Log.alert(
                 'Trying to redirect via deep link, but the response is empty. User likely not authenticated.',
@@ -518,13 +531,13 @@ function beginDeepLinkRedirectAfterTransition(shouldAuthenticateWithCurrentAccou
 }
 
 function handleRestrictedEvent(eventName: string) {
-    type HandleRestrictedEventParams = {
-        eventName: string;
-    };
-
     const parameters: HandleRestrictedEventParams = {eventName};
 
-    API.write('HandleRestrictedEvent', parameters);
+    API.write(WRITE_COMMANDS.HANDLE_RESTRICTED_EVENT, parameters);
+}
+
+function updateLastVisitedPath(path: string) {
+    Onyx.merge(ONYXKEYS.LAST_VISITED_PATH, path);
 }
 
 export {
@@ -544,4 +557,6 @@ export {
     finalReconnectAppAfterActivatingReliableUpdates,
     savePolicyDraftByNewWorkspace,
     createWorkspaceWithPolicyDraftAndNavigateToIt,
+    updateLastVisitedPath,
+    KEYS_TO_PRESERVE,
 };

@@ -1,8 +1,6 @@
-// import type {DrawerContentComponentProps} from '@react-navigation/drawer';
 import React from 'react';
 import {View} from 'react-native';
 import NoDropZone from '@components/DragAndDrop/NoDropZone';
-// import {createDrawerNavigator} from '@react-navigation/drawer'
 import InitialSettingsPage from '@expPages/settings/InitialSettingsPage';
 import SCREENS from '@src/SCREENS';
 import type {DrawerContentComponentProps, DrawerNavigationOptions} from '../../../../../plugins/react-navigation-drawer-6.6.10/packages/drawer/src';
@@ -38,7 +36,7 @@ function SidebarDrawNavigator() {
                     )}
                 >
                     <Drawer.Screen
-                        name={SCREENS.DRAWER_SIDEBAR_HOME}
+                        name={SCREENS.HOME}
                         options={defaultScreenOptions}
                         getComponent={loadSidebarScreen}
                     />

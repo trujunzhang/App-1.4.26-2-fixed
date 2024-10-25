@@ -9,7 +9,7 @@ description: A short description of the page's content. This is used for SEO pur
 This short blurb provides all the context the user might need to know what the feature is and why they'd use it. If there are particular best practices embedded in the design, we'd explain why they're best practices here.
 
 What advantages does this feature provide in general?
-What is unique about this feature in terms of our specific implementation of it in Expensify?
+What is unique about this feature in terms of our specific implementation of it in Ieatta?
 -->
 
 # How-to

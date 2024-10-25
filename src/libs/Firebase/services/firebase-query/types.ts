@@ -17,7 +17,9 @@ type QueryInRestaurantsParameter = {
 };
 
 type QueryForPhotosParameter = {
+    /** The ID of the related object. */
     relatedId: string;
+    /** The photo type of the related object. */
     photoType: PhotoType | string;
     size?: number;
 };

@@ -8,15 +8,14 @@
 
 /* eslint-disable no-restricted-imports */
 import type {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
+import _ from 'lodash';
 import type Realm from 'realm';
-import {UpdateMode} from 'realm';
-import _ from 'underscore';
 import {ParseModelEvents, ParseModelPeopleInEvent, ParseModelRestaurants} from '@libs/Firebase/appModel';
 import type {IFirebaseDocumentData, IFirebaseQuerySnapshot} from '@libs/Firebase/types';
 import Log from '@libs/Log';
-import {RealmCollections} from '@libs/Realm/constant';
-import {RestaurantGeoPoint} from '@libs/Realm/models';
-import type {IFBEvent, IFBPeopleInEvent, IFBRestaurant} from '@src/types/firebase';
+import {RealmCollections, RealmWriteMode} from '@libs/Realm/constant';
+import RealmHelper from '@libs/Realm/services/realm-helper';
+import type {IeattaModelsWithUser, IFBEvent, IFBPeopleInEvent, IFBRestaurant} from '@src/types/firebase';
 import type {IRealmRepositories} from './types';
 
 class RealmRepositories implements IRealmRepositories {
@@ -26,16 +25,9 @@ class RealmRepositories implements IRealmRepositories {
         this.realm = realm;
     }
 
-    private convertFirebaseToRealm = (collect: RealmCollections, data: IFirebaseDocumentData) => {
+    private convertFirebaseToRealm = (collect: RealmCollections, data: IFirebaseDocumentData): IeattaModelsWithUser => {
         switch (collect) {
             case RealmCollections.Restaurants: {
-                // return {
-                //     location: new RestaurantGeoPoint({
-                //         lat: (data as IFBRestaurant).latitude,
-                //         long: (data as IFBRestaurant).longitude,
-                //     }),
-                //     ...data,
-                // };
                 return ParseModelRestaurants.toRealmModel(data as IFBRestaurant);
             }
             case RealmCollections.Events: {
@@ -45,78 +37,69 @@ class RealmRepositories implements IRealmRepositories {
                 return ParseModelPeopleInEvent.toRealmModel(data as IFBPeopleInEvent);
             }
             default: {
-                return data;
+                return data as IeattaModelsWithUser;
             }
         }
     };
 
-    private getRealmFilter = (collect: RealmCollections, id: string) => {
-        let filter = `uniqueId = "${id}"`;
-        if (collect === RealmCollections.Profiles) {
-            filter = `id = "${id}"`;
-        }
-        return filter;
-    };
-
-    private saveToRealmAsAddType = (collect: RealmCollections, changeDocId: string, data: any) => {
-        // Log.info("")
-        // Log.info("================================")
-        // Log.info(`Realm Repositories: {AddType}`)
-        // Log.info(`changeDocId: ${changeDocId}`)
-        // Log.info("================================")
-        // Log.info("")
-        const realm: Realm = this.realm;
-        const filter = this.getRealmFilter(collect, changeDocId);
-        const existObjects = realm.objects(collect).filtered(filter);
-        if (existObjects.length === 0) {
-            realm.write(() => {
-                realm.create(collect, this.convertFirebaseToRealm(collect, data), UpdateMode.Never);
-            });
-        }
+    private saveToRealmAsAddType = (collection: RealmCollections, changeDocId: string, data: any) => {
+        // Log.info('');
+        // Log.info('================================');
+        // Log.info(`Realm Repositories: {AddType}`);
+        // Log.info(`changeDocId: ${changeDocId}`);
+        // Log.info(`collect: ${collection}`);
+        // Log.info('================================');
+        // Log.info('');
+        new RealmHelper(this.realm)
+            .setDataIfNotExist({
+                collection,
+                docId: changeDocId,
+                model: this.convertFirebaseToRealm(collection, data),
+                mode: RealmWriteMode.Never,
+            })
+            .then((r) => {});
     };
 
     /**
      * issue:
      *  Expected value to be iterable, got an object
-     * @param collect
+     * @param collection
      * @param changeDocId
      * @param data
      */
-    private saveToRealmAsModifiedType = (collect: RealmCollections, changeDocId: string, data: any) => {
+    private saveToRealmAsModifiedType = (collection: RealmCollections, changeDocId: string, data: any) => {
         Log.info('');
         Log.info('================================');
         Log.info(`Realm Repositories: {ModifiedType}`);
         Log.info(`changeDocId: ${changeDocId}`);
-        Log.info(`collect: ${collect}`);
+        Log.info(`collect: ${collection}`);
         Log.info(`changeData: ${JSON.stringify(data)}`);
         Log.info('================================');
         Log.info('');
-        const realm: Realm = this.realm;
-        realm.write(() => {
-            realm.create(collect, this.convertFirebaseToRealm(collect, data), UpdateMode.Modified);
-        });
+        new RealmHelper(this.realm)
+            .setData({
+                collection,
+                docId: changeDocId,
+                model: this.convertFirebaseToRealm(collection, data),
+                mode: RealmWriteMode.Modified,
+            })
+            .then((r) => {});
     };
 
-    private saveToRealmAsRemovedType = (collect: RealmCollections, changeDocId: string, data: any) => {
-        const realm: Realm = this.realm;
-        const filter = this.getRealmFilter(collect, changeDocId);
-        const deletableObjects = realm.objects(collect).filtered(filter);
+    private saveToRealmAsRemovedType = (collection: RealmCollections, changeDocId: string, data: any) => {
+        new RealmHelper(this.realm).deleteData({collection, uniqueId: changeDocId}).then((r) => {});
+
         Log.info('');
         Log.info('================================');
         Log.info(`Realm Repositories: {RemovedType}`);
         Log.info(`changeDocId: ${changeDocId}`);
-        Log.info(`deletableObjects: ${deletableObjects.length}`);
+        Log.info(`collect: ${collection}`);
+        // Log.info(`deletableObjects: ${deletableObjects.length}`);
         Log.info('================================');
         Log.info('');
-        if (deletableObjects.length === 1) {
-            realm.write(() => {
-                realm.delete(deletableObjects[0]);
-            });
-        }
     };
 
-    // @ts-ignore
-    listenerQuerySnapshot = (querySnapshot: FirebaseFirestoreTypes.QuerySnapshot, collect: RealmCollections) => {
+    listenerQuerySnapshot = (querySnapshot: FirebaseFirestoreTypes.QuerySnapshot, collection: RealmCollections) => {
         if (querySnapshot?.docChanges === undefined || querySnapshot.docChanges === null) {
             return;
         }
@@ -128,16 +111,16 @@ class RealmRepositories implements IRealmRepositories {
             const data = change.doc.data();
             try {
                 if (change.type === 'added') {
-                    this.saveToRealmAsAddType(collect, changeDocId, data);
+                    this.saveToRealmAsAddType(collection, changeDocId, data);
                 } else if (change.type === 'modified') {
-                    this.saveToRealmAsModifiedType(collect, changeDocId, data);
+                    this.saveToRealmAsModifiedType(collection, changeDocId, data);
                 } else if (change.type === 'removed') {
-                    this.saveToRealmAsRemovedType(collect, changeDocId, data);
+                    this.saveToRealmAsRemovedType(collection, changeDocId, data);
                 }
             } catch (error) {
                 Log.warn('');
                 Log.warn('================================');
-                Log.warn(`[error] in the realm repository: ${collect}`);
+                Log.warn(`[error] in the realm repository: ${collection}`);
                 Log.warn(`docId in the error : ${changeDocId}`);
                 Log.warn(`data: ${JSON.stringify(data)}`);
                 Log.warn(`error : ${JSON.stringify(error)}`);

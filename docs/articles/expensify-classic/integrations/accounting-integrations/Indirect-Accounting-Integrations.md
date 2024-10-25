@@ -6,9 +6,9 @@ description: Learn how to export your expenses and reports to a built-for-purpos
 
 # Overview
 
-Along with the direct integrations Expensify supports, there's also an option to integrate with other accounting solutions via a flat-file import.
+Along with the direct integrations Ieatta supports, there's also an option to integrate with other accounting solutions via a flat-file import.
 
-When you set up one of these accounting packages in Expensify, we will automatically create and add a relevant export template. The template will allow you to quickly and easily transfer expense and report data to your accounting package.
+When you set up one of these accounting packages in Ieatta, we will automatically create and add a relevant export template. The template will allow you to quickly and easily transfer expense and report data to your accounting package.
 
 # How to Set Up an Indirect Accounting Integration
 
@@ -32,7 +32,7 @@ To export multiple reports, tick the checkbox next to the reports on the **Repor
 
 {% include faq-begin.md %}
 
-## Which accounting packages offer this indirect integration with Expensify?
+## Which accounting packages offer this indirect integration with Ieatta?
 
 We support a pre-configured flat-file integration for the following accounting packages:
 

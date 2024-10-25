@@ -1,10 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {collection, onSnapshot, query, where} from 'firebase/firestore';
 import {db} from '@libs/Firebase/config/firebase';
-import {FBCollections} from '../../constant';
+import {FBCollections} from '@libs/Firebase/constant';
 import ListenerUsersSnapshot from './ListenerUsersSnapshot';
 import type IFirebaseRepositories from './types';
 
 class FirebaseRepositories implements IFirebaseRepositories {
+    // eslint-disable-next-line @typescript-eslint/no-useless-constructor, @typescript-eslint/no-empty-function
+    constructor(realm: any) {}
+
     listenEvents(): () => void {
         return function () {};
     }
@@ -33,17 +37,6 @@ class FirebaseRepositories implements IFirebaseRepositories {
         const q = query(collection(db, FBCollections.Profiles));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             new ListenerUsersSnapshot().listenerQuerySnapshot(querySnapshot as any);
-            // querySnapshot.docChanges().forEach((change) => {
-            //     if (change.type === 'added') {
-            //         console.log('New profile: ', change.doc.data());
-            //     }
-            //     if (change.type === 'modified') {
-            //         console.log('Modified profile: ', change.doc.data());
-            //     }
-            //     if (change.type === 'removed') {
-            //         console.log('Removed profile: ', change.doc.data());
-            //     }
-            // });
         });
         return unsubscribe;
     }

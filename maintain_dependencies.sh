@@ -208,7 +208,7 @@ function lib_for_react_native {
 function lib_business {
 	libs=(
 		"react-native-date-picker" "5.0.2"
-        "react-datetime"           "^3.2.0",
+        "react-datetime"           "^3.2.0"
 		#       "moment"        "latest"
 		#       "ngeohash"      "^0.6.3"
 		#       "blueimp-md5"   "^2.19.0"
@@ -228,22 +228,25 @@ function lib_business {
 
 function lib_firebase {
 	# FIREBASE_VERSION="12.3.0"
-	FIREBASE_VERSION="18.5.0"
+	# FIREBASE_VERSION="18.5.0"
+    #    $FirebaseSDKVersion = '10.19.0'
+	FIREBASE_VERSION="20.1.0"
+    #    $FirebaseSDKVersion = '10.27.0'
 	libs=(
 		# Google login
 		# web
 		# https://firebase.google.com/docs/auth/web/google-signin
-		#  "firebase"                               "10.7.1"
-		#  "firebase-tools"                         "13.0.1"
+		 "firebase"                               "10.7.1"
+		 "firebase-tools"                         "13.0.1"
 
 		# https://rnfirebase.io/
-		#        "@react-native-firebase/app"             "$FIREBASE_VERSION"
-		#        "@react-native-firebase/auth"            "$FIREBASE_VERSION"
-		#        "@react-native-firebase/firestore"       "$FIREBASE_VERSION"
-		#
-		#        "@react-native-firebase/analytics"       "$FIREBASE_VERSION"
-		#        "@react-native-firebase/crashlytics"     "$FIREBASE_VERSION" # stop, need crash id.
-		#        "@react-native-firebase/perf"            "$FIREBASE_VERSION"
+		       "@react-native-firebase/app"             "$FIREBASE_VERSION"
+		       "@react-native-firebase/auth"            "$FIREBASE_VERSION"
+		       "@react-native-firebase/firestore"       "$FIREBASE_VERSION"
+
+		       "@react-native-firebase/analytics"       "$FIREBASE_VERSION"
+		       "@react-native-firebase/crashlytics"     "$FIREBASE_VERSION" # stop, need crash id.
+		       "@react-native-firebase/perf"            "$FIREBASE_VERSION"
 
 		#  "react-firebase-hooks"                  "^5.1.1"
 		"react-firebase-pagination-hooks" "https://github.com/trujunzhang/react-firebase-pagination-hooks"

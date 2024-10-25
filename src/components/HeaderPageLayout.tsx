@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import type {ReactNode} from 'react';
-import {ScrollView, View} from 'react-native';
+import {View} from 'react-native';
 import type {StyleProp, ViewStyle} from 'react-native';
 import useNetwork from '@hooks/useNetwork';
 import useStyleUtils from '@hooks/useStyleUtils';
@@ -13,17 +13,15 @@ import FixedFooter from './FixedFooter';
 import HeaderWithBackButton from './HeaderWithBackButton';
 import type HeaderWithBackButtonProps from './HeaderWithBackButton/types';
 import ScreenWrapper from './ScreenWrapper';
+import ScrollView from './ScrollView';
 
 type HeaderPageLayoutProps = ChildrenProps &
     HeaderWithBackButtonProps & {
-        /** Whether to show the header bar */
-        showHeaderBar?: boolean;
-
-        /**  Whether to show the vertical scroll bar */
-        showsVerticalScrollIndicator?: boolean;
-
         /** The background color to apply in the upper half of the screen. */
         backgroundColor?: string;
+
+        /** TestID to apply to the whole section container */
+        testID: string;
 
         /** A fixed footer to display at the bottom of the page. */
         footer?: ReactNode;
@@ -42,11 +40,11 @@ type HeaderPageLayoutProps = ChildrenProps &
 
         /** Style to apply to the whole section container */
         style?: StyleProp<ViewStyle>;
-    };
 
+        /** Whether or not to show the offline indicator */
+        shouldShowOfflineIndicatorInWideScreen?: boolean;
+    };
 function HeaderPageLayout({
-    showHeaderBar = true,
-    showsVerticalScrollIndicator = true,
     backgroundColor,
     children,
     footer,
@@ -55,6 +53,8 @@ function HeaderPageLayout({
     childrenContainerStyles,
     style,
     headerContent,
+    shouldShowOfflineIndicatorInWideScreen = false,
+    testID,
     ...rest
 }: HeaderPageLayoutProps) {
     const theme = useTheme();
@@ -77,30 +77,26 @@ function HeaderPageLayout({
             shouldEnablePickerAvoiding={false}
             includeSafeAreaPaddingBottom={false}
             offlineIndicatorStyle={[appBGColor]}
-            testID={HeaderPageLayout.displayName}
+            testID={testID}
+            shouldShowOfflineIndicatorInWideScreen={shouldShowOfflineIndicatorInWideScreen}
         >
             {({safeAreaPaddingBottomStyle}) => (
                 <>
-                    {showHeaderBar && (
-                        <HeaderWithBackButton
-                            // eslint-disable-next-line react/jsx-props-no-spreading
-                            {...rest}
-                            titleColor={titleColor}
-                            iconFill={iconFill}
-                        />
-                    )}
+                    <HeaderWithBackButton
+                        // eslint-disable-next-line react/jsx-props-no-spreading
+                        {...rest}
+                        titleColor={titleColor}
+                        iconFill={iconFill}
+                    />
                     <View style={[styles.flex1, appBGColor, !isOffline && footer ? safeAreaPaddingBottomStyle : {}]}>
-                        {/** Safari on ios/mac has a bug where overscrolling the page scrollview shows green background color. This is a workaround to fix that. https://github.com/Expensify/App/issues/23422 */}
+                        {/** Safari on ios/mac has a bug where overscrolling the page scrollview shows green background color. This is a workaround to fix that. https://github.com/Ieatta/App/issues/23422 */}
                         {Browser.isSafari() && (
                             <View style={styles.dualColorOverscrollSpacer}>
                                 <View style={[styles.flex1, StyleUtils.getBackgroundColorStyle(backgroundColor ?? theme.appBG)]} />
                                 <View style={[isSmallScreenWidth ? styles.flex1 : styles.flex3, appBGColor]} />
                             </View>
                         )}
-                        <ScrollView
-                            showsVerticalScrollIndicator={showsVerticalScrollIndicator}
-                            contentContainerStyle={[safeAreaPaddingBottomStyle, style, scrollViewContainerStyles]}
-                        >
+                        <ScrollView contentContainerStyle={[safeAreaPaddingBottomStyle, style, scrollViewContainerStyles]}>
                             {!Browser.isSafari() && <View style={styles.overscrollSpacer(backgroundColor ?? theme.appBG, windowHeight)} />}
                             <View style={[styles.alignItemsCenter, styles.justifyContentEnd, StyleUtils.getBackgroundColorStyle(backgroundColor ?? theme.appBG), headerContainerStyles]}>
                                 {headerContent}

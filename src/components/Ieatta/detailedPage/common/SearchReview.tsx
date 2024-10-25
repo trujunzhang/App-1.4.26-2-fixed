@@ -1,11 +1,8 @@
-import React, {useCallback, useRef, useState} from 'react';
-import type {GestureResponderEvent, StyleProp, ViewStyle} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import type {StyleProp, ViewStyle} from 'react-native';
 import {View} from 'react-native';
-import Hoverable from '@components/Hoverable';
 import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
-import {PressableWithFeedback} from '@components/Pressable';
-import Text from '@components/Text';
 import TextInput from '@components/TextInput';
 import Tooltip from '@components/Tooltip';
 import useLocalize from '@hooks/useLocalize';
@@ -13,7 +10,6 @@ import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import type {OnReviewSearchChanged} from '@libs/Firebase/list/types/rows/review';
 import variables from '@styles/variables';
-import CONST from '@src/CONST';
 
 type SearchReviewProps = {
     // Text explaining what the user can search for

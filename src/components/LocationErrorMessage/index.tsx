@@ -4,8 +4,8 @@ import CONST from '@src/CONST';
 import BaseLocationErrorMessage from './BaseLocationErrorMessage';
 import type LocationErrorMessageProps from './types';
 
-/** Opens expensify help site in a new browser tab */
-const navigateToExpensifyHelpSite = () => {
+/** Opens ieatta help site in a new browser tab */
+const navigateToIeattaHelpSite = () => {
     Linking.openURL(CONST.NEWHELP_URL);
 };
 
@@ -14,7 +14,7 @@ function LocationErrorMessage(props: LocationErrorMessageProps) {
         <BaseLocationErrorMessage
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            onAllowLocationLinkPress={navigateToExpensifyHelpSite}
+            onAllowLocationLinkPress={navigateToIeattaHelpSite}
         />
     );
 }

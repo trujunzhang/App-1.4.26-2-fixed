@@ -1,8 +1,5 @@
-import lodashDefer from 'lodash/defer';
 import moment from 'moment';
-import type {ForwardedRef, ReactElement, ReactNode, RefObject} from 'react';
-import React, {forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
-import type {ScrollView} from 'react-native';
+import React, {useState} from 'react';
 import {View} from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import Button from '@components/Button';

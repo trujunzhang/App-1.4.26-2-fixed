@@ -10,6 +10,7 @@ import Text from '@components/Text';
 import withNavigationFallback from '@components/withNavigationFallback';
 import useActiveElementRole from '@hooks/useActiveElementRole';
 import useKeyboardShortcut from '@hooks/useKeyboardShortcut';
+import useStyleUtils from '@hooks/useStyleUtils';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import HapticFeedback from '@libs/HapticFeedback';
@@ -19,18 +20,7 @@ import type ChildrenProps from '@src/types/utils/ChildrenProps';
 import type IconAsset from '@src/types/utils/IconAsset';
 import validateSubmitShortcut from './validateSubmitShortcut';
 
-type ButtonWithText = {
-    /** The text for the button label */
-    text?: string;
-
-    /** Boolean whether to display the right icon */
-    shouldShowRightIcon?: boolean;
-
-    /** The icon asset to display to the left of the text */
-    icon?: IconAsset | null;
-};
-
-type ButtonProps = (ButtonWithText | ChildrenProps) & {
+type ButtonProps = Partial<ChildrenProps> & {
     /** Should the press event bubble across multiple instances when Enter key triggers it. */
     allowBubble?: boolean;
 
@@ -45,6 +35,12 @@ type ButtonProps = (ButtonWithText | ChildrenProps) & {
 
     /** Any additional styles to pass to the right icon container. */
     iconRightStyles?: StyleProp<ViewStyle>;
+
+    /** The width of the icon. */
+    iconWidth?: number;
+
+    /** The height of the icon. */
+    iconHeight?: number;
 
     /** Small sized button */
     small?: boolean;
@@ -91,12 +87,6 @@ type ButtonProps = (ButtonWithText | ChildrenProps) & {
     /** Additional button styles. Specific to the OpacityView of the button */
     hoverStyles?: StyleProp<ViewStyle>;
 
-    /** The width of the icon. */
-    iconWidth?: number;
-
-    /** The height of the icon. */
-    iconHeight?: number;
-
     /** Additional text styles */
     textStyles?: StyleProp<TextStyle>;
 
@@ -126,6 +116,18 @@ type ButtonProps = (ButtonWithText | ChildrenProps) & {
 
     /** Accessibility label for the component */
     accessibilityLabel?: string;
+
+    /** The icon asset to display to the left of the text */
+    icon?: IconAsset | null;
+
+    /** The text for the button label */
+    text?: string;
+
+    /** Boolean whether to display the right icon */
+    shouldShowRightIcon?: boolean;
+
+    /** Whether the button should use split style or not */
+    isSplitButton?: boolean;
 };
 
 type KeyboardShortcutComponentProps = Pick<ButtonProps, 'isDisabled' | 'isLoading' | 'onPress' | 'pressOnEnter' | 'allowBubble' | 'enterKeyEventListenerPriority'>;
@@ -172,8 +174,14 @@ function Button(
 
         iconRight = Expensicons.ArrowRight,
         iconFill,
+        icon = null,
         iconStyles = [],
         iconRightStyles = [],
+
+        iconWidth = variables.iconSizeSmall,
+        iconHeight = variables.iconSizeSmall,
+
+        text = '',
 
         small = false,
         large = false,
@@ -196,9 +204,6 @@ function Button(
         hoverStyles = [],
         textStyles = [],
 
-        iconWidth = variables.iconSizeSmall,
-        iconHeight = variables.iconSizeSmall,
-
         shouldUseDefaultHover = true,
         success = false,
         danger = false,
@@ -207,22 +212,23 @@ function Button(
         shouldRemoveLeftBorderRadius = false,
         shouldEnableHapticFeedback = false,
         isLongPressDisabled = false,
+        shouldShowRightIcon = false,
 
         id = '',
         accessibilityLabel = '',
+        isSplitButton = false,
         ...rest
     }: ButtonProps,
-    ref: ForwardedRef<View>,
+    ref: ForwardedRef<View | HTMLDivElement>,
 ) {
     const theme = useTheme();
     const styles = useThemeStyles();
+    const StyleUtils = useStyleUtils();
 
     const renderContent = () => {
         if ('children' in rest) {
             return rest.children;
         }
-
-        const {text = '', icon = null, shouldShowRightIcon = false} = rest;
 
         const textComponent = (
             <Text
@@ -251,10 +257,14 @@ function Button(
                 <View style={[styles.justifyContentBetween, styles.flexRow]}>
                     <View style={[styles.alignItemsCenter, styles.flexRow, styles.flexShrink1]}>
                         {icon && (
-                            <View style={[styles.mr1, iconStyles]}>
+                            <View style={[large ? styles.mr2 : styles.mr1, !text && styles.mr0, iconStyles]}>
                                 <Icon
                                     src={icon}
+                                    hasText={!!text}
                                     fill={iconFill ?? (success || danger ? theme.textLight : theme.icon)}
+                                    small={small}
+                                    medium={medium}
+                                    large={large}
                                     width={iconWidth}
                                     height={iconHeight}
                                 />
@@ -263,13 +273,27 @@ function Button(
                         {textComponent}
                     </View>
                     {shouldShowRightIcon && (
-                        <View style={[styles.justifyContentCenter, styles.ml1, iconRightStyles]}>
-                            <Icon
-                                src={iconRight}
-                                fill={iconFill ?? (success || danger ? theme.textLight : theme.icon)}
-                                width={iconWidth}
-                                height={iconHeight}
-                            />
+                        <View style={[styles.justifyContentCenter, large ? styles.ml2 : styles.ml1, iconRightStyles]}>
+                            {!isSplitButton ? (
+                                <Icon
+                                    src={iconRight}
+                                    fill={iconFill ?? (success || danger ? theme.textLight : theme.icon)}
+                                    small={medium}
+                                    medium={large}
+                                    width={iconWidth}
+                                    height={iconHeight}
+                                />
+                            ) : (
+                                <Icon
+                                    src={iconRight}
+                                    fill={iconFill ?? (success || danger ? theme.textLight : theme.icon)}
+                                    small={small}
+                                    medium={medium}
+                                    large={large}
+                                    width={iconWidth}
+                                    height={iconHeight}
+                                />
+                            )}
                         </View>
                     )}
                 </View>
@@ -281,20 +305,26 @@ function Button(
 
     return (
         <>
-            <KeyboardShortcutComponent
-                isDisabled={isDisabled}
-                isLoading={isLoading}
-                allowBubble={allowBubble}
-                onPress={onPress}
-                pressOnEnter={pressOnEnter}
-                enterKeyEventListenerPriority={enterKeyEventListenerPriority}
-            />
+            {pressOnEnter && (
+                <KeyboardShortcutComponent
+                    isDisabled={isDisabled}
+                    isLoading={isLoading}
+                    allowBubble={allowBubble}
+                    onPress={onPress}
+                    pressOnEnter={pressOnEnter}
+                    enterKeyEventListenerPriority={enterKeyEventListenerPriority}
+                />
+            )}
             <PressableWithFeedback
                 ref={ref}
                 onPress={(event) => {
                     if (event?.type === 'click') {
                         const currentTarget = event?.currentTarget as HTMLElement;
                         currentTarget?.blur();
+                    }
+
+                    if (event?.type === 'keyup') {
+                        return;
                     }
 
                     if (shouldEnableHapticFeedback) {
@@ -324,17 +354,15 @@ function Button(
                 ]}
                 style={[
                     styles.button,
-                    small ? styles.buttonSmall : undefined,
-                    medium ? styles.buttonMedium : undefined,
-                    large ? styles.buttonLarge : undefined,
+                    StyleUtils.getButtonStyleWithIcon(styles, small, medium, large, Boolean(icon), Boolean(text?.length > 0), shouldShowRightIcon),
                     success ? styles.buttonSuccess : undefined,
                     danger ? styles.buttonDanger : undefined,
-                    isDisabled && (success || danger) ? styles.buttonOpacityDisabled : undefined,
+                    isDisabled ? styles.buttonOpacityDisabled : undefined,
                     isDisabled && !danger && !success ? styles.buttonDisabled : undefined,
                     shouldRemoveRightBorderRadius ? styles.noRightBorderRadius : undefined,
                     shouldRemoveLeftBorderRadius ? styles.noLeftBorderRadius : undefined,
                     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-                    'text' in rest && (rest?.icon || rest?.shouldShowRightIcon) ? styles.alignItemsStretch : undefined,
+                    text && shouldShowRightIcon ? styles.alignItemsStretch : undefined,
                     innerStyles,
                 ]}
                 hoverStyle={[
@@ -363,3 +391,5 @@ function Button(
 Button.displayName = 'Button';
 
 export default withNavigationFallback(React.forwardRef(Button));
+
+export type {ButtonProps};

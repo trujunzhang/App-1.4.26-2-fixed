@@ -1,12 +1,12 @@
 // @flow
 import * as _ from 'lodash';
 import * as React from 'react';
-import {Animated, ImageSourcePropType, ImageStyle, ImageURISource, Platform, Image as RNImage, StyleProp, StyleSheet, View} from 'react-native';
+import {Animated, ImageSourcePropType, ImageStyle, ImageURISource, Platform, Image as RNImage, StyleProp, StyleSheet, TextStyle, View} from 'react-native';
 // import { BlurView } from "expo-blur";
 import CacheManager, {DownloadOptions} from './CacheManager';
 
 interface ImageProps {
-    style?: StyleProp<ImageStyle>;
+    style?: StyleProp<TextStyle> | StyleProp<ImageStyle>;
     defaultSource?: ImageURISource | number;
     preview?: ImageSourcePropType;
     options?: DownloadOptions;
@@ -68,7 +68,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                         onError({nativeEvent: {error: new Error('Could not load image')}});
                     }
                 }
-            } catch (error) {
+            } catch (error: any) {
                 onError({nativeEvent: {error}});
             }
         }
@@ -76,18 +76,19 @@ export default class Image extends React.Component<ImageProps, ImageState> {
 
     render() {
         const {preview, style, defaultSource, tint, ...otherProps} = this.props;
-        const {uri, intensity} = this.state;
+        // const {uri, intensity} = this.state;
+        const {uri} = this.state;
         const isImageReady = !!uri;
-        const opacity = intensity.interpolate({
-            inputRange: [0, 100],
-            outputRange: [0, 0.5],
-        });
+        // const opacity = intensity.interpolate({
+        //     inputRange: [0, 100],
+        //     outputRange: [0, 0.5],
+        // });
         const flattenedStyle = StyleSheet.flatten(style);
         const computedStyle: StyleProp<ImageStyle> = [
             StyleSheet.absoluteFill,
             _.transform(
                 _.pickBy(flattenedStyle, (_val, key) => propsToCopy.indexOf(key) !== -1),
-                (result, value: any, key) => Object.assign(result, {[key]: value - (flattenedStyle.borderWidth || 0)}),
+                (result: any, value: any, key) => Object.assign(result, {[key]: value - (flattenedStyle.borderWidth || 0)}),
             ),
         ];
         return (
@@ -123,7 +124,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     }
 }
 
-const black = 'black';
-const white = 'white';
+// const black = 'black';
+// const white = 'white';
 const propsToCopy = ['borderRadius', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderTopLeftRadius', 'borderTopRightRadius'];
 // const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);

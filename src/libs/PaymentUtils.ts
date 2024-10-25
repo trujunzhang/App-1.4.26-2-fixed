@@ -12,7 +12,7 @@ type AccountType = BankAccount['accountType'] | Fund['accountType'];
 /**
  * Check to see if user has either a debit card or personal bank account added that can be used with a wallet.
  */
-function hasExpensifyPaymentMethod(fundList: Record<string, Fund>, bankAccountList: Record<string, BankAccount>, shouldIncludeDebitCard = true): boolean {
+function hasIeattaPaymentMethod(fundList: Record<string, Fund>, bankAccountList: Record<string, BankAccount>, shouldIncludeDebitCard = true): boolean {
     const validBankAccount = Object.values(bankAccountList).some((bankAccountJSON) => {
         const bankAccount = new BankAccountModel(bankAccountJSON);
 
@@ -40,7 +40,7 @@ function getPaymentMethodDescription(accountType: AccountType, account: BankAcco
 /**
  * Get the PaymentMethods list
  */
-function formatPaymentMethods(bankAccountList: Record<string, BankAccount>, fundList: Record<string, Fund>, styles: ThemeStyles): PaymentMethod[] {
+function formatPaymentMethods(bankAccountList: Record<string, BankAccount>, fundList: Record<string, Fund> | Fund[], styles: ThemeStyles): PaymentMethod[] {
     const combinedPaymentMethods: PaymentMethod[] = [];
 
     Object.values(bankAccountList).forEach((bankAccount) => {
@@ -88,4 +88,4 @@ function calculateWalletTransferBalanceFee(currentBalance: number, methodType: s
     return Math.max(calculateFee, transferMethodTypeFeeStructure.MINIMUM_FEE);
 }
 
-export {hasExpensifyPaymentMethod, getPaymentMethodDescription, formatPaymentMethods, calculateWalletTransferBalanceFee};
+export {hasIeattaPaymentMethod, getPaymentMethodDescription, formatPaymentMethods, calculateWalletTransferBalanceFee};

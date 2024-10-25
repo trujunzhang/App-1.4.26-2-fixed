@@ -45,14 +45,12 @@ function PhotoCarouselButtons({photoWidth, photoHeight, photoIndex, shouldShowLe
                     },
                 ]}
                 hoverStyles={[{backgroundColor: TailwindColors.white}]}
-                icon={isRightArrow ? Expensicons.ArrowRight : Expensicons.ArrowLeft}
+                icon={isRightArrow ? Expensicons.ArrowRight : Expensicons.BackArrow}
                 iconFill={TailwindColors.gray500}
                 iconWidth={variables.iconSizeNormal}
-                iconHeight={variables.iconSizeNormal}
+                iconHeight={variables.iconSizeLarge}
                 iconStyles={[styles.ml0, styles.mr0]}
                 onPress={onPress}
-                // onPressIn={cancelAutoHideArrow}
-                // onPressOut={autoHideArrow}
             />
         );
     };

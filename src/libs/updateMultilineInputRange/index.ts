@@ -8,7 +8,7 @@ import type UpdateMultilineInputRange from './types';
  * at the end of the text value, and automatically scroll the input field to this position after the field gains
  * focus. This provides a better user experience in cases where the text in the field has to be edited. The auto-
  * scroll behaviour works on all platforms except iOS native.
- * See https://github.com/Expensify/App/issues/20836 for more details.
+ * See https://github.com/Ieatta/App/issues/20836 for more details.
  */
 const updateMultilineInputRange: UpdateMultilineInputRange = (input, shouldAutoFocus = true) => {
     if (!input) {

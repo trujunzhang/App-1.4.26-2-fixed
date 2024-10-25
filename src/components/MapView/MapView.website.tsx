@@ -3,11 +3,11 @@
 // For the web version, we use the Mapbox Web library called react-map-gl, while for the native mobile version,
 // we utilize a different Mapbox library @rnmapbox/maps tailored for mobile development.
 import {useFocusEffect} from '@react-navigation/native';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+// import mapboxgl from 'mapbox-gl';
+// import 'mapbox-gl/dist/mapbox-gl.css';
 import React, {forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState} from 'react';
-import type {MapRef} from 'react-map-gl';
-import Map, {Marker} from 'react-map-gl';
+// import type {MapRef} from 'react-map-gl';
+// import Map, {Marker} from 'react-map-gl';
 import {View} from 'react-native';
 import {withOnyx} from 'react-native-onyx';
 import useStyleUtils from '@hooks/useStyleUtils';
@@ -38,6 +38,7 @@ const MapView = forwardRef<MapViewHandle, ComponentProps>(
             userLocation: cachedUserLocation,
             directionCoordinates,
             initialState = {location: CONST.MAPBOX.DEFAULT_COORDINATE, zoom: CONST.MAPBOX.DEFAULT_ZOOM},
+            interactive = true,
         },
         ref,
     ) => {
@@ -48,43 +49,12 @@ const MapView = forwardRef<MapViewHandle, ComponentProps>(
         const styles = useThemeStyles();
         const StyleUtils = useStyleUtils();
 
-        const [mapRef, setMapRef] = useState<MapRef | null>(null);
-        // const [currentPosition, setCurrentPosition] = useState(cachedUserLocation);
-        const [currentPosition, setCurrentPosition] = useState(initialState.location);
+        // const [mapRef, setMapRef] = useState<MapRef | null>(null);
+        const [currentPosition, setCurrentPosition] = useState(cachedUserLocation);
         const [userInteractedWithMap, setUserInteractedWithMap] = useState(false);
         const [shouldResetBoundaries, setShouldResetBoundaries] = useState<boolean>(false);
-        const setRef = useCallback((newRef: MapRef | null) => setMapRef(newRef), []);
-        const hasAskedForLocationPermission = useRef(false);
-
-        useFocusEffect(
-            useCallback(() => {
-                if (isOffline) {
-                    return;
-                }
-
-                if (hasAskedForLocationPermission.current) {
-                    return;
-                }
-
-                hasAskedForLocationPermission.current = true;
-                // getCurrentPosition(
-                //     (params) => {
-                //         const currentCoords = {longitude: params.coords.longitude, latitude: params.coords.latitude};
-                //         setCurrentPosition(currentCoords);
-                //         setUserLocation(currentCoords);
-                //     },
-                //     () => {
-                //         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-                //         if (cachedUserLocation || !initialState) {
-                //             return;
-                //         }
-
-                //         // setCurrentPosition({longitude: initialState.location[0], latitude: initialState.location[1]});
-                //         setCurrentPosition({longitude: initialState.location.longitude, latitude: initialState.location.latitude});
-                //     },
-                // );
-            }, [cachedUserLocation, initialState, isOffline]),
-        );
+        // const setRef = useCallback((newRef: MapRef | null) => setMapRef(newRef), []);
+        const shouldInitializeCurrentPosition = useRef(true);
 
         // Determines if map can be panned to user's detected
         // location without bothering the user. It will return
@@ -92,138 +62,163 @@ const MapView = forwardRef<MapViewHandle, ComponentProps>(
         // if there are one or more waypoints present.
         const shouldPanMapToCurrentPosition = useCallback(() => !userInteractedWithMap && (!waypoints || waypoints.length === 0), [userInteractedWithMap, waypoints]);
 
-        useEffect(() => {
-            if (!currentPosition || !mapRef) {
+        const setCurrentPositionToInitialState = useCallback(() => {
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+            if (cachedUserLocation || !initialState) {
                 return;
             }
+            setCurrentPosition({longitude: initialState.location[0], latitude: initialState.location[1]});
+        }, [initialState, cachedUserLocation]);
 
-            if (!shouldPanMapToCurrentPosition()) {
-                return;
-            }
+        useFocusEffect(
+            useCallback(() => {
+                if (isOffline) {
+                    return;
+                }
 
-            mapRef.flyTo({
-                center: [currentPosition.longitude, currentPosition.latitude],
-                zoom: CONST.MAPBOX.DEFAULT_ZOOM,
-            });
-        }, [currentPosition, userInteractedWithMap, mapRef, shouldPanMapToCurrentPosition]);
+                if (!shouldInitializeCurrentPosition.current) {
+                    return;
+                }
 
-        const resetBoundaries = useCallback(() => {
-            if (!waypoints || waypoints.length === 0) {
-                return;
-            }
+                shouldInitializeCurrentPosition.current = false;
 
-            if (!mapRef) {
-                return;
-            }
+                if (!shouldPanMapToCurrentPosition()) {
+                    setCurrentPositionToInitialState();
+                    return;
+                }
 
-            if (waypoints.length === 1) {
-                mapRef.flyTo({
-                    center: waypoints[0].coordinate,
-                    zoom: CONST.MAPBOX.SINGLE_MARKER_ZOOM,
-                });
-                return;
-            }
+                getCurrentPosition((params) => {
+                    const currentCoords = {longitude: params.coords.longitude, latitude: params.coords.latitude};
+                    setCurrentPosition(currentCoords);
+                    setUserLocation(currentCoords);
+                }, setCurrentPositionToInitialState);
+            }, [isOffline, shouldPanMapToCurrentPosition, setCurrentPositionToInitialState]),
+        );
 
-            const map = mapRef.getMap();
+        // useEffect(() => {
+        //     if (!currentPosition || !mapRef) {
+        //         return;
+        //     }
+        //
+        //     if (!shouldPanMapToCurrentPosition()) {
+        //         return;
+        //     }
+        //
+        //     mapRef.flyTo({
+        //         center: [currentPosition.longitude, currentPosition.latitude],
+        //         zoom: CONST.MAPBOX.DEFAULT_ZOOM,
+        //     });
+        // }, [currentPosition, userInteractedWithMap, mapRef, shouldPanMapToCurrentPosition]);
 
-            const {northEast, southWest} = utils.getBounds(
-                waypoints.map((waypoint) => waypoint.coordinate),
-                directionCoordinates,
-            );
-            map.fitBounds([northEast, southWest], {padding: mapPadding});
-        }, [waypoints, mapRef, mapPadding, directionCoordinates]);
+        // const resetBoundaries = useCallback(() => {
+        //     if (!waypoints || waypoints.length === 0) {
+        //         return;
+        //     }
+        //
+        //     if (!mapRef) {
+        //         return;
+        //     }
+        //
+        //     if (waypoints.length === 1) {
+        //         mapRef.flyTo({
+        //             center: waypoints[0].coordinate,
+        //             zoom: CONST.MAPBOX.SINGLE_MARKER_ZOOM,
+        //         });
+        //         return;
+        //     }
+        //
+        //     const map = mapRef.getMap();
+        //
+        //     const {northEast, southWest} = utils.getBounds(
+        //         waypoints.map((waypoint) => waypoint.coordinate),
+        //         directionCoordinates,
+        //     );
+        //     map.fitBounds([northEast, southWest], {padding: mapPadding});
+        // }, [waypoints, mapRef, mapPadding, directionCoordinates]);
 
-        useEffect(resetBoundaries, [resetBoundaries]);
+        // useEffect(resetBoundaries, [resetBoundaries]);
 
         useEffect(() => {
             if (!shouldResetBoundaries) {
                 return;
             }
 
-            resetBoundaries();
+            // resetBoundaries();
             setShouldResetBoundaries(false);
             // eslint-disable-next-line react-hooks/exhaustive-deps -- this effect only needs to run when the boundaries reset is forced
         }, [shouldResetBoundaries]);
 
-        useEffect(() => {
-            if (!mapRef) {
-                return;
-            }
+        // useEffect(() => {
+        //     if (!mapRef) {
+        //         return;
+        //     }
+        //
+        //     const resizeObserver = new ResizeObserver(() => {
+        //         mapRef.resize();
+        //         setShouldResetBoundaries(true);
+        //     });
+        //     resizeObserver.observe(mapRef.getContainer());
+        //
+        //     return () => {
+        //         resizeObserver?.disconnect();
+        //     };
+        // }, [mapRef]);
 
-            const resizeObserver = new ResizeObserver(() => {
-                mapRef.resize();
-                setShouldResetBoundaries(true);
-            });
-            resizeObserver.observe(mapRef.getContainer());
+        // useImperativeHandle(
+        //     ref,
+        //     () => ({
+        //         flyTo: (location: [number, number], zoomLevel: number = CONST.MAPBOX.DEFAULT_ZOOM, animationDuration?: number) =>
+        //             mapRef?.flyTo({
+        //                 center: location,
+        //                 zoom: zoomLevel,
+        //                 duration: animationDuration,
+        //             }),
+        //         fitBounds: (northEast: [number, number], southWest: [number, number]) => mapRef?.fitBounds([northEast, southWest]),
+        //     }),
+        //     [mapRef],
+        // );
 
-            return () => {
-                resizeObserver?.disconnect();
-            };
-        }, [mapRef]);
-
-        useImperativeHandle(
-            ref,
-            () => ({
-                flyTo: (location: [number, number], zoomLevel: number = CONST.MAPBOX.DEFAULT_ZOOM, animationDuration?: number) =>
-                    mapRef?.flyTo({
-                        center: location,
-                        zoom: zoomLevel,
-                        duration: animationDuration,
-                    }),
-                fitBounds: (northEast: [number, number], southWest: [number, number]) => mapRef?.fitBounds([northEast, southWest]),
-            }),
-            [mapRef],
-        );
-
-        return (
-            <>
-                {Boolean(accessToken) && Boolean(currentPosition.latitude) && Boolean(currentPosition.longitude) ? (
-                    <View
-                        style={style}
-                        // eslint-disable-next-line react/jsx-props-no-spreading
-                        {...responder.panHandlers}
-                    >
-                        <Map
-                            onDrag={() => setUserInteractedWithMap(true)}
-                            ref={setRef}
-                            mapLib={mapboxgl}
-                            mapboxAccessToken={accessToken}
-                            initialViewState={{
-                                // longitude: currentPosition?.longitude,
-                                // latitude: currentPosition?.latitude,
-
-                                longitude: -122.4021,
-                                latitude: 37.7911,
-                                // DEFAULT_COORDINATE: [-122.4021, 37.7911],
-
-                                zoom: initialState.zoom,
-                            }}
-                            style={StyleUtils.getTextColorStyle(theme.mapAttributionText)}
-                            mapStyle={styleURL}
-                        >
-                            {waypoints?.map(({coordinate, markerComponent, id}) => {
-                                const MarkerComponent = markerComponent;
-                                return (
-                                    <Marker
-                                        key={id}
-                                        longitude={coordinate[0]}
-                                        latitude={coordinate[1]}
-                                    >
-                                        <MarkerComponent />
-                                    </Marker>
-                                );
-                            })}
-                            {directionCoordinates && <Direction coordinates={directionCoordinates} />}
-                        </Map>
-                    </View>
-                ) : (
-                    <PendingMapView
-                        title={translate('distance.mapPending.title')}
-                        subtitle={isOffline ? translate('distance.mapPending.subtitle') : translate('distance.mapPending.onlineSubtitle')}
-                        style={styles.mapEditView}
-                    />
-                )}
-            </>
+        return !isOffline && Boolean(accessToken) && Boolean(currentPosition) ? (
+            <View
+                style={style}
+                // eslint-disable-next-line react/jsx-props-no-spreading
+                {...responder.panHandlers}
+            >
+                {/* <Map */}
+                {/*    onDrag={() => setUserInteractedWithMap(true)} */}
+                {/*    ref={setRef} */}
+                {/*    mapLib={mapboxgl} */}
+                {/*    mapboxAccessToken={accessToken} */}
+                {/*    initialViewState={{ */}
+                {/*        longitude: currentPosition?.longitude, */}
+                {/*        latitude: currentPosition?.latitude, */}
+                {/*        zoom: initialState.zoom, */}
+                {/*    }} */}
+                {/*    style={StyleUtils.getTextColorStyle(theme.mapAttributionText)} */}
+                {/*    mapStyle={styleURL} */}
+                {/*    interactive={interactive} */}
+                {/* > */}
+                {/*    {waypoints?.map(({coordinate, markerComponent, id}) => { */}
+                {/*        const MarkerComponent = markerComponent; */}
+                {/*        return ( */}
+                {/*            <Marker */}
+                {/*                key={id} */}
+                {/*                longitude={coordinate[0]} */}
+                {/*                latitude={coordinate[1]} */}
+                {/*            > */}
+                {/*                <MarkerComponent /> */}
+                {/*            </Marker> */}
+                {/*        ); */}
+                {/*    })} */}
+                {/*    {directionCoordinates && <Direction coordinates={directionCoordinates} />} */}
+                {/* </Map> */}
+            </View>
+        ) : (
+            <PendingMapView
+                title={translate('distance.mapPending.title')}
+                subtitle={isOffline ? translate('distance.mapPending.subtitle') : translate('distance.mapPending.onlineSubtitle')}
+                style={styles.mapEditView}
+            />
         );
     },
 );

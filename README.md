@@ -1,9 +1,9 @@
 <div align="center">
-    <a href="https://new.expensify.com">
-        <img src="https://raw.githubusercontent.com/Expensify/App/main/web/favicon.png" width="64" height="64" alt="New Ieatta Icon">
+    <a href="https://new.ieatta.com">
+        <img src="https://raw.githubusercontent.com/Ieatta/App/main/web/favicon.png" width="64" height="64" alt="New Ieatta Icon">
     </a>
     <h1>
-        <a href="https://new.expensify.com">
+        <a href="https://new.ieatta.com">
             New Ieatta
         </a>
     </h1>
@@ -11,19 +11,20 @@
 
 #### Table of Contents
 * [Local Development](#local-development)
-* [Testing on browsers on simulators and emulators](#testing-on-browsers-on-simulators-and-emulators)
+* [Testing on browsers in simulators and emulators](#testing-on-browsers-in-simulators-and-emulators)
 * [Running The Tests](#running-the-tests)
 * [Debugging](#debugging)
 * [App Structure and Conventions](#app-structure-and-conventions)
 * [Philosophy](#Philosophy)
+* [Security](#Security)
 * [Internationalization](#Internationalization)
 * [Deploying](#deploying)
 
 #### Additional Reading
 * [API Details](contributingGuides/API.md)
 * [Offline First](contributingGuides/OFFLINE_UX.md)
-* [Contributing to Expensify](contributingGuides/CONTRIBUTING.md)
-* [Expensify Code of Conduct](CODE_OF_CONDUCT.md)
+* [Contributing to Ieatta](contributingGuides/CONTRIBUTING.md)
+* [Ieatta Code of Conduct](CODE_OF_CONDUCT.md)
 * [Contributor License Agreement](contributingGuides/CLA.md)
 
 ----
@@ -35,10 +36,10 @@ These instructions should get you set up ready to work on New Ieatta 🙌
 1. Install `nvm` then `node` & `npm`: `brew install nvm && nvm install`
 2. Install `watchman`: `brew install watchman`
 3. Install dependencies: `npm install`
-4. Install `mkcert`: `brew install mkcert` followed by `npm run setup-https`. If you are not using macOS, follow the instructions [here](https://github.com/FiloSottile/mkcert?tab=readme-ov-file#installation). 
-5. Create a host entry in your local hosts file, `/etc/hosts` for dev.new.expensify.com pointing to localhost:
+4. Install `mkcert`: `brew install mkcert` followed by `npm run setup-https`. If you are not using macOS, follow the instructions [here](https://github.com/FiloSottile/mkcert?tab=readme-ov-file#installation).
+5. Create a host entry in your local hosts file, `/etc/hosts` for dev.new.ieatta.com pointing to localhost:
 ```
-127.0.0.1 dev.new.expensify.com
+127.0.0.1 dev.new.ieatta.com
 ```
 
 You can use any IDE or code editing tool for developing on any platform. Use your favorite!
@@ -49,52 +50,66 @@ In order to have more consistent builds, we use a strict `node` and `npm` versio
 ## Configuring HTTPS
 The webpack development server now uses https. If you're using a mac, you can simply run `npm run setup-https`.
 
-If you're using another operating system, you will need to ensure `mkcert` is installed, and then follow the instructions in the repository to generate certificates valid for `dev.new.expensify.com` and `localhost`. The certificate should be named `certificate.pem` and the key should be named `key.pem`. They should be placed in `config/webpack`.
+If you're using another operating system, you will need to ensure `mkcert` is installed, and then follow the instructions in the repository to generate certificates valid for `dev.new.ieatta.com` and `localhost`. The certificate should be named `certificate.pem` and the key should be named `key.pem`. They should be placed in `config/webpack`.
 
 ## Running the web app 🕸
 * To run the **development web app**: `npm run web`
-* Changes applied to Javascript will be applied automatically via WebPack as configured in `webpack.dev.js`
+* Changes applied to Javascript will be applied automatically via WebPack as configured in `webpack.dev.ts`
 
 ## Running the iOS app 📱
 For an M1 Mac, read this [SO](https://stackoverflow.com/questions/64901180/how-to-run-cocoapods-on-apple-silicon-m1) for installing cocoapods.
 
+* If you haven't already, install Xcode tools and make sure to install the optional "iOS Platform" package as well. This installation may take awhile.
+    * After installation, check in System Settings that there's no update for Xcode. Otherwise, you may encounter issues later that don't explain that you solve them by updating Xcode.
 * Install project gems, including cocoapods, using bundler to ensure everyone uses the same versions. In the project root, run: `bundle install`
     * If you get the error `Could not find 'bundler'`, install the bundler gem first: `gem install bundler` and try again.
     * If you are using MacOS and get the error `Gem::FilePermissionError` when trying to install the bundler gem, you're likely using system Ruby, which requires administrator permission to modify. To get around this, install another version of Ruby with a version manager like [rbenv](https://github.com/rbenv/rbenv#installation).
 * Before installing iOS dependencies, you need to obtain a token from Mapbox to download their SDKs. Please run `npm run configure-mapbox` and follow the instructions.
-    * For help with MapBox token, you can see [this Slack thread](https://expensify.slack.com/archives/C01GTK53T8Q/p1692740856745279?thread_ts=1692322511.804599&cid=C01GTK53T8Q)
+    * For help with MapBox token, you can see [this Slack thread](https://ieatta.slack.com/archives/C01GTK53T8Q/p1692740856745279?thread_ts=1692322511.804599&cid=C01GTK53T8Q)
 * To install the iOS dependencies, run: `npm install && npm run pod-install`
-* If you are an Expensify employee and want to point the emulator to your local VM, follow [this](https://stackoverflow.com/c/expensify/questions/7699)
+* If you are an Ieatta employee and want to point the emulator to your local VM, follow [this](https://stackoverflow.com/c/ieatta/questions/7699)
 * To run a on a **Development Simulator**: `npm run ios`
 * Changes applied to Javascript will be applied automatically, any changes to native code will require a recompile
+
+If you want to run the app on an actual physical iOS device, please follow the instructions [here](https://github.com/Ieatta/App/blob/main/contributingGuides/HOW_TO_BUILD_APP_ON_PHYSICAL_IOS_DEVICE.md).
 
 ## Running the Android app 🤖
 * Before installing Android dependencies, you need to obtain a token from Mapbox to download their SDKs. Please run `npm run configure-mapbox` and follow the instructions. If you already did this step for iOS, there is no need to repeat this step.
 * Go through the official React-Native instructions on [this page](https://reactnative.dev/docs/environment-setup?guide=native&platform=android) to start running the app on android.
-* If you are an Expensify employee and want to point the emulator to your local VM, follow [this](https://stackoverflow.com/c/expensify/questions/7699)
+* If you are an Ieatta employee and want to point the emulator to your local VM, follow [this](https://stackoverflow.com/c/ieatta/questions/7699)
 * To run a on a **Development Emulator**: `npm run android`
 * Changes applied to Javascript will be applied automatically, any changes to native code will require a recompile
 
 ## Running the MacOS desktop app 🖥
 * To run the **Development app**, run: `npm run desktop`, this will start a new Electron process running on your MacOS desktop in the `dist/Mac` folder.
 
+## Receiving Notifications
+To receive notifications on development build of the app while hitting the Staging or Production API, you need to use the production airship config.
+### Android
+1. Copy the [production config](https://github.com/Ieatta/App/blob/d7c1256f952c0020344d809ee7299b49a4c70db2/android/app/src/main/assets/airshipconfig.properties#L1-L7) to the [development config](https://github.com/Ieatta/App/blob/d7c1256f952c0020344d809ee7299b49a4c70db2/android/app/src/development/assets/airshipconfig.properties#L1-L8).
+2. Rebuild the app.
+
+### iOS
+1. Replace the [development key and secret](https://github.com/Ieatta/App/blob/d7c1256f952c0020344d809ee7299b49a4c70db2/ios/AirshipConfig.plist#L7-L10) with the [production values](https://github.com/Ieatta/App/blob/d7c1256f952c0020344d809ee7299b49a4c70db2/ios/AirshipConfig.plist#L11-L14).
+2. Rebuild the app.
+
 ## Troubleshooting
 1. If you are having issues with **_Getting Started_**, please reference [React Native's Documentation](https://reactnative.dev/docs/environment-setup)
 2. If you are running into CORS errors like (in the browser dev console)
    ```sh
-   Access to fetch at 'https://www.expensify.com/api?command=BeginSignIn' from origin 'http://localhost:8080' has been blocked by CORS policy
+   Access to fetch at 'https://www.ieatta.com/api/BeginSignIn' from origin 'http://localhost:8080' has been blocked by CORS policy
    ```
    You probably have a misconfigured `.env` file - remove it (`rm .env`) and try again
 
-**Note:** Expensify engineers that will be testing with the API in your local dev environment please refer to [these additional instructions](https://stackoverflow.com/c/expensify/questions/7699/7700).
+**Note:** Ieatta engineers that will be testing with the API in your local dev environment please refer to [these additional instructions](https://stackoverflow.com/c/ieatta/questions/7699/7700).
 
 ## Environment variables
 Creating an `.env` file is not necessary. We advise external contributors against it. It can lead to errors when
 variables referenced here get updated since your local `.env` file is ignored.
 
 - `NEW_EXPENSIFY_URL` - The root URL used for the website
-- `SECURE_EXPENSIFY_URL` - The URL used to hit the Expensify secure API
-- `EXPENSIFY_URL` - The URL used to hit the Expensify API
+- `SECURE_EXPENSIFY_URL` - The URL used to hit the Ieatta secure API
+- `EXPENSIFY_URL` - The URL used to hit the Ieatta API
 - `EXPENSIFY_PARTNER_NAME` - Constant used for the app when authenticating.
 - `EXPENSIFY_PARTNER_PASSWORD` - Another constant used for the app when authenticating. (This is OK to be public)
 - `PUSHER_APP_KEY` - Key used to authenticate with Pusher.com
@@ -108,8 +123,8 @@ variables referenced here get updated since your local `.env` file is ignored.
 - `CAPTURE_METRICS` (optional) - Set this to `true` to capture performance metrics and see them in Flipper
    see [PERFORMANCE.md](contributingGuides/PERFORMANCE.md#performance-metrics-opt-in-on-local-release-builds) for more information
 - `ONYX_METRICS` (optional) - Set this to `true` to capture even more performance metrics and see them in Flipper
-   see [React-Native-Onyx#benchmarks](https://github.com/Expensify/react-native-onyx#benchmarks) for more information
-- `E2E_TESTING` (optional) - This needs to be set to `true` when running the e2e tests for performance regression testing. 
+   see [React-Native-Onyx#benchmarks](https://github.com/Ieatta/react-native-onyx#benchmarks) for more information
+- `E2E_TESTING` (optional) - This needs to be set to `true` when running the e2e tests for performance regression testing.
    This happens usually automatically, read [this](tests/e2e/README.md) for more information
 
 ----
@@ -123,7 +138,7 @@ You create this certificate by following the instructions in [`Configuring HTTPS
 #### Pre-requisite for Android flow
 1. Open any emulator using Android Studio
 2. Use `adb push "$(mkcert -CAROOT)/rootCA.pem" /storage/emulated/0/Download/` to push certificate to install in Download folder.
-3. Install the certificate as CA certificate from the settings. On the Android emulator, this option can be found in Settings > Security > Encryption & Credentials > Install a certificate > CA certificate.  
+3. Install the certificate as CA certificate from the settings. On the Android emulator, this option can be found in Settings > Security > Encryption & Credentials > Install a certificate > CA certificate.
 4. Close the emulator.
 
 Note - If you want to run app on `https://127.0.0.1:8082`, then just install the certificate and use `adb reverse tcp:8082 tcp:8082` on every startup.
@@ -133,7 +148,7 @@ Note - If you want to run app on `https://127.0.0.1:8082`, then just install the
 2. Select the emulator you want to run if prompted. (If single emulator is available, then it will open automatically)
 3. Let the script execute till the message `🎉 Done!`.
 
-Note - If you want to run app on `https://dev.new.expensify.com:8082`, then just do the Android flow and use `npm run startAndroidEmulator` to start the Android Emulator every time (It will configure the emulator).
+Note - If you want to run app on `https://dev.new.ieatta.com:8082`, then just do the Android flow and use `npm run startAndroidEmulator` to start the Android Emulator every time (It will configure the emulator).
 
 
 Possible Scenario:
@@ -183,6 +198,79 @@ Our React Native Android app now uses the `Hermes` JS engine which requires your
 
 To make it easier to test things in web, we expose the Onyx object to the window, so you can easily do `Onyx.set('bla', 1)`.
 
+----
+
+# Release Profiler
+Often, performance issue debugging occurs in debug builds, which can introduce errors from elements such as JS Garbage Collection, Hermes debug markers, or LLDB pauses.
+
+`react-native-release-profiler` facilitates profiling within release builds for accurate local problem-solving and broad performance analysis in production to spot regressions or collect extensive device data. Therefore, we will utilize the production build version
+
+### Getting Started with Source Maps
+To accurately profile your application, generating source maps for Android and iOS is crucial. Here's how to enable them:
+1. Enable source maps on Android
+Ensure the following is set in your app's `android/app/build.gradle` file.
+
+    ```jsx
+    project.ext.react = [
+        enableHermes: true,
+        hermesFlagsRelease: ["-O", "-output-source-map"], // <-- here, plus whichever flag was required to set this away from default
+    ]
+    ```
+
+2. Enable source maps on IOS
+Within Xcode head to the build phase - `Bundle React Native code and images`.
+
+    ```jsx
+    export SOURCEMAP_FILE="$(pwd)/../main.jsbundle.map" // <-- here;
+
+    export NODE_BINARY=node
+    ../node_modules/react-native/scripts/react-native-xcode.sh
+    ```
+3. Install the necessary packages and CocoaPods dependencies:
+    ```jsx
+    npm i && npm run pod-install
+    ```
+7. Depending on the platform you are targeting, run your Android/iOS app in production mode.
+8. Upon completion, the generated source map can be found at:
+  Android: `android/app/build/generated/sourcemaps/react/productionRelease/index.android.bundle.map`
+  IOS: `main.jsbundle.map`
+
+### Recording a Trace:
+1. Ensure you have generated the source map as outlined above.
+2. Launch the app in production mode.
+2. Navigate to the feature you wish to profile.
+3. Initiate the profiling session by tapping with four fingers to open the menu and selecting **`Use Profiling`**.
+4. Close the menu and interact with the app.
+5. After completing your interactions, tap with four fingers again and select to stop profiling.
+6. You will be presented with a **`Share`** option to export the trace, which includes a trace file (`Profile<app version>.cpuprofile`) and build info (`AppInfo<app version>.json`).
+
+Build info:
+```jsx
+{
+    appVersion: "1.0.0",
+    environment: "production",
+    platform: "IOS",
+    totalMemory: "3GB",
+    usedMemory: "300MB"
+}
+```
+
+### How to symbolicate trace record:
+1. You have two files: `AppInfo<app version>.json` and `Profile<app version>.cpuprofile`
+2. Place the `Profile<app version>.cpuprofile` file at the root of your project.
+3. If you have already generated a source map from the steps above for this branch, you can skip to the next step. Otherwise, obtain the app version from `AppInfo<app version>.json` switch to that branch and generate the source map as described.
+
+`IMPORTANT:` You should generate the source map from the same branch as the trace was recorded.
+
+4. Use the following commands to symbolicate the trace for Android and iOS, respectively:
+Android: `npm run symbolicate-release:android`
+IOS: `npm run symbolicate-release:ios`
+5. A new file named `Profile_trace_for_<app version>-converted.json` will appear in your project's root folder.
+6. Open this file in your tool of choice:
+    - SpeedScope ([https://www.speedscope.app](https://www.speedscope.app/))
+    - Perfetto UI (https://ui.perfetto.dev/)
+    - Google Chrome's Tracing UI (chrome://tracing)
+
 ---
 
 # App Structure and Conventions
@@ -213,7 +301,7 @@ This layer is solely responsible for:
 - Reflecting exactly the data that is in persistent storage by using `withOnyx()` to bind to Onyx data.
 - Taking user input and passing it to an action
 
-As a convention, the UI layer should never interact with device storage directly or call `Onyx.set()` or `Onyx.merge()`. Use an action! For example, check out this action that is signing in the user [here](https://github.com/Expensify/App/blob/919c890cc391ad38b670ca1b266c114c8b3c3285/src/pages/signin/PasswordForm.js#L78-L78).
+As a convention, the UI layer should never interact with device storage directly or call `Onyx.set()` or `Onyx.merge()`. Use an action! For example, check out this action that is signing in the user [here](https://github.com/Ieatta/App/blob/919c890cc391ad38b670ca1b266c114c8b3c3285/src/pages/signin/PasswordForm.js#L78-L78).
 
 ```js
 validateAndSubmitForm() {
@@ -222,7 +310,7 @@ validateAndSubmitForm() {
 }
 ```
 
-That action will then call `Onyx.merge()` to [set default data and a loading state, then make an API request, and set the response with another `Onyx.merge()`](https://github.com/Expensify/App/blob/919c890cc391ad38b670ca1b266c114c8b3c3285/src/libs/actions/Session.js#L228-L247).
+That action will then call `Onyx.merge()` to [set default data and a loading state, then make an API request, and set the response with another `Onyx.merge()`](https://github.com/Ieatta/App/blob/919c890cc391ad38b670ca1b266c114c8b3c3285/src/libs/actions/Session.js#L228-L247).
 
 ```js
 function signIn(password, twoFactorAuthCode) {
@@ -282,7 +370,7 @@ created to house a collection of items in plural form and using camelCase (eg: p
 - styles: These files define styles used among components/pages
 - contributingGuides: This is just a set of markdown files providing guides and insights to aid developers in learning how to contribute to this repo
 
-**Note:** There is also a directory called `/docs`, which houses the Expensify Help site. It's a static site that's built with Jekyll and hosted on GitHub Pages.
+**Note:** There is also a directory called `/docs`, which houses the Ieatta Help site. It's a static site that's built with Jekyll and hosted on GitHub Pages.
 
 ## File naming/structure
 Files should be named after the component/function/constants they export, respecting the casing used for it. ie:
@@ -342,7 +430,7 @@ export default withOnyx({
 ## Things to know or brush up on before jumping into the code
 1. The major difference between React Native and React are the [components](https://reactnative.dev/docs/components-and-apis) that are used in the `render()` method. Everything else is exactly the same. Any React skills you have can be applied to React Native.
 1. The application uses [`react-navigation`](https://reactnavigation.org/) for navigating between parts of the app.
-1. [Higher Order Components](https://reactjs.org/docs/higher-order-components.html) are used to connect React components to persistent storage via [`react-native-onyx`](https://github.com/Expensify/react-native-onyx).
+1. [Higher Order Components](https://reactjs.org/docs/higher-order-components.html) are used to connect React components to persistent storage via [`react-native-onyx`](https://github.com/Ieatta/react-native-onyx).
 
 ----
 
@@ -394,22 +482,133 @@ This application is built with the following principles.
 
 ----
 
+# Security
+Updated rules for managing members across all types of chats in New Ieatta.
+
+- **Nobody can leave or be removed from something they were automatically added to. For example:**
+
+    - DM members can't leave or be removed from their DMs
+    - Members can't leave or be removed from their own workspace chats
+    - Admins can't leave or be removed from workspace chats
+    - Members can't leave or be removed from the #announce room
+    - Admins can't leave or be removed from #admins
+    - Domain members can't leave or be removed from their domain chat
+    - Report submitters can't leave or be removed from their reports
+    - Report managers can't leave or be removed from their reports
+    - Group owners cannot be removed from their groups - they need to transfer ownership first
+- **Excepting the above, admins can remove anyone. For example:**
+    - Group admins can remove other group admins, as well as group members
+    - Workspace admins can remove other workspace admins, as well as workspace members, and invited guests
+- **Excepting the above, members can remove guests. For example:**
+    - Workspace members can remove non-workspace guests.
+- **Excepting the above, anybody can remove themselves from any object**
+
+1. ### DM
+    |  | Member
+    | :---: | :---:
+    | **Invite** | ❌
+    | **Remove** | ❌
+    | **Leave**  | ❌
+    | **Can be removed**  | ❌
+- DM always has two participants. None of the participant can leave or be removed from the DM. Also no additional member can be invited to the chat.
+
+2. ### Workspace
+    1. #### Workspace
+        |   |  Creator  |  Member(Employee/User) | Admin |  Auditor?
+        | :---: | :---:  |  :---: | :---: | :---:
+        | **Invite** | ✅ |  ❌ |  ✅ | ❌
+        | **Remove** | ✅ |  ❌ |  ✅ | ❌
+        | **Leave**  | ❌ |  ✅ |  ❌ | ✅
+        | **Can be removed**  | ❌ |  ✅ | ✅ | ✅
+
+        - Creator can't leave or be removed from their own workspace
+        - Admins can't leave from the workspace
+        - Admins can remove other workspace admins, as well as workspace members, and invited guests
+        - Creator can remove other workspace admins, as well as workspace members, and invited guests
+        - Members and Auditors cannot invite or remove anyone from the workspace
+
+    2. #### Workspace #announce room
+        |   |  Member(Employee/User) | Admin |  Auditor?
+        | :---: | :---:  |  :---: | :---:
+        | **Invite** | ❌ |  ❌ |  ❌
+        | **Remove** | ❌ |  ❌ |  ❌
+        | **Leave**  | ❌ |  ❌ |  ❌
+        | **Can be removed**  | ❌ |  ❌ |  ❌ |
+
+       - No one can leave or be removed from the #announce room
+
+    3. #### Workspace #admin room
+        |   |  Admin |
+        | :---: | :---:
+        | **Invite** | ❌
+        | **Remove** | ❌
+        | **Leave**  | ❌
+        | **Can be removed**  | ❌
+
+        - Admins can't leave or be removed from #admins
+
+    4. #### Workspace rooms
+        |   |  Creator | Member | Guest(outside of the workspace)
+        | :---: | :---:  |  :---: | :---:
+        | **Invite** | ✅ | ✅ | ✅
+        | **Remove** | ✅ | ✅ | ❌
+        | **Leave**  | ✅ | ✅ | ✅
+        | **Can be removed**  | ✅ | ✅ | ✅
+
+        - Everyone can be removed/can leave from the room including creator
+        - Guests are not able to remove anyone from the room
+
+    4. #### Workspace chats
+        |   |  Admin | Member(default) | Member(invited)
+        | :---: | :---:  |  :---:  |  :---:
+        | **Invite** | ✅ |  ✅ | ❌
+        | **Remove** | ✅ |  ✅ | ❌
+        | **Leave**  | ❌ |  ❌  | ✅
+        | **Can be removed**  | ❌ | ❌ | ✅
+
+        - Admins are not able to leave/be removed from the workspace chat
+        - Default members(automatically invited) are not able to leave/be removed from the workspace chat
+        - Invited members(invited by members) are not able to invite or remove from the workspace chat
+        - Invited members(invited by members) are able to leave the workspace chat
+        - Default members and admins are able to remove invited members
+
+3. ### Domain chat
+    |   |  Member
+    | :---: | :---:
+    | **Remove** | ❌
+    | **Leave**  | ❌
+    | **Can be removed**  | ❌
+
+- Domain members can't leave or be removed from their domain chat
+
+4. ### Reports
+    |   |  Submitter | Manager
+    | :---: | :---:  | :---:
+    | **Remove** | ❌ | ❌
+    | **Leave**  | ❌ | ❌
+    | **Can be removed**  | ❌ | ❌
+
+- Report submitters can't leave or be removed from their reports (eg, if they are the report.accountID)
+- Report managers can't leave or be removed from their reports (eg, if they are the report.managerID)
+
+----
+
 # Internationalization
 This application is built with Internationalization (I18n) / Localization (L10n) support, so it's important to always
 localize the following types of data when presented to the user (even accessibility texts that are not rendered):
 
-- Texts: See [translate method](https://github.com/Expensify/App/blob/655ba416d552d5c88e57977a6e0165fb7eb7ab58/src/libs/translate.js#L15)
-- Date/time: see [DateUtils](https://github.com/Expensify/App/blob/f579946fbfbdc62acc5bd281dc75cabb803d9af0/src/libs/DateUtils.js)
-- Numbers and amounts: see [NumberFormatUtils](https://github.com/Expensify/App/blob/55b2372d1344e3b61854139806a53f8a3d7c2b8b/src/libs/NumberFormatUtils.js) and [LocaleDigitUtils](https://github.com/Expensify/App/blob/55b2372d1344e3b61854139806a53f8a3d7c2b8b/src/libs/LocaleDigitUtils.js)
-- Phones: see [LocalPhoneNumber](https://github.com/Expensify/App/blob/bdfbafe18ee2d60f766c697744f23fad64b62cad/src/libs/LocalePhoneNumber.js#L51-L52)
+- Texts: See [translate method](https://github.com/Ieatta/App/blob/655ba416d552d5c88e57977a6e0165fb7eb7ab58/src/libs/translate.js#L15)
+- Date/time: see [DateUtils](https://github.com/Ieatta/App/blob/f579946fbfbdc62acc5bd281dc75cabb803d9af0/src/libs/DateUtils.js)
+- Numbers and amounts: see [NumberFormatUtils](https://github.com/Ieatta/App/blob/55b2372d1344e3b61854139806a53f8a3d7c2b8b/src/libs/NumberFormatUtils.js) and [LocaleDigitUtils](https://github.com/Ieatta/App/blob/55b2372d1344e3b61854139806a53f8a3d7c2b8b/src/libs/LocaleDigitUtils.js)
+- Phones: see [LocalPhoneNumber](https://github.com/Ieatta/App/blob/bdfbafe18ee2d60f766c697744f23fad64b62cad/src/libs/LocalePhoneNumber.js#L51-L52)
 
-In most cases, you will be needing to localize data used in a component, if that's the case, there's a HOC [withLocalize](https://github.com/Expensify/App/blob/37465dbd07da1feab8347835d82ed3d2302cde4c/src/components/withLocalize.js).
-It will abstract most of the logic you need (mostly subscribe to the [NVP_PREFERRED_LOCALE](https://github.com/Expensify/App/blob/6cf1a56df670a11bf61aa67eeb64c1f87161dea1/src/ONYXKEYS.js#L88) Onyx key)
+In most cases, you will be needing to localize data used in a component, if that's the case, there's a HOC [withLocalize](https://github.com/Ieatta/App/blob/37465dbd07da1feab8347835d82ed3d2302cde4c/src/components/withLocalize.js).
+It will abstract most of the logic you need (mostly subscribe to the [NVP_PREFERRED_LOCALE](https://github.com/Ieatta/App/blob/6cf1a56df670a11bf61aa67eeb64c1f87161dea1/src/ONYXKEYS.js#L88) Onyx key)
 and is the preferred way of localizing things inside components.
 
 Some pointers:
 
-- All translations are stored in language files in [src/languages](https://github.com/Expensify/App/tree/b114bc86ff38e3feca764e75b3f5bf4f60fcd6fe/src/languages).
+- All translations are stored in language files in [src/languages](https://github.com/Ieatta/App/tree/b114bc86ff38e3feca764e75b3f5bf4f60fcd6fe/src/languages).
 - We try to group translations by their pages/components
 - A common rule of thumb is to move a common word/phrase to be shared when it's in 3 places
 - Always prefer longer and more complex strings in the translation files. For example
@@ -424,38 +623,38 @@ Some pointers:
 ## QA and deploy cycles
 We utilize a CI/CD deployment system built using [GitHub Actions](https://github.com/features/actions) to ensure that new code is automatically deployed to our users as fast as possible. As part of this process, all code is first deployed to our staging environments, where it undergoes quality assurance (QA) testing before it is deployed to production. Typically, pull requests are deployed to staging immediately after they are merged.
 
-Every time a PR is deployed to staging, it is added to a [special tracking issue](https://github.com/Expensify/App/issues?q=is%3Aopen+is%3Aissue+label%3AStagingDeployCash) with the label `StagingDeployCash` (there will only ever be one open at a time). This tracking issue contains information about the new application version, a list of recently deployed pull requests, and any issues found on staging that are not present on production. Every weekday at 9am PST, our QA team adds the `🔐LockCashDeploys🔐` label to that tracking issue, and that signifies that they are starting their daily QA cycle. They will perform both regular regression testing and the QA steps listed for every pull request on the `StagingDeployCash` checklist.
+Every time a PR is deployed to staging, it is added to a [special tracking issue](https://github.com/Ieatta/App/issues?q=is%3Aopen+is%3Aissue+label%3AStagingDeployCash) with the label `StagingDeployCash` (there will only ever be one open at a time). This tracking issue contains information about the new application version, a list of recently deployed pull requests, and any issues found on staging that are not present on production. Every weekday at 9am PST, our QA team adds the `🔐LockCashDeploys🔐` label to that tracking issue, and that signifies that they are starting their daily QA cycle. They will perform both regular regression testing and the QA steps listed for every pull request on the `StagingDeployCash` checklist.
 
 Once the `StagingDeployCash` is locked, we won't run any staging deploys until it is either unlocked, or we run a production deploy. If severe issues are found on staging that are not present on production, a new issue (or the PR that caused the issue) will be labeled with `DeployBlockerCash`, and added to the `StagingDeployCash` deploy checklist. If we want to resolve a deploy blocker by reverting a pull request or deploying a hotfix directly to the staging environment, we can merge a pull request with the `CP Staging` label.
 
 Once we have confirmed to the best of our ability that there are no deploy-blocking issues and that all our new features are working as expected on staging, we'll close the `StagingDeployCash`. That will automatically trigger a production deployment, open a new `StagingDeployCash` checklist, and deploy to staging any pull requests that were merged while the previous checklist was locked.
 
 ##  Key GitHub workflows
-These are some of the most central [GitHub Workflows](https://github.com/Expensify/App/tree/main/.github/workflows). There is more detailed information in the README [here](https://github.com/Expensify/App/blob/main/.github/workflows/README.md).
+These are some of the most central [GitHub Workflows](https://github.com/Ieatta/App/tree/main/.github/workflows). There is more detailed information in the README [here](https://github.com/Ieatta/App/blob/main/.github/workflows/README.md).
 
 ### preDeploy
-The [preDeploy workflow](https://github.com/Expensify/App/blob/main/.github/workflows/preDeploy.yml) executes whenever a pull request is merged to `main`, and at a high level does the following:
+The [preDeploy workflow](https://github.com/Ieatta/App/blob/main/.github/workflows/preDeploy.yml) executes whenever a pull request is merged to `main`, and at a high level does the following:
 
 - If the `StagingDeployCash` is locked, comment on the merged PR that it will be deployed later.
 - Otherwise:
-  - Create a new version by triggering the [`createNewVersion` workflow](https://github.com/Expensify/App/blob/main/.github/workflows/createNewVersion.yml)
+  - Create a new version by triggering the [`createNewVersion` workflow](https://github.com/Ieatta/App/blob/main/.github/workflows/createNewVersion.yml)
   - Update the `staging` branch from main.
-- Also, if the pull request has the `CP Staging` label, it will execute the [`cherryPick` workflow](https://github.com/Expensify/App/blob/main/.github/workflows/cherryPick.yml) to deploy the pull request directly to staging, even if the `StagingDeployCash` is locked.
+- Also, if the pull request has the `CP Staging` label, it will execute the [`cherryPick` workflow](https://github.com/Ieatta/App/blob/main/.github/workflows/cherryPick.yml) to deploy the pull request directly to staging, even if the `StagingDeployCash` is locked.
 
 ### deploy
-The [`deploy` workflow](https://github.com/Expensify/App/blob/main/.github/workflows/deploy.yml) is really quite simple. It runs when code is pushed to the `staging` or `production` branches, and:
+The [`deploy` workflow](https://github.com/Ieatta/App/blob/main/.github/workflows/deploy.yml) is really quite simple. It runs when code is pushed to the `staging` or `production` branches, and:
 
 - If `staging` was updated, it creates a tag matching the new version, and pushes tags.
 - If `production` was updated, it creates a GitHub Release for the new version.
 
 ### platformDeploy
-The [`platformDeploy` workflow](https://github.com/Expensify/App/blob/main/.github/workflows/platformDeploy.yml) is what actually runs the deployment on all four platforms (iOS, Android, Web, macOS Desktop). It runs a staging deploy whenever a new tag is pushed to GitHub, and runs a production deploy whenever a new release is created.
+The [`platformDeploy` workflow](https://github.com/Ieatta/App/blob/main/.github/workflows/platformDeploy.yml) is what actually runs the deployment on all four platforms (iOS, Android, Web, macOS Desktop). It runs a staging deploy whenever a new tag is pushed to GitHub, and runs a production deploy whenever a new release is created.
 
 ### lockDeploys
-The [`lockDeploys` workflow](https://github.com/Expensify/App/blob/main/.github/workflows/lockDeploys.yml) executes when the `StagingDeployCash` is locked, and it waits for any currently running staging deploys to finish, then gives Applause the :green_circle: to begin QA by commenting in the `StagingDeployCash` checklist.
+The [`lockDeploys` workflow](https://github.com/Ieatta/App/blob/main/.github/workflows/lockDeploys.yml) executes when the `StagingDeployCash` is locked, and it waits for any currently running staging deploys to finish, then gives Applause the :green_circle: to begin QA by commenting in the `StagingDeployCash` checklist.
 
 ### finishReleaseCycle
-The [`finishReleaseCycle` workflow](https://github.com/Expensify/App/blob/main/.github/workflows/finishReleaseCycle.yml) executes when the `StagingDeployCash` is closed. It updates the `production` branch from `staging` (triggering a production deploy), deploys `main` to staging (with a new `PATCH` version), and creates a new `StagingDeployCash` deploy checklist.
+The [`finishReleaseCycle` workflow](https://github.com/Ieatta/App/blob/main/.github/workflows/finishReleaseCycle.yml) executes when the `StagingDeployCash` is closed. It updates the `production` branch from `staging` (triggering a production deploy), deploys `main` to staging (with a new `PATCH` version), and creates a new `StagingDeployCash` deploy checklist.
 
 ## Local production builds
 Sometimes it might be beneficial to generate a local production version instead of testing on production. Follow the steps below for each client:

@@ -1,8 +1,7 @@
 import React from 'react';
-import {ActivityIndicator, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Image, StyleSheet, View} from 'react-native';
 import * as Expensicons from '@components/Icon/Expensicons';
 import Text from '@components/Text';
-import withLocalize, {withLocalizePropTypes} from '@components/withLocalize';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import TailwindColors from '@styles/tailwindcss/colors';
@@ -18,7 +17,7 @@ function BaseGoogleButton({isLoading}: BaseGoogleButtonProps) {
         <View style={[styles.flexRow, styles.shadowMd, styles.ph4, styles.pv2, styles.mt2, styles.mb1, styles.gap2]}>
             {isLoading ? (
                 <ActivityIndicator
-                    color={TailwindColors.gray800}
+                    color={theme.textSupporting}
                     style={[]}
                 />
             ) : (

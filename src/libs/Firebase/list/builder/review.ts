@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import type {ReviewType} from '@libs/Firebase/constant';
 import {PageSection, RowPressableType} from '@libs/Firebase/list/constant';
+import type {IPageRow} from '@libs/Firebase/list/types/page-row';
 import type {ISectionEmptyRow, ISectionTitleRow} from '@libs/Firebase/list/types/rows/common';
 import type {IReviewActionbarRow, IReviewInPageRow, IReviewOnSearchAndSortChanged, IReviewRow, IReviewSubmitRow, IReviewTitleRow} from '@libs/Firebase/list/types/rows/review';
 import type {IFBReview} from '@src/types/firebase';
@@ -13,7 +14,7 @@ type BuildReviewsParams = {
     reviewChanged: IReviewOnSearchAndSortChanged;
 };
 
-const buildReviewRows = (isSmallScreenWidth: boolean, reviews: IFBReview[]) => {
+const buildReviewRows = (isSmallScreenWidth: boolean, reviews: IFBReview[]): IPageRow[] => {
     if (reviews.length === 0) {
         const rowData: ISectionEmptyRow = {emptyHint: 'sections.empty.noReviews'};
         return [
@@ -21,11 +22,12 @@ const buildReviewRows = (isSmallScreenWidth: boolean, reviews: IFBReview[]) => {
                 rowType: PageSection.SECTION_REVIEW_EMPTY,
                 rowData,
                 rowKey: 'PageSection.SECTION_REVIEW_EMPTY-<no Reviews>',
+                modalName: 'empty',
                 pressType: RowPressableType.NO_EVENT,
             },
         ];
     }
-    const buildReviewRow = (review: IFBReview, index: number) => {
+    const buildReviewRow = (review: IFBReview, index: number): IPageRow => {
         const rowData: IReviewInPageRow = {
             review,
             shouldShowDivide: index !== reviews.length - 1,
@@ -34,6 +36,7 @@ const buildReviewRows = (isSmallScreenWidth: boolean, reviews: IFBReview[]) => {
             rowType: PageSection.SECTION_REVIEW,
             rowData,
             rowKey: `${review?.uniqueId}`,
+            modalName: 'review',
             pressType: RowPressableType.SECONDARY_PRESS,
         };
     };
@@ -45,16 +48,17 @@ const buildReviewRows = (isSmallScreenWidth: boolean, reviews: IFBReview[]) => {
  | Reviews
  |--------------------------------------------------
  */
-const buildReviews = (isSmallScreenWidth: boolean, params: BuildReviewsParams) => {
+const buildReviews = (isSmallScreenWidth: boolean, params: BuildReviewsParams): IPageRow[] => {
     const {relatedTitle, relatedId, reviewType, reviews, reviewChanged} = params;
     const titleRow: ISectionTitleRow = {
         title: isSmallScreenWidth ? 'sections.titles.reviews' : 'sections.titles.recommendedReviews',
         isSmallScreenWidth,
     };
-    const titleSection = {
+    const titleSection: IPageRow = {
         rowType: PageSection.COMMON_TITLE,
         rowData: titleRow,
         rowKey: 'PageSection.COMMON_TITLE-<Reviews>',
+        modalName: 'title',
         pressType: RowPressableType.NO_EVENT,
     };
 
@@ -69,10 +73,11 @@ const buildReviews = (isSmallScreenWidth: boolean, params: BuildReviewsParams) =
      * for web screen
      */
     const actionbarRowData: IReviewActionbarRow = reviewChanged;
-    const actionBarRow = {
+    const actionBarPageRow: IPageRow = {
         rowType: PageSection.SECTION_REVIEW_ACTION_BAR,
         rowData: actionbarRowData,
         rowKey: 'PageSection.SECTION_REVIEW_ACTION_BAR-<Reviews>',
+        modalName: 'review-action-bar',
         pressType: RowPressableType.NO_EVENT,
     };
     const loggedUserSubmitRowData: IReviewSubmitRow = {
@@ -80,14 +85,15 @@ const buildReviews = (isSmallScreenWidth: boolean, params: BuildReviewsParams) =
         relatedId,
         reviewType,
     };
-    const loggedUserSubmitRow = {
+    const loggedUserSubmitPageRow: IPageRow = {
         rowType: PageSection.SECTION_REVIEW_LOGGED_USER,
         rowData: loggedUserSubmitRowData,
         rowKey: 'PageSection.SECTION_REVIEW_LOGGED_USER<Reviews>',
+        modalName: 'review-logged-user-bar',
         pressType: RowPressableType.SINGLE_PRESS,
     };
 
-    return [titleSection, actionBarRow, loggedUserSubmitRow, ...buildReviewRows(isSmallScreenWidth, reviews)];
+    return [titleSection, actionBarPageRow, loggedUserSubmitPageRow, ...buildReviewRows(isSmallScreenWidth, reviews)];
 };
 
 export {

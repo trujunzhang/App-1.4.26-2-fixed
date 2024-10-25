@@ -9,7 +9,6 @@ import type {ValueOf} from 'type-fest';
 import Button from '@components/Button';
 import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
-import type {AnchorAlignment} from '@components/Popover/types';
 import type {PopoverMenuItem} from '@components/PopoverMenu';
 import PopoverMenu from '@components/PopoverMenu';
 import useStyleUtils from '@hooks/useStyleUtils';
@@ -19,7 +18,7 @@ import useWindowDimensions from '@hooks/useWindowDimensions';
 import type {ReviewDropdownOption} from '@libs/Firebase/review-sort';
 import CONST from '@src/CONST';
 import type {AnchorPosition} from '@src/styles';
-import type IconAsset from '@src/types/utils/IconAsset';
+import AnchorAlignment from '@src/types/utils/AnchorAlignment';
 
 type ReviewSortButtonProps = {
     /** Text to display for the menu header */
@@ -102,7 +101,8 @@ function ReviewSortButton({
                 });
             });
         }
-    }, [windowWidth, windowHeight, isMenuVisible, anchorAlignment.vertical]);
+        // }, [windowWidth, windowHeight, isMenuVisible, anchorAlignment.vertical]);
+    }, [windowWidth, windowHeight, isMenuVisible]);
 
     const onItemSelected = (item: PopoverMenuItem, index: number) => {
         setIsMenuVisible(false);
@@ -173,7 +173,7 @@ function ReviewSortButton({
                     anchorPosition={popoverAnchorPosition}
                     anchorRef={caretButton}
                     withoutOverlay
-                    anchorAlignment={anchorAlignment}
+                    // anchorAlignment={anchorAlignment}
                     headerText={menuHeaderText}
                     menuItems={options.map((item: any, index: number) => ({
                         ...item,

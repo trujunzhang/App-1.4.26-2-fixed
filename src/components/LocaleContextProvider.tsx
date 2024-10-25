@@ -7,7 +7,6 @@ import DateUtils from '@libs/DateUtils';
 import * as LocaleDigitUtils from '@libs/LocaleDigitUtils';
 import * as LocalePhoneNumber from '@libs/LocalePhoneNumber';
 import * as Localize from '@libs/Localize';
-import Log from '@libs/Log';
 import * as NumberFormatUtils from '@libs/NumberFormatUtils';
 import CONST from '@src/CONST';
 import type {TranslationPaths} from '@src/languages/types';
@@ -51,6 +50,9 @@ type LocaleContextProps = {
     /** Gets the locale digit corresponding to a standard digit */
     toLocaleDigit: (digit: string) => string;
 
+    /** Formats a number into its localized ordinal representation */
+    toLocaleOrdinal: (number: number) => string;
+
     /** Gets the standard digit corresponding to a locale digit */
     fromLocaleDigit: (digit: string) => string;
 
@@ -66,6 +68,7 @@ const LocaleContext = createContext<LocaleContextProps>({
     updateLocale: () => '',
     formatPhoneNumber: () => '',
     toLocaleDigit: () => '',
+    toLocaleOrdinal: () => '',
     fromLocaleDigit: () => '',
     preferredLocale: CONST.LOCALES.DEFAULT,
 });
@@ -88,16 +91,8 @@ function LocaleContextProvider({preferredLocale, currentUserPersonalDetails = {}
 
     const datetimeToCalendarTime = useMemo<LocaleContextProps['datetimeToCalendarTime']>(
         () =>
-            (datetime, includeTimezone, isLowercase = false) => {
-                // Log.info('');
-                // Log.info('================================');
-                // Log.info(`datetime in the LocaleContextProvider: ${datetime}`)
-                // Log.info(`value in the LocaleContextProvider: ${value}`)
-                // Log.info('================================');
-                // Log.info('');
-                const value = DateUtils.datetimeToCalendarTime(locale, datetime, includeTimezone, selectedTimezone, isLowercase);
-                return value;
-            },
+            (datetime, includeTimezone, isLowercase = false) =>
+                DateUtils.datetimeToCalendarTime(locale, datetime, includeTimezone, selectedTimezone, isLowercase),
         [locale, selectedTimezone],
     );
 
@@ -106,6 +101,8 @@ function LocaleContextProvider({preferredLocale, currentUserPersonalDetails = {}
     const formatPhoneNumber = useMemo<LocaleContextProps['formatPhoneNumber']>(() => (phoneNumber) => LocalePhoneNumber.formatPhoneNumber(phoneNumber), []);
 
     const toLocaleDigit = useMemo<LocaleContextProps['toLocaleDigit']>(() => (digit) => LocaleDigitUtils.toLocaleDigit(locale, digit), [locale]);
+
+    const toLocaleOrdinal = useMemo<LocaleContextProps['toLocaleOrdinal']>(() => (number) => LocaleDigitUtils.toLocaleOrdinal(locale, number), [locale]);
 
     const fromLocaleDigit = useMemo<LocaleContextProps['fromLocaleDigit']>(() => (localeDigit) => LocaleDigitUtils.fromLocaleDigit(locale, localeDigit), [locale]);
 
@@ -118,10 +115,11 @@ function LocaleContextProvider({preferredLocale, currentUserPersonalDetails = {}
             updateLocale,
             formatPhoneNumber,
             toLocaleDigit,
+            toLocaleOrdinal,
             fromLocaleDigit,
             preferredLocale: locale,
         }),
-        [translate, numberFormat, datetimeToRelative, datetimeToCalendarTime, updateLocale, formatPhoneNumber, toLocaleDigit, fromLocaleDigit, locale],
+        [translate, numberFormat, datetimeToRelative, datetimeToCalendarTime, updateLocale, formatPhoneNumber, toLocaleDigit, toLocaleOrdinal, fromLocaleDigit, locale],
     );
 
     return <LocaleContext.Provider value={contextValue}>{children}</LocaleContext.Provider>;
@@ -141,4 +139,4 @@ Provider.displayName = 'withOnyx(LocaleContextProvider)';
 
 export {Provider as LocaleContextProvider, LocaleContext};
 
-export type {LocaleContextProps};
+export type {LocaleContextProps, Locale};

@@ -1,10 +1,10 @@
+// eslint-disable-next-line no-restricted-imports
+import _ from 'lodash';
 import React from 'react';
 import {useCollectionOnce} from 'react-firebase-hooks/firestore';
-// eslint-disable-next-line no-restricted-imports
-import _ from 'underscore';
 import RecipeWithPhotosInfoPanel from '@components/Ieatta/detailedPage/header/RecipeWithPhotosInfoPanel';
 import {PhotoType} from '@libs/Firebase/constant';
-import {queryForPhotos} from '@libs/Firebase/services/firebase-query';
+import * as FirebaseQuery from '@libs/Firebase/services/firebase-query';
 import type {IFBPhoto} from '@src/types/firebase';
 import type {RecipeWithPhotosInfoPanelDataProps} from './types';
 
@@ -15,7 +15,7 @@ function RecipeWithPhotosInfoPanelData({recipe}: RecipeWithPhotosInfoPanelDataPr
      |--------------------------------------------------
      */
     const [photoSnapshot, loader] = useCollectionOnce(
-        queryForPhotos({
+        FirebaseQuery.queryForPhotos({
             relatedId: recipe.uniqueId,
             photoType: PhotoType.Recipe,
         }),

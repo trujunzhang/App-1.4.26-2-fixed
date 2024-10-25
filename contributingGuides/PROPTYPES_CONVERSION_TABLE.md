@@ -1,4 +1,4 @@
-# Expensify PropTypes Conversion Table
+# Ieatta PropTypes Conversion Table
 
 This is a reference to help you convert PropTypes to TypeScript types. 
 

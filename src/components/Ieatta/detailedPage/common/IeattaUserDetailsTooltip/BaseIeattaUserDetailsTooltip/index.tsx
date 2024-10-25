@@ -22,6 +22,7 @@ function BaseIeattaUserDetailsTooltip({userId, children}: IeattaUserDetailsToolt
                 <View style={styles.emptyAvatar}>
                     <Avatar
                         containerStyles={[styles.actionAvatar]}
+                        shouldShowAsAvatar
                         avatarUrl={avatarUrl}
                         type={CONST.ICON_TYPE_AVATAR}
                         name={user?.displayName}
@@ -30,18 +31,7 @@ function BaseIeattaUserDetailsTooltip({userId, children}: IeattaUserDetailsToolt
                 <Text style={[styles.mt2, styles.textMicroBold, styles.textReactionSenders, styles.textAlignCenter]}>{user?.displayName}</Text>
             </View>
         );
-    }, [
-        styles.alignItemsCenter,
-        styles.ph2,
-        styles.pv2,
-        styles.emptyAvatar,
-        styles.actionAvatar,
-        styles.mt2,
-        styles.textMicroBold,
-        styles.textReactionSenders,
-        styles.textAlignCenter,
-        user,
-    ]);
+    }, [styles.alignItemsCenter, styles.ph2, styles.pv2, styles.emptyAvatar, styles.actionAvatar, styles.mt2, styles.textMicroBold, styles.textReactionSenders, styles.textAlignCenter]);
 
     return (
         <Tooltip

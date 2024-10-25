@@ -16,12 +16,8 @@ function isAuthTokenRequired(command: string): boolean {
 export default function enhanceParameters(command: string, parameters: Record<string, unknown>): Record<string, unknown> {
     const finalParameters = {...parameters};
 
-    if (isAuthTokenRequired(command)) {
-        if (NetworkStore.getSupportAuthToken() && NetworkStore.isSupportRequest(command)) {
-            finalParameters.authToken = NetworkStore.getSupportAuthToken();
-        } else if (!parameters.authToken) {
-            finalParameters.authToken = NetworkStore.getAuthToken();
-        }
+    if (isAuthTokenRequired(command) && !parameters.authToken) {
+        finalParameters.authToken = NetworkStore.getAuthToken();
     }
 
     finalParameters.referer = CONFIG.EXPENSIFY.EXPENSIFY_CASH_REFERER;
@@ -30,18 +26,15 @@ export default function enhanceParameters(command: string, parameters: Record<st
     // is sending the request.
     finalParameters.platform = getPlatform();
 
-    // This application does not save its authToken in cookies like the classic Expensify app.
-    // Setting api_setCookie to false will ensure that the Expensify API doesn't set any cookies
-    // and prevents interfering with the cookie authToken that Expensify classic uses.
+    // This application does not save its authToken in cookies like the classic Ieatta app.
+    // Setting api_setCookie to false will ensure that the Ieatta API doesn't set any cookies
+    // and prevents interfering with the cookie authToken that Ieatta classic uses.
     finalParameters.api_setCookie = false;
 
     // Include current user's email in every request and the server logs
     finalParameters.email = parameters.email ?? NetworkStore.getCurrentUserEmail();
 
     finalParameters.isFromDevEnv = Environment.isDevelopment();
-
-    // idempotencyKey declared in JS is front-end-only. We delete it here so it doesn't interfere with idempotency in other layers.
-    delete finalParameters.idempotencyKey;
 
     return finalParameters;
 }

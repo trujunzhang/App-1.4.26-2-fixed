@@ -1,6 +1,6 @@
 import lodashGet from 'lodash/get';
 import moment from 'moment';
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
 import {Image as RNImage, View} from 'react-native';
 import Avatar from '@components/Avatar';
 import {IeattaStars} from '@components/Icon/IeattaStars';
@@ -10,7 +10,6 @@ import {usePersonalDetails} from '@components/OnyxProvider';
 import PressableWithoutFeedback from '@components/Pressable/PressableWithoutFeedback';
 import useThemeStyles from '@hooks/useThemeStyles';
 import ControlSelection from '@libs/ControlSelection';
-import Log from '@libs/Log';
 import Navigation from '@libs/Navigation/Navigation';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';
@@ -63,7 +62,8 @@ function ReviewItemSingle({review, children, isHovered = false}: ReportActionIte
                 <View>
                     <Avatar
                         containerStyles={[styles.actionAvatar]}
-                        avatarUrl={lodashGet(reviewCreatedUser, 'originalUrl', CONST.IEATTA_URL_EMPTY)}
+                        shouldShowAsAvatar
+                        avatarUrl={lodashGet(reviewCreatedUser, 'avatarThumbnail', CONST.IEATTA_URL_EMPTY)}
                         type={CONST.ICON_TYPE_AVATAR}
                         name={reviewCreatedUser?.displayName}
                     />

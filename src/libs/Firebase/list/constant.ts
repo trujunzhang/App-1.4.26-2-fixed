@@ -4,6 +4,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 // eslint-disable-next-line no-restricted-syntax,import/prefer-default-export
 export enum PageSection {
+    Unknow,
     /**
      |--------------------------------------------------
      | photo carousel
@@ -11,6 +12,8 @@ export enum PageSection {
      */
     PHOTO_CAROUSEL_ITEM_WITH_EVENT,
     PHOTO_CAROUSEL_ITEM_WITHOUT_EVENT,
+    PHOTO_GRID_ITEM_WITH_EVENT,
+    PHOTO_GRID_LOCAL_ITEM,
 
     /**
      |--------------------------------------------------
@@ -18,7 +21,7 @@ export enum PageSection {
      |--------------------------------------------------
      */
     DETAILED_EDIT_MODEL_BUTTON,
-    RESTAURANT_TITLE_IN_EVENT_PAGE,
+    DISPLAY_NAME_TITLE_ROW,
 
     /**
      |--------------------------------------------------
@@ -84,9 +87,9 @@ export enum PageSection {
      |--------------------------------------------------
      */
     // photo(restaurant/recipe)
-    SECTION_PHOTO_COVER,
-    SECTION_PHOTO_ROW,
     SECTION_PHOTO_TITLE,
+    SECTION_PHOTO_ROW,
+    SECTION_PHOTO_ITEM,
     // review(restaurant/event/recipe)
     SECTION_REVIEW,
     SECTION_REVIEW_ACTION_BAR,
@@ -100,10 +103,20 @@ export enum PageSection {
      */
     RECIPE_ROW,
     RECIPE_ROW_WEB,
+    /**
+     |--------------------------------------------------
+     | SkeletonView
+     |--------------------------------------------------
+     */
+    SECTION_SKELETON_VIEW,
 }
 
 export enum RowPressableType {
     NO_EVENT,
     SINGLE_PRESS,
     SECONDARY_PRESS,
+}
+
+export enum SkeletonViewType {
+    EVENTS_IN_RESTAURANT,
 }

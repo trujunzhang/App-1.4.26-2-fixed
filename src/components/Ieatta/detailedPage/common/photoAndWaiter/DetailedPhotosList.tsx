@@ -1,63 +1,36 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
-import React, {useCallback, useRef, useState} from 'react';
-import {FlatList, GestureResponderEvent, StyleSheet, View} from 'react-native';
-import Hoverable from '@components/Hoverable';
-import SectionEmptyView from '@components/Ieatta/detailedPage/common/SectionEmptyView';
+import React, {useCallback} from 'react';
+import {FlatList, StyleSheet, View} from 'react-native';
 import SectionPhotoEmptyView from '@components/Ieatta/detailedPage/common/SectionPhotoEmptyView';
-import PressableWithSecondaryInteraction from '@components/PressableWithSecondaryInteraction';
-import useLocalize from '@hooks/useLocalize';
-import useStyleUtils from '@hooks/useStyleUtils';
+import PageFlashListItemWithEvent from '@components/Ieatta/detailedPage/PageFlashListItemWithEvent';
 import useThemeStyles from '@hooks/useThemeStyles';
-import ControlSelection from '@libs/ControlSelection';
-import * as DeviceCapabilities from '@libs/DeviceCapabilities';
-import Log from '@libs/Log';
-import SelectionScraper from '@libs/SelectionScraper';
-import Navigation from '@navigation/Navigation';
-import TailwindColors from '@styles/tailwindcss/colors';
+import {PhotoType} from '@libs/Firebase/constant';
+import {PageSection, RowPressableType} from '@libs/Firebase/list/constant';
+import {ModalNames} from '@libs/Firebase/list/types/page-row';
+import {IPhotoItemRow} from '@libs/Firebase/list/types/rows/photo';
 import variables from '@styles/variables';
-import ROUTES from '@src/ROUTES';
 import type {IFBPhoto} from '@src/types/firebase';
-import DetailedPhotosNativeView from './DetailedPhotoNativeView';
 
 type DetailedPhotosListProps = {
+    /** The ID of the related object. */
+    relatedId: string;
+    /** The photo type of the related object. */
+    photoType: PhotoType | string;
+    /** The list of photos. */
     photos: IFBPhoto[];
-    isSmallScreenWidth: boolean;
+    /** Whether the screen is small. */
+    isSmallScreen: boolean;
+    /** Whether the list is loading. */
     isLoading?: boolean;
+    /** The name of modal * */
+    modalName?: ModalNames;
 };
 
 const keyExtractor = (item: IFBPhoto) => `row_${item.uniqueId}`;
 
-function DetailedPhotosList({photos, isSmallScreenWidth, isLoading = false}: DetailedPhotosListProps) {
+function DetailedPhotosList({relatedId, photoType, photos, isSmallScreen, isLoading, modalName = 'photo'}: DetailedPhotosListProps) {
     const styles = useThemeStyles();
-    const StyleUtils = useStyleUtils();
 
-    const {translate} = useLocalize();
-    const [isContextMenuActive, setIsContextMenuActive] = useState(() => false);
-    const popoverAnchorRef = useRef<View>();
-
-    /**
-     * Show the ReportActionContextMenu modal popover.
-     *
-     * @param {Object} [event] - A press event.
-     */
-    const showPopover = useCallback((event: GestureResponderEvent | MouseEvent) => {
-        setIsContextMenuActive(true);
-        const selection = SelectionScraper.getCurrentSelection();
-        // ReportActionContextMenu.showContextMenu(
-        //     CONST.CONTEXT_MENU_TYPES.REPORT_ACTION,
-        //     event,
-        //     selection,
-        //     popoverAnchorRef,
-        //     props.report.reportID,
-        //     props.action.reportActionID,
-        //     originalReportID,
-        //     props.draftMessage,
-        //     () => setIsContextMenuActive(true),
-        //     toggleContextMenuFromActiveReportAction,
-        //     ReportUtils.isArchivedRoom(originalReport),
-        //     ReportUtils.chatIncludesChronos(originalReport),
-        // );
-    }, []);
     /**
      * Function which renders a row in the list
      *
@@ -68,39 +41,26 @@ function DetailedPhotosList({photos, isSmallScreenWidth, isLoading = false}: Det
      */
     const renderItem = useCallback(
         // eslint-disable-next-line react/no-unused-prop-types
-        ({
-            item,
-        }: {
-            // eslint-disable-next-line react/no-unused-prop-types
-            item: IFBPhoto;
-        }) => {
+        ({item, index}: {item: IFBPhoto; index: number}) => {
+            const photoRow: IPhotoItemRow = {
+                relatedId,
+                photoType,
+                photo: item,
+            };
+
             return (
-                <View style={[]}>
-                    <PressableWithSecondaryInteraction
-                        ref={popoverAnchorRef as unknown as React.RefObject<View>}
-                        style={[styles.pointerEventsAuto]}
-                        onPressIn={() => isSmallScreenWidth && DeviceCapabilities.canUseTouchScreen() && ControlSelection.block()}
-                        onPressOut={() => ControlSelection.unblock()}
-                        onPress={() => {
-                            // Navigation.navigate(ROUTES.RESTAURANT_WITH_ID.getRoute(restaurant.uniqueId));
-                        }}
-                        onSecondaryInteraction={showPopover}
-                        preventDefaultContextMenu
-                        withoutFocusOnSecondaryInteraction
-                        accessibilityLabel={translate('accessibilityHints.chatMessage')}
-                    >
-                        <Hoverable shouldHandleScroll>
-                            {(hovered) => (
-                                <View style={[hovered && styles.shadowLg]}>
-                                    <DetailedPhotosNativeView photo={item} />
-                                </View>
-                            )}
-                        </Hoverable>
-                    </PressableWithSecondaryInteraction>
-                </View>
+                <PageFlashListItemWithEvent
+                    item={{
+                        rowType: PageSection.SECTION_PHOTO_ITEM,
+                        rowData: photoRow,
+                        rowKey: 'PageSection.SECTION_PHOTO_ITEM<Photo>',
+                        modalName,
+                        pressType: RowPressableType.SECONDARY_PRESS,
+                    }}
+                />
             );
         },
-        [isSmallScreenWidth, showPopover, styles.pointerEventsAuto, styles.shadowLg, translate],
+        [photoType, relatedId, modalName],
     );
 
     return (

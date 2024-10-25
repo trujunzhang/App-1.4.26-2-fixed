@@ -37,4 +37,5 @@ export enum ReviewType {
     Restaurant = 'restaurant',
     Event = 'event',
     Recipe = 'recipe',
+    Unknown = 'unknown',
 }

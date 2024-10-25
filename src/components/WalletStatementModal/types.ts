@@ -7,7 +7,7 @@ type WalletStatementOnyxProps = {
 };
 
 type WalletStatementProps = WalletStatementOnyxProps & {
-    /** URL for oldDot (expensify.com) statements page to display */
+    /** URL for oldDot (ieatta.com) statements page to display */
     statementPageURL: string;
 };
 

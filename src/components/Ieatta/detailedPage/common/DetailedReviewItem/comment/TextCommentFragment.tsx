@@ -1,4 +1,3 @@
-import Str from 'expensify-common/lib/str';
 import {isEmpty} from 'lodash';
 import React, {memo} from 'react';
 import type {StyleProp, TextStyle} from 'react-native';
@@ -11,7 +10,6 @@ import useWindowDimensions from '@hooks/useWindowDimensions';
 import convertToLTR from '@libs/convertToLTR';
 import * as DeviceCapabilities from '@libs/DeviceCapabilities';
 import * as EmojiUtils from '@libs/EmojiUtils';
-import variables from '@styles/variables';
 import type {Message} from '@src/types/onyx/ReportAction';
 
 type TextCommentFragmentProps = {

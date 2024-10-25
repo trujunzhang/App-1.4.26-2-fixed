@@ -1,6 +1,6 @@
 # KSv2
 
-In Expensify, we use a prioritization system called called "Kernel Scheduler v2" (KSv2) to help us keep aligned on how frequently GitHub issues should be worked on, depending on their time priority:
+In Ieatta, we use a prioritization system called called "Kernel Scheduler v2" (KSv2) to help us keep aligned on how frequently GitHub issues should be worked on, depending on their time priority:
 
 **Hourly**: If a Github issue has the `Hourly` label, the assignee should update it *at least* once an hour
 
@@ -16,7 +16,7 @@ To help surface the issues and PRs that need the most `#urgency`, we've built a 
 
 <img src="https://user-images.githubusercontent.com/6829422/213875977-8ff4cf19-7690-4203-ae13-a8da259be7d0.png" />
 
-Once you have the extension installed, you can access it by going to https://github.com/Expensify/App#k2 or clicking on the K2 tab at the top of a repo (between pull requests and GH actions). You'll have to create a Personal Access Token in GitHub ([here](https://github.com/settings/tokens)) and enter that in the K2 dashboard the first time you open it, so that your K2 extension can automatically pull data about your GitHub account.
+Once you have the extension installed, you can access it by going to https://github.com/Ieatta/App#k2 or clicking on the K2 tab at the top of a repo (between pull requests and GH actions). You'll have to create a Personal Access Token in GitHub ([here](https://github.com/settings/tokens)) and enter that in the K2 dashboard the first time you open it, so that your K2 extension can automatically pull data about your GitHub account.
 
 ### Pull Requests for review
 
@@ -24,13 +24,13 @@ In the dashboard, you can first see the PRs assigned to you as `Reviewer`. As pa
 
 ### Issues assigned to you
 
-In the next section you can see all issues assigned to you, prioritized from most urgent (on the left) to least urgent (on the right). Issues will also change color depending on other factors - e.g. if they have "HOLD" in the title or if they have the `Overdue`, `Planning`, or `Waiting for copy` labels applied.
+In the next section, you can see all issues assigned to you, prioritized from most urgent (on the left) to least urgent (on the right). Issues will also change color depending on other factors - e.g. if they have "HOLD" in the title or if they have the `Overdue`, `Planning`, or `Waiting for copy` labels applied.
 
 If a GitHub issue has the `Overdue` label, the text will be red. This means that the issue hasn't been updated in the amount of time allotted for an update (ex - A weekly issue becomes overdue if it hasn't been updated in a week).
 
 ### Your Pull Requests
 
-After the issues section you will find a section that lists the PRs you've created.
+After the issues section, you will find a section that lists the PRs you've created.
 
 <img src="https://user-images.githubusercontent.com/6829422/213875978-3df6bcd0-ee9a-472a-9a9f-6db70486bcf0.png" />
 
@@ -54,7 +54,7 @@ Additionally, the extension provides a button that facilitates the creation of t
 
 ## Installation
 
-You can install the KSv2 extension from [here](https://github.com/Expensify/k2-extension/).
+You can install the KSv2 extension from [here](https://github.com/Ieatta/k2-extension/).
 
 ## Best Practices
 - Look at the dashboard every day, before you start any work

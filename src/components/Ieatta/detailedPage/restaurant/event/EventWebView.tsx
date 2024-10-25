@@ -1,15 +1,14 @@
 import React from 'react';
 import {View} from 'react-native';
 import DisplayNames from '@components/DisplayNames';
-import Divider from '@components/Divider';
 import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
+import Divider from '@components/Ieatta/components/Divider';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import {formatDateString} from '@libs/Firebase/utils/timeago_helper';
-import TailwindColors from '@styles/tailwindcss/colors';
 import variables from '@styles/variables';
 import type {EventRowProps} from './types';
 
@@ -33,7 +32,7 @@ function EventWebView({eventInRestaurantRow}: EventRowProps) {
                                 // displayNamesWithTooltips={optionItem.displayNamesWithTooltips}
                                 tooltipEnabled
                                 numberOfLines={1}
-                                textStyles={[styles.optionDisplayName, styles.optionDisplayNameCompact, styles.textStrong, styles.textBlue, styles.base, styles.fontMedium, styles.pre]}
+                                textStyles={[styles.optionDisplayName, styles.optionDisplayNameCompact, styles.textStrong, styles.textBlue, styles.base, styles.pre]}
                                 shouldUseFullTitle
                             />
                         </View>

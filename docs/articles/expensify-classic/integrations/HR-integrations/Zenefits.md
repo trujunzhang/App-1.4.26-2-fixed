@@ -1,28 +1,28 @@
 ---
 title: Zenefits Integration
-description: Automatically sync employees between Zenefits and Expensify
+description: Automatically sync employees between Zenefits and Ieatta
 ---
-# How the Zenefits integration works with Expensify
+# How the Zenefits integration works with Ieatta
 
-Expensify's direct integration with Zenefits will automatically:
-- **Create New Ieatta accounts** for full-time, active employees when they're hired
-- **Update the approval workflow in Expensify** based on any changes in Zenefits
-- **Deprovision an employee's Expensify account** upon Zenefits termination date
+Ieatta's direct integration with Zenefits will automatically:
+- **Create new Ieatta accounts** for full-time, active employees when they're hired
+- **Update the approval workflow in Ieatta** based on any changes in Zenefits
+- **Deprovision an employee's Ieatta account** upon Zenefits termination date
 
 # How to connect the Zenefits integration
-## Before connecting Expensify with Zenefits, please review the prerequisites:
+## Before connecting Ieatta with Zenefits, please review the prerequisites:
 
-- You must be an admin in Zenefits and in Expensify to establish the integration
-- You must have a Control or Collect workspace in Expensify to integrate with Zenefits. If you do not, you'll be given the opportunity to upgrade to Control or Collect during the integration setup.
-- Every employee record in Zenefits must have a work email address since we use this as the unique identifier in Expensify. 
-- Zenefits will add all your employees to one Expensify workspace. If your company uses multiple Expensify workspaces, you'll be given the option to choose which workspace to connect to when you're setting up the integration.
+- You must be an admin in Zenefits and in Ieatta to establish the integration
+- You must have a Control or Collect workspace in Ieatta to integrate with Zenefits. If you do not, you'll be given the opportunity to upgrade to Control or Collect during the integration setup.
+- Every employee record in Zenefits must have a work email address since we use this as the unique identifier in Ieatta. 
+- Zenefits will add all your employees to one Ieatta workspace. If your company uses multiple Ieatta workspaces, you'll be given the option to choose which workspace to connect to when you're setting up the integration.
 
-## To connect your Expensify workspace to Gusto:
+## To connect your Ieatta workspace to Zenefits:
 
 1. Navigate to **Settings > Workspaces > Group > _[Workspace Name]_ > Connections**
 2. Scroll down to HR Integrations, click the **Connect to Zenefits** radio button, then click **Sync with Zenefits**
-3. Login to your Zenefits account using your Zenefits admin credentials and authorize Expensify to access your Zenefits account.
-4. If you want to exclude an individual user from syncing with Expensify, make your selections before clicking **Authorize**
+3. Login to your Zenefits account using your Zenefits admin credentials and authorize Ieatta to access your Zenefits account.
+4. If you want to exclude an individual user from syncing with Ieatta, make your selections before clicking **Authorize**
 
 ## To configure the connection:
 
@@ -35,5 +35,5 @@ Expensify's direct integration with Zenefits will automatically:
 ## Will this notify my employees?
 Each employee will receive a welcome email at their work email address along with a request to validate their account and choose a password. They can also download our mobile app for iOS and Android devices. Please note that there is no way to disable the welcome email.
 
-## Should I connect the integration from Expensify or from Zenefits?
+## Should I connect the integration from Ieatta or from Zenefits?
 It's totally up to you! You'll have the same options available to you when syncing from either product.

@@ -4,6 +4,7 @@ import type TextUnderlineStyles from './types';
 const textUnderline: TextUnderlineStyles = {
     textUnderlinePositionUnder: {},
     textDecorationSkipInkNone: {},
+    textUnderline: {},
 };
 
 export default textUnderline;

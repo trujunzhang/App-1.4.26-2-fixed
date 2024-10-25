@@ -5,16 +5,18 @@
 /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
 import type {IAuthUser} from '@libs/Firebase/models/auth_user_model';
 import type {IFBPhoto} from '@src/types/firebase';
-import {PhotoType} from '../constant';
+import {FBCollections, PhotoType} from '../constant';
 import {documentIdFromCurrentDate} from '../utils/md5_utils';
 import {getDateStringForCreatedOrUpdatedDate} from '../utils/timeago_helper';
 
+type ParseModelPhotosEmptyPhotoParams = {authUserModel: IAuthUser; photoUniqueId?: string; relatedId: string; photoType: string; filePath: string};
+
 // eslint-disable-next-line import/prefer-default-export,rulesdir/no-inline-named-export
 export class ParseModelPhotos {
-    static emptyPhoto({authUserModel, relatedId, photoType, filePath}: {authUserModel: IAuthUser; relatedId: string; photoType: string; filePath: string}) {
+    static emptyPhoto({authUserModel, photoUniqueId = documentIdFromCurrentDate(), relatedId, photoType, filePath}: ParseModelPhotosEmptyPhotoParams) {
         const photo: IFBPhoto = {
             // Base(5)
-            uniqueId: documentIdFromCurrentDate(),
+            uniqueId: photoUniqueId,
             creatorId: authUserModel.uid,
             createdAt: getDateStringForCreatedOrUpdatedDate(),
             updatedAt: getDateStringForCreatedOrUpdatedDate(),
@@ -58,11 +60,32 @@ export class ParseModelPhotos {
             for (let i = 0; i < placeholderLength; i++) {
                 photosWithPlaceholder.push({
                     uniqueId: `${i}`,
+                    creatorId: '',
                     originalUrl: '',
+                    photoType: PhotoType.Unknown,
                 } as IFBPhoto);
             }
             return photosWithPlaceholder;
         }
         return photos;
     }
+
+    static isPlacehoderphoto(photo: IFBPhoto) {
+        return photo.originalUrl === '' && photo.photoType === PhotoType.Unknown && photo.creatorId === '';
+    }
+
+    static getCollectionName(photoType: string) {
+        switch (photoType) {
+            case PhotoType.Recipe:
+                return FBCollections.Recipes;
+            case PhotoType.Restaurant:
+                return FBCollections.Restaurants;
+            case PhotoType.User:
+                return FBCollections.Profiles;
+            default:
+                return FBCollections.Unknown;
+        }
+    }
 }
+
+export type {ParseModelPhotosEmptyPhotoParams};

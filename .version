@@ -1,5 +1,7 @@
-App-1.4.26-2
+1.4.70-5
+https://github.com/Expensify/App/releases/tag/1.4.70-5
 
-v1.4.64-6:
+note:
+  rm src/components/Onfido
 
 

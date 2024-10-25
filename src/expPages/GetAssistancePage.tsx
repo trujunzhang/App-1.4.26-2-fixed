@@ -1,6 +1,6 @@
-import type {RouteProp} from '@react-navigation/native';
+import type {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
-import {ScrollView, View} from 'react-native';
+import {View} from 'react-native';
 import {withOnyx} from 'react-native-onyx';
 import type {OnyxEntry} from 'react-native-onyx';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
@@ -8,17 +8,19 @@ import * as Expensicons from '@components/Icon/Expensicons';
 import * as Illustrations from '@components/Icon/Illustrations';
 import type {MenuItemWithLink} from '@components/MenuItemList';
 import ScreenWrapper from '@components/ScreenWrapper';
+import ScrollView from '@components/ScrollView';
 import Section from '@components/Section';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import Navigation from '@libs/Navigation/Navigation';
+import type {SettingsNavigatorParamList} from '@libs/Navigation/types';
 import * as Link from '@userActions/Link';
 import * as Report from '@userActions/Report';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
-import type {Route} from '@src/ROUTES';
+import type SCREENS from '@src/SCREENS';
 import type {Account} from '@src/types/onyx';
 
 type GetAssistanceOnyxProps = {
@@ -26,10 +28,7 @@ type GetAssistanceOnyxProps = {
     account: OnyxEntry<Account>;
 };
 
-type GetAssistancePageProps = GetAssistanceOnyxProps & {
-    /** Route object from navigation */
-    route: RouteProp<{params: {backTo: Route}}>;
-};
+type GetAssistancePageProps = GetAssistanceOnyxProps & StackScreenProps<SettingsNavigatorParamList, typeof SCREENS.GET_ASSISTANCE>;
 
 function GetAssistancePage({route, account}: GetAssistancePageProps) {
     const styles = useThemeStyles();
@@ -38,7 +37,7 @@ function GetAssistancePage({route, account}: GetAssistancePageProps) {
     const menuItems: MenuItemWithLink[] = [
         {
             title: translate('getAssistancePage.chatWithConcierge'),
-            onPress: () => Report.navigateToConciergeChat(),
+            onPress: () => Report.navigateToConciergeChat(true),
             icon: Expensicons.ChatBubble,
             shouldShowRightIcon: true,
             wrapperStyle: [styles.cardMenuItem],

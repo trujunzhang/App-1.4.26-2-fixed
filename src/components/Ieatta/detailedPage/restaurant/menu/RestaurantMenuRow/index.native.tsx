@@ -1,23 +1,18 @@
 import {useQuery} from '@realm/react';
 import React from 'react';
-import {View} from 'react-native';
 import RestaurantMenuList from '@components/Ieatta/detailedPage/restaurant/menu/RestaurantMenuList';
-import Text from '@components/Text';
-import useThemeStyles from '@hooks/useThemeStyles';
-import Log from '@libs/Log';
 import {RealmCollections} from '@libs/Realm/constant';
-import {toEventsList} from '@libs/Realm/helpers/realmTypeHelper';
-import {toRecipesList} from '@libs/Realm/helpers/realmTypeHelper/index.native';
-import TailwindColors from '@styles/tailwindcss/colors';
+import {toRealmModelList} from '@libs/Realm/helpers/realmTypeHelper';
+import type {IFBRecipe} from '@src/types/firebase';
 import type {RestaurantMenuRowProps} from './types';
 
 function RestaurantMenuRow({menuRow}: RestaurantMenuRowProps) {
     const {restaurantId, isSmallScreenWidth} = menuRow;
 
-    const recipes = useQuery(RealmCollections.Recipes, (array) => {
+    const recipes = useQuery<IFBRecipe>(RealmCollections.Recipes, (array) => {
         return array.filtered('restaurantId == $0', restaurantId);
     });
-    const recipesInRestaurant = toRecipesList(recipes);
+    const recipesInRestaurant: IFBRecipe[] = toRealmModelList<IFBRecipe>(recipes);
 
     // Log.info("")
     // Log.info("================================")

@@ -4,6 +4,7 @@ import * as Illustrations from '@components/Icon/Illustrations';
 import Section, {CARD_LAYOUT} from '@components/Section';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
+import * as App from '@userActions/App';
 
 function WorkspaceCardCreateAWorkspace() {
     const styles = useThemeStyles();
@@ -16,9 +17,12 @@ function WorkspaceCardCreateAWorkspace() {
             cardLayout={CARD_LAYOUT.ICON_ON_TOP}
             subtitle={translate('workspace.emptyWorkspace.subtitle')}
             subtitleMuted
-            containerStyles={[styles.highlightBG]}
+            containerStyles={[styles.highlightBG, styles.mv2]}
         >
             <Button
+                onPress={() => {
+                    App.createWorkspaceWithPolicyDraftAndNavigateToIt();
+                }}
                 text={translate('workspace.emptyWorkspace.createAWorkspaceCTA')}
                 style={styles.mt5}
                 success

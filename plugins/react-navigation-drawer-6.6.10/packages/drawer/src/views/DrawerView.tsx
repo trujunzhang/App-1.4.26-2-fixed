@@ -75,7 +75,6 @@ function DrawerViewBase({
     Platform.OS === 'android' ||
     Platform.OS === 'ios',
   // Reanimated 2 is not configured
-  // @ts-expect-error: the type definitions are incomplete
   useLegacyImplementation = !Reanimated.isConfigured?.(),
 }: Props) {
   // Reanimated v3 dropped legacy v1 syntax

@@ -7,7 +7,7 @@ import type FocusTextInputAfterAnimation from './types';
  * "Focus the text input with a slight delay to make sure modals are closed first.
  * Since in react-native-modal `onModalHide` is called before the modal is actually hidden.
  * It results in the keyboard being dismissed right away on both iOS and Android.
- * See this discussion for more details: https://github.com/Expensify/App/issues/18300"
+ * See this discussion for more details: https://github.com/Ieatta/App/issues/18300"
  *
  * But the bug already fixed, without using setTimeout for IOS the focus seems to work properly.
  * Instead there is new IOS bug of text input content doesn't scroll to bottom if using setTimeout,
@@ -19,7 +19,7 @@ import type FocusTextInputAfterAnimation from './types';
  */
 const focusTextInputAfterAnimation: FocusTextInputAfterAnimation = (inputRef, animationLength = 0) => {
     setTimeout(() => {
-        inputRef.focus();
+        inputRef?.focus();
     }, animationLength);
 };
 

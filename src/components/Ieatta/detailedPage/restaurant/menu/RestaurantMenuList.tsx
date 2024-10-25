@@ -1,60 +1,65 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useMemo} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
+import {MenusRowSkeletonView} from '@components/Ieatta/components/SkeletonViews';
 import SectionEmptyView from '@components/Ieatta/detailedPage/common/SectionEmptyView';
 import PageFlashListItemWithEvent from '@components/Ieatta/detailedPage/PageFlashListItemWithEvent';
-import useLocalize from '@hooks/useLocalize';
-import useStyleUtils from '@hooks/useStyleUtils';
 import useThemeStyles from '@hooks/useThemeStyles';
 import useWindowDimensions from '@hooks/useWindowDimensions';
 import {buildRecipeHorizontalRows} from '@libs/Firebase/list/builder/recipe';
-import type {IPageRow} from '@libs/Firebase/list/types/page-row';
+import type {IPageRow, ModalNames} from '@libs/Firebase/list/types/page-row';
 import variables from '@styles/variables';
 import type {IFBRecipe} from '@src/types/firebase';
 
 type RestaurantMenuListProps = {
     recipes: IFBRecipe[];
+    loadingForRecipes?: boolean;
+    modalName?: ModalNames;
 };
 
 const keyExtractor = (item: IPageRow) => `row_${item.rowKey}`;
 
-function RestaurantMenuList({recipes}: RestaurantMenuListProps) {
+function RestaurantMenuList({recipes, loadingForRecipes = false, modalName = 'recipe'}: RestaurantMenuListProps) {
     const styles = useThemeStyles();
     const {isSmallScreenWidth} = useWindowDimensions();
 
-    const rowsData = useMemo(() => buildRecipeHorizontalRows(isSmallScreenWidth, recipes), [isSmallScreenWidth, recipes]);
+    const rowsData = useMemo(() => buildRecipeHorizontalRows({isSmallScreenWidth, recipes, modalName}), [isSmallScreenWidth, recipes, modalName]);
 
-    return (
-        <>
-            {recipes.length > 0 ? (
-                <View
-                    style={[
-                        styles.flexColumn,
-                        styles.w100,
-                        {
-                            height: isSmallScreenWidth ? variables.menuInRestaurantMobileItemHeight : variables.menuInRestaurantWebItemHeight,
-                        },
-                    ]}
-                >
-                    <FlatList
-                        horizontal
-                        indicatorStyle="white"
-                        keyboardShouldPersistTaps="always"
-                        data={rowsData}
-                        testID="page-recipes-flashlist"
-                        keyExtractor={keyExtractor}
-                        renderItem={({item}) => {
-                            return <PageFlashListItemWithEvent item={item} />;
-                        }}
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={StyleSheet.flatten([styles.ph4])}
-                        ItemSeparatorComponent={() => <View style={{width: 15}} />}
-                    />
-                </View>
-            ) : (
-                <SectionEmptyView emptyRow={{emptyHint: 'sections.empty.noRecipes'}} />
-            )}
-        </>
+    const renderHorizontalList = (
+        <View
+            style={[
+                styles.flexColumn,
+                styles.w100,
+                {
+                    height: isSmallScreenWidth ? variables.menuInRestaurantMobileItemHeight : variables.menuInRestaurantWebItemHeight,
+                },
+            ]}
+        >
+            <FlatList
+                horizontal
+                indicatorStyle="white"
+                keyboardShouldPersistTaps="always"
+                data={rowsData}
+                testID="page-recipes-flashlist"
+                keyExtractor={keyExtractor}
+                renderItem={({item}) => {
+                    return <PageFlashListItemWithEvent item={item} />;
+                }}
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={StyleSheet.flatten([styles.ph4])}
+                ItemSeparatorComponent={() => <View style={{width: 15}} />}
+            />
+        </View>
     );
+
+    if (loadingForRecipes) {
+        return <MenusRowSkeletonView />;
+    }
+
+    if (recipes.length === 0) {
+        return <SectionEmptyView emptyRow={{emptyHint: 'sections.empty.noRecipes'}} />;
+    }
+
+    return renderHorizontalList;
 }
 
 export default RestaurantMenuList;

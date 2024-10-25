@@ -12,7 +12,7 @@ type Session = {
     authToken?: string;
 
     /** Currently logged in user authToken type */
-    authTokenType?: string;
+    authTokenType?: ValueOf<typeof CONST.AUTH_TOKEN_TYPES>;
 
     /** Currently logged in user support authToken */
     supportAuthToken?: string;
@@ -20,11 +20,11 @@ type Session = {
     /** Currently logged in user encrypted authToken */
     encryptedAuthToken?: string;
 
-    /** Currently logged in user accountID generated in the client */
-    accountID?: number;
+    /** Boolean that indicates whether it is loading or not */
+    loading?: boolean;
 
-    /** Currently logged in user userID in the firebase's table */
-    userID?: string;
+    /** Currently logged in user accountID */
+    accountID?: number;
 
     autoAuthState?: AutoAuthState;
 

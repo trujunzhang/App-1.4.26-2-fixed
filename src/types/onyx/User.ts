@@ -5,16 +5,19 @@ type User = {
     /** Whether we should use the staging version of the secure API server */
     shouldUseStagingServer?: boolean;
 
+    /** Whether user muted all sounds in application */
+    isMutedAllSounds?: boolean;
+
     /** Is the user account validated? */
     validated: boolean;
 
     /** Whether or not the user is on a public domain email account or not */
     isFromPublicDomain: boolean;
 
-    /** Whether or not the user use expensify card */
-    isUsingExpensifyCard: boolean;
+    /** Whether or not the user use ieatta card */
+    isUsingIeattaCard: boolean;
 
-    /** Whever Expensify Card approval flow is ongoing - checking loginList for private domains */
+    /** Whever Ieatta Card approval flow is ongoing - checking loginList for private domains */
     isCheckingDomain?: boolean;
 
     /** Whether or not the user has lounge access */

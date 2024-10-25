@@ -2,10 +2,7 @@ import React, {memo} from 'react';
 import type {StyleProp, TextStyle} from 'react-native';
 import IeattaUserDetailsTooltip from '@components/Ieatta/detailedPage/common/IeattaUserDetailsTooltip';
 import Text from '@components/Text';
-import useLocalize from '@hooks/useLocalize';
-import useNetwork from '@hooks/useNetwork';
 import useThemeStyles from '@hooks/useThemeStyles';
-import type {IFBReview} from '@src/types/firebase';
 import type {Message} from '@src/types/onyx/ReportAction';
 import TextCommentFragment from './comment/TextCommentFragment';
 

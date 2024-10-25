@@ -3,22 +3,39 @@
 
 /* eslint-disable rulesdir/no-api-in-views */
 import Logger from 'expensify-common/lib/Logger';
+import Onyx from 'react-native-onyx';
 import type {Merge} from 'type-fest';
+import CONST from '@src/CONST';
+import ONYXKEYS from '@src/ONYXKEYS';
 import pkg from '../../package.json';
+import {addLog} from './actions/Console';
+import {shouldAttachLog} from './Console';
 import getPlatform from './getPlatform';
 import * as Network from './Network';
 import requireParameters from './requireParameters';
 
 let timeout: NodeJS.Timeout;
+let shouldCollectLogs = false;
+
+Onyx.connect({
+    key: ONYXKEYS.SHOULD_STORE_LOGS,
+    callback: (val) => {
+        if (!val) {
+            shouldCollectLogs = false;
+        }
+
+        shouldCollectLogs = Boolean(val);
+    },
+});
 
 type LogCommandParameters = {
-    expensifyCashAppVersion: string;
+    ieattaCashAppVersion: string;
     logPacket: string;
 };
 
 function LogCommand(parameters: LogCommandParameters): Promise<{requestID: string}> {
     const commandName = 'Log';
-    requireParameters(['logPacket', 'expensifyCashAppVersion'], parameters, commandName);
+    requireParameters(['logPacket', 'ieattaCashAppVersion'], parameters, commandName);
 
     // Note: We are forcing Log to run since it requires no authToken and should only be queued when we are offline.
     // Non-cancellable request: during logout, when requests are cancelled, we don't want to cancel any remaining logs
@@ -27,7 +44,7 @@ function LogCommand(parameters: LogCommandParameters): Promise<{requestID: strin
 
 // eslint-disable-next-line
 type ServerLoggingCallbackOptions = {api_setCookie: boolean; logPacket: string};
-type RequestParams = Merge<ServerLoggingCallbackOptions, {shouldProcessImmediately: boolean; shouldRetry: boolean; expensifyCashAppVersion: string; parameters: string}>;
+type RequestParams = Merge<ServerLoggingCallbackOptions, {shouldProcessImmediately: boolean; shouldRetry: boolean; ieattaCashAppVersion: string; parameters: string}>;
 
 /**
  * Network interface for logger.
@@ -36,7 +53,7 @@ function serverLoggingCallback(logger: Logger, params: ServerLoggingCallbackOpti
     const requestParams = params as RequestParams;
     requestParams.shouldProcessImmediately = false;
     requestParams.shouldRetry = false;
-    requestParams.expensifyCashAppVersion = `expensifyCash[${getPlatform()}]${pkg.version}`;
+    requestParams.ieattaCashAppVersion = `ieattaCash[${getPlatform()}]${pkg.version}`;
     if (requestParams.parameters) {
         requestParams.parameters = JSON.stringify(requestParams.parameters);
     }
@@ -50,7 +67,15 @@ function serverLoggingCallback(logger: Logger, params: ServerLoggingCallbackOpti
 const Log = new Logger({
     serverLoggingCallback,
     clientLoggingCallback: (message) => {
+        if (!shouldAttachLog(message)) {
+            return;
+        }
+
         console.debug(message);
+
+        if (shouldCollectLogs) {
+            addLog({time: new Date(), level: CONST.DEBUG_CONSOLE.LEVELS.DEBUG, message});
+        }
     },
     isDebug: true,
 });

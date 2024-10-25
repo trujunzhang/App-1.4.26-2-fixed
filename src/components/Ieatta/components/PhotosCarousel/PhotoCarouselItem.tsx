@@ -1,4 +1,5 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import _ from 'lodash';
+import React from 'react';
 import {View} from 'react-native';
 import * as Expensicons from '@components/Icon/Expensicons';
 import ImagePlaceholder from '@components/ImagePlaceholder';
@@ -16,13 +17,13 @@ const debugPhotoIndex = false;
 
 function PhotoCarouselItem({carouselItem}: PhotoCarouselItemProps) {
     const styles = useThemeStyles();
-    const {photo: item, index, photoWidth, photoHeight} = carouselItem;
+    const {photo: item, index = 0, photoWidth, photoHeight} = carouselItem;
 
     return (
         <View
             style={[
+                _.isUndefined(photoWidth) ? styles.w100 : {width: photoWidth},
                 {
-                    width: photoWidth,
                     height: photoHeight,
                 },
             ]}

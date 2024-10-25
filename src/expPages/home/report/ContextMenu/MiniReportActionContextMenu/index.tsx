@@ -1,8 +1,8 @@
 import React from 'react';
 import {View} from 'react-native';
 import useStyleUtils from '@hooks/useStyleUtils';
-import BaseReportActionContextMenu from '@expPages/home/report/ContextMenu/BaseReportActionContextMenu';
 import CONST from '@src/CONST';
+import BaseReportActionContextMenu from '@src/expPages/home/report/ContextMenu/BaseReportActionContextMenu';
 import type MiniReportActionContextMenuProps from './types';
 
 function MiniReportActionContextMenu({displayAsGroup = false, ...rest}: MiniReportActionContextMenuProps) {

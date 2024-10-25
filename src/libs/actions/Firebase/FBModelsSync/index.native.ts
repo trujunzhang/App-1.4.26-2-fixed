@@ -1,8 +1,8 @@
 import {isBefore} from 'date-fns';
+// eslint-disable-next-line no-restricted-imports
+import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import Onyx from 'react-native-onyx';
-// eslint-disable-next-line no-restricted-imports
-import _ from 'underscore';
 import * as API from '@libs/API';
 import * as ErrorUtils from '@libs/ErrorUtils';
 import Log from '@libs/Log';

@@ -1,4 +1,5 @@
 import type {ReportAction} from '@src/types/onyx';
+import type {Unit} from '@src/types/onyx/Policy';
 import type en from './en';
 
 type AddressLineParams = {
@@ -7,10 +8,6 @@ type AddressLineParams = {
 
 type CharacterLimitParams = {
     limit: number;
-};
-
-type MaxParticipantsReachedParams = {
-    count: number;
 };
 
 type ZipCodeExampleFormatParams = {
@@ -90,6 +87,7 @@ type ReportArchiveReasonsMergedParams = {
 type ReportArchiveReasonsRemovedFromPolicyParams = {
     displayName: string;
     policyName: string;
+    shouldUseYou?: boolean;
 };
 
 type ReportArchiveReasonsPolicyDeletedParams = {
@@ -99,23 +97,24 @@ type ReportArchiveReasonsPolicyDeletedParams = {
 type RequestCountParams = {
     count: number;
     scanningReceipts: number;
+    pendingReceipts: number;
 };
 
-type SettleExpensifyCardParams = {
+type SettleIeattaCardParams = {
     formattedAmount: string;
 };
 
-type RequestAmountParams = {amount: number};
+type RequestAmountParams = {amount: string};
 
 type RequestedAmountMessageParams = {formattedAmount: string; comment?: string};
 
-type SplitAmountParams = {amount: number};
+type SplitAmountParams = {amount: string};
 
 type DidSplitAmountMessageParams = {formattedAmount: string; comment: string};
 
-type AmountEachParams = {amount: number};
+type AmountEachParams = {amount: string};
 
-type PayerOwesAmountParams = {payer: string; amount: number | string};
+type PayerOwesAmountParams = {payer: string; amount: number | string; comment?: string};
 
 type PayerOwesParams = {payer: string};
 
@@ -135,11 +134,13 @@ type WaitingOnBankAccountParams = {submitterDisplayName: string};
 
 type CanceledRequestParams = {amount: string; submitterDisplayName: string};
 
+type AdminCanceledRequestParams = {manager: string; amount: string};
+
 type SettledAfterAddedBankAccountParams = {submitterDisplayName: string; amount: string};
 
 type PaidElsewhereWithAmountParams = {payer?: string; amount: string};
 
-type PaidWithExpensifyWithAmountParams = {payer?: string; amount: string};
+type PaidWithIeattaWithAmountParams = {payer?: string; amount: string};
 
 type ThreadRequestReportNameParams = {formattedAmount: string; comment: string};
 
@@ -155,15 +156,13 @@ type EnterMagicCodeParams = {contactMethod: string};
 
 type TransferParams = {amount: string};
 
-type InstantSummaryParams = {rate: number; minAmount: number};
+type InstantSummaryParams = {rate: string; minAmount: string};
 
 type NotYouParams = {user: string};
 
 type DateShouldBeBeforeParams = {dateString: string};
 
 type DateShouldBeAfterParams = {dateString: string};
-
-type IncorrectZipFormatParams = {zipFormat?: string};
 
 type WeSentYouMagicSignInLinkParams = {login: string; loginType: string};
 
@@ -195,7 +194,7 @@ type OOOEventSummaryFullDayParams = {summary: string; dayCount: number; date: st
 
 type OOOEventSummaryPartialDayParams = {summary: string; timePeriod: string; date: string};
 
-type ParentNavigationSummaryParams = {rootReportName?: string; workspaceName?: string};
+type ParentNavigationSummaryParams = {reportName?: string; workspaceName?: string};
 
 type SetTheRequestParams = {valueName: string; newValueToDisplay: string};
 
@@ -209,13 +208,11 @@ type UpdatedTheDistanceParams = {newDistanceToDisplay: string; oldDistanceToDisp
 
 type FormattedMaxLengthParams = {formattedMaxLength: string};
 
-type TagSelectionParams = {tagName: string};
-
 type WalletProgramParams = {walletProgram: string};
 
 type ViolationsAutoReportedRejectedExpenseParams = {rejectedBy: string; rejectReason: string};
 
-type ViolationsCashExpenseWithNoReceiptParams = {amount: string};
+type ViolationsCashExpenseWithNoReceiptParams = {formattedLimit?: string};
 
 type ViolationsConversionSurchargeParams = {surcharge?: number};
 
@@ -225,15 +222,15 @@ type ViolationsMaxAgeParams = {maxAge: number};
 
 type ViolationsMissingTagParams = {tagName?: string};
 
-type ViolationsOverAutoApprovalLimitParams = {formattedLimitAmount: string};
+type ViolationsOverAutoApprovalLimitParams = {formattedLimit?: string};
 
-type ViolationsOverCategoryLimitParams = {categoryLimit: string};
+type ViolationsOverCategoryLimitParams = {formattedLimit?: string};
 
-type ViolationsOverLimitParams = {amount: string};
+type ViolationsOverLimitParams = {formattedLimit?: string};
 
-type ViolationsPerDayLimitParams = {limit: string};
+type ViolationsPerDayLimitParams = {formattedLimit?: string};
 
-type ViolationsReceiptRequiredParams = {amount: string; category?: string};
+type ViolationsReceiptRequiredParams = {formattedLimit?: string; category?: string};
 
 type ViolationsRterParams = {
     brokenBankConnection: boolean;
@@ -246,6 +243,8 @@ type ViolationsRterParams = {
 type ViolationsTagOutOfPolicyParams = {tagName?: string};
 
 type ViolationsTaxOutOfPolicyParams = {taxName?: string};
+
+type PaySomeoneParams = {name?: string};
 
 type TaskCreatedActionParams = {title: string};
 
@@ -287,7 +286,24 @@ type TranslationFlatObject = {
     [TKey in TranslationPaths]: TranslateType<EnglishTranslation, TKey>;
 };
 
+type TermsParams = {amount: string};
+
+type ElectronicFundsParams = {percentage: string; amount: string};
+
+type LogSizeParams = {size: number};
+
+type HeldRequestParams = {comment: string};
+
+type DistanceRateOperationsParams = {count: number};
+
+type ReimbursementRateParams = {unit: Unit};
+
+type DetailedPageActionModalObject = {
+    modalName: string;
+};
+
 export type {
+    AdminCanceledRequestParams,
     ApprovedAmountParams,
     AddressLineParams,
     AlreadySignedInParams,
@@ -304,19 +320,19 @@ export type {
     DeleteActionParams,
     DeleteConfirmationParams,
     DidSplitAmountMessageParams,
+    DistanceRateOperationsParams,
     EditActionParams,
+    ElectronicFundsParams,
     EnglishTranslation,
     EnterMagicCodeParams,
     FormattedMaxLengthParams,
     GoBackMessageParams,
     GoToRoomParams,
-    IncorrectZipFormatParams,
     InstantSummaryParams,
     LocalTimeParams,
     LoggedInAsParams,
     ManagerApprovedAmountParams,
     ManagerApprovedParams,
-    MaxParticipantsReachedParams,
     NewFaceEnterMagicCodeParams,
     NoLongerHaveAccessParams,
     NotAllowedExtensionParams,
@@ -325,7 +341,7 @@ export type {
     OOOEventSummaryPartialDayParams,
     OurEmailProviderParams,
     PaidElsewhereWithAmountParams,
-    PaidWithExpensifyWithAmountParams,
+    PaidWithIeattaWithAmountParams,
     ParentNavigationSummaryParams,
     PayerOwesAmountParams,
     PayerOwesParams,
@@ -346,13 +362,13 @@ export type {
     RoomRenamedToParams,
     SetTheDistanceParams,
     SetTheRequestParams,
-    SettleExpensifyCardParams,
+    SettleIeattaCardParams,
     SettledAfterAddedBankAccountParams,
     SizeExceededParams,
     SplitAmountParams,
     StepCounterParams,
-    TagSelectionParams,
     TaskCreatedActionParams,
+    TermsParams,
     ThreadRequestReportNameParams,
     ThreadSentMoneyReportNameParams,
     ToValidateLoginParams,
@@ -386,4 +402,9 @@ export type {
     WelcomeNoteParams,
     WelcomeToRoomParams,
     ZipCodeExampleFormatParams,
+    LogSizeParams,
+    HeldRequestParams,
+    PaySomeoneParams,
+    ReimbursementRateParams,
+    DetailedPageActionModalObject,
 };

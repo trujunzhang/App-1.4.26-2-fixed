@@ -57,7 +57,7 @@ function TextInput(props: BaseTextInputProps, ref: ForwardedRef<BaseTextInputRef
         <BaseTextInput
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            ref={(element: any) => {
+            ref={(element) => {
                 textInputRef.current = element as HTMLFormElement;
 
                 if (!ref) {

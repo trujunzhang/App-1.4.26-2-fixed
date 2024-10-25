@@ -6,9 +6,12 @@ module.exports = {
     arrowParens: 'always',
     printWidth: 190,
     singleAttributePerLine: true,
+    /** `importOrder` should be defined in an alphabetical order. */
     importOrder: [
         '@assets/(.*)$',
         '@components/(.*)$',
+        '@desktop/(.*)$',
+        '@github/(.*)$',
         '@hooks/(.*)$',
         '@libs/(.*)$',
         '@navigation/(.*)$',
@@ -19,6 +22,7 @@ module.exports = {
         '@src/(.*)$',
         '^[./]',
     ],
+    importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
     importOrderSortSpecifiers: true,
     importOrderCaseInsensitive: true,
 };

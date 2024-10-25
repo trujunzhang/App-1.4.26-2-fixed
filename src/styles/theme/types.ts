@@ -1,4 +1,3 @@
-import colors from '@styles/theme/colors';
 import type CONST from '@src/CONST';
 import type {ColorScheme, StatusBarStyle} from '..';
 
@@ -12,23 +11,28 @@ type ThemeColors = {
     appBG: Color;
     splashBG: Color;
     highlightBG: Color;
+    messageHighlightBG: Color;
     border: Color;
     borderLighter: Color;
     borderFocus: Color;
     icon: Color;
     iconMenu: Color;
     iconHovered: Color;
+    iconMenuHovered: Color;
     iconSuccessFill: Color;
+    iconDangerFill: Color;
     iconReversed: Color;
     iconColorfulBackground: Color;
     textSupporting: Color;
     text: Color;
     textColorfulBackground: Color;
+    syntax: Color;
     link: Color;
     linkHover: Color;
     buttonDefaultBG: Color;
     buttonHoveredBG: Color;
     buttonPressedBG: Color;
+    buttonSuccessText: Color;
     danger: Color;
     dangerHover: Color;
     dangerPressed: Color;
@@ -44,7 +48,6 @@ type ThemeColors = {
 
     // Additional keys
     overlay: Color;
-    backdropColor: Color;
     inverse: Color;
     shadow: Color;
     componentBG: Color;
@@ -88,9 +91,10 @@ type ThemeColors = {
     skeletonLHNOut: Color;
     QRLogo: Color;
     starDefaultBG: Color;
-    loungeAccessOverlay: Color;
     mapAttributionText: Color;
     white: Color;
+    videoPlayerBG: Color;
+    transparentWhite: Color;
 
     PAGE_THEMES: Record<string, {backgroundColor: Color; statusBarStyle: StatusBarStyle}>;
 

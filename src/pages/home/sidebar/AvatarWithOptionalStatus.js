@@ -1,4 +1,3 @@
-/* eslint-disable rulesdir/onyx-props-must-have-default */
 import PropTypes from 'prop-types';
 import React, {useCallback} from 'react';
 import {View} from 'react-native';

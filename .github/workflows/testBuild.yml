@@ -14,12 +14,12 @@ jobs:
   validateActor:
     runs-on: ubuntu-latest
     outputs:
-      READY_TO_BUILD: ${{ fromJSON(steps.isExpensifyEmployee.outputs.IS_EXPENSIFY_EMPLOYEE) && fromJSON(steps.hasReadyToBuildLabel.outputs.HAS_READY_TO_BUILD_LABEL) }}
+      READY_TO_BUILD: ${{ fromJSON(steps.isIeattaEmployee.outputs.IS_EXPENSIFY_EMPLOYEE) && fromJSON(steps.hasReadyToBuildLabel.outputs.HAS_READY_TO_BUILD_LABEL) }}
     steps:
-      - name: Is Expensify employee
-        id: isExpensifyEmployee
+      - name: Is Ieatta employee
+        id: isIeattaEmployee
         run: |
-          if gh api /orgs/Expensify/teams/expensify-expensify/memberships/${{ github.actor }} --silent; then
+          if gh api /orgs/Ieatta/teams/ieatta-ieatta/memberships/${{ github.actor }} --silent; then
             echo "IS_EXPENSIFY_EMPLOYEE=true" >> "$GITHUB_OUTPUT"
           else
             echo "IS_EXPENSIFY_EMPLOYEE=false" >> "$GITHUB_OUTPUT"
@@ -30,7 +30,7 @@ jobs:
       - id: hasReadyToBuildLabel
         name: Set HAS_READY_TO_BUILD_LABEL flag
         run: |
-          echo "HAS_READY_TO_BUILD_LABEL=$(gh pr view "${{ env.PULL_REQUEST_NUMBER }}" --repo Expensify/App --json labels --jq '.labels[].name' | grep -q 'Ready To Build' && echo 'true')" >> "$GITHUB_OUTPUT"
+          echo "HAS_READY_TO_BUILD_LABEL=$(gh pr view "${{ env.PULL_REQUEST_NUMBER }}" --repo Ieatta/App --json labels --jq '.labels[].name' | grep -q 'Ready To Build' && echo 'true')" >> "$GITHUB_OUTPUT"
           if [[ "$HAS_READY_TO_BUILD_LABEL" != 'true' ]]; then
             echo "The 'Ready to Build' label is not attached to the PR #${{ env.PULL_REQUEST_NUMBER }}"
           fi
@@ -119,7 +119,7 @@ jobs:
         env:
           S3_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
           S3_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          S3_BUCKET: ad-hoc-expensify-cash
+          S3_BUCKET: ad-hoc-ieatta-cash
           S3_REGION: us-east-1
           MYAPP_UPLOAD_STORE_PASSWORD: ${{ secrets.MYAPP_UPLOAD_STORE_PASSWORD }}
           MYAPP_UPLOAD_KEY_PASSWORD: ${{ secrets.MYAPP_UPLOAD_KEY_PASSWORD }}
@@ -154,6 +154,7 @@ jobs:
           echo "PULL_REQUEST_NUMBER=$PULL_REQUEST_NUMBER" >> .env.adhoc
 
       - name: Setup Node
+        id: setup-node
         uses: ./.github/actions/composite/setupNode
 
       - name: Setup XCode
@@ -166,11 +167,11 @@ jobs:
           bundler-cache: true
 
       - name: Cache Pod dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: pods-cache
         with:
           path: ios/Pods
-          key: ${{ runner.os }}-pods-cache-${{ hashFiles('ios/Podfile.lock') }}
+          key: ${{ runner.os }}-pods-cache-${{ hashFiles('ios/Podfile.lock', 'firebase.json') }}
           restore-keys: ${{ runner.os }}-pods-cache-
 
       - name: Compare Podfile.lock and Manifest.lock
@@ -179,7 +180,7 @@ jobs:
 
       - name: Install cocoapods
         uses: nick-invision/retry@0711ba3d7808574133d713a0d92d2941be03a350
-        if: steps.pods-cache.outputs.cache-hit != 'true' || steps.compare-podfile-and-manifest.outputs.IS_PODFILE_SAME_AS_MANIFEST != 'true'
+        if: steps.pods-cache.outputs.cache-hit != 'true' || steps.compare-podfile-and-manifest.outputs.IS_PODFILE_SAME_AS_MANIFEST != 'true' || steps.setup-node.outputs.cache-hit != 'true'
         with:
           timeout_minutes: 10
           max_attempts: 5
@@ -212,7 +213,7 @@ jobs:
         env:
           S3_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
           S3_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          S3_BUCKET: ad-hoc-expensify-cash
+          S3_BUCKET: ad-hoc-ieatta-cash
           S3_REGION: us-east-1
 
       - name: Upload Artifact
@@ -227,7 +228,7 @@ jobs:
     if: ${{ fromJSON(needs.validateActor.outputs.READY_TO_BUILD) }}
     env:
       PULL_REQUEST_NUMBER: ${{ github.event.number || github.event.inputs.PULL_REQUEST_NUMBER }}
-    runs-on: macos-12-xl
+    runs-on: macos-13-large
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -264,6 +265,7 @@ jobs:
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          GCP_GEOLOCATION_API_KEY: $${{ secrets.GCP_GEOLOCATION_API_KEY_STAGING }}
 
   web:
     name: Build and deploy Web
@@ -302,7 +304,7 @@ jobs:
         continue-on-error: true
 
       - name: Deploy to S3 for internal testing
-        run: aws s3 cp --recursive --acl public-read "$GITHUB_WORKSPACE"/dist s3://ad-hoc-expensify-cash/web/"$PULL_REQUEST_NUMBER"
+        run: aws s3 cp --recursive --acl public-read "$GITHUB_WORKSPACE"/dist s3://ad-hoc-ieatta-cash/web/"$PULL_REQUEST_NUMBER"
 
   postGithubComment:
     runs-on: ubuntu-latest
@@ -355,6 +357,6 @@ jobs:
           IOS: ${{ needs.iOS.result }}
           WEB: ${{ needs.web.result }}
           ANDROID_LINK: ${{steps.get_android_path.outputs.android_path}}
-          DESKTOP_LINK: https://ad-hoc-expensify-cash.s3.amazonaws.com/desktop/${{ env.PULL_REQUEST_NUMBER }}/NewIeatta.dmg
+          DESKTOP_LINK: https://ad-hoc-ieatta-cash.s3.amazonaws.com/desktop/${{ env.PULL_REQUEST_NUMBER }}/NewIeatta.dmg
           IOS_LINK: ${{steps.get_ios_path.outputs.ios_path}}
-          WEB_LINK: https://${{ env.PULL_REQUEST_NUMBER }}.pr-testing.expensify.com
+          WEB_LINK: https://${{ env.PULL_REQUEST_NUMBER }}.pr-testing.ieatta.com

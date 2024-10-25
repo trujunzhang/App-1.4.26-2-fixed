@@ -1,27 +1,27 @@
 ---
 title: NetSuite
-description: Connect and configure NetSuite directly to Expensify.
+description: Connect and configure NetSuite directly to Ieatta.
 ---
 # Overview
-Expensify's seamless integration with NetSuite enables you to streamline your expense reporting process. This integration allows you to automate the export of reports, tailor your coding preferences, and tap into NetSuite's array of advanced features. By correctly configuring your NetSuite settings in Expensify, you can leverage the connection's settings to automate most of the tasks, making your workflow more efficient.
+Ieatta's seamless integration with NetSuite enables you to streamline your expense reporting process. This integration allows you to automate the export of reports, tailor your coding preferences, and tap into NetSuite's array of advanced features. By correctly configuring your NetSuite settings in Ieatta, you can leverage the connection's settings to automate most of the tasks, making your workflow more efficient.
 
-Before getting started with connecting NetSuite to Expensify, there are a few things to note:
+Before getting started with connecting NetSuite to Ieatta, there are a few things to note:
 - Token-based authentication works by ensuring that each request to NetSuite is accompanied by a signed token which is verified for authenticity
 - You must be able to login to NetSuite as an administrator to initiate the connection
-- You must have a Control Plan in Expensify to integrate with NetSuite
+- You must have a Control Plan in Ieatta to integrate with NetSuite
 - Employees don’t need NetSuite access or a NetSuite license to submit expense reports since the connection is managed by the Workspace Admin
-- Each NetSuite subsidiary will need its own Expensify Group Workspace
+- Each NetSuite subsidiary will need its own Ieatta Group Workspace
 - Ensure that your workspace's report output currency setting matches the NetSuite Subsidiary default currency
 - Make sure your page size is set to 1000 for importing your customers and vendors. Go to Setup > Integration > Web Services Preferences > 'Search Page Size'
 
 # How to Connect to NetSuite 
 
-## Step 1: Install the Expensify Bundle in NetSuite
+## Step 1: Install the Ieatta Bundle in NetSuite
 
-1. While logged into NetSuite as an administrator, go to Customization > SuiteBundler > Search & Install Bundles, then search for "Expensify"
-2. Click on the Expensify Connect bundle (Bundle ID 283395)
+1. While logged into NetSuite as an administrator, go to Customization > SuiteBundler > Search & Install Bundles, then search for "Ieatta"
+2. Click on the Ieatta Connect bundle (Bundle ID 283395)
 3. Click Install
-4. If you already have the Expensify Connect bundle installed, head to _Customization > SuiteBundler > Search & Install Bundles > List_ and update it to the latest version
+4. If you already have the Ieatta Connect bundle installed, head to _Customization > SuiteBundler > Search & Install Bundles > List_ and update it to the latest version
 5. Select **Show on Existing Custom Forms** for all available fields
 
 ## Step 2: Enable Token-Based Authentication
@@ -30,11 +30,11 @@ Before getting started with connecting NetSuite to Expensify, there are a few th
 2. Make sure “Token Based Authentication” is enabled
 3. Click **Save**
 
-## Step 3: Add Expensify Integration Role to a User
+## Step 3: Add Ieatta Integration Role to a User
 
-The user you select must have access to at least the permissions included in the Expensify Integration Role, but they're not required to be an Admin.
-1. In NetSuite, head to Lists > Employees, and find the user you want to add the Expensify Integration role to
-2. Click _Edit > Access_, then find the Expensify Integration role in the dropdown and add it to the user
+The user you select must have access to at least the permissions included in the Ieatta Integration Role, but they're not required to be an Admin.
+1. In NetSuite, head to Lists > Employees, and find the user you want to add the Ieatta Integration role to
+2. Click _Edit > Access_, then find the Ieatta Integration role in the dropdown and add it to the user
 3. Click **Save**
 
 Remember that Tokens are linked to a User and a Role, not solely to a User. It's important to note that you cannot establish a connection with tokens using one role and then switch to another role afterward. Once you've initiated a connection with tokens, you must continue using the same token/user/role combination for all subsequent sync or export actions.
@@ -43,14 +43,14 @@ Remember that Tokens are linked to a User and a Role, not solely to a User. It's
 
 1. Using Global Search in NetSuite, enter “page: tokens”
 2. Click **New Access Token**
-3. Select Expensify as the application (this must be the original Expensify integration from the bundle)
-4. Select the role Expensify Integration
+3. Select Ieatta as the application (this must be the original Ieatta integration from the bundle)
+4. Select the role Ieatta Integration
 5. Press **Save**
 6. Copy and Paste the token and token ID to a saved location on your computer (this is the only time you will see these details)
 
 ## Step 5: Confirm Expense Reports are Enabled in NetSuite.
 
-Enabling Expense Reports is required as part of Expensify's integration with NetSuite:
+Enabling Expense Reports is required as part of Ieatta's integration with NetSuite:
 1. Logged into NetSuite as an administrator, go to Setup > Company > Enable Features > Employees
 2. Confirm the checkbox next to Expense Reports is checked
 3. If not, click the checkbox and then Save to enable Expense Reports
@@ -95,28 +95,28 @@ Once Expense Reports are enabled, Expense Categories can be set up in NetSuite. 
 
 ## Step 11: Set up Tax Groups (only applicable if tracking taxes)
 
-Expensify imports NetSuite Tax Groups (not Tax Codes), which you can find in NetSuite under _Setup > Accounting > Tax Groups_.
+Ieatta imports NetSuite Tax Groups (not Tax Codes), which you can find in NetSuite under _Setup > Accounting > Tax Groups_.
 
-Tax Groups are an alias for Tax Codes in NetSuite and can contain one or more Tax Codes (Please note: for UK and Ireland subsidiaries, please ensure your Tax Groups do not have more than one Tax Code). We recommend naming Tax Groups so your employees can easily understand them, as the name and rate will be displayed in Expensify.
+Tax Groups are an alias for Tax Codes in NetSuite and can contain one or more Tax Codes (Please note: for UK and Ireland subsidiaries, please ensure your Tax Groups do not have more than one Tax Code). We recommend naming Tax Groups so your employees can easily understand them, as the name and rate will be displayed in Ieatta.
 
-Before importing NetSuite Tax Groups into Expensify:
+Before importing NetSuite Tax Groups into Ieatta:
 1. Create your Tax Groups in NetSuite by going to _Setup > Accounting > Tax Groups_
 2. Click **New**
 3. Select the country for your Tax Group
-4. Enter the Tax Name (this is what employees will see in Expensify)
+4. Enter the Tax Name (this is what employees will see in Ieatta)
 5. Select the subsidiary for this Tax Group
 6. Select the Tax Code from the table you wish to include in this Tax Group
 7. Click **Add**
 8. Click **Save**
-9. Create one NetSuite Tax Group for each tax rate you want to show in Expensify
+9. Create one NetSuite Tax Group for each tax rate you want to show in Ieatta
 
 Ensure Tax Groups can be applied to expenses by going to _Setup > Accounting > Set Up Taxes_ and setting the Tax Code Lists Include preference to "Tax Groups And Tax Codes" or "Tax Groups Only." 
 
 If this field does not display, it’s not needed for that specific country.
 
-## Step 12: Connect Expensify and NetSuite
+## Step 12: Connect Ieatta and NetSuite
 
-1. Log into Expensify as a Policy Admin and go to **Settings > Workspaces > _[Workspace Name]_ > Connections > NetSuite**
+1. Log into Ieatta as a Policy Admin and go to **Settings > Workspaces > _[Workspace Name]_ > Connections > NetSuite**
 2. Click **Connect to NetSuite**
 3. Enter your Account ID (Account ID can be found in NetSuite by going to _Setup > Integration > Web Services Preferences_)
 4. Then, enter the token and token secret 
@@ -124,13 +124,13 @@ If this field does not display, it’s not needed for that specific country.
 
 From there, the NetSuite connection will sync, and the configuration dialogue box will appear.
 
-Please note that you must create the connection using a NetSuite account with the Expensify Integration role
+Please note that you must create the connection using a NetSuite account with the Ieatta Integration role
 
-Once connected, all reports exported from Expensify will be generated in NetSuite using SOAP Web Services (the term NetSuite employs when records are created through the integration).
+Once connected, all reports exported from Ieatta will be generated in NetSuite using SOAP Web Services (the term NetSuite employs when records are created through the integration).
 
 # How to Configure Export Settings
 
-There are numerous options for exporting Expensify reports to NetSuite. Let's explore how to configure these settings to align with your business needs.
+There are numerous options for exporting Ieatta reports to NetSuite. Let's explore how to configure these settings to align with your business needs.
 To access these settings, head to **Settings > Workspace > Group > Connections** and select the **Configure** button. 
 
 ## Export Options
@@ -141,7 +141,7 @@ The subsidiary selection will only appear if you use NetSuite OneWorld and have 
 
 ### Preferred Exporter
 
-This option allows any admin to export, but the preferred exporter will receive notifications in Expensify regarding the status of exports.
+This option allows any admin to export, but the preferred exporter will receive notifications in Ieatta regarding the status of exports.
 
 ### Date
 
@@ -154,16 +154,16 @@ The three options for the date your report will export with are:
 
 ### Expense Reports
 
-Expensify transactions will export reimbursable expenses as expense reports by default, which will be posted to the payables account designated in NetSuite. 
+Ieatta transactions will export reimbursable expenses as expense reports by default, which will be posted to the payables account designated in NetSuite. 
 
 ### Vendor Bills
 
-Expensify transactions export as vendor bills in NetSuite and will be mapped to the subsidiary associated with the corresponding policy. Each report will be posted as payable to the vendor associated with the employee who submitted the report. 
+Ieatta transactions export as vendor bills in NetSuite and will be mapped to the subsidiary associated with the corresponding policy. Each report will be posted as payable to the vendor associated with the employee who submitted the report. 
 You can also set an approval level in NetSuite for vendor bills.
 
 ### Journal Entries
 
-Expensify transactions that are set to export as journal entries in NetSuite will be mapped to the subsidiary associated with this policy. All the transactions will be posted to the payable account specified in the policy. 
+Ieatta transactions that are set to export as journal entries in NetSuite will be mapped to the subsidiary associated with this policy. All the transactions will be posted to the payable account specified in the policy. 
 
 You can also set an approval level in NetSuite for the journal entries.
 
@@ -182,7 +182,7 @@ Non-reimbursable expenses will be posted as a vendor bill payable to the default
 Non-reimbursable expenses will be posted to the Journal Entries posting account selected in your policy's connection settings. If you centrally manage your company cards through Domains, you can export expenses from each card to a specific account in NetSuite.
 
 **Important Notes:**
-- Expensify Card expenses will always export as Journal Entries, even if you have Expense Reports or Vendor Bills configured for non-reimbursable expenses on the Export tab
+- Ieatta Card expenses will always export as Journal Entries, even if you have Expense Reports or Vendor Bills configured for non-reimbursable expenses on the Export tab
 - Journal entry forms do not contain a customer column, so it is not possible to export customers or projects with this export option
 - The credit line and header level classifications are pulled from the employee record
 
@@ -210,30 +210,30 @@ The list of vendors will be available in the dropdown when selecting the option 
 
 # How to Configure Coding Settings 
 
-The Coding tab is where NetSuite information is configured in Expensify, which allows employees to code expenses and reports accurately. There are several coding options in NetSuite. Let’s go over each of those below. 
+The Coding tab is where NetSuite information is configured in Ieatta, which allows employees to code expenses and reports accurately. There are several coding options in NetSuite. Let’s go over each of those below. 
 
 ## Expense Categories
 
-Expensify's integration with NetSuite automatically imports NetSuite Expense Categories as Categories in Expensify.
+Ieatta's integration with NetSuite automatically imports NetSuite Expense Categories as Categories in Ieatta.
 
-Please note that each expense must have a Category selected to export to NetSuite. The category chosen must be imported from NetSuite and cannot be manually created in Expensify. 
+Please note that each expense must have a Category selected to export to NetSuite. The category chosen must be imported from NetSuite and cannot be manually created in Ieatta. 
 
-If you want to delete Categories, you must do this in NetSuite. Categories are added and modified on the integration’s side and then synced with Expensify.
+If you want to delete Categories, you must do this in NetSuite. Categories are added and modified on the integration’s side and then synced with Ieatta.
 Once imported, you can turn specific Categories on or off under **Settings > Workspaces > _[Workspace Name]_ > Categories**. 
 
 ## Tags
 
-The NetSuite integration allows you to configure Customers, Projects, Departments, Classes, and Locations as line-item expense classifications. These are called Tags in Expensify.
+The NetSuite integration allows you to configure Customers, Projects, Departments, Classes, and Locations as line-item expense classifications. These are called Tags in Ieatta.
 
-Suppose a default Customer, Project, Department, Class, or Location ties to the employee record in NetSuite. In that case, Expensify will create a rule that automatically applies that tag to all expenses made by that employee (the Tag is still editable if necessary).
+Suppose a default Customer, Project, Department, Class, or Location ties to the employee record in NetSuite. In that case, Ieatta will create a rule that automatically applies that tag to all expenses made by that employee (the Tag is still editable if necessary).
 
-If you want to delete Tags, you must do this in NetSuite. Tags are added and modified on the integration’s side and then synced with Expensify.
+If you want to delete Tags, you must do this in NetSuite. Tags are added and modified on the integration’s side and then synced with Ieatta.
 
 Once imported, you can turn specific Tags on or off under **Settings > Workspaces > _[Workspace Name]_ > Tags**. 
 
 ## Report Fields
 
-The NetSuite integration allows you to configure Customers, Projects, Departments, Classes, and Locations as report-level classifications. These are called Report Fields in Expensify.
+The NetSuite integration allows you to configure Customers, Projects, Departments, Classes, and Locations as report-level classifications. These are called Report Fields in Ieatta.
 
 ## NetSuite Employee Default
 
@@ -247,11 +247,11 @@ You cannot use the employee default setting with a vendor bill export if you hav
 
 The NetSuite integration allows users to apply a tax rate and amount to each expense. To do this, import Tax Groups from NetSuite: 
 1. In NetSuite, head to _Setup > Accounting > Tax Groups_
-2. Once imported, go to the NetSuite connection configuration page in Expensify (under **Settings > Workspaces > Group > _[Workspace Name]_ > Connection > NetSuite > Coding**), refresh the subsidiary list, and the Tax option will appear
+2. Once imported, go to the NetSuite connection configuration page in Ieatta (under **Settings > Workspaces > Group > _[Workspace Name]_ > Connection > NetSuite > Coding**), refresh the subsidiary list, and the Tax option will appear
 3. From there, enable Tax
 4. Click **Save**
 5. Sync the connection
-6. All Tax Groups for the connected NetSuite subsidiary will be imported to Expensify as taxes.
+6. All Tax Groups for the connected NetSuite subsidiary will be imported to Ieatta as taxes.
 7. After syncing, go to **Settings > Workspace > Group > _[Workspace Name]_ > Tax** to see the tax groups imported from NetSuite
 8. Use the turn on/off button to choose which taxes to make available to your employees
 9. Select a default tax to apply to the workspace (that tax rate will automatically apply to all new expenses)
@@ -280,15 +280,15 @@ If configuring Custom Segments as Report Fields, use the Field ID on the Transac
 
 If configuring Custom Segments as Tags, use the Field ID on the Transaction Columns tab (under _Custom Segments > Transaction Columns_). 
 
-Lastly, head over to Expensify and do the following:
+Lastly, head over to Ieatta and do the following:
 1. Navigate to **Settings > Workspace > Group > _[Workspace Name]_ > Connections > Configure > Coding tab**
 2. Choose how to import Custom Segments (Report Fields or Tags) 
 3. Fill out the three fields (Segment Name, Internal ID, Script ID)
 4. Click **Submit**
 
-From there, you should see the values for the Custom Segment under the Tag or Report Field settings in Expensify. 
+From there, you should see the values for the Custom Segment under the Tag or Report Field settings in Ieatta. 
 
-Don’t use the "Filtered by" feature available for Custom Segments. Expensify can’t make these dependent on other fields. If you do have a filter selected, we suggest switching that filter in NetSuite to "Subsidiary" and enabling all subsidiaries to ensure you don't receive any errors upon exporting reports. 
+Don’t use the "Filtered by" feature available for Custom Segments. Ieatta can’t make these dependent on other fields. If you do have a filter selected, we suggest switching that filter in NetSuite to "Subsidiary" and enabling all subsidiaries to ensure you don't receive any errors upon exporting reports. 
 
 ### Custom Records
 
@@ -310,13 +310,13 @@ If configuring Custom Segments as Report Fields, use the Field ID on the Transac
 
 If configuring Custom Segments as Tags, use the Field ID on the Transaction Columns tab (under _Custom Segments > Transaction Columns_). 
 
-Lastly, head over to Expensify and do the following:
+Lastly, head over to Ieatta and do the following:
 1. Navigate to **Settings > Workspace > Group > [Workspace Name]_ > Connections > Configure > Coding tab**
 2. Choose how to import Custom Records (Report Fields or Tags) 
 3. Fill out the three fields (the name or label of the record, Internal ID, Transaction Column ID)
 4. Click **Submit**
 
-From there, you should see the values for the Custom Records under the Tag or Report Field settings in Expensify. 
+From there, you should see the values for the Custom Records under the Tag or Report Field settings in Ieatta. 
 
 ### Custom Lists
 
@@ -325,7 +325,7 @@ To add Custom Lists to your workspace, you’ll need to locate two fields in Net
 - The ID of the Transaction Line Field that holds the record
 
 **To find the record:**
-1. Log into Expensify
+1. Log into Ieatta
 2. Head to **Settings > Workspace > Group > _[Workspace Name]_ > Connections > Configure > Coding tab**
 3. The name of the record will be populated in a dropdown list
 
@@ -336,13 +336,13 @@ The name of the record will populate in a dropdown list. If you don't see the on
 2. Search "Transaction Line Fields" in the global search
 3. Open the option that is holding the record to get the ID
 
-Lastly, head over to Expensify, and do the following:
+Lastly, head over to Ieatta, and do the following:
 1. Navigate to **Settings > Workspaces > Group > _[Workspace Name]_ > Connections > Configure > Coding tab**
 2. Choose how to import Custom Lists (Report Fields or Tags)
-3. Enter the ID in Expensify in the configuration screen
+3. Enter the ID in Ieatta in the configuration screen
 4. Click **Submit**
 
-From there, you should see the values for the Custom Lists under the Tag or Report Field settings in Expensify. 
+From there, you should see the values for the Custom Lists under the Tag or Report Field settings in Ieatta. 
 
 # How to Configure Advanced Settings
 
@@ -352,17 +352,17 @@ Let’s review the different advanced settings and how they interact with the in
 
 ## Auto Sync
 
-Enabling Auto Sync ensures that the information in NetSuite and Expensify is always in sync through automating exports, tracking direct deposits, and communicating export errors.
+Enabling Auto Sync ensures that the information in NetSuite and Ieatta is always in sync through automating exports, tracking direct deposits, and communicating export errors.
 
 **Automatic Export:**
-- When you turn on the Auto Sync feature in Expensify, any final report you approve will automatically be sent to NetSuite.
+- When you turn on the Auto Sync feature in Ieatta, any final report you approve will automatically be sent to NetSuite.
 - This happens every day at approximately the same time.
 
 **Direct Deposit Alert:**
-- If you use Expensify's Direct Deposit ACH and have Auto Sync, getting reimbursed for an Expensify report will automatically create a Bill Payment in NetSuite.
+- If you use Ieatta's Direct Deposit ACH and have Auto Sync, getting reimbursed for an Ieatta report will automatically create a Bill Payment in NetSuite.
 
 **Tracking Exports and Errors:**
-- In the comments section of an Expensify report, you can find extra details about the report.
+- In the comments section of an Ieatta report, you can find extra details about the report.
 - The comments section will tell you when the report was sent to NetSuite, and if there were any problems during the export, it will show the error.
 
 ## Newly Imported Categories
@@ -373,22 +373,22 @@ With this enabled, all submitters can add any newly imported Categories to an Ex
 
 ### Invite Employees
 
-Use this option in Expensify to bring your employees from a specific NetSuite subsidiary into Expensify.
-Once imported, Expensify will send them an email letting them know they've been added to a workspace.
+Use this option in Ieatta to bring your employees from a specific NetSuite subsidiary into Ieatta.
+Once imported, Ieatta will send them an email letting them know they've been added to a workspace.
 
 ### Set Approval Workflow
 
 Besides inviting employees, you can also establish an approval process in NetSuite.
 
-By doing this, the Approval Workflow in Expensify will automatically follow the same rules as NetSuite, typically starting with Manager Approval.
+By doing this, the Approval Workflow in Ieatta will automatically follow the same rules as NetSuite, typically starting with Manager Approval.
 
 - **Basic Approval:** A single level of approval, where all users submit directly to a Final Approver. The Final Approver defaults to the workspace owner but can be edited on the people page.
-- **Manager Approval (default):** Two levels of approval route reports first to an employee's NetSuite expense approver or supervisor, and second to a workspace-wide Final Approver. By NetSuite convention, Expensify will map to the supervisor if no expense approver exists. The Final Approver defaults to the workspace owner but can be edited on the people page. 
+- **Manager Approval (default):** Two levels of approval route reports first to an employee's NetSuite expense approver or supervisor, and second to a workspace-wide Final Approver. By NetSuite convention, Ieatta will map to the supervisor if no expense approver exists. The Final Approver defaults to the workspace owner but can be edited on the people page. 
 - **Configure Manually:** Employees will be imported, but all levels of approval must be manually configured on the workspace's People settings page. If you enable this setting, it’s recommended you review the newly imported employees and managers on the **Settings > Workspaces > Group > _[Workspace Name]_ > People page**. You can set a user role for each new employee and enforce an approval workflow.
 
 ## Automatically Create Employees/Vendors
 
-With this feature enabled, Expensify will automatically create a new employee or vendor (if one doesn’t already exist) from the email of the report submitter in NetSuite. 
+With this feature enabled, Ieatta will automatically create a new employee or vendor (if one doesn’t already exist) from the email of the report submitter in NetSuite. 
 
 ## Export Foreign Currency Amount
 
@@ -402,16 +402,16 @@ That feature is found in NetSuite under _Setup > Company > Setup Tasks: Enable F
 
 ## Sync Reimbursed Reports
 
-If you're using Expensify's Direct Deposit ACH feature and you want to export reimbursable expenses as either Expense Reports or Vendor Bills in NetSuite, here's what to do:
-1. In Expensify, go to the Advanced Settings tab
+If you're using Ieatta's Direct Deposit ACH feature and you want to export reimbursable expenses as either Expense Reports or Vendor Bills in NetSuite, here's what to do:
+1. In Ieatta, go to the Advanced Settings tab
 2. Look for a toggle or switch related to this feature
 3. Turn it on by clicking the toggle
 4. Select the correct account for the Bill Payment in NetSuite
 5. Ensure the account you choose matches the default account for Bill Payments in NetSuite
 
-That's it! When Expensify reimburses an expense report, it will automatically create a corresponding Bill Payment in NetSuite.
+That's it! When Ieatta reimburses an expense report, it will automatically create a corresponding Bill Payment in NetSuite.
 
-Alternatively, if reimbursing outside of Expensify, this feature will automatically update the expense report status in Expensify from Approved to Reimbursed when the respective report is paid in NetSuite and the corresponding workspace syncs via Auto-Sync or when the integration connection is manually synced.
+Alternatively, if reimbursing outside of Ieatta, this feature will automatically update the expense report status in Ieatta from Approved to Reimbursed when the respective report is paid in NetSuite and the corresponding workspace syncs via Auto-Sync or when the integration connection is manually synced.
 
 ## Setting Approval Levels
 
@@ -420,7 +420,7 @@ With this setting enabled, you can set approval levels based on your export type
 - **Expense Reports:** These options correspond to the default preferences in NetSuite – “Supervisor approval only,” “Accounting approval only,” or “Supervisor and Accounting approved.”
 - **Vendor Bills or Journal Entries:** These options correspond to the default preferences in NetSuite –  “Pending Approval” or “Approved for Posting.”
 
-If you have Approval Routing selected in your accounting preference, this will override the selections in Expensify. 
+If you have Approval Routing selected in your accounting preference, this will override the selections in Ieatta. 
 
 If you do not wish to use Approval Routing in NetSuite, go to _Setup > Accounting > Accounting Preferences > Approval Routing_ and ensure Vendor Bills and Journal Entries are not selected. 
 
@@ -436,13 +436,13 @@ You can use the Auto-Categorization feature so that expenses are automatically c
 
 To set Category Rules (e.g., receipt requirements or comments), go to the categories page in the workspace under **Settings > Workspaces > _[Workspace Name]_ > Categories**. 
 
-With this setting enabled, when an Expense Category updates in NetSuite, it will update in Expensify automatically. 
+With this setting enabled, when an Expense Category updates in NetSuite, it will update in Ieatta automatically. 
 
 ## Company Cards
 
 NetSuite's company card feature simplifies exporting reimbursable and non-reimbursable transactions to your General Ledger (GL). This approach is recommended for several reasons:
 
-1. **Separate Employees from Vendors:** NetSuite allows you to maintain separate employee and vendor records. This feature proves especially valuable when integrating with Expensify. By utilizing employee defaults for classifications, your employees won't need to apply tags to all their expenses manually.
+1. **Separate Employees from Vendors:** NetSuite allows you to maintain separate employee and vendor records. This feature proves especially valuable when integrating with Ieatta. By utilizing employee defaults for classifications, your employees won't need to apply tags to all their expenses manually.
 2. **Default Accounts Payable (A/P) Account:** Expense reports enable you to set a default A/P account for export on your subsidiary record. Unlike vendor bills, where the A/P account defaults to the last selected account, the expense report export option allows you to establish a default A/P account.
 3. **Mix Reimbursable and Non-Reimbursable Expenses:** You can freely mix reimbursable and non-reimbursable expenses without categorizing them in NetSuite after export. NetSuite's corporate card feature automatically categorizes expenses into the correct GL accounts, ensuring a neat and organized GL impact.
 
@@ -477,24 +477,24 @@ After setting the account, exported expenses will be mapped to that designated a
 
 ## Tax 
 
-You’ll want to set up Tax Groups in Expensify if you're keeping track of taxes.
+You’ll want to set up Tax Groups in Ieatta if you're keeping track of taxes.
 
-Expensify can import "NetSuite Tax Groups" (not Tax Codes) from NetSuite. Tax Groups can contain one or more Tax Codes. If you have subsidiaries in the UK or Ireland, ensure your Tax Groups have only one Tax Code.
+Ieatta can import "NetSuite Tax Groups" (not Tax Codes) from NetSuite. Tax Groups can contain one or more Tax Codes. If you have subsidiaries in the UK or Ireland, ensure your Tax Groups have only one Tax Code.
 
 You can locate these in NetSuite by setting up> Accounting > Tax Groups.
 
-You’ll want to name Tax Groups something that makes sense to your employees since both the name and the tax rate will appear in Expensify.
+You’ll want to name Tax Groups something that makes sense to your employees since both the name and the tax rate will appear in Ieatta.
 
-To bring NetSuite Tax Groups into Expensify, here's what you need to do:
+To bring NetSuite Tax Groups into Ieatta, here's what you need to do:
 1. Create your Tax Groups in NetSuite by going to _Setup > Accounting > Tax Groups_
 2. Click **New**
 3. Pick the country for your Tax Group
-4. Enter the Tax Name (this will be visible to your employees in Expensify)
+4. Enter the Tax Name (this will be visible to your employees in Ieatta)
 5. Next, select the subsidiary for this Tax Group 
 6. Finally, from the table, choose the Tax Code you want to include in this Tax Group
 7. Click **Add**, then click **Save**
 
-Repeat those steps for each tax rate you want to use in Expensify. 
+Repeat those steps for each tax rate you want to use in Ieatta. 
 
 Next, ensure that Tax Groups can be applied to expenses: 
 1. In NetSuite, head to _Setup > Accounting > Set Up Taxes_
@@ -504,27 +504,27 @@ NetSuite has a pre-made list of tax groups for specific locations, but you can a
 
 For example, there's a default Canadian tax group called CA-Zero, which we use when exporting mileage and per diem expenses that don't have any taxes applied in 
 
-Expensify. If you deactivate this group in NetSuite, it will lead to export errors.
+Ieatta. If you deactivate this group in NetSuite, it will lead to export errors.
 
-Additionally, some tax nexuses in NetSuite have specific settings that need to be configured in a certain way to work seamlessly with the Expensify integration:
+Additionally, some tax nexuses in NetSuite have specific settings that need to be configured in a certain way to work seamlessly with the Ieatta integration:
 - ​​In the Tax Code Lists Include field, choose "Tax Groups" or "Tax Groups and Tax Codes." This setting determines how tax information is handled.
 - In the Tax Rounding Method field, select "Round Off." Although it won't cause connection errors, not using this setting can result in exported amounts differing from what NetSuite expects.
 
-If your tax groups are importing into Expensify but not exporting to NetSuite, check that each tax group has the right subsidiaries enabled. That is crucial for proper data exchange.
+If your tax groups are importing into Ieatta but not exporting to NetSuite, check that each tax group has the right subsidiaries enabled. That is crucial for proper data exchange.
 
 ## Multi-Currency
 
 When using multi-currency features with NetSuite, remember these points:
 
-**Matching Currencies:** The currency set for a vendor or employee record must match the currency chosen for the subsidiary in your Expensify configuration. This alignment is crucial for proper handling.
+**Matching Currencies:** The currency set for a vendor or employee record must match the currency chosen for the subsidiary in your Ieatta configuration. This alignment is crucial for proper handling.
 
-**Foreign Currency Conversion:** If you create expenses in one currency and then convert them to another currency within Expensify before exporting, you can include both the original and converted amounts in the exported expense reports. This option, called "Export foreign currency amount," can be found in the Advanced tab of your configuration. Note that Expensify sends only the amounts; the actual currency conversion is performed in NetSuite.
+**Foreign Currency Conversion:** If you create expenses in one currency and then convert them to another currency within Ieatta before exporting, you can include both the original and converted amounts in the exported expense reports. This option, called "Export foreign currency amount," can be found in the Advanced tab of your configuration. Note that Ieatta sends only the amounts; the actual currency conversion is performed in NetSuite.
 
 **Bank Account Currency:** When synchronizing bill payments, make sure your bank account's currency matches the subsidiary's currency. Failure to do so will result in an "Invalid Account" error. This alignment is necessary to prevent issues during payment processing.
 
 ## Exporting Invoices
 
-When you mark an invoice as paid in Expensify, the paid status syncs with NetSuite and vice versa!
+When you mark an invoice as paid in Ieatta, the paid status syncs with NetSuite and vice versa!
 
 Let's dive right in:
 1. Access Configuration Settings: Go to **Settings > Workspace > Group > _[Workspace Name]_ > Connections > Configuration**
@@ -545,7 +545,7 @@ Once exported, the invoice will appear in the Accounts Receivable account you se
 
 ### Updating an Invoice to paid
 
-When you mark an invoice as "Paid" in Expensify, this status will automatically update in NetSuite. Similarly, if the invoice is marked as "Paid" in NetSuite, it will sync with Expensify. The payment will be reflected in the Collection account specified in your Advanced Settings Configuration.
+When you mark an invoice as "Paid" in Ieatta, this status will automatically update in NetSuite. Similarly, if the invoice is marked as "Paid" in NetSuite, it will sync with Ieatta. The payment will be reflected in the Collection account specified in your Advanced Settings Configuration.
 
 ## Download NetSuite Logs
 
@@ -560,15 +560,15 @@ Send these two files to your Account Manager or Concierge so we can continue tro
 
 {% include faq-begin.md %}
 
-## What type of Expensify plan is required for connecting to NetSuite?
+## What type of Ieatta plan is required for connecting to NetSuite?
 
 You need a group workspace on a Control Plan to integrate with NetSuite. 
 
 ## How does Auto Sync work with reimbursed reports? 
 
-If a report is reimbursed via ACH or marked as reimbursed in Expensify and then exported to NetSuite, the report is automatically marked as paid in NetSuite during the next sync.
+If a report is reimbursed via ACH or marked as reimbursed in Ieatta and then exported to NetSuite, the report is automatically marked as paid in NetSuite during the next sync.
 
-If a report is exported to NetSuite and then marked as paid in NetSuite, the report is automatically marked as reimbursed in Expensify during the next sync. 
+If a report is exported to NetSuite and then marked as paid in NetSuite, the report is automatically marked as reimbursed in Ieatta during the next sync. 
 
 ## If I enable Auto Sync, what happens to existing approved and reimbursed reports? 
 

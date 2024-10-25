@@ -1,6 +1,6 @@
 import React from 'react';
-import {contextMenuRef} from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
 import CONST from '@src/CONST';
+import {contextMenuRef} from '@src/expPages/home/report/ContextMenu/ReportActionContextMenu';
 import BaseQuickEmojiReactions from './BaseQuickEmojiReactions';
 import type {OpenPickerCallback, QuickEmojiReactionsProps} from './types';
 

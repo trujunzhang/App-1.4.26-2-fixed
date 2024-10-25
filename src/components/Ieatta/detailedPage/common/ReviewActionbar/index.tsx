@@ -2,7 +2,6 @@ import React from 'react';
 import {View} from 'react-native';
 import ReviewSortButton from '@components/Ieatta/detailedPage/common/ReviewSortButton';
 import SearchReview from '@components/Ieatta/detailedPage/common/SearchReview';
-import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import type {IReviewActionbarRow} from '@libs/Firebase/list/types/rows/review';
 import type {ReviewDropdownOption} from '@libs/Firebase/review-sort';

@@ -1,15 +1,15 @@
 import React from 'react';
 import {PhotoCarouselItem} from '@components/Ieatta/components/PhotosCarousel';
+import PhotoLocalItem from '@components/Ieatta/components/PhotosGrid/PhotoLocalItem';
 import {RestaurantCardView, RestaurantRowView} from '@components/LHNRestaurantsList';
 import {PageSection} from '@libs/Firebase/list/constant';
-import type {IPageRow} from '@libs/Firebase/list/types/page-row';
 import type {IEventInfoPanelRow} from '@libs/Firebase/list/types/rows/event';
-import type {IFBRestaurant} from '@src/types/firebase';
 import {
+    DetailedPhotosNativeView,
     DetailedPhotosRow,
     DetailedReviewItem,
+    DisplayNameTitle,
     EditModelButton,
-    RestaurantTitleInEvent,
     ReviewActionbar,
     ReviewSubmitPanel,
     SectionCommonTitle,
@@ -18,6 +18,7 @@ import {
     SectionPeopleOrderedTitle,
     SectionPhotoTitle,
     SectionWaiterTitle,
+    SkeletonView,
 } from './common';
 import {OrderedUserSmallView, OrderedUserWebView, WaitersRowInEvent} from './event';
 import {EventInfoPanel, EventInfoWebPanel, RecipeInfoPanel, RecipeWithPhotosInfoPanelData, RestaurantInfoPanel, RestaurantWithPhotosInfoPanelData} from './header';
@@ -30,14 +31,36 @@ function PageFlashListItem({item, hovered}: PageFlashListItemProps) {
     switch (item.rowType) {
         /**
  |--------------------------------------------------
+     | SkeletonView
+ |--------------------------------------------------
+ */
+        case PageSection.SECTION_SKELETON_VIEW: {
+            return <SkeletonView rowData={item.rowData} />;
+        }
+
+        /**
+ |--------------------------------------------------
+ | Common
+ |--------------------------------------------------
+ */
+        case PageSection.COMMON_TITLE: {
+            return <SectionCommonTitle titleRow={item.rowData} />;
+        }
+
+        /**
+ |--------------------------------------------------
  | photo carousel
  |--------------------------------------------------
  */
-        case PageSection.PHOTO_CAROUSEL_ITEM_WITH_EVENT:
-        case PageSection.PHOTO_CAROUSEL_ITEM_WITHOUT_EVENT: {
+        case PageSection.PHOTO_CAROUSEL_ITEM_WITHOUT_EVENT:
+        case PageSection.PHOTO_GRID_ITEM_WITH_EVENT:
+        case PageSection.PHOTO_CAROUSEL_ITEM_WITH_EVENT: {
             return <PhotoCarouselItem carouselItem={item.rowData} />;
         }
 
+        case PageSection.PHOTO_GRID_LOCAL_ITEM: {
+            return <PhotoLocalItem localItem={item.rowData} />;
+        }
         /**
  |--------------------------------------------------
  | 'Edit button' on the Detailed pages
@@ -46,8 +69,13 @@ function PageFlashListItem({item, hovered}: PageFlashListItemProps) {
         case PageSection.DETAILED_EDIT_MODEL_BUTTON: {
             return <EditModelButton editModelRow={item.rowData} />;
         }
-        case PageSection.RESTAURANT_TITLE_IN_EVENT_PAGE: {
-            return <RestaurantTitleInEvent rowData={item.rowData} />;
+        case PageSection.DISPLAY_NAME_TITLE_ROW: {
+            return (
+                <DisplayNameTitle
+                    hovered={hovered}
+                    rowData={item.rowData}
+                />
+            );
         }
 
         /**
@@ -73,15 +101,6 @@ function PageFlashListItem({item, hovered}: PageFlashListItemProps) {
         }
         /**
  |--------------------------------------------------
- | Common
- |--------------------------------------------------
- */
-
-        case PageSection.COMMON_TITLE: {
-            return <SectionCommonTitle titleRow={item.rowData} />;
-        }
-        /**
- |--------------------------------------------------
  | Photos in the detailed page
  |--------------------------------------------------
  */
@@ -91,7 +110,9 @@ function PageFlashListItem({item, hovered}: PageFlashListItemProps) {
         case PageSection.SECTION_PHOTO_ROW: {
             return <DetailedPhotosRow photoRow={item.rowData} />;
         }
-
+        case PageSection.SECTION_PHOTO_ITEM: {
+            return <DetailedPhotosNativeView photoRow={item.rowData} />;
+        }
         /**
  |--------------------------------------------------
  | Reviews in the detailed page

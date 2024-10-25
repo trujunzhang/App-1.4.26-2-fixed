@@ -1,14 +1,12 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import DisplayNames from '@components/DisplayNames';
 import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
 import Text from '@components/Text';
-import Tooltip from '@components/Tooltip';
 import useLocalize from '@hooks/useLocalize';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
-import TailwindColors from '@styles/tailwindcss/colors';
 import variables from '@styles/variables';
 import type {EventRowProps} from './types';
 

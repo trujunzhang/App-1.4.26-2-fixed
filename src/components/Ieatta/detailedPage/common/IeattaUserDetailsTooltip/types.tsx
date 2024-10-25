@@ -1,5 +1,4 @@
 import type {AvatarSource} from '@libs/UserUtils';
-import type {IFBReview} from '@src/types/firebase';
 import type {AvatarType} from '@src/types/onyx/OnyxCommon';
 import type ChildrenProps from '@src/types/utils/ChildrenProps';
 

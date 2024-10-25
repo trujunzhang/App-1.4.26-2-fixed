@@ -39,7 +39,7 @@ function RightModalNavigator({navigation}: RightModalNavigatorProps) {
                 <Stack.Navigator screenOptions={screenOptions}>
                     <Stack.Screen
                         name={SCREENS.RIGHT_MODAL.EDIT_IEATTA}
-                        component={ModalStackNavigators.EditIeattaStackNavigator}
+                        component={ModalStackNavigators.RightIeattaStackNavigator}
                     />
                     <Stack.Screen
                         name={SCREENS.RIGHT_MODAL.SETTINGS}
@@ -66,8 +66,8 @@ function RightModalNavigator({navigation}: RightModalNavigatorProps) {
                         component={ModalStackNavigators.ReportSettingsModalStackNavigator}
                     />
                     <Stack.Screen
-                        name={SCREENS.RIGHT_MODAL.REPORT_WELCOME_MESSAGE}
-                        component={ModalStackNavigators.ReportWelcomeMessageModalStackNavigator}
+                        name={SCREENS.RIGHT_MODAL.REPORT_DESCRIPTION}
+                        component={ModalStackNavigators.ReportDescriptionModalStackNavigator}
                     />
                     <Stack.Screen
                         name={SCREENS.RIGHT_MODAL.PARTICIPANTS}
@@ -136,6 +136,10 @@ function RightModalNavigator({navigation}: RightModalNavigatorProps) {
                     <Stack.Screen
                         name="ProcessMoneyRequestHold"
                         component={ModalStackNavigators.ProcessMoneyRequestHoldStackNavigator}
+                    />
+                    <Stack.Screen
+                        name={SCREENS.RIGHT_MODAL.SEARCH_REPORT}
+                        component={ModalStackNavigators.SearchReportModalStackNavigator}
                     />
                 </Stack.Navigator>
             </View>

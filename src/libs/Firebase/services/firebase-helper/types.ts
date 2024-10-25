@@ -1,9 +1,7 @@
 import type {FBCollections} from '@libs/Firebase/constant';
-import type {IFBEvent, IFBPeopleInEvent, IFBPhoto, IFBRecipe, IFBRestaurant, IFBReview, IFBUser} from '@src/types/firebase';
+import type {IeattaModelsWithoutUser, IFBEvent, IFBPeopleInEvent, IFBPhoto, IFBRecipe, IFBRestaurant, IFBReview, IFBUser} from '@src/types/firebase';
 
 type GetData = {path: FBCollections; id: string};
-type IeattaModelsWithoutUser = IFBRestaurant | IFBEvent | IFBPeopleInEvent | IFBPhoto | IFBRecipe | IFBReview;
-type IeattaModelsWithUser = IeattaModelsWithoutUser | IFBUser;
 
 type SetData = {
     path: FBCollections;
@@ -48,6 +46,6 @@ type IFirebaseHelper = {
     deleteData({path, uniqueId}: DeleteData): Promise<void>;
 };
 
-export type {GetData, SetData, DeleteData, IeattaModelsWithoutUser, IeattaModelsWithUser};
+export type {GetData, SetData, DeleteData};
 
 export default IFirebaseHelper;
