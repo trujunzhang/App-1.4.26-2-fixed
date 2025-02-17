@@ -1,8 +1,6 @@
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line no-restricted-imports, lodash/import-scope
 import _ from 'lodash';
 import type Realm from 'realm';
-import type {RealmCollections} from '@libs/Realm/constant';
-import type {IeattaModelsWithoutUser, IFBEvent, IFBPeopleInEvent, IFBPhoto, IFBRecipe, IFBRestaurant, IFBReview, IFBSqlPhoto, IFBUser} from '@src/types/firebase';
 import type {ToRealmModelList} from './types';
 
 /**

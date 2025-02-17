@@ -8,10 +8,10 @@ import {Dimensions} from 'react-native';
 import ConfirmModal from '@components/ConfirmModal';
 import PopoverWithMeasuredContent from '@components/PopoverWithMeasuredContent';
 import useLocalize from '@hooks/useLocalize';
-import useWindowDimensions from '@hooks/useWindowDimensions';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import calculateAnchorPosition from '@libs/calculateAnchorPosition';
-import {PageSection, RowPressableType} from '@libs/Firebase/list/constant';
-import type {IPageRow} from '@libs/Firebase/list/types/page-row';
+import {PageSection, RowPressableType} from '@libs/FirebaseIeatta/list/constant';
+import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
 import {actionDeleteNavigateTo} from '@libs/ieatta/DeleteNavigationUtils';
 import * as ShowNotify from '@libs/ieatta/Notify';
 import type {AnchorDimensions} from '@src/styles';
@@ -39,7 +39,7 @@ const emptySelection: IPageRow = {
 };
 
 function PopoverDetailedPageActionContextMenu(_props: unknown, ref: ForwardedRef<DetailedPageActionContextMenu>) {
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
     const {translate} = useLocalize();
     const typeRef = useRef<ContextMenuType>();
     const selectionRef = useRef<IPageRow>(emptySelection);

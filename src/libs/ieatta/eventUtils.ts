@@ -1,13 +1,14 @@
-// eslint-disable-next-line no-restricted-imports
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+// eslint-disable-next-line no-restricted-imports, lodash/import-scope
 import _ from 'lodash';
 import type {IFBEvent, IFBPhoto, IFBRecipe} from '@src/types/firebase';
 
 function filterWaiters(event: IFBEvent | undefined, waitersInRestaurant: IFBPhoto[]) {
-    const waitersString: string[] = event != null ? event.waiterIds : [];
+    const waitersArray: string[] = event != null ? event.waiterIds : [];
 
     const waiterDict: Record<string, IFBPhoto> = Object.assign({}, ..._.map(waitersInRestaurant, (photo) => ({[photo.uniqueId]: photo})));
     const waiters = _.filter(
-        _.map(waitersString, (waiterId: string) => waiterDict[waiterId]),
+        _.map(waitersArray, (waiterId: string) => waiterDict[waiterId]),
         (notUndefined) => notUndefined !== undefined,
     );
     return waiters;

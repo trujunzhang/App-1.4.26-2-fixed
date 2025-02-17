@@ -1,4 +1,5 @@
-import _ from 'lodash';
+/* eslint-disable no-restricted-imports */
+// eslint-disable-next-line lodash/import-scope
 import React from 'react';
 import {ScrollView, View} from 'react-native';
 import CommonFooter from '@components/Ieatta/components/CommonFooter';
@@ -9,10 +10,15 @@ import type {PhotosPagePageProps} from '@pages/photos/online/types';
 import variables from '@styles/variables';
 import type {IFBPhoto} from '@src/types/firebase';
 
-function PhotosPageWebPage({pageIndex, relatedId, photoType, photosInPage}: PhotosPagePageProps) {
+function PhotosPageWebPage({navigation, pageIndex, relatedId, photoType, photosInPage}: PhotosPagePageProps) {
     const styles = useThemeStyles();
 
-    const onPhotoChanged = (selectedPhoto: IFBPhoto) => {};
+    // eslint-disable-next-line rulesdir/prefer-early-return
+    const onCarouselPhotoChanged = (photoIndex: number, selectedPhoto: IFBPhoto) => {
+        if (photoIndex !== pageIndex) {
+            navigation.setParams({selected: selectedPhoto.uniqueId});
+        }
+    };
 
     return (
         <View style={[styles.ph10, styles.flex1]}>
@@ -31,6 +37,7 @@ function PhotosPageWebPage({pageIndex, relatedId, photoType, photosInPage}: Phot
                     pageIndex={pageIndex}
                     photosInPage={photosInPage}
                     photoHeight={variables.popoverPhotoCarouselItemHeight}
+                    onCarouselPhotoChanged={onCarouselPhotoChanged}
                 />
                 <CommonFooter />
             </ScrollView>

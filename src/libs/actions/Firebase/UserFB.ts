@@ -1,9 +1,10 @@
+/* eslint-disable jsdoc/no-types */
 import {isBefore} from 'date-fns';
 import lodashGet from 'lodash/get';
 import {number} from 'prop-types';
 import Onyx from 'react-native-onyx';
 // eslint-disable-next-line no-restricted-imports
-import {generateLoggedUserId} from '@libs/Firebase/utils/md5_utils';
+import {generateLoggedUserId} from '@libs/FirebaseIeatta/utils/md5_utils';
 import Log from '@libs/Log';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';

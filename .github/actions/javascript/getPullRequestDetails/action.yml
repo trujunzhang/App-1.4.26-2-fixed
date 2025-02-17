@@ -2,7 +2,7 @@ name: 'Get the details of a pull request'
 description: 'Get the details of a pull request'
 inputs:
   GITHUB_TOKEN:
-    description: Auth token for New Ieatta Github
+    description: Auth token for New Expensify Github
     required: true
   PULL_REQUEST_NUMBER:
     description: The number of the pull request

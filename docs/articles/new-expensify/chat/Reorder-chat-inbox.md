@@ -2,7 +2,7 @@
 title: Reorder chat inbox
 description: Change how your chats are displayed in your inbox
 ---
-<div id="new-ieatta" markdown="1">
+<div id="new-expensify" markdown="1">
 
 You can customize the order of the chat messages in your inbox by pinning them to the top and/or changing your message priority to Most Recent or #focus:
 - **Pin**: Bumps a specific chat up to the top of your inbox list.  

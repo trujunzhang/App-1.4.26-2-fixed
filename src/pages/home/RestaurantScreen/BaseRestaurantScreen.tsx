@@ -1,13 +1,13 @@
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line no-restricted-imports, lodash/import-scope
 import _ from 'lodash';
 import React, {useMemo} from 'react';
 import DetailedPageLayout from '@components/Ieatta/detailedPage/DetailedPageLayout';
-import useWindowDimensions from '@hooks/useWindowDimensions';
-import type {RestartScreenNavigationProps} from '@libs/Firebase/helper/RestaurantUtils';
-import type {BuildEventsInRestaurantParams} from '@libs/Firebase/list/builder/restaurant';
-import {buildRestaurantRows} from '@libs/Firebase/list/builder/restaurant';
-import type {IReviewOnSearchAndSortChanged} from '@libs/Firebase/list/types/rows/review';
-import type {IFBEvent, IFBRestaurant, IFBReview} from '@src/types/firebase';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
+import type {RestartScreenNavigationProps} from '@libs/FirebaseIeatta/helper/RestaurantUtils';
+import type {BuildEventsInRestaurantParams} from '@libs/FirebaseIeatta/list/builder/restaurant';
+import {buildRestaurantRows} from '@libs/FirebaseIeatta/list/builder/restaurant';
+import type {IReviewOnSearchAndSortChanged} from '@libs/FirebaseIeatta/list/types/rows/review';
+import type {IFBRestaurant, IFBReview} from '@src/types/firebase';
 
 type BaseRestaurantScreenProps = RestartScreenNavigationProps &
     IReviewOnSearchAndSortChanged & {
@@ -34,7 +34,7 @@ function BaseRestaurantScreen({
     onReviewSortChanged,
     onReviewSearchChanged,
 }: BaseRestaurantScreenProps) {
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
 
     // eslint-disable-next-line rulesdir/no-negated-variables
     const shouldShowNotFoundPage = _.isUndefined(restaurant) && !shouldShowLoading;
@@ -52,7 +52,7 @@ function BaseRestaurantScreen({
                     onReviewSearchChanged,
                 },
             }),
-        [isSmallScreenWidth, restaurant, eventsInRestaurant, reviews, onReviewSortChanged, onReviewSearchChanged],
+        [isSmallScreenWidth, restaurantId, restaurant, eventsInRestaurant, reviews, onReviewSortChanged, onReviewSearchChanged],
     );
 
     return (

@@ -1,3 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
+/* eslint-disable you-dont-need-lodash-underscore/is-undefined */
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import moment from 'moment';
@@ -7,7 +13,7 @@ import type {OnyxEntry} from 'react-native-onyx';
 import {withOnyx} from 'react-native-onyx';
 import Button from '@components/Button';
 import Icon from '@components/Icon';
-import * as Expensicons from '@components/Icon/Expensicons';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
 import {IeattaStars} from '@components/Icon/IeattaStars';
 import Divider from '@components/Ieatta/components/Divider';
 import {SectionCommonTitle} from '@components/Ieatta/detailedPage/common';
@@ -16,14 +22,15 @@ import ImagePlaceholder from '@components/ImagePlaceholder';
 import MapView from '@components/MapView';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import useWindowDimensions from '@hooks/useWindowDimensions';
-import {FBCollections, ReviewType} from '@libs/Firebase/constant';
-import {PageSection, RowPressableType} from '@libs/Firebase/list/constant';
-import type {IDisplayNameTitleRow} from '@libs/Firebase/list/types/rows/common';
-import {calcRateForRestaurant} from '@libs/Firebase/utils/rate_utils';
-import {StringUtils} from '@libs/Firebase/utils/string_utils';
+import {FBCollections, ReviewType} from '@libs/FirebaseIeatta/constant';
+import {PageSection, RowPressableType} from '@libs/FirebaseIeatta/list/constant';
+import type {IDisplayNameTitleRow} from '@libs/FirebaseIeatta/list/types/rows/common';
+import {calcRateForRestaurant} from '@libs/FirebaseIeatta/utils/rate_utils';
+import {StringUtils} from '@libs/FirebaseIeatta/utils/string_utils';
 import {navigationToEditEvent, navigationToEditReview} from '@libs/ieatta/editFormUtils';
 import TailwindColors from '@styles/tailwindcss/colors';
 import variables from '@styles/variables';
@@ -47,7 +54,8 @@ function EventInfoWePanel({restaurant, event, mapboxAccessToken}: EventInfoWebPa
     const theme = useTheme();
     const styles = useThemeStyles();
     const {translate} = useLocalize();
-    const {isSmallScreenWidth, windowWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
+    const {windowWidth} = useWindowDimensions();
     const shouldShowRightMap = windowWidth > 600 + variables.sideBarWidth;
 
     const dateTable = () => {
@@ -105,7 +113,7 @@ function EventInfoWePanel({restaurant, event, mapboxAccessToken}: EventInfoWebPa
         return (
             <View style={[styles.flex1, styles.flexColumn, styles.alignItemsStart, styles.gap2]}>
                 <PageFlashListItemWithEvent
-                    item={{
+                    pageRow={{
                         rowKey: 'PageSection.DISPLAY_NAME_TITLE_ROW<Restaurant-Title>',
                         rowType: PageSection.DISPLAY_NAME_TITLE_ROW,
                         rowData,
@@ -131,14 +139,14 @@ function EventInfoWePanel({restaurant, event, mapboxAccessToken}: EventInfoWebPa
     };
 
     const leftPanel = (
-        <View style={[styles.flex1, styles.flexRow, styles.alignItemsStart, styles.eventLeftPanelBorderInWebHeaderPanel]}>
+        <View style={[styles.flex1, styles.flexRow, styles.alignItemsStart, styles.eventLeftPanelBorderInWebHeaderPanel, styles.borderColorBorder]}>
             <View style={[styles.flex1, styles.h100]}>
                 <ImagePlaceholder
                     key={restaurant ? restaurant?.uniqueId : event.uniqueId}
                     sourceUri={lodashGet(restaurant, 'originalUrl', '')}
                     style={[styles.w100, styles.h100]}
                     imageType="png"
-                    placeholder={Expensicons.PNGBusinessMediumSquare}
+                    placeholder={Ieattaicons.PNGBusinessMediumSquare}
                 />
             </View>
             {/** Right Info Container  */}
@@ -147,7 +155,7 @@ function EventInfoWePanel({restaurant, event, mapboxAccessToken}: EventInfoWebPa
                 <View style={[styles.flex1, styles.w100, styles.ph8, styles.pv8, styles.gap1]}>
                     <View style={[styles.flexRow, styles.gap2]}>
                         <Icon
-                            src={Expensicons.MapMarker}
+                            src={Ieattaicons.MapMarker}
                             width={variables.iconSizeLarge}
                             height={variables.iconSizeLarge}
                             fill={theme.textSupporting}
@@ -163,7 +171,7 @@ function EventInfoWePanel({restaurant, event, mapboxAccessToken}: EventInfoWebPa
                 <View style={[styles.flex1, styles.w100, styles.ph8, styles.pv8, styles.gap1]}>
                     <View style={[styles.flexRow, styles.gap3]}>
                         <Icon
-                            src={Expensicons.EventInfo}
+                            src={Ieattaicons.EventInfo}
                             width={variables.iconSizeLarge}
                             height={variables.iconSizeLarge}
                             fill={theme.textSupporting}

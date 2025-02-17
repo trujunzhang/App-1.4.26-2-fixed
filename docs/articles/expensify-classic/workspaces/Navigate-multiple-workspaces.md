@@ -1,8 +1,8 @@
 ---
 title: Navigate multiple workspaces
-description: Using more than one Ieatta workspace
+description: Using more than one Expensify workspace
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 If you have have multiple workspaces (whether its an individual workspace and a group workspace or multiple group workspaces), you’ll want to 
 - Set a default workspace (Some domains have your default automatically set. In this case, you cannot change your default workspace). 

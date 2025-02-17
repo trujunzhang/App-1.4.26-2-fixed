@@ -1,5 +1,5 @@
 import {initialAndShowNotifyOnSmallScreen, updateNotifyOnSmallScreen} from './notifyForSmallscreen';
-import type {InitialAndShowNotify, ToastType, UpdateNotify} from './types';
+import type {InitialAndShowNotify, UpdateNotify} from './types';
 
 const initialAndShowNotify: InitialAndShowNotify = initialAndShowNotifyOnSmallScreen;
 

@@ -4,12 +4,12 @@ description: uploading a CSV file containing your company card transactions
 ---
 
 # Overview
-Ieatta offers a convenient CSV import feature for managing company card expenses when direct connections or commercial card feeds aren't available. This feature allows you to upload a CSV file containing your company card transactions and assign them to cardholders within your Ieatta domain.
+Expensify offers a convenient CSV import feature for managing company card expenses when direct connections or commercial card feeds aren't available. This feature allows you to upload a CSV file containing your company card transactions and assign them to cardholders within your Expensify domain.
 This feature is available on Group Workspaces and requires Domain Admin access.
 
 # How to import company cards via CSV
 1. Download a CSV of transactions from your bank by logging into their website and finding the relevant statement.
-2. Format the CSV for upload using [this template](https://s3-us-west-1.amazonaws.com/concierge-responses-ieatta-com/uploads%2F1594908368712-Best+Example+CSV+for+Domains.csv) as a guide. 
+2. Format the CSV for upload using [this template](https://s3-us-west-1.amazonaws.com/concierge-responses-expensify-com/uploads%2F1594908368712-Best+Example+CSV+for+Domains.csv) as a guide. 
 - At a minimum, your file must include the following columns:
   - **Card Number** - each number in this column should display at least the last four digits, and you can obscure up to 12 characters 
 (e.g., 543212XXXXXX12334).
@@ -18,7 +18,7 @@ This feature is available on Group Workspaces and requires Domain Admin access.
   - **Posted Amount** - use the number format in this column, and indicate negative amounts with parentheses (e.g., (335.98) for -$335.98).
   - **Posted Currency** - use currency codes (e.g., USD, GBP, EUR) to indicate the currency of the posted transactions.
 - You can also add mapping for Categories and Tags, but those parameters are optional. 
-3. Log into Ieatta on your web browser.
+3. Log into Expensify on your web browser.
 4. Head to Settings > Domains > Domain Name > Company Cards
 5. Click Manage/Import CSV
 6. Create a Company Card Layout Name for your spreadsheet
@@ -74,7 +74,7 @@ To troubleshoot this:
 4. If the layout isn't listed, create a new **Company Card Layout Name** and upload the spreadsheet again.
 
 
-## I added a new parameter to an existing spreadsheet, but the data isn't showing in Ieatta after the upload completes. What's going on?
+## I added a new parameter to an existing spreadsheet, but the data isn't showing in Expensify after the upload completes. What's going on?
 If you added a new card to an existing spreadsheet and imported it via a saved layout, but it isn't showing up for assignment, this suggests that the modification may have caused an issue.
 The next step in troubleshooting this issue is to compare the number of rows on the revised spreadsheet to the Output Preview to ensure the row count matches the revised spreadsheet. 
 To check this:

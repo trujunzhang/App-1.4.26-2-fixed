@@ -15,7 +15,7 @@ import useStyleUtils from '@hooks/useStyleUtils';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import useWindowDimensions from '@hooks/useWindowDimensions';
-import type {ReviewDropdownOption} from '@libs/Firebase/review-sort';
+import type {ReviewDropdownOption} from '@libs/FirebaseIeatta/review-sort';
 import CONST from '@src/CONST';
 import type {AnchorPosition} from '@src/styles';
 import AnchorAlignment from '@src/types/utils/AnchorAlignment';

@@ -1,4 +1,4 @@
-import type {IEventsInRestaurantRow} from '@libs/Firebase/list/types/rows/restaurant';
+import type {IEventsInRestaurantRow} from '@libs/FirebaseIeatta/list/types/rows/restaurant';
 
 type EventRowProps = {
     eventInRestaurantRow: IEventsInRestaurantRow;

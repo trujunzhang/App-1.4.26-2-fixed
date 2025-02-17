@@ -3,7 +3,7 @@ import React from 'react';
 import {View} from 'react-native';
 import NoDropZone from '@components/DragAndDrop/NoDropZone';
 import type {FeatureTrainingNavigatorParamList} from '@libs/Navigation/types';
-import TrackTrainingPage from '@src/expPages/TrackTrainingPage';
+import TrackTrainingPage from '@expPages/TrackTrainingPage';
 import SCREENS from '@src/SCREENS';
 
 const Stack = createStackNavigator<FeatureTrainingNavigatorParamList>();

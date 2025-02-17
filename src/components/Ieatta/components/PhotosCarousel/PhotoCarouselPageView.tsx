@@ -1,6 +1,6 @@
 import type {ViewabilityConfigCallbackPairs} from '@react-native/virtualized-lists/Lists/VirtualizedList';
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
-import moment from 'moment';
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 import type {ViewabilityConfigCallbackPair, ViewToken} from 'react-native';
 import {FlatList, Keyboard, PixelRatio, View} from 'react-native';
@@ -8,13 +8,12 @@ import PageFlashListItemWithEvent from '@components/Ieatta/detailedPage/PageFlas
 import {PressableWithFeedback} from '@components/Pressable';
 import Text from '@components/Text';
 import Tooltip from '@components/Tooltip';
-import withWindowDimensions from '@components/withWindowDimensions';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import * as DeviceCapabilities from '@libs/DeviceCapabilities';
-import {PhotoType} from '@libs/Firebase/constant';
-import {PageSection, RowPressableType} from '@libs/Firebase/list/constant';
-import type {IPhotoCarouselItemRow} from '@libs/Firebase/list/types/rows/photo';
+import {PhotoType} from '@libs/FirebaseIeatta/constant';
+import {PageSection, RowPressableType} from '@libs/FirebaseIeatta/list/constant';
+import type {IPhotoCarouselItemRow} from '@libs/FirebaseIeatta/list/types/rows/photo';
 import Navigation from '@libs/Navigation/Navigation';
 import * as PhotosPageContextMenu from '@pages/photos/online/Popover/ContextMenu/PhotosPageContextMenu';
 import variables from '@styles/variables';
@@ -93,7 +92,7 @@ function PhotoCarouselPageView({
             }
 
             setPage(startIndex);
-            onPhotoChanged(photosWithPlaceholder[startIndex]);
+            onPhotoChanged(startIndex, photosWithPlaceholder.at(startIndex));
 
             setShowLeftArrow(startIndex > 0);
             setShowRightArrow(startIndex < photosLength - 1);
@@ -152,13 +151,14 @@ function PhotoCarouselPageView({
                 relatedId: 'notApplicable',
                 photoType: PhotoType.Unknown,
                 photo,
+                containerWidth,
                 photoWidth: containerWidth,
                 photoHeight,
             };
             return (
                 <View style={[styles.flex1]}>
                     <PageFlashListItemWithEvent
-                        item={{
+                        pageRow={{
                             rowType: PageSection.PHOTO_CAROUSEL_ITEM_WITHOUT_EVENT,
                             rowData: carouselItem,
                             rowKey: 'PageSection.PHOTO_CAROUSEL_ITEM_WITH_EVENT<Photo>',
@@ -169,7 +169,7 @@ function PhotoCarouselPageView({
                 </View>
             );
         },
-        [photoHeight, containerWidth],
+        [containerWidth, photoHeight, styles.flex1],
     );
 
     const bottomPanel = (
@@ -207,7 +207,6 @@ function PhotoCarouselPageView({
                     <FlatList
                         key={`photos-page-${containerWidth}`}
                         keyboardShouldPersistTaps="handled"
-                        // listKey="PhotoCarouselPageView"
                         horizontal
                         decelerationRate="fast"
                         showsHorizontalScrollIndicator={false}
@@ -254,4 +253,5 @@ function PhotoCarouselPageView({
 
 PhotoCarouselPageView.displayName = 'PhotoCarouselPageView';
 
-export default withWindowDimensions(PhotoCarouselPageView);
+// export default withWindowDimensions(PhotoCarouselPageView);
+export default PhotoCarouselPageView;

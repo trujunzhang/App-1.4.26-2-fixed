@@ -1,28 +1,67 @@
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import React from 'react';
 import {View} from 'react-native';
-import * as Expensicons from '@components/Icon/Expensicons';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
 import ImagePlaceholder from '@components/ImagePlaceholder';
+import SelectCircle from '@components/SelectCircle';
 import Text from '@components/Text';
 import useThemeStyles from '@hooks/useThemeStyles';
-import type {IPhotoCarouselItemRow} from '@libs/Firebase/list/types/rows/photo';
+import type {IPhotoCarouselItemRow} from '@libs/FirebaseIeatta/list/types/rows/photo';
 import TailwindColors from '@styles/tailwindcss/colors';
 
 type PhotoCarouselItemProps = {
     carouselItem: IPhotoCarouselItemRow;
+    /** Whether to use the Checkbox (multiple selection) instead of the Checkmark (single selection) */
+    canSelectMultiple?: boolean;
+    isSelected?: boolean;
 };
 
 // const debugPhotoIndex = true;
 const debugPhotoIndex = false;
 
-function PhotoCarouselItem({carouselItem}: PhotoCarouselItemProps) {
+function PhotoCarouselItem({carouselItem, canSelectMultiple = true, isSelected = false}: PhotoCarouselItemProps) {
     const styles = useThemeStyles();
-    const {photo: item, index = 0, photoWidth, photoHeight} = carouselItem;
+    const {photo: item, index = 0, photoWidth, photoHeight, containerWidth} = carouselItem;
+
+    const renderDebug = () => {
+        return (
+            <View style={[styles.pAbsolute, styles.l0, styles.t0]}>
+                <Text
+                    style={[
+                        {
+                            color: TailwindColors.red500,
+                            fontSize: 48,
+                        },
+                        styles.ml4,
+                        styles.mt4,
+                    ]}
+                >
+                    {index + 1}
+                </Text>
+            </View>
+        );
+    };
+
+    const renderSelect = () => {
+        if (!isSelected) {
+            return null;
+        }
+
+        return (
+            <View style={[styles.pAbsolute, styles.r2, styles.t2]}>
+                <SelectCircle
+                    isChecked={isSelected ?? false}
+                    selectCircleStyles={styles.ml0}
+                />
+            </View>
+        );
+    };
 
     return (
         <View
             style={[
-                _.isUndefined(photoWidth) ? styles.w100 : {width: photoWidth},
+                _.isUndefined(containerWidth) ? styles.w100 : {width: containerWidth},
                 {
                     height: photoHeight,
                 },
@@ -32,24 +71,12 @@ function PhotoCarouselItem({carouselItem}: PhotoCarouselItemProps) {
                 sourceUri={item.originalUrl}
                 style={[styles.w100, styles.h100]}
                 imageType="svg"
-                placeholder={Expensicons.LargeEmptyBizSkyline}
+                placeholder={Ieattaicons.LargeEmptyBizSkyline}
+                width={photoWidth}
+                height={photoHeight}
             />
-            {debugPhotoIndex && (
-                <View style={[styles.pAbsolute, styles.l0, styles.t0]}>
-                    <Text
-                        style={[
-                            {
-                                color: TailwindColors.red500,
-                                fontSize: 48,
-                            },
-                            styles.ml4,
-                            styles.mt4,
-                        ]}
-                    >
-                        {index + 1}
-                    </Text>
-                </View>
-            )}
+            {debugPhotoIndex && renderDebug()}
+            {canSelectMultiple && renderSelect()}
         </View>
     );
 }

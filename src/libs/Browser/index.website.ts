@@ -1,7 +1,7 @@
 import CONFIG from '@src/CONFIG';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';
-import type {GetBrowser, IsMobile, IsMobileChrome, IsMobileSafari, IsSafari, OpenRouteInDesktopApp} from './types';
+import type {GetBrowser, IsChromeIOS, IsMobile, IsMobileChrome, IsMobileSafari, IsMobileWebKit, IsSafari, OpenRouteInDesktopApp} from './types';
 
 /**
  * Fetch browser name from UA string
@@ -58,28 +58,44 @@ const isMobileChrome: IsMobileChrome = () => {
     return /Android/i.test(userAgent) && /chrome|chromium|crios/i.test(userAgent);
 };
 
+/**
+ * Checks if the requesting user agent is a WebKit-based browser on an iOS mobile device.
+ */
+const isMobileWebKit: IsMobileWebKit = () => {
+    const userAgent = navigator.userAgent;
+    return /iP(ad|od|hone)/i.test(userAgent) && /WebKit/i.test(userAgent);
+};
+
+/**
+ * Checks if the requesting user agent is a Chrome browser on an iOS mobile device.
+ */
+const isChromeIOS: IsChromeIOS = () => {
+    const userAgent = navigator.userAgent;
+    return /iP(ad|od|hone)/i.test(userAgent) && /CriOS/i.test(userAgent);
+};
+
 const isSafari: IsSafari = () => getBrowser() === 'safari' || isMobileSafari();
 
 /**
  * The session information needs to be passed to the Desktop app, and the only way to do that is by using query params. There is no other way to transfer the data.
  */
-const openRouteInDesktopApp: OpenRouteInDesktopApp = (shortLivedAuthToken = '', email = '') => {
+const openRouteInDesktopApp: OpenRouteInDesktopApp = (shortLivedAuthToken = '', email = '', initialRoute = '') => {
     const params = new URLSearchParams();
     // If the user is opening the desktop app through a third party signin flow, we need to manually add the exitTo param
     // so that the desktop app redirects to the correct home route after signin is complete.
     const openingFromDesktopRedirect = window.location.pathname === `/${ROUTES.DESKTOP_SIGN_IN_REDIRECT}`;
-    params.set('exitTo', `${openingFromDesktopRedirect ? '/r' : window.location.pathname}${window.location.search}${window.location.hash}`);
+    params.set('exitTo', `${openingFromDesktopRedirect ? '/r' : initialRoute || window.location.pathname}${window.location.search}${window.location.hash}`);
     if (email && shortLivedAuthToken) {
         params.set('email', email);
         params.set('shortLivedAuthToken', shortLivedAuthToken);
     }
-    const ieattaUrl = new URL(CONFIG.EXPENSIFY.NEW_EXPENSIFY_URL);
-    const ieattaDeeplinkUrl = `${CONST.DEEPLINK_BASE_URL}${ieattaUrl.host}/transition?${params.toString()}`;
+    const expensifyUrl = new URL(CONFIG.EXPENSIFY.NEW_EXPENSIFY_URL);
+    const expensifyDeeplinkUrl = `${CONST.DEEPLINK_BASE_URL}${expensifyUrl.host}/transition?${params.toString()}`;
 
     const browser = getBrowser();
 
     // This check is necessary for Safari, otherwise, if the user
-    // does NOT have the Ieatta desktop app installed, it's gonna
+    // does NOT have the Expensify desktop app installed, it's gonna
     // show an error in the page saying that the address is invalid.
     // It is also necessary for Firefox, otherwise the window.location.href redirect
     // will abort the fetch request from NetInfo, which will cause the app to go offline temporarily.
@@ -88,7 +104,7 @@ const openRouteInDesktopApp: OpenRouteInDesktopApp = (shortLivedAuthToken = '', 
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
         if (iframe.contentWindow) {
-            iframe.contentWindow.location.href = ieattaDeeplinkUrl;
+            iframe.contentWindow.location.href = expensifyDeeplinkUrl;
         }
         // Since we're creating an iframe for Safari to handle deeplink,
         // we need to give Safari some time to open the pop-up window.
@@ -97,8 +113,8 @@ const openRouteInDesktopApp: OpenRouteInDesktopApp = (shortLivedAuthToken = '', 
             document.body.removeChild(iframe);
         }, 0);
     } else {
-        window.location.href = ieattaDeeplinkUrl;
+        window.location.href = expensifyDeeplinkUrl;
     }
 };
 
-export {getBrowser, isMobile, isMobileSafari, isSafari, isMobileChrome, openRouteInDesktopApp};
+export {getBrowser, isMobile, isMobileSafari, isMobileWebKit, isSafari, isMobileChrome, isChromeIOS, openRouteInDesktopApp};

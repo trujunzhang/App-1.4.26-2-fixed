@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {ForwardedRef} from 'react';
 import React, {forwardRef} from 'react';
@@ -8,7 +12,7 @@ import type {BaseTextInputProps, BaseTextInputRef} from '@components/TextInput/B
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 
-type RebaseEventDatePickerProps = {
+type ReviewRatingPanelProps = {
     /** BasePicker label */
     // label?: string | null;
     /** Input value */
@@ -21,7 +25,7 @@ type RebaseEventDatePickerProps = {
     // onInputChange: (value: number, index?: number) => void;
 } & BaseTextInputProps;
 
-function ReviewRatingPanel({inputID, value = '1', onInputChange, label = '', shouldSaveDraft = false}: RebaseEventDatePickerProps, ref: ForwardedRef<BaseTextInputRef>) {
+function ReviewRatingPanel({inputID, value = '1', onInputChange, label = '', shouldSaveDraft = false}: ReviewRatingPanelProps, ref: ForwardedRef<BaseTextInputRef>) {
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 

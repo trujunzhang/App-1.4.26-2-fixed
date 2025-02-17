@@ -259,7 +259,7 @@ function CardContainer({
       ]}
       style={[
         {
-          // This is necessary to avoid unfocused larger pages increasing scroll area
+          // This is necessary to avoid unfocused larger expPages increasing scroll area
           // The issue can be seen on the web when a smaller screen is pushed over a larger one
           overflow: active ? undefined : 'hidden',
           display:

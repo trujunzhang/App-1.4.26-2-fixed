@@ -2,7 +2,7 @@
 title: Edit or delete messages
 description: Edit or delete chat messages you've sent
 ---
-<div id="new-ieatta" markdown="1">
+<div id="new-expensify" markdown="1">
 
 {% include info.html %}
 You can edit or delete your *own* messages only. Deleting a message cannot be undone.

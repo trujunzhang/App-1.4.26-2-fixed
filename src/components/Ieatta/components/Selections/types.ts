@@ -1,16 +1,22 @@
-import type {ListItem, UserListItemProps} from '@components/SelectionList/types';
+import type {ListItem, ListItemProps, UserListItemProps} from '@components/SelectionList/types';
+import type {IFBPhoto, IFBRestaurant} from '@src/types/firebase';
 
 type ChoiceRecipeItem = ListItem & {
     recipeId: string;
     recipeUrl: string;
 };
 
+type ChoiceWaiterItem = ListItem & IFBPhoto;
+
 type ChoiceOrderedUserItem = ListItem & {
     userId: string;
-    userUrl: string;
+    userUrl?: string;
 };
+
+type SearchRestaurantsItem = ListItem & IFBRestaurant;
 
 type AddRecipeListItemProps<TItem extends ChoiceRecipeItem> = UserListItemProps<TItem>;
 type AddUserListItemProps<TItem extends ChoiceOrderedUserItem> = UserListItemProps<TItem>;
+type SearchRestaurantsItemProps<TItem extends SearchRestaurantsItem> = ListItemProps<TItem>;
 
-export type {AddRecipeListItemProps, AddUserListItemProps, ChoiceRecipeItem, ChoiceOrderedUserItem};
+export type {AddRecipeListItemProps, AddUserListItemProps, ChoiceRecipeItem, ChoiceOrderedUserItem, SearchRestaurantsItem, SearchRestaurantsItemProps, ChoiceWaiterItem};

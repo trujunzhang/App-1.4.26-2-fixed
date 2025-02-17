@@ -2,7 +2,7 @@
 import React, {useState} from 'react';
 import RestaurantCardView from '@components/LHNRestaurantsList/RestaurantCardView';
 import RestaurantRowView from '@components/LHNRestaurantsList/RestaurantRowView';
-import {restaurants} from '@libs/Firebase/data/Restaurants';
+import {restaurants} from '@libs/FirebaseIeatta/data/Restaurants';
 
 /**
  * We use the Component Story Format for writing stories. Follow the docs here:

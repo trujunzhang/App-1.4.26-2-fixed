@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import _ from 'lodash';
 import React, {useEffect, useState} from 'react';
 import type {ImageStyle, StyleProp, ViewStyle} from 'react-native';
 import {StyleSheet as RNStyleSheet, View} from 'react-native';
@@ -15,6 +13,7 @@ import CONST from '@src/CONST';
 import type {AvatarType} from '@src/types/onyx/OnyxCommon';
 import Icon from './Icon';
 import * as Expensicons from './Icon/Expensicons';
+import * as Ieattaicons from './Icon/Ieattaicons';
 import Image from './Image';
 import ImagePlaceholder from './ImagePlaceholder';
 
@@ -52,30 +51,31 @@ type AvatarProps = {
     /** Used to locate fallback icon in end-to-end tests. */
     fallbackIconTestID?: string;
 
-    /** Denotes whether it is an avatar or a workspace avatar */
-    type?: AvatarType;
-
     /** Owner of the avatar. If user, displayName. If workspace, policy name */
     name?: string;
 
+    /** Denotes whether it is an avatar or a workspace avatar */
+    type: AvatarType;
+
     /** Optional account id if it's user avatar or policy id if it's workspace avatar */
-    accountID?: number | string;
+    avatarID?: number | string;
 };
 
 function Avatar({
     source: originalSource,
+    /** fields for Ieatta */
     avatarUrl,
     shouldShowAsAvatar = false,
-    imageStyles = {},
+    imageStyles,
     iconAdditionalStyles,
     containerStyles,
     size = CONST.AVATAR_SIZE.DEFAULT,
     fill,
     fallbackIcon = Expensicons.FallbackAvatar,
     fallbackIconTestID = '',
-    type = CONST.ICON_TYPE_AVATAR,
+    type,
     name = '',
-    accountID,
+    avatarID,
 }: AvatarProps) {
     const theme = useTheme();
     const styles = useThemeStyles();
@@ -89,26 +89,69 @@ function Avatar({
     }, [originalSource]);
 
     const isWorkspace = type === CONST.ICON_TYPE_WORKSPACE;
-    const iconSize = StyleUtils.getAvatarSize(size);
+    const userAccountID = isWorkspace ? undefined : (avatarID as number);
 
-    const imageStyle: StyleProp<ImageStyle> = [StyleUtils.getAvatarStyle(size), imageStyles, styles.noBorderRadius];
-    const iconStyle = imageStyles ? [StyleUtils.getAvatarStyle(size), styles.bgTransparent, imageStyles] : undefined;
-
-    // We pass the color styles down to the SVG for the workspace and fallback avatar.
-    const source = isWorkspace ? originalSource : UserUtils.getAvatar(originalSource, Number(accountID));
+    const source = isWorkspace ? originalSource : UserUtils.getAvatar(originalSource, userAccountID);
     const useFallBackAvatar = imageError || !source || source === Expensicons.FallbackAvatar;
     const fallbackAvatar = isWorkspace ? ReportUtils.getDefaultWorkspaceAvatar(name) : fallbackIcon || Expensicons.FallbackAvatar;
     const fallbackAvatarTestID = isWorkspace ? ReportUtils.getDefaultWorkspaceAvatarTestID(name) : fallbackIconTestID || 'SvgFallbackAvatar Icon';
     const avatarSource = useFallBackAvatar ? fallbackAvatar : source;
 
+    // We pass the color styles down to the SVG for the workspace and fallback avatar.
+    const iconSize = StyleUtils.getAvatarSize(size);
+    const imageStyle: StyleProp<ImageStyle> = [StyleUtils.getAvatarStyle(size), imageStyles, styles.noBorderRadius];
+    const iconStyle = imageStyles ? [StyleUtils.getAvatarStyle(size), styles.bgTransparent, imageStyles] : undefined;
+
     let iconColors;
     if (isWorkspace) {
-        iconColors = StyleUtils.getDefaultWorkspaceAvatarColor(accountID?.toString() ?? '');
+        iconColors = StyleUtils.getDefaultWorkspaceAvatarColor(avatarID?.toString() ?? '');
     } else if (useFallBackAvatar) {
         iconColors = StyleUtils.getBackgroundColorAndFill(theme.buttonHoveredBG, theme.icon);
     } else {
         iconColors = null;
     }
+
+    const commonIcon = () => {
+        if (typeof avatarSource === 'string') {
+            return null;
+        }
+        return (
+            <View style={iconStyle}>
+                <Icon
+                    testID={fallbackAvatarTestID}
+                    src={avatarSource}
+                    height={iconSize}
+                    width={iconSize}
+                    fill={imageError ? iconColors?.fill ?? theme.offline : iconColors?.fill ?? fill}
+                    additionalStyles={[StyleUtils.getAvatarBorderStyle(size, type), iconColors, iconAdditionalStyles]}
+                />
+            </View>
+        );
+    };
+
+    const commonAvatar = (sourceUri: string | undefined) => (
+        <View
+            testID="AvatarWrapper"
+            style={RNStyleSheet.flatten(StyleUtils.getAvatarStyle(size))}
+        >
+            <ImagePlaceholder
+                sourceUri={sourceUri}
+                style={RNStyleSheet.flatten(StyleUtils.getAvatarStyle(size))}
+                imageType="png"
+                placeholder={Ieattaicons.User60Square}
+            />
+        </View>
+    );
+
+    const renderAvatar = () => {
+        if (shouldShowAsAvatar) {
+            return commonAvatar(avatarUrl);
+        }
+        if (type === CONST.ICON_TYPE_AVATAR) {
+            return commonAvatar(source as string);
+        }
+        return commonIcon();
+    };
 
     return (
         <View style={[containerStyles, styles.pointerEventsNone]}>
@@ -121,32 +164,7 @@ function Avatar({
                     />
                 </View>
             ) : (
-                <View style={[]}>
-                    {shouldShowAsAvatar ? (
-                        <View
-                            testID="AvatarWrapper"
-                            style={RNStyleSheet.flatten(StyleUtils.getAvatarStyle(size))}
-                        >
-                            <ImagePlaceholder
-                                sourceUri={avatarUrl}
-                                style={RNStyleSheet.flatten(StyleUtils.getAvatarStyle(size))}
-                                imageType="png"
-                                placeholder={Expensicons.User60Square}
-                            />
-                        </View>
-                    ) : (
-                        <View style={iconStyle}>
-                            <Icon
-                                testID={fallbackAvatarTestID}
-                                src={avatarSource}
-                                height={iconSize}
-                                width={iconSize}
-                                fill={imageError ? iconColors?.fill ?? theme.offline : iconColors?.fill ?? fill}
-                                additionalStyles={[StyleUtils.getAvatarBorderStyle(size, type), iconColors, iconAdditionalStyles]}
-                            />
-                        </View>
-                    )}
-                </View>
+                renderAvatar()
             )}
         </View>
     );

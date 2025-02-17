@@ -1,19 +1,14 @@
-import {setRestaurantIdInSidebar} from '@libs/actions/ieatta/restaurant';
-import {ParseModelReviews} from '@libs/Firebase/appModel';
-import {FBCollections} from '@libs/Firebase/constant';
-import {PageSection} from '@libs/Firebase/list/constant';
-import type {IPageRow} from '@libs/Firebase/list/types/page-row';
-import type {IDisplayNameTitleRow, IEditModelButtonRow} from '@libs/Firebase/list/types/rows/common';
-import type {IPhotoCarouselItemRow, IPhotoItemRow} from '@libs/Firebase/list/types/rows/photo';
-import type {IEventsInRestaurantRow, IRestaurantSidebarRow} from '@libs/Firebase/list/types/rows/restaurant';
-import type {IReviewInPageRow, IReviewSubmitRow} from '@libs/Firebase/list/types/rows/review';
-import Navigation from '@libs/Navigation/Navigation';
-import * as PhotosPageContextMenu from '@pages/photos/online/Popover/ContextMenu/PhotosPageContextMenu';
-import ROUTES from '@src/ROUTES';
+import {ParseModelReviews} from '@libs/FirebaseIeatta/appModel';
+import {PageSection} from '@libs/FirebaseIeatta/list/constant';
+import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
+import type {IEventsInRestaurantRow, IRestaurantSidebarRow} from '@libs/FirebaseIeatta/list/types/rows/restaurant';
+import type {IReviewInPageRow} from '@libs/FirebaseIeatta/list/types/rows/review';
+// import * as PhotosPageContextMenu from '@pages/photos/online/Popover/ContextMenu/PhotosPageContextMenu';
 import type {IFBRecipe} from '@src/types/firebase';
 import {navigationToEditEvent, navigationToEditRecipe, navigationToEditRestaurant, navigationToEditReview} from './editFormUtils';
 
 function actionEditNavigateTo(item: IPageRow) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const {rowData} = item;
     switch (item.rowType) {
         /**
@@ -95,7 +90,7 @@ function actionEditNavigateTo(item: IPageRow) {
         case PageSection.SIDEBAR_RESTAURANT_ROW:
         case PageSection.SIDEBAR_RESTAURANT_CARD: {
             const {restaurant} = rowData as IRestaurantSidebarRow;
-            navigationToEditRestaurant(restaurant.uniqueId);
+            navigationToEditRestaurant({restaurantId: restaurant.uniqueId});
             break;
         }
         case PageSection.RESTAURANT_EVENT:

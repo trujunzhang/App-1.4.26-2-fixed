@@ -1,11 +1,11 @@
 import {setRestaurantIdInSidebar} from '@libs/actions/ieatta/restaurant';
-import {FBCollections} from '@libs/Firebase/constant';
-import {PageSection} from '@libs/Firebase/list/constant';
-import type {IPageRow} from '@libs/Firebase/list/types/page-row';
-import type {IDisplayNameTitleRow, IEditModelButtonRow} from '@libs/Firebase/list/types/rows/common';
-import type {IPhotoCarouselItemRow, IPhotoItemRow} from '@libs/Firebase/list/types/rows/photo';
-import type {IEventsInRestaurantRow, IRestaurantSidebarRow} from '@libs/Firebase/list/types/rows/restaurant';
-import type {IReviewSubmitRow} from '@libs/Firebase/list/types/rows/review';
+import {FBCollections} from '@libs/FirebaseIeatta/constant';
+import {PageSection} from '@libs/FirebaseIeatta/list/constant';
+import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
+import type {IDisplayNameTitleRow, IEditModelButtonRow} from '@libs/FirebaseIeatta/list/types/rows/common';
+import type {IPhotoCarouselItemRow, IPhotoItemRow} from '@libs/FirebaseIeatta/list/types/rows/photo';
+import type {IEventsInRestaurantRow, IRestaurantSidebarRow} from '@libs/FirebaseIeatta/list/types/rows/restaurant';
+import type {IReviewSubmitRow} from '@libs/FirebaseIeatta/list/types/rows/review';
 import Navigation from '@libs/Navigation/Navigation';
 import * as PhotosPageContextMenu from '@pages/photos/online/Popover/ContextMenu/PhotosPageContextMenu';
 import ROUTES from '@src/ROUTES';
@@ -16,7 +16,7 @@ function pageItemNavigateForEditButtonOnDetailedPage(rowData: IEditModelButtonRo
     const {restaurantId, relatedId, modelPath} = rowData;
     switch (modelPath) {
         case FBCollections.Restaurants: {
-            navigationToEditRestaurant(relatedId);
+            navigationToEditRestaurant({restaurantId: relatedId});
             break;
         }
         case FBCollections.Events: {
@@ -34,6 +34,7 @@ function pageItemNavigateForEditButtonOnDetailedPage(rowData: IEditModelButtonRo
 }
 
 function pageItemNavigateTo(item: IPageRow) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const {rowData} = item;
     switch (item.rowType) {
         /**
@@ -48,6 +49,15 @@ function pageItemNavigateTo(item: IPageRow) {
             Navigation.navigate(ROUTES.PHOTOS_PAGE_VIEW.getRoute({relatedId, photoType, selected}));
             break;
         }
+        case PageSection.PHOTO_SELECT_COVERR_FOR_RESTAURANT_AND_RECIPE:
+        case PageSection.PHOTO_ADD_WAITERS_ITEM_WITH_EVENT: {
+            const carouselItem: IPhotoCarouselItemRow = item.rowData as IPhotoCarouselItemRow;
+            const section = carouselItem.section ?? {isSelected: false, onItemPressed: () => {}};
+            const onItemPressed = section.onItemPressed;
+            onItemPressed(carouselItem.photo, section.isSelected);
+            break;
+        }
+
         case PageSection.PHOTO_CAROUSEL_ITEM_WITH_EVENT: {
             const carouselItem: IPhotoCarouselItemRow = rowData as IPhotoCarouselItemRow;
             const {relatedId, photoType, photo} = carouselItem;

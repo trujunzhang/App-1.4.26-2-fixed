@@ -14,9 +14,9 @@ import useNetwork from '@hooks/useNetwork';
 import useThemeStyles from '@hooks/useThemeStyles';
 import * as ErrorUtils from '@libs/ErrorUtils';
 import BankAccount from '@libs/models/BankAccount';
+import getSubstepValues from '@expPages/ReimbursementAccount/utils/getSubstepValues';
+import getValuesForBeneficialOwner from '@expPages/ReimbursementAccount/utils/getValuesForBeneficialOwner';
 import CONST from '@src/CONST';
-import getSubstepValues from '@src/expPages/ReimbursementAccount/utils/getSubstepValues';
-import getValuesForBeneficialOwner from '@src/expPages/ReimbursementAccount/utils/getValuesForBeneficialOwner';
 import ONYXKEYS from '@src/ONYXKEYS';
 import type {ReimbursementAccountForm} from '@src/types/form';
 import INPUT_IDS from '@src/types/form/ReimbursementAccountForm';
@@ -74,7 +74,7 @@ function CompanyOwnersListUBO({
     const {isOffline} = useNetwork();
 
     const isLoading = reimbursementAccount?.isLoading ?? false;
-    const requestorData = getSubstepValues(REQUESTOR_PERSONAL_INFO_KEYS, null, reimbursementAccount);
+    const requestorData = getSubstepValues(REQUESTOR_PERSONAL_INFO_KEYS, undefined, reimbursementAccount);
     const error = ErrorUtils.getLatestErrorMessage(reimbursementAccount);
 
     const extraBeneficialOwners =
@@ -120,6 +120,7 @@ function CompanyOwnersListUBO({
                                 description={`${requestorData.requestorAddressStreet}, ${requestorData.requestorAddressCity}, ${requestorData.requestorAddressState} ${requestorData.requestorAddressZipCode}`}
                                 wrapperStyle={[styles.ph5]}
                                 icon={Expensicons.FallbackAvatar}
+                                iconType={CONST.ICON_TYPE_AVATAR}
                                 iconWidth={40}
                                 iconHeight={40}
                                 interactive={false}

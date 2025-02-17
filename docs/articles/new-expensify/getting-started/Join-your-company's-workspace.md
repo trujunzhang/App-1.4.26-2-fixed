@@ -1,18 +1,18 @@
 ---
 title: Join your company's workspace
-description: Get started with Ieatta by joining your company's workspace
+description: Get started with Expensify by joining your company's workspace
 ---
 
-<div id="new-ieatta" markdown="1">
+<div id="new-expensify" markdown="1">
 
-Welcome to Ieatta! If you received an invitation to join your company’s Ieatta workspace, follow the 5 steps below to get started.
+Welcome to Expensify! If you received an invitation to join your company’s Expensify workspace, follow the 5 steps below to get started.
 
 # 1. Download the mobile app
 
-Upload your expenses and check your reports right from your phone by downloading the Ieatta mobile app. You can search for “Ieatta” in the app store, or tap one of the links below.
+Upload your expenses and check your reports right from your phone by downloading the Expensify mobile app. You can search for “Expensify” in the app store, or tap one of the links below.
 
-[iOS](https://apps.apple.com/us/app/ieatta-expense-tracker/id471713959) 
-| [Android](https://play.google.com/store/apps/details?id=org.me.mobiieattag&hl=en_US&gl=US)
+[iOS](https://apps.apple.com/us/app/expensify-expense-tracker/id471713959) 
+| [Android](https://play.google.com/store/apps/details?id=org.me.mobiexpensifyg&hl=en_US&gl=US)
 
 # 2. Add your name, photo, and preferences
 
@@ -51,6 +51,8 @@ Upload your expenses and check your reports right from your phone by downloading
 {% include end-option.html %}
 
 {% include end-selector.html %}
+
+![The profile page to change options like display name]({{site.url}}/assets/images/ExpensifyHelp_R2_Profile_1.png){:width="100%"}
  
 # 3. Meet Concierge
 
@@ -73,7 +75,7 @@ You can create an expense by SmartScanning a receipt to automatically capture th
 <ol type="a">
    <li>Click the + icon in the bottom left menu and select <b>Submit Expense</b>.</li>
    <li>Click <b>Scan</b>.</li>
-   <li>Drag and drop the receipt into Ieatta, or click <b>Choose File</b> to select it from your saved files. <i>Note: The SmartScan process will auto-populate the merchant, date, and amount.</i></li>
+   <li>Drag and drop the receipt into Expensify, or click <b>Choose File</b> to select it from your saved files. <i>Note: The SmartScan process will auto-populate the merchant, date, and amount.</i></li>
    <li>Use the search field to find the desired workspace or an individual’s name, email, or phone number.</li>
    <li>Add a description, category, tags, or tax as desired, or as required by your workspace.</li> 
    <li>(Optional) Enable the expense as billable if it should be billed to a client.</li>
@@ -96,7 +98,7 @@ You can create an expense by SmartScanning a receipt to automatically capture th
 {% include end-selector.html %}
 
 {% include info.html %}
-You can also forward receipts to receipts@ieatta.com using an email address that is your primary or secondary email address. SmartScan will automatically pull all of the details from the receipt and add it to your expenses.
+You can also forward receipts to receipts@expensify.com using an email address that is your primary or secondary email address. SmartScan will automatically pull all of the details from the receipt and add it to your expenses.
 {% include end-info.html %}
 
 ## Manually add an expense
@@ -150,12 +152,12 @@ To enable two-factor authentication,
            <li>Click <b>Copy</b> to paste the codes into a document or other secure location.</li>
        </ul>
    <li>Click <b>Next</b>.</li>
-   <li>Download or open your authenticator app and connect it to Ieatta by either:</li>
+   <li>Download or open your authenticator app and connect it to Expensify by either:</li>
       <ul>
            <li>Scanning the QR code</li>
            <li>Entering the code into your authenticator app</li>
       </ul>
-   <li>Enter the 6-digit code from your authenticator app into Ieatta and click <b>Verify</b>.</li>
+   <li>Enter the 6-digit code from your authenticator app into Expensify and click <b>Verify</b>.</li>
 </ol>
 {% include end-option.html %}
 
@@ -170,12 +172,12 @@ To enable two-factor authentication,
            <li>Tap <b>Copy</b> to paste the codes into a document or other secure location.</li>
        </ul>
    <li>Tap <b>Next</b>.</li>
-   <li>Download or open your authenticator app and connect it to Ieatta by either:</li>
+   <li>Download or open your authenticator app and connect it to Expensify by either:</li>
       <ul>
            <li>Scanning the QR code</li>
            <li>Entering the code into your authenticator app</li>
       </ul>
-   <li>Enter the 6-digit code from your authenticator app into Ieatta and tap <b>Verify</b>.</li>
+   <li>Enter the 6-digit code from your authenticator app into Expensify and tap <b>Verify</b>.</li>
 </ol>
 
 {% include end-option.html %}

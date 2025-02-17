@@ -1,5 +1,5 @@
-import React from 'react';
 import type {ForwardedRef} from 'react';
+import React from 'react';
 import {Camera} from 'react-native-vision-camera';
 import useTabNavigatorFocus from '@hooks/useTabNavigatorFocus';
 import type {NavigationAwareCameraNativeProps} from './types';

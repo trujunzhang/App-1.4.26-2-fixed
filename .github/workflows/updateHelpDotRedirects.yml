@@ -1,4 +1,4 @@
-name: Update Redirects to IeattaHelp
+name: Update Redirects to ExpensifyHelp
 
 on:
   # Run on any push to main that has changes to the redirects file

@@ -1,18 +1,13 @@
-import _ from 'lodash';
-import PropTypes from 'prop-types';
+// eslint-disable-next-line lodash/import-scope
 import React from 'react';
 import {Image, View} from 'react-native';
-import * as Illustrations from '@components/Icon/Illustrations';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
 import Text from '@components/Text';
-import TextLink from '@components/TextLink';
-import withLocalize, {withLocalizePropTypes} from '@components/withLocalize';
-import useStyleUtils from '@hooks/useStyleUtils';
-import useTheme from '@hooks/useTheme';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
+// import withLocalize, {withLocalizePropTypes} from '@components/withLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import useWindowDimensions from '@hooks/useWindowDimensions';
 import variables from '@styles/variables';
-import * as Session from '@userActions/Session';
-import CONST from '@src/CONST';
 
 // const propTypes = {
 //     ...withLocalizePropTypes,
@@ -23,11 +18,12 @@ import CONST from '@src/CONST';
 //     shouldShowSmallScreen: false,
 // };
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 type CommonFooterProps = {};
 function CommonFooter(props: CommonFooterProps) {
     const styles = useThemeStyles();
     const {windowWidth, windowHeight} = useWindowDimensions();
-    const {isSmallScreenWidth, isMediumScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth, isMediumScreenWidth} = useResponsiveLayout();
 
     let imageSize;
     if (isSmallScreenWidth) {
@@ -55,7 +51,7 @@ function CommonFooter(props: CommonFooterProps) {
         <View style={[styles.mb8]}>
             <View style={[styles.footerBottomLogo, styles.alignItemsCenter]}>
                 <Image
-                    source={Illustrations.FooterCityscape}
+                    source={Ieattaicons.FooterCityscape}
                     style={[styles.alignSelfCenter, imageSize]}
                 />
                 <Text style={[styles.mt8]}>Copyright © 2004–2020 Ieatta Inc. Ieatta,and related marks are registered trademarks of Ieatta.</Text>

@@ -1,18 +1,18 @@
 ---
 title: Claim and verify a domain
-description: Grant specific employee permissions by claiming a private domain and verifying it in Ieatta
+description: Grant specific employee permissions by claiming a private domain and verifying it in Expensify
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
-If you have a private domain (like yourcompany.com), you can add the domain to your Ieatta account. Claiming a domain allows you to grant specific permissions to accounts that include the domain in their email address (for example, if your domain is yourcompany.com, anyone who signs up under this domain—like yourname@yourcompany.com—will have these domain rules applied to their account). 
+If you have a private domain (like yourcompany.com), you can add the domain to your Expensify account. Claiming a domain allows you to grant specific permissions to accounts that include the domain in their email address (for example, if your domain is yourcompany.com, anyone who signs up under this domain—like yourname@yourcompany.com—will have these domain rules applied to their account). 
 
 Claiming a domain also allows you to: 
-* Import and reconcile company credit cards and Ieatta Cards
-* Add company credit card and Ieatta Card rules and restrictions
+* Import and reconcile company credit cards and Expensify Cards
+* Add company credit card and Expensify Card rules and restrictions
 
 Once you verify your domain, you’ll be able to:
 * Assign delegates for employees who are on vacation
-* Delete employee Ieatta accounts
+* Delete employee Expensify accounts
 * Enable SAML / SSO settings for secure log in
 
 {% include info.html %}
@@ -37,15 +37,15 @@ To complete this step, you must have a Control workspace, and you’ll need acce
 <ol type="a">
    <li>Log in to your DNS service provider (which may be the website you purchased the domain from or that currently hosts the domain, like NameCheap, GoDaddy, DNSMadeEasy, or Amazon Route53. You may need to contact your company’s IT department if your domain is managed internally).</li>
    <li>Find the page for DNS records, which might be labeled as DNS Management or Zone File Editor.</li>  
-   <li>Add a new TXT record  and set the value as 532F6180D8.</li>
+   <li>Add a new TXT record with the value assigned to you in the domain verification settings.</li>
    <li>Save your changes.</li>
-   <li>In Ieatta, click the Domain Members tab and click <b>Verify</b>.</li>
+   <li>In Expensify, click the Domain Members tab and click <b>Verify</b>.</li>
 </ol>
 
-After successful verification, an email will be sent to all members of the Ieatta domain to inform them that their accounts will be under domain control (i.e. the rules set for the domain will affect their account). 
+After successful verification, an email will be sent to all members of the Expensify domain to inform them that their accounts will be under domain control (i.e. the rules set for the domain will affect their account). 
 
 # Add another domain
 
-To add an additional domain, you’ll have to first add your email address that is connected with your domain as your [primary or secondary email] (https://help.ieatta.com/articles/ieatta-classic/settings/account-settings/Change-or-add-email-address) (for example, if your domain is yourcompany.com, then you want to add and verify your email address @yourcompany.com as your primary or secondary email address). Then you can complete the steps above to add the domain. 
+To add an additional domain, you’ll have to first add your email address that is connected with your domain as your [primary or secondary email] (https://help.expensify.com/articles/expensify-classic/settings/account-settings/Change-or-add-email-address) (for example, if your domain is yourcompany.com, then you want to add and verify your email address @yourcompany.com as your primary or secondary email address). Then you can complete the steps above to add the domain. 
 
 </div>

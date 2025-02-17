@@ -4,11 +4,15 @@ require File.join(File.dirname(`node --print "require.resolve('expo/package.json
 $RNMapboxMapsImpl = 'mapbox'
 $VCDisableFrameProcessors = true
 
+
+
 use_frameworks! :linkage => :static
 # right after `use_frameworks! :linkage => :static`
 $RNFirebaseAsStaticFramework = true
 # Override Firebase SDK Version
-$FirebaseSDKVersion = '10.19.0'
+# $FirebaseSDKVersion = '10.19.0'
+$FirebaseSDKVersion = '11.4.0'
+
 
 def node_require(script)
   # Resolve script with node to allow for hoisting
@@ -23,8 +27,9 @@ node_require('react-native/scripts/react_native_pods.rb')
 node_require('react-native-permissions/scripts/setup.rb')
 
 # Our min supported iOS version is higher than the default (min_ios_version_supported) to support libraires such as Airship
-platform :ios, 16.0
+platform :ios, 14.0
 prepare_react_native_project!
+
 
 setup_permissions([
   'Camera',
@@ -56,14 +61,11 @@ end
 
 # Configure Mapbox before installing dependencies
 pre_install do |installer|
-  # $RNMapboxMaps.pre_install(installer)
+  $RNMapboxMaps.pre_install(installer)
 end
 
 target 'NewIeatta' do
   use_expo_modules!
-
-  pod 'react-native-date-picker', :path => '../node_modules/react-native-date-picker'
-
   post_integrate do |installer|
     begin
       expo_patch_react_imports!(installer)
@@ -79,7 +81,8 @@ target 'NewIeatta' do
     'DebugProduction' => :debug,
     'ReleaseDevelopment' => :release,
     'ReleaseAdHoc' => :release,
-    'ReleaseProduction' => :release
+    'ReleaseProduction' => :release,
+    'Debug' => :debug
 
   config = use_native_modules!
 
@@ -92,8 +95,7 @@ target 'NewIeatta' do
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
-    :app_path => "#{Pod::Config.instance.installation_root}/..",
-    :hermes_enabled => true
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
 
@@ -104,13 +106,14 @@ target 'NewIeatta' do
 
   post_install do |installer|
     # Configure Mapbox after installation
-    # $RNMapboxMaps.post_install(installer)
+    $RNMapboxMaps.post_install(installer)
 
     # https://github.com/facebook/react-native/blob/main/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
       installer,
       config[:reactNativePath],
-      :mac_catalyst_enabled => false
+      :mac_catalyst_enabled => false,
+      # :ccache_enabled => true
     )
     __apply_Xcode_14_3_RC_post_install_workaround(installer)
 
@@ -127,6 +130,7 @@ target 'NewIeatta' do
       end
 
 
+
       if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
         target.build_configurations.each do |config|
           config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
@@ -139,3 +143,5 @@ end
 target 'NotificationServiceExtension' do
   pod 'AirshipServiceExtension'
 end
+
+pod 'FullStory', :http => 'https://ios-releases.fullstory.com/fullstory-1.52.0-xcframework.tar.gz'

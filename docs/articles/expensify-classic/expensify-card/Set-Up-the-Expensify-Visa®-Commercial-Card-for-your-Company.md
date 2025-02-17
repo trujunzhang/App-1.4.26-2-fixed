@@ -1,36 +1,36 @@
 ---
-title: Set Up the Ieatta Visa® Commercial Card for your Company
-description: Details on setting up the Ieatta Card for your company as an admin
+title: Set Up the Expensify Visa® Commercial Card for your Company
+description: Details on setting up the Expensify Card for your company as an admin
 ---
 # Overview
 
-If you’re an admin interested in rolling out the Ieatta Visa® Commercial Card for your organization, you’re in the right place. This article will cover how to qualify and apply for the Ieatta Card program and begin issuing cards to your employees. 
+If you’re an admin interested in rolling out the Expensify Visa® Commercial Card for your organization, you’re in the right place. This article will cover how to qualify and apply for the Expensify Card program and begin issuing cards to your employees. 
 
-# How to qualify for the Ieatta Card program
+# How to qualify for the Expensify Card program
 
-There are three prerequisites to consider before applying for the Ieatta Card:
+There are three prerequisites to consider before applying for the Expensify Card:
 
 1. The email address associated with your account must be on a private domain
-2. You must claim your private domain in Ieatta
-3. You must add and verify a US business bank account to your Ieatta account
+2. You must claim your private domain in Expensify
+3. You must add and verify a US business bank account to your Expensify account
    
 To claim a domain, you must be a workspace admin with a company email address matching the domain you want to claim. After you create an account and set up a workspace, head to **Settings > Domains** to claim your domain.
 
 You can add a business bank account by navigating to **Settings > Account > Payments** and clicking Add Verified Bank Account. Follow the setup steps and complete the verification process as required.
 
-# How to apply for the Ieatta Card
+# How to apply for the Expensify Card
 
-Once you’ve claimed your domain and added a verified US business bank account, you can apply for the Ieatta Card. There are multiple ways to apply for the card from the web:
+Once you’ve claimed your domain and added a verified US business bank account, you can apply for the Expensify Card. There are multiple ways to apply for the card from the web:
 
 ## From the home page
 
-1. Log into your Ieatta account using your preferred web browser
+1. Log into your Expensify account using your preferred web browser
 2. Head to your account’s home page
-3. On the task that says “Introducing the Ieatta Card,” click **Enable my Ieatta Cards** to get started
+3. On the task that says “Introducing the Expensify Card,” click **Enable my Expensify Cards** to get started
 
 ## From the Company Cards page
 
-1. Log into your Ieatta account using your preferred web browser
+1. Log into your Expensify account using your preferred web browser
 2. Head to **Settings > Domains > _Domain Name_ > Company Cards**
 3. Click **Get the Card**
 
@@ -50,20 +50,20 @@ The Company Cards page will act as a hub to view all employees who have been iss
 
 ## Are there foreign transaction fees?
 
-There are no foreign transaction fees when using your Ieatta Card for international purchases.
+There are no foreign transaction fees when using your Expensify Card for international purchases.
 
-## How does the Ieatta Card affect my or my company's credit score?
+## How does the Expensify Card affect my or my company's credit score?
 
-Applying for or using the Ieatta Card will never have any positive or negative effect on your personal credit score or your business's credit score. We do not consider your or your business' credit score when determining approval and your card limit.
+Applying for or using the Expensify Card will never have any positive or negative effect on your personal credit score or your business's credit score. We do not consider your or your business' credit score when determining approval and your card limit.
 
-## How much does the Ieatta Card cost?
+## How much does the Expensify Card cost?
 
-The Ieatta Card is a free corporate card, and no fees are associated with it. In addition, if you use the Ieatta Card, you can save money on your Ieatta subscription (based on how much of your approved spend occurs on the Ieatta Card, compared with other approved spend, in each month).
+The Expensify Card is a free corporate card, and no fees are associated with it. In addition, if you use the Expensify Card, you can save money on your Expensify subscription (based on how much of your approved spend occurs on the Expensify Card, compared with other approved spend, in each month).
 
-## If I have staff outside the US, can they use the Ieatta Card?
+## If I have staff outside the US, can they use the Expensify Card?
 
-As long as the verified bank account used to apply for the Ieatta Card is a US bank account, your cardholders can be anywhere in the world.
+As long as the verified bank account used to apply for the Expensify Card is a US bank account, your cardholders can be anywhere in the world.
 
-Otherwise, the Ieatta Card is not available for customers using non-US banks. With that said, launching international support is a top priority for us. Let us know if you’re interested in contacting support, and we’ll reach out as soon as the Ieatta Card is available outside the United States.
+Otherwise, the Expensify Card is not available for customers using non-US banks. With that said, launching international support is a top priority for us. Let us know if you’re interested in contacting support, and we’ll reach out as soon as the Expensify Card is available outside the United States.
 
 {% include faq-end.md %}

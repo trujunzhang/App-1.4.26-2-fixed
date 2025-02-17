@@ -24,7 +24,7 @@ function clearErrorFields(formID: OnyxFormKey) {
 }
 
 function setDraftValues(formID: OnyxFormKey, draftValues: NullishDeep<OnyxValue<OnyxFormDraftKey>>) {
-    Onyx.merge(`${formID}Draft`, draftValues);
+    Onyx.merge(`${formID}Draft`, draftValues ?? null);
 }
 
 function clearDraftValues(formID: OnyxFormKey) {
@@ -42,27 +42,20 @@ function clearDraftValues(formID: OnyxFormKey) {
 //     Onyx.merge(FormUtils.getDraftKey(formID), undefined);
 // }
 
-/**
- * @param draftID
- */
-function clearDraftValuesByDraftId(formID: OnyxFormKey) {
-    Onyx.set(`${formID}Draft`, {});
-}
+// type UpdateDraftValuesForEditModelIdParams = {formID: OnyxFormKey; editFormUniqueId: string; lastEditFormUniqueId: string};
 
-type UpdateDraftValuesForEditModelIdParams = {formID: OnyxFormKey; editFormUniqueId: string; lastEditFormUniqueId: string};
+// /**
+//  * @param draftID
+//  * @param editFormUniqueId
+//  * @param lastEditFormUniqueId
+//  */
+// function updateDraftValuesForEditModelId({formID, editFormUniqueId, lastEditFormUniqueId}: UpdateDraftValuesForEditModelIdParams) {
+//     if (editFormUniqueId === lastEditFormUniqueId) {
+//         return;
+//     }
+//     Onyx.set(`${formID}Draft`, {editFormUniqueId});
+// }
 
-/**
- * @param draftID
- * @param editFormUniqueId
- * @param lastEditFormUniqueId
- */
-function updateDraftValuesForEditModelId({formID, editFormUniqueId, lastEditFormUniqueId}: UpdateDraftValuesForEditModelIdParams) {
-    if (editFormUniqueId === lastEditFormUniqueId) {
-        return;
-    }
-    Onyx.set(`${formID}Draft`, {editFormUniqueId});
-}
-
-export {clearDraftValues, clearErrorFields, clearErrors, setDraftValues, setErrorFields, setErrors, setIsLoading, clearDraftValuesByDraftId, updateDraftValuesForEditModelId};
+export {clearDraftValues, clearErrorFields, clearErrors, setDraftValues, setErrorFields, setErrors, setIsLoading};
 
 // export {setDraftValues, setErrorFields, setErrors, setIsLoading, clearDraftValues, clearDraftValuesByDraftId, updateDraftValuesForEditModelId};

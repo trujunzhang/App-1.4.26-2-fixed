@@ -2,7 +2,7 @@
 title: Add expenses in bulk
 description: Add multiple expenses at one time
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 You can upload bulk receipt images or add receipt details in bulk.
 
@@ -26,7 +26,7 @@ You can upload bulk receipt images or add receipt details in bulk.
 
 # Manually add receipt details in bulk
 
-*Note: This process is currently not available from the mobile app and must be completed from the Ieatta website.*
+*Note: This process is currently not available from the mobile app and must be completed from the Expensify website.*
 
 1. Click the **Expenses** tab.
 2. Click **New Expense** and select **Create Multiple**.
@@ -34,7 +34,7 @@ You can upload bulk receipt images or add receipt details in bulk.
 
 # Upload personal expenses via CSV, XLS, etc.
 
-*Note: This process is currently not available from the mobile app and must be completed from the Ieatta website.*
+*Note: This process is currently not available from the mobile app and must be completed from the Expensify website.*
 
 1. Hover over Settings, then click **Account**. 
 2. Click the **Credit Card Import** tab. 

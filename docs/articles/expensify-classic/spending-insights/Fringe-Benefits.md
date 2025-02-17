@@ -3,7 +3,7 @@ title: Fringe Benefits
 description: How to track your Fringe Benefits
 ---
 # Overview 
-If you’re looking to track and report expense data to calculate Fringe Benefits Tax (FBT), you can use Ieatta’s special workflow that allows you to capture extra information and use a template to export to a spreadsheet.
+If you’re looking to track and report expense data to calculate Fringe Benefits Tax (FBT), you can use Expensify’s special workflow that allows you to capture extra information and use a template to export to a spreadsheet.
 
 # How to set up Fringe Benefit Tax
 
@@ -12,13 +12,13 @@ First, you’ll need to add these two tags to your Workspace:
 1) Number of Internal Attendees
 2) Number of External Attendees 
 
-These tags must be named exactly as written above, ensuring there are no extra spaces at the beginning or at the end. You’ll need to set the tags to be  numbers 00 - 10 or whatever number you wish to go up to (up to the maximum number of attendees you would expect at any one time), one tag per number i.e. “01”, “02”, “03” etc. These tags can be added in addition to those that are pulled in from your accounting solution. Follow these [instructions](https://help.ieatta.com/articles/ieatta-classic/workspaces/Tags) to add tags.
+These tags must be named exactly as written above, ensuring there are no extra spaces at the beginning or at the end. You’ll need to set the tags to be  numbers 00 - 10 or whatever number you wish to go up to (up to the maximum number of attendees you would expect at any one time), one tag per number i.e. “01”, “02”, “03” etc. These tags can be added in addition to those that are pulled in from your accounting solution. Follow these [instructions](https://help.expensify.com/articles/expensify-classic/workspaces/Tags) to add tags.
 
 ## Add Payroll Code
 Go to **Settings > Workspaces > Group > _Workspace Name_ > Categories** and within the categories you wish to track FBT against, select **Edit Category** and add the code “TAG”:
 
 ## Enable Workflow
-Once you’ve added both tags (Internal Attendees and External Attendees) and added the payroll code “TAG” to FBT categories, you can send a request to Ieatta at concierge@ieatta.com to enable the FBT workflow. Please send the following request:
+Once you’ve added both tags (Internal Attendees and External Attendees) and added the payroll code “TAG” to FBT categories, you can send a request to Expensify at concierge@expensify.com to enable the FBT workflow. Please send the following request:
 >“Can you please add the custom workflow/DEW named FRINGE_BENEFIT_TAX to my company workspace named <insert your company workspace name> ?”
 Once the FBT workflow is enabled, it will require anything with the code “TAG” to include the two attendee count tags in order to be submitted.
 
@@ -40,4 +40,4 @@ Your expenses may have multiple levels of coding, i.e.:
 
 In the above case, you’ll want to use `{expense:tag:ntag-3}` and `{expense:tag:ntag-4}` as formulas to report on the number of internal and external attendees.
 
-Our article on [Custom Templates](https://help.ieatta.com/articles/ieatta-classic/insights-and-custom-reporting/Custom-Templates) shows how to create a custom CSV. 
+Our article on [Custom Templates](https://help.expensify.com/articles/expensify-classic/insights-and-custom-reporting/Custom-Templates) shows how to create a custom CSV. 

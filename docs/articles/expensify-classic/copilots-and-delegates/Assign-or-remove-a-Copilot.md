@@ -3,7 +3,7 @@ title: Assign or remove a Copilot
 description: Safely delegate tasks without sharing login information.
 ---
 
-You can safely delegate tasks to someone else without sharing your login information by assigning them as your Copilot. Your copilot can access your Ieatta account through their own account to: 
+You can safely delegate tasks to someone else without sharing your login information by assigning them as your Copilot. Your copilot can access your Expensify account through their own account to: 
 * Prepare expenses on your behalf
 * Approve and reimburse expense reports on your behalf (Full Access Copilots only)
 * View and make changes to your account, domain, and workspace settings
@@ -19,7 +19,7 @@ You can safely delegate tasks to someone else without sharing your login informa
    * **Submit Only Access**: Your Copilot will have the same access and limitations as a Full Access Copilot, but they will not be able to approve reports on your behalf—they can only submit them.
 5. Click **Invite Copilot**.
 
-If your Copilot already has an Ieatta account, they will get an email notifying them that they can now also access your account from within their own. If they do not have an Ieatta account, they will get an email with a link to create one. Once created, they will be able to access your account from within their own.
+If your Copilot already has an Expensify account, they will get an email notifying them that they can now also access your account from within their own. If they do not have an Expensify account, they will get an email with a link to create one. Once created, they will be able to access your account from within their own.
 
 # Remove a Copilot
 

@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type {StackScreenProps} from '@react-navigation/stack';
 import lodashGet from 'lodash/get';
 import React from 'react';
 import {useDocumentDataOnce} from 'react-firebase-hooks/firestore';
-import {FBCollections, ReviewType} from '@libs/Firebase/constant';
-import * as FirebaseQuery from '@libs/Firebase/services/firebase-query';
+import {FBCollections, ReviewType} from '@libs/FirebaseIeatta/constant';
+import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
 import {emptyReviewTag} from '@libs/ieatta/editFormUtils';
 import type {RightIeattaNavigatorParamList} from '@libs/Navigation/types';
 import CONST from '@src/CONST';
@@ -13,6 +14,7 @@ import BaseEditReviewPage from './BaseEditReviewPage';
 
 type EditReviewNavigationProps = StackScreenProps<RightIeattaNavigatorParamList, typeof SCREENS.RIGHT_IEATTA.REVIEW>;
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 type EditReviewPageProps = EditReviewNavigationProps & {};
 
 function EditReviewPage(props: EditReviewPageProps) {

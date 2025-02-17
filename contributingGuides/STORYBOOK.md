@@ -2,11 +2,11 @@
 
 >Storybook is an open source tool for building UI components and pages in isolation. It streamlines UI development, testing, and documentation.
 
-At Ieatta, we primarily use [Storybook](https://storybook.js.org/) to provide interactive documentation of our design system. This helps bridge the gap between design and engineering to encourage code reusibility and improve communication.
+At Expensify, we primarily use [Storybook](https://storybook.js.org/) to provide interactive documentation of our design system. This helps bridge the gap between design and engineering to encourage code reusibility and improve communication.
 
 ### Building and Deploying Storybook
 
-The Storybook docs deploy automatically so there's nothing extra to do here. Storybook is built to the `/dist` folder and lives at [`https://new.ieatta.com/docs/index.html`](https://new.ieatta.com/docs/index.html).
+The Storybook docs deploy automatically so there's nothing extra to do here. Storybook is built to the `/dist` folder and lives at [`https://new.expensify.com/docs/index.html`](https://new.expensify.com/docs/index.html).
 
 To test a local build, we can run
 

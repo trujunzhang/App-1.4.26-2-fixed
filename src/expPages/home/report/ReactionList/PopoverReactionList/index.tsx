@@ -1,7 +1,7 @@
 import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
 import type {ForwardedRef} from 'react';
 import type {InnerReactionListRef} from '@hooks/useBasePopoverReactionList/types';
-import type {ReactionListRef} from '@src/expPages/home/ReportScreenContext';
+import type {ReactionListRef} from '@expPages/home/ReportScreenContext';
 import BasePopoverReactionList from './BasePopoverReactionList';
 
 function PopoverReactionList(props: unknown, ref: ForwardedRef<ReactionListRef>) {
@@ -19,13 +19,9 @@ function PopoverReactionList(props: unknown, ref: ForwardedRef<ReactionListRef>)
         innerReactionListRef.current?.hideReactionList();
     };
 
-    const isActiveReportAction = (actionID: number | string) => Boolean(actionID) && reactionListReportActionID === actionID;
+    const isActiveReportAction = (actionID: number | string) => !!actionID && reactionListReportActionID === actionID;
 
     useImperativeHandle(ref, () => ({showReactionList, hideReactionList, isActiveReportAction}));
-
-    if (reactionListReportActionID === '' || reactionListEmojiName === '') {
-        return null;
-    }
 
     return (
         <BasePopoverReactionList

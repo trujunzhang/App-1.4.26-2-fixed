@@ -1,8 +1,8 @@
 ---
 title: Automatically submit employee reports
-description: Use Ieatta's Scheduled Submit feature to have your employees' expenses submitted automatically for them
+description: Use Expensify's Scheduled Submit feature to have your employees' expenses submitted automatically for them
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 Scheduled Submit automatically adds expenses to a report and sends them for approval so that your employees do not have to remember to manually submit their reports each week. This allows you to automatically collect employee expenses on a schedule of your choosing.
 

@@ -1,4 +1,4 @@
-import React, {forwardRef, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {forwardRef, useEffect, useMemo, useRef, useState} from 'react';
 import type {ForwardedRef} from 'react';
 import {ActivityIndicator, Keyboard, LogBox, View} from 'react-native';
 import type {LayoutChangeEvent} from 'react-native';
@@ -14,6 +14,7 @@ import useNetwork from '@hooks/useNetwork';
 import useStyleUtils from '@hooks/useStyleUtils';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
+import * as UserLocation from '@libs/actions/UserLocation';
 import * as ApiUtils from '@libs/ApiUtils';
 import getCurrentPosition from '@libs/getCurrentPosition';
 import type {GeolocationErrorCodeType} from '@libs/getCurrentPosition/getCurrentPosition.types';
@@ -23,7 +24,24 @@ import CONST from '@src/CONST';
 import type {Address} from '@src/types/onyx/PrivatePersonalDetails';
 import CurrentLocationButton from './CurrentLocationButton';
 import isCurrentTargetInsideContainer from './isCurrentTargetInsideContainer';
-import type {AddressSearchProps} from './types';
+import type {AddressSearchProps, PredefinedPlace} from './types';
+
+/**
+ * Check if the place matches the search by the place name or description.
+ * @param search The search string for a place
+ * @param place The place to check for a match on the search
+ * @returns true if search is related to place, otherwise it returns false.
+ */
+function isPlaceMatchForSearch(search: string, place: PredefinedPlace): boolean {
+    if (!search) {
+        return true;
+    }
+    if (!place) {
+        return false;
+    }
+    const fullSearchSentence = `${place.name ?? ''} ${place.description}`;
+    return search.split(' ').every((searchTerm) => !searchTerm || fullSearchSentence.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase()));
+}
 
 // The error that's being thrown below will be ignored until we fork the
 // react-native-google-places-autocomplete repo and replace the
@@ -41,6 +59,7 @@ function AddressSearch(
         isLimitedToUSA = false,
         label,
         maxInputLength,
+        onFocus,
         onBlur,
         onInputChange,
         onPress,
@@ -71,10 +90,11 @@ function AddressSearch(
     const [isTyping, setIsTyping] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    const [searchValue, setSearchValue] = useState(value || defaultValue || '');
+    const [searchValue, setSearchValue] = useState('');
     const [locationErrorCode, setLocationErrorCode] = useState<GeolocationErrorCodeType>(null);
     const [isFetchingCurrentLocation, setIsFetchingCurrentLocation] = useState(false);
     const shouldTriggerGeolocationCallbacks = useRef(true);
+    const [shouldHidePredefinedPlaces, setShouldHidePredefinedPlaces] = useState(false);
     const containerRef = useRef<View>(null);
     const query = useMemo(
         () => ({
@@ -141,7 +161,7 @@ function AddressSearch(
         });
 
         // Make sure that the order of keys remains such that the country is always set above the state.
-        // Refer to https://github.com/Ieatta/App/issues/15633 for more information.
+        // Refer to https://github.com/Expensify/App/issues/15633 for more information.
         const {
             country: countryFallbackLongName = '',
             state: stateAutoCompleteFallback = '',
@@ -201,7 +221,7 @@ function AddressSearch(
             }
         }
 
-        // Not all pages define the Address Line 2 field, so in that case we append any additional address details
+        // Not all expPages define the Address Line 2 field, so in that case we append any additional address details
         // (e.g. Apt #) to Address Line 1
         if (subpremise && typeof renamedInputKeys?.street2 === 'undefined') {
             values.street += `, ${subpremise}`;
@@ -214,7 +234,7 @@ function AddressSearch(
 
         if (inputID) {
             Object.entries(values).forEach(([key, inputValue]) => {
-                const inputKey = renamedInputKeys?.[key as keyof Address] ?? key;
+                const inputKey = renamedInputKeys?.[key as keyof Omit<Address, 'current'>] ?? key;
                 if (!inputKey) {
                     return;
                 }
@@ -249,12 +269,17 @@ function AddressSearch(
                 setIsFetchingCurrentLocation(false);
                 setLocationErrorCode(null);
 
+                const {latitude, longitude} = successData.coords;
+
                 const location = {
-                    lat: successData.coords.latitude,
-                    lng: successData.coords.longitude,
+                    lat: latitude,
+                    lng: longitude,
                     address: CONST.YOUR_LOCATION_TEXT,
                     name: CONST.YOUR_LOCATION_TEXT,
                 };
+
+                // Update the current user location
+                UserLocation.setUserLocation({longitude, latitude});
                 onPress?.(location);
             },
             (errorData) => {
@@ -263,7 +288,7 @@ function AddressSearch(
                 }
 
                 setIsFetchingCurrentLocation(false);
-                setLocationErrorCode(errorData.code);
+                setLocationErrorCode(errorData?.code ?? null);
             },
             {
                 maximumAge: 0, // No cache, always get fresh location info
@@ -276,7 +301,7 @@ function AddressSearch(
         // eslint-disable-next-line react/jsx-no-useless-fragment
         <>
             {(predefinedPlaces?.length ?? 0) > 0 && (
-                <>
+                <View style={styles.overflowAuto}>
                     {/* This will show current location button in list if there are some recent destinations */}
                     {shouldShowCurrentLocationButton && (
                         <CurrentLocationButton
@@ -285,7 +310,7 @@ function AddressSearch(
                         />
                     )}
                     {!value && <Text style={[styles.textLabel, styles.colorMuted, styles.pv2, styles.ph3, styles.overflowAuto]}>{translate('common.recentDestinations')}</Text>}
-                </>
+                </View>
             )}
         </>
     );
@@ -298,13 +323,22 @@ function AddressSearch(
         };
     }, []);
 
-    const listEmptyComponent = useCallback(
-        () =>
-            !!isOffline || !isTyping ? null : <Text style={[styles.textLabel, styles.colorMuted, styles.pv4, styles.ph3, styles.overflowAuto]}>{translate('common.noResultsFound')}</Text>,
-        [isOffline, isTyping, styles, translate],
+    const filteredPredefinedPlaces = useMemo(() => {
+        if (!searchValue) {
+            return predefinedPlaces ?? [];
+        }
+        if (shouldHidePredefinedPlaces) {
+            return [];
+        }
+        return predefinedPlaces?.filter((predefinedPlace) => isPlaceMatchForSearch(searchValue, predefinedPlace)) ?? [];
+    }, [predefinedPlaces, searchValue, shouldHidePredefinedPlaces]);
+
+    const listEmptyComponent = useMemo(
+        () => (!isTyping ? undefined : <Text style={[styles.textLabel, styles.colorMuted, styles.pv4, styles.ph3, styles.overflowAuto]}>{translate('common.noResultsFound')}</Text>),
+        [isTyping, styles, translate],
     );
 
-    const listLoader = useCallback(
+    const listLoader = useMemo(
         () => (
             <View style={[styles.pv4]}>
                 <ActivityIndicator
@@ -342,7 +376,7 @@ function AddressSearch(
                         fetchDetails
                         suppressDefaultStyles
                         enablePoweredByContainer={false}
-                        predefinedPlaces={predefinedPlaces ?? undefined}
+                        predefinedPlaces={filteredPredefinedPlaces}
                         listEmptyComponent={listEmptyComponent}
                         listLoaderComponent={listLoader}
                         renderHeaderComponent={renderHeaderComponent}
@@ -351,7 +385,7 @@ function AddressSearch(
                             const subtitle = data.isPredefinedPlace ? data.description : data.structured_formatting.secondary_text;
                             return (
                                 <View>
-                                    {!!title && <Text style={[styles.googleSearchText]}>{title}</Text>}
+                                    {!!title && <Text style={styles.googleSearchText}>{title}</Text>}
                                     <Text style={[title ? styles.textLabelSupporting : styles.googleSearchText]}>{subtitle}</Text>
                                 </View>
                             );
@@ -385,6 +419,7 @@ function AddressSearch(
                             shouldSaveDraft,
                             onFocus: () => {
                                 setIsFocused(true);
+                                onFocus?.();
                             },
                             onBlur: (event) => {
                                 if (!isCurrentTargetInsideContainer(event, containerRef)) {
@@ -398,6 +433,7 @@ function AddressSearch(
                             onInputChange: (text: string) => {
                                 setSearchValue(text);
                                 setIsTyping(true);
+                                setShouldHidePredefinedPlaces(!isOffline);
                                 if (inputID) {
                                     onInputChange?.(text);
                                 } else {
@@ -414,10 +450,11 @@ function AddressSearch(
                         }}
                         styles={{
                             textInputContainer: [styles.flexColumn],
-                            listView: [StyleUtils.getGoogleListViewStyle(displayListViewBorder), styles.overflowAuto, styles.borderLeft, styles.borderRight, !isFocused && {height: 0}],
+                            listView: [StyleUtils.getGoogleListViewStyle(displayListViewBorder), styles.borderLeft, styles.borderRight, !isFocused && styles.h0],
                             row: [styles.pv4, styles.ph3, styles.overflowAuto],
                             description: [styles.googleSearchText],
-                            separator: [styles.googleSearchSeparator],
+                            separator: [styles.googleSearchSeparator, styles.overflowAuto],
+                            container: [styles.mh100],
                         }}
                         numberOfLines={2}
                         isRowScrollable={false}
@@ -430,22 +467,23 @@ function AddressSearch(
                         }}
                         inbetweenCompo={
                             // We want to show the current location button even if there are no recent destinations
-                            predefinedPlaces?.length === 0 &&
-                            shouldShowCurrentLocationButton && (
+                            predefinedPlaces?.length === 0 && shouldShowCurrentLocationButton ? (
                                 <View style={[StyleUtils.getGoogleListViewStyle(true), styles.overflowAuto, styles.borderLeft, styles.borderRight]}>
                                     <CurrentLocationButton
                                         onPress={getCurrentLocation}
                                         isDisabled={isOffline}
                                     />
                                 </View>
-                            )
+                            ) : undefined
                         }
                         placeholder=""
-                    />
-                    <LocationErrorMessage
-                        onClose={() => setLocationErrorCode(null)}
-                        locationErrorCode={locationErrorCode}
-                    />
+                        listViewDisplayed
+                    >
+                        <LocationErrorMessage
+                            onClose={() => setLocationErrorCode(null)}
+                            locationErrorCode={locationErrorCode}
+                        />
+                    </GooglePlacesAutocomplete>
                 </View>
             </ScrollView>
             {isFetchingCurrentLocation && <FullScreenLoadingIndicator />}

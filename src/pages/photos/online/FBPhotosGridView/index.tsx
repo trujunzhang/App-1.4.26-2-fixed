@@ -1,14 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
 import type {StackScreenProps} from '@react-navigation/stack';
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import React from 'react';
 import {useCollection, useDocumentData} from 'react-firebase-hooks/firestore';
 import {PhotosPageSkeletonView} from '@components/Ieatta/components/SkeletonViews';
 import PhotosPageLayout from '@components/Ieatta/photos/PhotosPageLayout';
-import useWindowDimensions from '@hooks/useWindowDimensions';
-import {FBCollections, PhotoType} from '@libs/Firebase/constant';
-import * as FirebaseQuery from '@libs/Firebase/services/firebase-query';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
+import {FBCollections, PhotoType} from '@libs/FirebaseIeatta/constant';
+import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
 import {getPhotosForPage} from '@libs/ieatta/photoUtils';
 import type {AuthScreensParamList} from '@libs/Navigation/types';
 import CONST from '@src/CONST';
@@ -21,9 +24,9 @@ type FBPhotosGridViewProps = StackScreenProps<AuthScreensParamList, typeof SCREE
 
 function FBPhotosGridView({route}: FBPhotosGridViewProps) {
     const relatedId = lodashGet(route, 'params.relatedId', CONST.IEATTA_MODEL_ID_EMPTY);
-    const photoType = lodashGet(route, 'params.photoType', PhotoType.Unknown);
+    const photoType: string = lodashGet(route, 'params.photoType', PhotoType.Unknown);
 
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
 
     /**
      |--------------------------------------------------

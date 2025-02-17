@@ -1,6 +1,8 @@
-import type {IUserInEventRow} from '@libs/Firebase/list/types/rows/event';
+import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
+import type {IUserInEventRow} from '@libs/FirebaseIeatta/list/types/rows/event';
 
 type OrderedUserViewProps = {
+    pageRow: IPageRow;
     rowData: IUserInEventRow;
 };
 

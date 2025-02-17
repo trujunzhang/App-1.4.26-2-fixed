@@ -7,7 +7,7 @@ When you're out of office or on vacation, you can assign a Vacation Delegate to 
 
 A Vacation Delegate approves expense reports on behalf of another workspace member when needed. Once they are assigned, any reports sent to the member for approval will immediately start going to their delegate. Then when the member is ready to take over their reports again, they’ll be able to disable the delegate. 
 
-Ieatta keeps a detailed audit trail to show exactly when a delegate stepped in to approve reports on someone else's behalf and what actions they took on the report.
+Expensify keeps a detailed audit trail to show exactly when a delegate stepped in to approve reports on someone else's behalf and what actions they took on the report.
 
 # Assign a delegate for yourself
 

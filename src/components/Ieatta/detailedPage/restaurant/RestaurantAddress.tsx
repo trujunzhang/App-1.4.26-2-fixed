@@ -11,8 +11,8 @@ function RestaurantAddress({address}: RestaurantAddressProps) {
     const styles = useThemeStyles();
 
     return (
-        <View style={[styles.flexRow, styles.alignItemsCenter, styles.ph3, styles.pv4, styles.sectionComponentContainer]}>
-            <Text style={[styles.sectionInfoNormal]}>{address}</Text>
+        <View style={[styles.flexRow, styles.alignItemsCenter, styles.ph8, styles.pv4, styles.backgroundComponentBG]}>
+            <Text style={[styles.sectionInfoNormal, styles.sm]}>{address}</Text>
         </View>
     );
 }

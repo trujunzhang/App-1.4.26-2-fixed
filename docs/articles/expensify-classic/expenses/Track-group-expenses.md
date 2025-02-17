@@ -2,7 +2,7 @@
 title: Track group expenses
 description: Use Attendee Tracking to track group expenses
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 Capture group and event expenses with Attendee Tracking by documenting who attended and the cost per attendee. The amount is always divided evenly between all attendees—different amounts cannot be allocated to specific attendees. To divide the amounts differently, you’ll first have to split the expense. 
 

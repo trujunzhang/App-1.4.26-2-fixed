@@ -3,30 +3,30 @@ title: Commercial Card Feeds
 description: Commercial Card Feeds
 ---
 # Overview
-A Commercial Card Feed is a connection that’s established directly between Ieatta and your bank. This type of connection is considered the most reliable way to import company card expenses. Commercial Card Feeds cannot be interrupted by common changes on the bank’s side such as updating login credentials or a change in the bank’s UI.
+A Commercial Card Feed is a connection that’s established directly between Expensify and your bank. This type of connection is considered the most reliable way to import company card expenses. Commercial Card Feeds cannot be interrupted by common changes on the bank’s side such as updating login credentials or a change in the bank’s UI.
 
-The easiest way to confirm if your company card program is eligible for a commercial bank feed is to ask your bank directly. If your company uses a commercial card program that isn’t with one of our Approved! Banking Partners (which supports connecting the feed via login credentials), the best way to import your company cards is by setting up a direct Commercial Card Feed between Ieatta and your bank.
+The easiest way to confirm if your company card program is eligible for a commercial bank feed is to ask your bank directly. If your company uses a commercial card program that isn’t with one of our Approved! Banking Partners (which supports connecting the feed via login credentials), the best way to import your company cards is by setting up a direct Commercial Card Feed between Expensify and your bank.
 
 # How to set up a Commercial Card Feed 
-Before setting up a Commercial Card Feed, you’ll want to set up your domain in Ieatta. You can do this by going to Settings > Domains > New Domain.
+Before setting up a Commercial Card Feed, you’ll want to set up your domain in Expensify. You can do this by going to Settings > Domains > New Domain.
 
-After the domain is set up in Ieatta, you can follow the instructions that correspond with your company’s card program.
+After the domain is set up in Expensify, you can follow the instructions that correspond with your company’s card program.
 
 # How to set up a MasterCard Commercial Feed 
-Your bank will need to access MasterCard's SmartData portal to complete the process. Ieatta is a registered vendor in the portal, so neither you, your bank, nor Ieatta need to complete any MasterCard forms. (Your bank may have its own form between you and the bank, though.)
+Your bank will need to access MasterCard's SmartData portal to complete the process. Expensify is a registered vendor in the portal, so neither you, your bank, nor Expensify need to complete any MasterCard forms. (Your bank may have its own form between you and the bank, though.)
 
 These are the steps you'll need to follow for a MasterCard feed:
-- Contact your banking relationship manager and request that your CDF (Common Data File) feed be sent directly to Ieatta in the MasterCard SmartData Portal (file type: CDF version 3 Release 11.01). Please also specify the date of the earliest transactions you require in the feed. 
-- The bank will initiate feed delivery by finding Ieatta in MasterCard's online portal. Once this is done, the bank will email you the distribution ID.
-- While you're waiting for your bank, make sure to set up a domain in Ieatta -- it's required for us to be able to add the card feed to your account!
-- Once you have the distribution ID, send it to us using the submission form [here](https://ieatta.typeform.com/to/cGlCAz?typeform-source=community.ieatta.com).
+- Contact your banking relationship manager and request that your CDF (Common Data File) feed be sent directly to Expensify in the MasterCard SmartData Portal (file type: CDF version 3 Release 11.01). Please also specify the date of the earliest transactions you require in the feed. 
+- The bank will initiate feed delivery by finding Expensify in MasterCard's online portal. Once this is done, the bank will email you the distribution ID.
+- While you're waiting for your bank, make sure to set up a domain in Expensify -- it's required for us to be able to add the card feed to your account!
+- Once you have the distribution ID, send it to us using the submission form [here](https://expensify.typeform.com/to/cGlCAz?typeform-source=community.expensify.com).
 - We will connect the feed once we receive the file details and notify you when the feed is enabled. 
 
 # How to set up a Visa Commercial Feed
 These are the steps you'll need to follow for a Visa feed:
-- Contact your banking relationship manager and request that your VCF (Variant Call Format) feed be sent directly to Ieatta. Feel free to share this information with them: "There is a check box in your bank's Visa Subscription Management portal that they, or their BPS team, can select to enable the feed. This means there is no need for a test file because Visa already has agreements with 3rd parties who receive the files."
+- Contact your banking relationship manager and request that your VCF (Variant Call Format) feed be sent directly to Expensify. Feel free to share this information with them: "There is a check box in your bank's Visa Subscription Management portal that they, or their BPS team, can select to enable the feed. This means there is no need for a test file because Visa already has agreements with 3rd parties who receive the files."
 - Ask your bank to send you the "feed filename" OR the raw file information. You'll need the Processor, Financial Institution (Bank), and Company IDs; these are available in Visa Subscription Management if your relationship manager is still looking for them.
-- Once you have the file information, send it to us using the submission form [here](https://ieatta.typeform.com/to/cGlCAz?typeform-source=community.ieatta.com).
+- Once you have the file information, send it to us using the submission form [here](https://expensify.typeform.com/to/cGlCAz?typeform-source=community.expensify.com).
 - While you're waiting for your bank, make sure to set up a domain -- it's required for us to be able to add the feed to your account!
 - We will connect the feed once we receive these details and notify you when the feed is enabled. 
 
@@ -37,7 +37,7 @@ Below are instructions for filling out each page of the Amex form:
 - PAGE 1
   - Corporation Name = the legal name of your company on file with American Express
   - Corporation Address = the legal address of your company
-  - Requested Feed Start Date = the date you want transactional data to start feeding into Ieatta. If you'd like historical data, be sure to date back as far as you'd prefer. You must put this date in an international date format (i.e., DD/MM/YY or spelled out January 1, 1900) to ensure the correct date.
+  - Requested Feed Start Date = the date you want transactional data to start feeding into Expensify. If you'd like historical data, be sure to date back as far as you'd prefer. You must put this date in an international date format (i.e., DD/MM/YY or spelled out January 1, 1900) to ensure the correct date.
   - Requestor Contact = the name of the individual party completing the request
   - Email address = the email address of the individual party completing the request
   - Control Account Number = the master or basic control account number corresponding to the cards you'd like to be on the feed. Please note this will not be a credit card number. If you need help with the correct control account number, please contact Amex.
@@ -57,10 +57,10 @@ While you're waiting for Amex, make sure to set up a domain -- it's required for
 Once the feed is complete, Amex will send you a Production Letter. This will have the feed information in it, which will look something like this:
 R123456_B123456789_GL1025_001_$DATE$$TIME$_$SEQ$
 
-Once you have the filename, send it to us using the submission form [here](https://ieatta.typeform.com/to/cGlCAz?typeform-source=community.ieatta.com).
+Once you have the filename, send it to us using the submission form [here](https://expensify.typeform.com/to/cGlCAz?typeform-source=community.expensify.com).
 
 # How to assign company cards
-After connecting your company cards with Ieatta, you can assign each card to its respective cardholder. 
+After connecting your company cards with Expensify, you can assign each card to its respective cardholder. 
 To assign cards go to Settings > Domains > [Your domain] > Company Cards.
 If you have more than one card feed, select the correct feed in the drop-down list in the Company Card section. 
 Once you’ve selected the appropriate feed, click the `Assign New Cards` button to populate the emails and last four digits of the cardholder. 
@@ -77,7 +77,7 @@ You can search the list using the last 4 digits of the card number. If no transa
 Note: if you're assigning a card by typing in the full PAN (the full card number), press the ENTER key on your keyboard after. The field may clear itself after pressing ENTER, but click Assign anyway and then verify that the assignment shows up in the cardholder table.
 
 ## Set the transaction start date (optional)
-Any transactions that were posted prior to this date will not be imported into Ieatta. If you do not make a selection, it will default to the earliest available transactions from the card. Note: We can only import data for the time period the bank is releasing to us. It's not possible to override the start date the bank has provided via this tool.
+Any transactions that were posted prior to this date will not be imported into Expensify. If you do not make a selection, it will default to the earliest available transactions from the card. Note: We can only import data for the time period the bank is releasing to us. It's not possible to override the start date the bank has provided via this tool.
 
 Click the Assign button
 Once assigned, you will see each cardholder associated with their card as well as the start date listed.
@@ -102,19 +102,19 @@ Note: If expenses are Processing and then rejected, they will also be deleted wh
 {% include faq-begin.md %}
 
 ## My Commercial Card feed is set up. Why is a specific card not coming up when I try to assign it to an employee?
-Cards will appear in the drop-down when activated and have at least one posted transaction. If the card is activated and has been used for a while and you're still not seeing it, please reach out to your Account Manager or message concierge@ieatta.com for further assistance.
+Cards will appear in the drop-down when activated and have at least one posted transaction. If the card is activated and has been used for a while and you're still not seeing it, please reach out to your Account Manager or message concierge@expensify.com for further assistance.
 
 ## Is there a fee for utilizing Commercial Card Feeds? 
 Nope! Commercial Card Feed setup comes at no extra cost and is a part of the Corporate Workspace pricing.
 
 ## What is the difference between Commercial Card feeds and your direct bank connections? 
-The direct bank connection is a connection set up with your login credentials for that account, while the Commercial Card feed is set up by your bank requesting that Visa/MasterCard/Amex send a daily transaction feed to Ieatta. The former can be done without the assistance of your bank or Ieatta, but the latter requires effort from your bank and Ieatta to get set up.
+The direct bank connection is a connection set up with your login credentials for that account, while the Commercial Card feed is set up by your bank requesting that Visa/MasterCard/Amex send a daily transaction feed to Expensify. The former can be done without the assistance of your bank or Expensify, but the latter requires effort from your bank and Expensify to get set up.
 
 ## I have a Small Business Amex account. Am I eligible to set up a Commercial Card feed? 
 If you have a Small Business or Triumph account, you may not be eligible for a Commercial Card feed and will need to use the direct bank connection for American Express Business.
 
-## What if my bank uses a Commercial Card program that isn't with one of Ieatta's Approved! Banking partners?
-If your company uses a Commercial Card program that isn’t with one of our Approved! Banking Partners (which supports connecting the feed via login credentials), the best way to import your company cards is by setting up a direct Commercial Card feed between Ieatta and your bank. Note the Approved! Banking Partners include: 
+## What if my bank uses a Commercial Card program that isn't with one of Expensify's Approved! Banking partners?
+If your company uses a Commercial Card program that isn’t with one of our Approved! Banking Partners (which supports connecting the feed via login credentials), the best way to import your company cards is by setting up a direct Commercial Card feed between Expensify and your bank. Note the Approved! Banking Partners include: 
 - Bank of America
 - Citibank
 - Capital One

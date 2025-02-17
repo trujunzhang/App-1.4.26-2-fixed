@@ -1,20 +1,20 @@
 ---
 title: Create a company workspace
-description: Get started with Ieatta by creating a workspace for your company
+description: Get started with Expensify by creating a workspace for your company
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 # Overview
 
-Welcome to Ieatta! If you are creating an Ieatta account for your company, follow the steps below to get started. 
+Welcome to Expensify! If you are creating an Expensify account for your company, follow the steps below to get started. 
 
 {% include info.html %}
-You can also schedule a free private onboarding session where one of our Setup Specialists will walk you through the entire process. Check your email and notifications in Ieatta for your unique signup link.
+You can also schedule a free private onboarding session where one of our Setup Specialists will walk you through the entire process. Check your email and notifications in Expensify for your unique signup link.
 {% include end-info.html %}
 
 # 1. Meet Concierge
 
-Your personal assistant, Concierge, lives on your Ieatta Home page on both desktop and the mobile app.
+Your personal assistant, Concierge, lives on your Expensify Home page on both desktop and the mobile app.
 
 Concierge will walk you through setting up your account and also provide:
 - Reminders to do things like submit your expenses
@@ -37,10 +37,10 @@ Connecting your business bank account allows you to:
 - Reimburse expenses via direct bank transfer
 - Pay bills
 - Collect invoice payments
-- Issue Ieatta Cards
+- Issue Expensify Cards
 
 {% include info.html %}
-The person who completes this process does not need to be a signer on the account, however they will be required to enter their own personal information as well. If someone other than the Ieatta account holder enters their personal information in this section, the details will be flagged for review, and adding the bank account to Ieatta will be delayed.
+The person who completes this process does not need to be a signer on the account, however they will be required to enter their own personal information as well. If someone other than the Expensify account holder enters their personal information in this section, the details will be flagged for review, and adding the bank account to Expensify will be delayed.
 {% include end-info.html %}
 
 To add a business bank account,
@@ -63,7 +63,7 @@ To add a business bank account,
            <li>Enter the legal business name.</li>
            <li>Enter the company address (Must be a physical location in the U.S. Maildrop address, P.O. boxes, or UPS Store addresses are flagged for review and will create a delay verifying the bank account).</li>
            <li>Enter the Tax Identification Number (TIN)</li>
-           <li>Enter the company website, formatted like https://www.ieatta.com</li>
+           <li>Enter the company website, formatted like https://www.expensify.com</li>
            <li>Enter the Industry Classification Code. You can locate a list of Industry Classification Codes <a href="https://www.sec.gov/corpfin/division-of-corporation-finance-standard-industrial-classification-sic-code-list">here</a>.</li>
            <li>Enter your personal information into the Requestor Information section, including your physical U.S. address and SSN issued from the U.S.</li>
            <li>Upload photos of your ID. It must be issued by the U.S. and be current (i.e., the expiration date must be in the future).</li>
@@ -74,7 +74,7 @@ To add a business bank account,
                   <li>If no individual owns more than 25% of the company you do not need to list any beneficial owners. In that case, be sure to leave both boxes unchecked under the Beneficial Owner Additional Information section.</li>
               </ul>
        </ul>
-   <li>Within 1-2 business days, Ieatta will send three test transactions to your bank account that you’ll enter into Ieatta to validate your bank account by either:</li>  
+   <li>Within 1-2 business days, Expensify will send three test transactions to your bank account that you’ll enter into Expensify to validate your bank account by either:</li>  
        <ul>
            <li>Clicking the validate task from Concierge on your Home page.</li>
            <li>Going to Settings > Account > Payments and clicking <b>Enter test transactions</b>.</li>
@@ -87,7 +87,7 @@ If after two business days you do not see these test transactions, click the gre
 
 # 4. Connect your accounting system
 
-If you use an external accounting system like QuickBooks, you can link it with Ieatta to help you import accounting data, code expenses, and more. 
+If you use an external accounting system like QuickBooks, you can link it with Expensify to help you import accounting data, code expenses, and more. 
 
 To add an accounting system integration,
 <ol type="a">
@@ -99,7 +99,7 @@ To add an accounting system integration,
    <li>Depending on the integration you selected, you’ll either be prompted with a login screen for the accounting system or additional steps for how to proceed.</li>
 </ol>
   
-For a walkthrough for how to set up a specific accounting system, visit our [Integrations](https://help.ieatta.com/ieatta-classic/hubs/integrations/) articles.  
+For a walkthrough for how to set up a specific accounting system, visit our [Integrations](https://help.expensify.com/expensify-classic/hubs/integrations/) articles.  
 
 # 5. Set approval rules
 
@@ -140,7 +140,7 @@ If disabled, receipts can be seen only by admins for the workspace or someone wh
        </ul>
    <li>Click the <b>Travel</b> tab and set the desired rules.</li>
        <ul>
-           <li>Determine what flight class and hotel rating Concierge should select when booking travel. Concierge can automatically book flights and hotels for your employees if they have an Ieatta card.</li>
+           <li>Determine what flight class and hotel rating Concierge should select when booking travel. Concierge can automatically book flights and hotels for your employees if they have an Expensify card.</li>
        </ul>
    <li>Click the <b>Per Diem</b> tab and set the desired rules.</li>
        <ul>
@@ -164,8 +164,8 @@ Add an extra layer of security to help keep your financial data safe and secure 
    <li>Download or open your authenticator app and either:</li>
        <ul>
            <li>Scan the QR code shown on your computer screen.</li>
-           <li>Enter the 6-digit code from your authenticator app into Ieatta and click <b>Verify</b>.</li>
+           <li>Enter the 6-digit code from your authenticator app into Expensify and click <b>Verify</b>.</li>
        </ul>
 </ol>
 
-When you log in to Ieatta in the future, you’ll be emailed a magic code that you’ll use to log in with. Then you’ll be prompted to open your authenticator app to get the 6-digit code and enter it into Ieatta. A new code regenerates every few seconds, so the code is always different. If the code time runs out, you can generate a new code as needed.
+When you log in to Expensify in the future, you’ll be emailed a magic code that you’ll use to log in with. Then you’ll be prompted to open your authenticator app to get the 6-digit code and enter it into Expensify. A new code regenerates every few seconds, so the code is always different. If the code time runs out, you can generate a new code as needed.

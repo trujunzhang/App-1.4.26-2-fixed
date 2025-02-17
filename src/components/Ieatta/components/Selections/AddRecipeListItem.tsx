@@ -1,7 +1,7 @@
-import Str from 'expensify-common/lib/str';
+import {Str} from 'expensify-common';
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
-import * as Expensicons from '@components/Icon/Expensicons';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
 import ImagePlaceholder from '@components/ImagePlaceholder';
 import PressableWithFeedback from '@components/Pressable/PressableWithFeedback';
 import SelectCircle from '@components/SelectCircle';
@@ -76,7 +76,7 @@ function AddRecipeListItem<TItem extends ChoiceRecipeItem>({
                             sourceUri={item.recipeUrl}
                             style={[styles.w100, styles.h100]}
                             imageType="png"
-                            placeholder={Expensicons.PNGBusinessMediumSquare}
+                            placeholder={Ieattaicons.PNGBusinessMediumSquare}
                         />
                     </View>
                     <View style={[styles.flex1, styles.flexColumn, styles.justifyContentCenter, styles.alignItemsStretch, styles.optionRow]}>

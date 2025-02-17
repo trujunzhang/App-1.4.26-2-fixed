@@ -72,22 +72,22 @@ You're all done! After the account is set, exported expenses will be mapped to t
 
 # Deep Dive
 ## Identifying company card transactions
-When you link your credit cards to Ieatta, the transactions will appear in each user's account on the Expenses page as soon as they're posted. You can identify transactions from centrally managed cards by seeing the locked card icon next to them. That icon indicates that they’re company card expenses:
+When you link your credit cards to Expensify, the transactions will appear in each user's account on the Expenses page as soon as they're posted. You can identify transactions from centrally managed cards by seeing the locked card icon next to them. That icon indicates that they’re company card expenses:
 [add image here]
 
 ## Importing historical transactions 
 
-After a card is connected via direct connection or via Approved! banks, Ieatta will import 30-90 days' worth of historical transactions to your account (the timeframe is based on your bank's discretion). Any historical expenses beyond that date range can be imported using the CSV spreadsheet import method. 
+After a card is connected via direct connection or via Approved! banks, Expensify will import 30-90 days' worth of historical transactions to your account (the timeframe is based on your bank's discretion). Any historical expenses beyond that date range can be imported using the CSV spreadsheet import method. 
 
 ## Using eReceipts 
-Ieatta eReceipts serve as digital substitutes for paper receipts in your purchase transactions, eliminating the necessity to retain physical receipts or utilize SmartScanning receipts. In the case of Ieatta Card transactions, eReceipts are automatically generated for all amounts. For other card programs, eReceipts are specifically generated for purchases amounting to $75 or less, provided the transactions are in USD.
+Expensify eReceipts serve as digital substitutes for paper receipts in your purchase transactions, eliminating the necessity to retain physical receipts or utilize SmartScanning receipts. In the case of Expensify Card transactions, eReceipts are automatically generated for all amounts in the following categories: Airlines, Commuter expenses, Gas, Groceries, Mail, Meals, Car rental, Taxis, and Utilities. For other card programs, eReceipts are specifically generated for purchases amounting to $75 or less, provided the transactions are in USD.
 To ensure seamless automatic importation, it's essential to maintain your transactions in US Dollars. Additionally, eReceipts can be directly imported from your bank account. Please be aware that CSV/OFX imported files of bank transactions do not support eReceipts.
-It's important to note that eReceipts are not generated for lodging expenses. Moreover, due to incomplete or inaccurate category information from certain banks, there may be instances of invalid eReceipts being generated for hotel purchases. If you choose to re-categorize expenses, a similar situation may arise. It's crucial to remember that our Ieatta eReceipt Guarantee excludes coverage for hotel and motel expenses.
+It's important to note that eReceipts are not generated for lodging expenses. Moreover, due to incomplete or inaccurate category information from certain banks, there may be instances of invalid eReceipts being generated for hotel purchases. If you choose to re-categorize expenses, a similar situation may arise. It's crucial to remember that our Expensify eReceipt Guarantee excludes coverage for hotel and motel expenses.
 
 {% include faq-begin.md %}
 ## What plan/subscription is required in order to manage corporate cards?
 Group Policy (Collect or Control plan only) 
-## When do my company card transactions import to Ieatta?
-Credit card transactions are imported to Ieatta once they’re posted to the bank account. This usually takes 1-3 business days between the point of purchase and when the transactions populate in your account.
+## When do my company card transactions import to Expensify?
+Credit card transactions are imported to Expensify once they’re posted to the bank account. This usually takes 1-3 business days between the point of purchase and when the transactions populate in your account.
 
 {% include faq-end.md %}

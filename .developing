@@ -19,3 +19,22 @@ IOURequestStepScan
         "@rnmapbox/maps": "10.1.20",
         "electron": "^29.2.0",
         "electron-builder": "24.13.2",
+
+import useWindowDimensions from '@hooks/useWindowDimensions';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
+
+const {isSmallScreenWidth} = useResponsiveLayout();
+
+import {Str} from 'expensify-common';
+
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
+
+SettingsModalStackNavigator
+
+
+    const [shouldHideGBRTooltip] = useOnyx(ONYXKEYS.NVP_SHOULD_HIDE_GBR_TOOLTIP, {initialValue: true});
+
+    const [shouldHideGBRTooltip] = useOnyx(ONYXKEYS.NVP_SHOULD_HIDE_GBR_TOOLTIP, {initialValue: true});
+
+
+    plugins/react-navigation-drawer-6.6.10/packages/native/src/useLinking.native.tsx

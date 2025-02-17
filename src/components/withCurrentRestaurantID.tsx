@@ -1,5 +1,4 @@
 import type {NavigationState} from '@react-navigation/native';
-import PropTypes from 'prop-types';
 import type {ComponentType, ForwardedRef, RefAttributes} from 'react';
 import React, {createContext, forwardRef, useCallback, useMemo, useState} from 'react';
 import getComponentDisplayName from '@libs/getComponentDisplayName';
@@ -17,15 +16,6 @@ type CurrentRestaurantIDContextProviderProps = {
 
 const CurrentRestaurantIDContext = createContext<CurrentRestaurantIDContextValue | null>(null);
 
-// TODO: Remove when depended components are migrated to TypeScript.
-const withCurrentRestaurantIDPropTypes = {
-    /** Function to update the state */
-    updateCurrentRestaurantID: PropTypes.func.isRequired,
-
-    /** The top most restaurant id */
-    currentRestaurantID: PropTypes.string,
-};
-
 const withCurrentRestaurantIDDefaultProps = {
     currentRestaurantID: '',
 };
@@ -39,7 +29,7 @@ function CurrentRestaurantIDContextProvider(props: CurrentRestaurantIDContextPro
      */
     const updateCurrentRestaurantID = useCallback(
         (state: NavigationState) => {
-            const restaurantID = Navigation.getTopmostRestaurantId(state) ?? '';
+            const restaurantID = Navigation.getTopmostRestaurantId(state) ?? '-1';
 
             /*
              * Make sure we don't make the restaurantID undefined when switching between the chat list and settings tab.
@@ -95,5 +85,5 @@ export default function withCurrentRestaurantID<TProps extends CurrentRestaurant
     return forwardRef(WithCurrentRestaurantID);
 }
 
-export {withCurrentRestaurantIDPropTypes, withCurrentRestaurantIDDefaultProps, CurrentRestaurantIDContextProvider, CurrentRestaurantIDContext};
+export {withCurrentRestaurantIDDefaultProps, CurrentRestaurantIDContextProvider, CurrentRestaurantIDContext};
 export type {CurrentRestaurantIDContextValue};

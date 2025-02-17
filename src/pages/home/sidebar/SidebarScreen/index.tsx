@@ -4,13 +4,13 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {useCallback, useRef} from 'react';
-import useWindowDimensions from '@hooks/useWindowDimensions';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import FreezeWrapper from '@libs/Navigation/FreezeWrapper';
 import BaseSidebarScreen from './BaseSidebarScreen';
 
 function SidebarScreen(props: any) {
     const popoverModal = useRef(null);
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
 
     /**
      * Method to hide popover when dragover.

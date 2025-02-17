@@ -2,7 +2,7 @@ name: 'Author Checklist Test'
 description: 'Verifies that the author checklist is filled out'
 inputs:
   GITHUB_TOKEN:
-    description: Auth token for New Ieatta Github
+    description: Auth token for New Expensify Github
     required: true
 runs:
   using: 'node20'

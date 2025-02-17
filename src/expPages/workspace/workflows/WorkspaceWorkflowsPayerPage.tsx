@@ -5,6 +5,7 @@ import type {OnyxEntry} from 'react-native-onyx';
 import Badge from '@components/Badge';
 import FullPageNotFoundView from '@components/BlockingViews/FullPageNotFoundView';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
+import {FallbackAvatar} from '@components/Icon/Expensicons';
 import ScreenWrapper from '@components/ScreenWrapper';
 import SelectionList from '@components/SelectionList';
 import type {ListItem, Section} from '@components/SelectionList/types';
@@ -17,13 +18,12 @@ import Navigation from '@libs/Navigation/Navigation';
 import * as OptionsListUtils from '@libs/OptionsListUtils';
 import * as PersonalDetailsUtils from '@libs/PersonalDetailsUtils';
 import * as PolicyUtils from '@libs/PolicyUtils';
-import * as UserUtils from '@libs/UserUtils';
 import type {SettingsNavigatorParamList} from '@navigation/types';
-import * as Policy from '@userActions/Policy';
+import AccessOrNotFoundWrapper from '@expPages/workspace/AccessOrNotFoundWrapper';
+import withPolicyAndFullscreenLoading from '@expPages/workspace/withPolicyAndFullscreenLoading';
+import type {WithPolicyAndFullscreenLoadingProps} from '@expPages/workspace/withPolicyAndFullscreenLoading';
+import * as Policy from '@userActions/Policy/Policy';
 import CONST from '@src/CONST';
-import AccessOrNotFoundWrapper from '@src/expPages/workspace/AccessOrNotFoundWrapper';
-import withPolicyAndFullscreenLoading from '@src/expPages/workspace/withPolicyAndFullscreenLoading';
-import type {WithPolicyAndFullscreenLoadingProps} from '@src/expPages/workspace/withPolicyAndFullscreenLoading';
 import type SCREENS from '@src/SCREENS';
 import type {PersonalDetailsList, PolicyEmployee} from '@src/types/onyx';
 import {isEmptyObject} from '@src/types/utils/EmptyObject';
@@ -67,7 +67,7 @@ function WorkspaceWorkflowsPayerPage({route, policy, personalDetails, isLoadingR
 
             const isOwner = policy?.owner === details?.login;
             const isAdmin = policyEmployee.role === CONST.POLICY.ROLE.ADMIN;
-            const shouldSkipMember = isDeletedPolicyEmployee(policyEmployee) || PolicyUtils.isIeattaTeam(details?.login) || (!isOwner && !isAdmin);
+            const shouldSkipMember = isDeletedPolicyEmployee(policyEmployee) || PolicyUtils.isExpensifyTeam(details?.login) || (!isOwner && !isAdmin);
 
             if (shouldSkipMember) {
                 return;
@@ -87,7 +87,7 @@ function WorkspaceWorkflowsPayerPage({route, policy, personalDetails, isLoadingR
                 rightElement: roleBadge,
                 icons: [
                     {
-                        source: UserUtils.getAvatar(details?.avatar, accountID),
+                        source: details.avatar ?? FallbackAvatar,
                         name: formatPhoneNumber(details?.login ?? ''),
                         type: CONST.ICON_TYPE_AVATAR,
                         id: accountID,
@@ -137,9 +137,9 @@ function WorkspaceWorkflowsPayerPage({route, policy, personalDetails, isLoadingR
     }, [formattedPolicyAdmins, formattedAuthorizedPayer, translate, searchTerm]);
 
     const headerMessage = useMemo(
-        () => (searchTerm && !sections[0].data.length ? translate('common.noResultsFound') : ''),
+        () => (searchTerm && !sections.at(0)?.data.length ? translate('common.noResultsFound') : ''),
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
         [translate, sections],
     );
 
@@ -151,7 +151,7 @@ function WorkspaceWorkflowsPayerPage({route, policy, personalDetails, isLoadingR
             return;
         }
 
-        Policy.setWorkspacePayer(policy?.id ?? '', authorizedPayerEmail);
+        Policy.setWorkspacePayer(policy?.id ?? '-1', authorizedPayerEmail);
         Navigation.goBack();
     };
 
@@ -186,12 +186,13 @@ function WorkspaceWorkflowsPayerPage({route, policy, personalDetails, isLoadingR
                     />
                     <SelectionList
                         sections={sections}
-                        textInputLabel={translate('optionsSelector.findMember')}
+                        textInputLabel={translate('selectionList.findMember')}
                         textInputValue={searchTerm}
                         onChangeText={setSearchTerm}
                         headerMessage={headerMessage}
                         ListItem={UserListItem}
                         onSelectRow={setPolicyAuthorizedPayer}
+                        shouldSingleExecuteRowSelect
                         showScrollIndicator
                     />
                 </ScreenWrapper>

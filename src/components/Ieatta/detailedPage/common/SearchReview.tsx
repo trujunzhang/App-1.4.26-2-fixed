@@ -8,7 +8,7 @@ import Tooltip from '@components/Tooltip';
 import useLocalize from '@hooks/useLocalize';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
-import type {OnReviewSearchChanged} from '@libs/Firebase/list/types/rows/review';
+import type {OnReviewSearchChanged} from '@libs/FirebaseIeatta/list/types/rows/review';
 import variables from '@styles/variables';
 
 type SearchReviewProps = {
@@ -49,7 +49,7 @@ function SearchReview({onReviewSearchChanged, placeholder, tooltip, style, conta
     return (
         <View style={containerStyle}>
             <Tooltip text={tooltip ?? translate('common.search')}>
-                <View style={[styles.searchContainer, style]}>
+                <View style={[styles.searchContainer, styles.backgroundHoverComponentBG, style]}>
                     <Icon
                         src={Expensicons.MagnifyingGlass}
                         width={variables.iconSizeSmall}

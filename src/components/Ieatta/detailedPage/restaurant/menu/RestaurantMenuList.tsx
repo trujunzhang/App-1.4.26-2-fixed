@@ -3,10 +3,10 @@ import {FlatList, StyleSheet, View} from 'react-native';
 import {MenusRowSkeletonView} from '@components/Ieatta/components/SkeletonViews';
 import SectionEmptyView from '@components/Ieatta/detailedPage/common/SectionEmptyView';
 import PageFlashListItemWithEvent from '@components/Ieatta/detailedPage/PageFlashListItemWithEvent';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
-import {buildRecipeHorizontalRows} from '@libs/Firebase/list/builder/recipe';
-import type {IPageRow, ModalNames} from '@libs/Firebase/list/types/page-row';
+import {buildRecipeHorizontalRows} from '@libs/FirebaseIeatta/list/builder/recipe';
+import type {IPageRow, ModalNames} from '@libs/FirebaseIeatta/list/types/page-row';
 import variables from '@styles/variables';
 import type {IFBRecipe} from '@src/types/firebase';
 
@@ -20,7 +20,7 @@ const keyExtractor = (item: IPageRow) => `row_${item.rowKey}`;
 
 function RestaurantMenuList({recipes, loadingForRecipes = false, modalName = 'recipe'}: RestaurantMenuListProps) {
     const styles = useThemeStyles();
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
 
     const rowsData = useMemo(() => buildRecipeHorizontalRows({isSmallScreenWidth, recipes, modalName}), [isSmallScreenWidth, recipes, modalName]);
 
@@ -42,7 +42,7 @@ function RestaurantMenuList({recipes, loadingForRecipes = false, modalName = 're
                 testID="page-recipes-flashlist"
                 keyExtractor={keyExtractor}
                 renderItem={({item}) => {
-                    return <PageFlashListItemWithEvent item={item} />;
+                    return <PageFlashListItemWithEvent pageRow={item} />;
                 }}
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={StyleSheet.flatten([styles.ph4])}

@@ -2,18 +2,18 @@
 title: Invite members and assign roles
 description: Invite new members to your workspace and assign them a role
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 Workspace Admins can invite new members to a workspace either by:
 
-- Enabling automatic access for members who sign up for Ieatta using their domain email address (like yourname@yourcompany.com)
+- Enabling automatic access for members who sign up for Expensify using their domain email address (like yourname@yourcompany.com)
 - Sending a link (you can copy the link and send it in Slack, Teams, etc.)
 - Sending an invitation email
 - Importing a list of new members 
 
 # Enable automatic access with company email
 
-Enabling pre-approvals allows members to automatically join your workspace when they create an Ieatta account using their domain email address (like yourname@yourcompany.com). 
+Enabling pre-approvals allows members to automatically join your workspace when they create an Expensify account using their domain email address (like yourname@yourcompany.com). 
 
 To enable automatic sign-up to your workspace:
 1. Hover over Settings, then click **Workspaces**. 
@@ -78,7 +78,7 @@ To add members in bulk,
 4. Click the desired workspace name. 
 5. Click the **Members** tab on the left.
 6. Click **Import from spreadsheet**.  
-7. Match the columns in your spreadsheet with the Ieatta data they correspond to. 
+7. Match the columns in your spreadsheet with the Expensify data they correspond to. 
 8. Click **Import**. 
 
 If you are utilizing the Advanced Approval feature, you can specify who each member should submit their expense reports to and who an approver should send approved reports for the next step in the approval process. If someone is the final approver, you can leave this field blank. 

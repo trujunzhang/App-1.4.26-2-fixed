@@ -3,6 +3,7 @@ import {View} from 'react-native';
 import DisplayNames from '@components/DisplayNames';
 import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useTheme from '@hooks/useTheme';
@@ -23,7 +24,7 @@ function EventSmallView({eventInRestaurantRow}: EventRowProps) {
                 <View style={[styles.flexRow, styles.alignItemsCenter]}>
                     <View style={[styles.alignItemsCenter, styles.justifyContentCenter]}>
                         <Icon
-                            src={Expensicons.EventInfo}
+                            src={Ieattaicons.EventInfo}
                             fill={theme.danger}
                             width={variables.iconSizeLarge}
                             height={variables.iconSizeLarge}
@@ -36,10 +37,9 @@ function EventSmallView({eventInRestaurantRow}: EventRowProps) {
                                 accessibilityLabel={translate('accessibilityHints.chatUserDisplayNames')}
                                 fullTitle={event.displayName}
                                 displayNamesWithTooltips={[]}
-                                // displayNamesWithTooltips={optionItem.displayNamesWithTooltips}
                                 tooltipEnabled
                                 numberOfLines={1}
-                                textStyles={[styles.optionDisplayName, styles.optionDisplayNameCompact, styles.fontMedium, styles.pre]}
+                                textStyles={[styles.optionDisplayName, styles.optionDisplayNameCompact, styles.textBold, styles.pre]}
                                 shouldUseFullTitle
                             />
                         </View>

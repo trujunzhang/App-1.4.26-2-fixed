@@ -2,7 +2,7 @@
 title: Create a group workspace
 description: Create a workspace for your team's expense reports
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 A workspace is the set of rules, settings, and spending limits for expense reports in your organization. This includes the unique expense categories and tags, budgets, currency and tax settings, etc. that all workspace members will use. A workspace also defines the approval workflow for your employees, as well as the accounting connection if using an accounting software integration.
 

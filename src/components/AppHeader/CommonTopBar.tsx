@@ -1,6 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
 import * as Expensicons from '@components/Icon/Expensicons';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
 import SearchWithLabel from '@components/Ieatta/components/SearchWithLabel';
 import Image from '@components/Image';
 import useLocalize from '@hooks/useLocalize';
@@ -8,9 +9,8 @@ import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import Navigation from '@libs/Navigation/Navigation';
 import SignInOrAvatarWithOptionalStatus from '@pages/home/sidebar/SignInOrAvatarWithOptionalStatus';
+import SearchRestaurantsButton from '@pages/searchPages/restaurants/SearchRouter/SearchRestaurantsButton';
 import variables from '@styles/variables';
-import * as Session from '@userActions/Session';
-import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';
 import Logo from './Logo';
 
@@ -28,7 +28,7 @@ function CommonTopBar() {
                         height: variables.iconSizeYelpLogoHeight,
                     },
                 ]}
-                source={Expensicons.YelpMenu}
+                source={Ieattaicons.YelpMenu}
             />
         );
     };
@@ -38,10 +38,9 @@ function CommonTopBar() {
             dataSet={{dragArea: true}}
         >
             <Logo />
-            <SearchWithLabel
-                placeholder={translate('headerPanel.search.buttonSearch')}
-                onPress={Session.checkIfActionIsAllowed(() => Navigation.navigate(ROUTES.SEARCH.getRoute(CONST.TAB_SEARCH.ALL)))}
-                containerStyle={[styles.flex1]}
+            <SearchRestaurantsButton
+                showAsButton={false}
+                style={[styles.flex1, styles.searchPressable]}
             />
             <SignInOrAvatarWithOptionalStatus isCreateMenuOpen={false} />
         </View>

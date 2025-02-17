@@ -1,6 +1,6 @@
 import React from 'react';
 import {ActivityIndicator, Image, StyleSheet, View} from 'react-native';
-import * as Expensicons from '@components/Icon/Expensicons';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
 import Text from '@components/Text';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
@@ -23,10 +23,10 @@ function BaseGoogleButton({isLoading}: BaseGoogleButtonProps) {
             ) : (
                 <Image
                     style={styles.signInGoogleLogoIcon}
-                    source={Expensicons.GoogleLogoIcon}
+                    source={Ieattaicons.GoogleLogoIcon}
                 />
             )}
-            <Text style={[styles.signInGoogleLogoText, styles.alignItemsCenter]}>Sign In with Google</Text>
+            <Text style={[styles.signInGoogleLogoText, styles.colorTextSupporting, styles.alignItemsCenter]}>Sign In with Google</Text>
         </View>
     );
 }

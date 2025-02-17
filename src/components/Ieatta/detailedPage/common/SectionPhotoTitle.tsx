@@ -1,12 +1,8 @@
 import React from 'react';
-import {View} from 'react-native';
-import Icon from '@components/Icon';
-import * as Expensicons from '@components/Icon/Expensicons';
-import type {ISectionTitleRow} from '@libs/Firebase/list/types/rows/common';
-import type {IPhotoRow} from '@libs/Firebase/list/types/rows/photo';
+import type {ISectionTitleRow} from '@libs/FirebaseIeatta/list/types/rows/common';
+import type {IPhotoRow} from '@libs/FirebaseIeatta/list/types/rows/photo';
 import Navigation from '@libs/Navigation/Navigation';
-import TailwindColors from '@styles/tailwindcss/colors';
-import variables from '@styles/variables';
+import type {TranslationPaths} from '@src/languages/types';
 import ROUTES from '@src/ROUTES';
 import SectionCommonTitle from './SectionCommonTitle';
 
@@ -21,12 +17,19 @@ function SectionPhotoTitle({photoItem}: SectionPhotoTitleProps) {
         isSmallScreenWidth: true,
     };
 
+    const getCameraIconToolTip = (): TranslationPaths => {
+        if (photoType === 'recipe') {
+            return 'photos.takePhoto.button.recipe';
+        }
+        return 'photos.takePhoto.button.restaurant';
+    };
+
     return (
         <SectionCommonTitle
             titleRow={titleRow}
-            shouldShowPlusIcon
-            plusIconToolTip="add.photo.title"
-            onPlusIconPressed={() => {
+            shouldShowCameraIcon
+            cameraIconToolTip={getCameraIconToolTip()}
+            onCameraIconPressed={() => {
                 Navigation.navigate(ROUTES.TAKE_PHOTO.getRoute({relatedId, photoType}));
             }}
         />

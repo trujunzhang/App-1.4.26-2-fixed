@@ -2,7 +2,7 @@
 title: Edit a report
 description: Make updates to a report
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
  
 You can update a report’s details such as the report title, workspace, report type, layout, and the attached expenses. 
 

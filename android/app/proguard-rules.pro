@@ -46,6 +46,12 @@
 -dontwarn org.jmrtd.protocol.BACResult
 -dontwarn org.jmrtd.protocol.PACEResult
 -dontwarn org.spongycastle.jce.provider.BouncyCastleProvider
+
+# Please add these rules to your existing keep rules in order to suppress warnings.
+# This is generated automatically by the Android Gradle plugin.
+-dontwarn kotlinx.parcelize.Parceler
+-dontwarn kotlinx.parcelize.Parcelize
+
 -keep class io.realm.react.**
 -keep public class com.dylanvann.fastimage.* {*;}
 -keep public class com.dylanvann.fastimage.** {*;}
@@ -55,3 +61,6 @@
   **[] $VALUES;
   public *;
 }
+# react-native-date-picker
+-keep public class net.time4j.android.ApplicationStarter
+-keep public class net.time4j.PrettyTime

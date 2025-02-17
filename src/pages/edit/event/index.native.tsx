@@ -1,5 +1,6 @@
 import type {StackScreenProps} from '@react-navigation/stack';
 import {useObject} from '@realm/react';
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import React from 'react';
@@ -13,6 +14,7 @@ import BaseEditEventPage from './BaseEditEventPage';
 
 type EditEventNavigationProps = StackScreenProps<RightIeattaNavigatorParamList, typeof SCREENS.RIGHT_IEATTA.EVENT>;
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 type EditEventPageProps = EditEventNavigationProps & {};
 
 function EditEventPage(props: EditEventPageProps) {

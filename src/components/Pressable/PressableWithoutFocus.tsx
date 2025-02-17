@@ -8,7 +8,7 @@ import type PressableProps from './GenericPressable/types';
  * We need to blur this element when clicked as it opens modal that implements focus-trapping.
  * When the modal is closed it focuses back to the last active element.
  * Therefore it shifts the element to bring it back to focus.
- * https://github.com/Ieatta/App/issues/6806
+ * https://github.com/Expensify/App/issues/6806
  */
 function PressableWithoutFocus({children, onPress, onLongPress, ...rest}: PressableProps) {
     const ref = useRef<View>(null);

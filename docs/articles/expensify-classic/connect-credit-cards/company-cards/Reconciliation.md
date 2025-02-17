@@ -4,14 +4,14 @@ description: How to reconcile company card transactions
 ---
 # Overview
 
-If your company imports corporate card transactions into Ieatta, you can reconcile them by using the Reconciliation dashboard under **Settings > Domains > Domain Name > Company Cards > Reconciliation**. To use the dashboard, simply enter the statement dates and click **Run**.    
+If your company imports corporate card transactions into Expensify, you can reconcile them by using the Reconciliation dashboard under **Settings > Domains > Domain Name > Company Cards > Reconciliation**. To use the dashboard, simply enter the statement dates and click **Run**.    
 
 # How to reconcile company cards  
 
 ## Confirm statement total  
 
-To confirm the total of transactions imported into Ieatta against a credit card statement: 
-1. Review the **Imported Total**, which shows the sum of all expenses imported into Ieatta for that statement period. This should match the total on your credit card statement. 
+To confirm the total of transactions imported into Expensify against a credit card statement: 
+1. Review the **Imported Total**, which shows the sum of all expenses imported into Expensify for that statement period. This should match the total on your credit card statement. 
 2. If there is a discrepancy, refresh the feed to import missing expenses. Click **Update all cards** for commercial card feeds, or update individual cards by clicking the blue cog icon and choosing **Update** for other feed types.
 3. After updating, click **Run** to update the transaction totals.
 
@@ -21,7 +21,7 @@ If there is a discrepancy between the totals on the credit card statement and th
 
 1. Sort the cards by clicking the heading for **Card Name/Number**, **Assignee** or **Total** and compare each card's total to the statement to determine which card(s) don't match the statement total.
 2. Click on the **Total** amount for a card to view the imported expenses and identify any that are missing from the statement. Confirm that all cards have been assigned to cardholders, as this could be another reason that the Imported Total doesn't match the statement.
-3. If there is still a discrepancy after updating and re-calculating the totals, please contact concierge@ieatta.com and provide the details of the expenses that are showing on your statement but are missing in Ieatta. To investigate, we’ll need the cardholder email, expense date, and amount. Keep in mind sorting by column heading also makes locating expenses easier.
+3. If there is still a discrepancy after updating and re-calculating the totals, please contact concierge@expensify.com and provide the details of the expenses that are showing on your statement but are missing in Expensify. To investigate, we’ll need the cardholder email, expense date, and amount. Keep in mind sorting by column heading also makes locating expenses easier.
 
 # Deep dive  
 

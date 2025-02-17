@@ -2,15 +2,17 @@ import type {PushPayload} from '@ua/react-native-airship';
 import Airship, {EventType} from '@ua/react-native-airship';
 import Onyx from 'react-native-onyx';
 import Log from '@libs/Log';
+import ShortcutManager from '@libs/ShortcutManager';
 import * as PushNotificationActions from '@userActions/PushNotification';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ForegroundNotifications from './ForegroundNotifications';
-import type {NotificationData} from './NotificationType';
+import type {PushNotificationData} from './NotificationType';
 import NotificationType from './NotificationType';
+import parsePushNotificationPayload from './parsePushNotificationPayload';
 import type {ClearNotifications, Deregister, Init, OnReceived, OnSelected, Register} from './types';
 import type PushNotificationType from './types';
 
-type NotificationEventActionCallback = (data: NotificationData) => Promise<void>;
+type NotificationEventActionCallback = (data: PushNotificationData) => Promise<void>;
 
 type NotificationEventActionMap = Partial<Record<EventType, Record<string, NotificationEventActionCallback>>>;
 
@@ -27,14 +29,8 @@ const notificationEventActionMap: NotificationEventActionMap = {};
  */
 function pushNotificationEventCallback(eventType: EventType, notification: PushPayload) {
     const actionMap = notificationEventActionMap[eventType] ?? {};
-    let payload = notification.extras.payload;
 
-    // On Android, some notification payloads are sent as a JSON string rather than an object
-    if (typeof payload === 'string') {
-        payload = JSON.parse(payload);
-    }
-
-    const data = payload as NotificationData;
+    const data = parsePushNotificationPayload(notification.extras.payload);
 
     Log.info(`[PushNotification] Callback triggered for ${eventType}`);
 
@@ -85,7 +81,7 @@ function refreshNotificationOptInStatus() {
  * from a headless JS process, outside of any react lifecycle.
  *
  * WARNING: Moving or changing this code could break Push Notification processing in non-obvious ways.
- *          DO NOT ALTER UNLESS YOU KNOW WHAT YOU'RE DOING. See this PR for details: https://github.com/Ieatta/App/pull/3877
+ *          DO NOT ALTER UNLESS YOU KNOW WHAT YOU'RE DOING. See this PR for details: https://github.com/Expensify/App/pull/3877
  */
 const init: Init = () => {
     // Setup event listeners
@@ -130,7 +126,7 @@ const register: Register = (notificationID) => {
             // Refresh notification opt-in status NVP for the new user.
             refreshNotificationOptInStatus();
         })
-        .catch((error) => {
+        .catch((error: Record<string, unknown>) => {
             Log.warn('[PushNotification] Failed to register for push notifications! Reason: ', error);
         });
 };
@@ -144,11 +140,12 @@ const deregister: Deregister = () => {
     Airship.removeAllListeners(EventType.PushReceived);
     Airship.removeAllListeners(EventType.NotificationResponse);
     ForegroundNotifications.disableForegroundNotifications();
+    ShortcutManager.removeAllDynamicShortcuts();
 };
 
 /**
  * Bind a callback to a push notification of a given type.
- * See https://github.com/Ieatta/Web-Ieatta/blob/main/lib/MobilePushNotifications.php for the various
+ * See https://github.com/Expensify/Web-Expensify/blob/main/lib/MobilePushNotifications.php for the various
  * types of push notifications sent, along with the data that they provide.
  *
  * Note: This implementation allows for only one callback to be bound to an Event/Type pair. For example,

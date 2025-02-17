@@ -1,12 +1,13 @@
 /* eslint-disable no-restricted-imports */
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line no-restricted-imports,lodash/import-scope
 import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import type {ChoiceOrderedUserItem} from '@components/Ieatta/components/Selections/types';
 import type {SectionListDataType} from '@components/SelectionList/types';
-import CONST from '@src/CONST';
+// import type {ChoiceOrderedUserItem} from '@components/Ieatta/components/Selections/types';
+// import type {SectionListDataType} from '@components/SelectionList/types';
 import type {IFBPhoto, IFBReview, IFBUser} from '@src/types/firebase';
-import type {PersonalDetails, PersonalDetailsList} from '@src/types/onyx';
+import type {PersonalDetailsList} from '@src/types/onyx';
 import {isEmptyObject} from '@src/types/utils/EmptyObject';
 
 type ConvertToRadioItemParamsForUsers = {
@@ -43,10 +44,10 @@ function convertToRadioItemForUsers({
         {
             title: orderedUsersTitle,
             shouldShow: !isEmptyObject(orderedUsers),
-            data: _.map(orderedUsers, (user) => {
+            data: _.map(orderedUsers, (user: IFBUser) => {
                 return {
                     userId: user.id,
-                    userUrl: lodashGet(user, 'originalUrl', CONST.IEATTA_URL_EMPTY),
+                    userUrl: user.originalUrl,
                     text: user.username,
                     alternateText: user.email,
                     isDisabled: true,
@@ -60,7 +61,7 @@ function convertToRadioItemForUsers({
             data: _.map(unOrderedUsers, (user) => {
                 return {
                     userId: user.id,
-                    userUrl: lodashGet(user, 'originalUrl', CONST.IEATTA_URL_EMPTY),
+                    userUrl: user.originalUrl,
                     text: user.username,
                     alternateText: user.email,
                     isDisabled: false,
@@ -72,6 +73,7 @@ function convertToRadioItemForUsers({
 }
 
 function toUserDict(users: IFBUser[]) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const userDict: Record<string, IFBUser> = Object.assign({}, ..._.map(users, (user) => ({[user.id]: user})));
 
     return userDict;

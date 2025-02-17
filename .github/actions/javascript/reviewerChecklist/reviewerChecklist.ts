@@ -3,7 +3,7 @@ import * as github from '@actions/github';
 import https from 'https';
 import GitHubUtils from '@github/libs/GithubUtils';
 
-const pathToReviewerChecklist = 'https://raw.githubusercontent.com/Ieatta/App/main/contributingGuides/REVIEWER_CHECKLIST.md';
+const pathToReviewerChecklist = 'https://raw.githubusercontent.com/Expensify/App/main/contributingGuides/REVIEWER_CHECKLIST.md';
 const reviewerChecklistContains = '# Reviewer Checklist';
 const issue: number = github.context.payload.issue?.number ?? github.context.payload.pull_request?.number ?? -1;
 const combinedComments: string[] = [];
@@ -55,16 +55,16 @@ function checkIssueForCompletedChecklist(numberOfChecklistItems: number) {
                 }
 
                 const whitespace = /([\n\r])/gm;
-                const comment = combinedComments[i].replace(whitespace, '');
+                const comment = combinedComments.at(i)?.replace(whitespace, '');
 
-                console.log(`Comment ${i} starts with: ${comment.slice(0, 20)}...`);
+                console.log(`Comment ${i} starts with: ${comment?.slice(0, 20)}...`);
 
                 // Found the reviewer checklist, so count how many completed checklist items there are
-                if (comment.indexOf(reviewerChecklistContains) !== -1) {
+                if (comment?.indexOf(reviewerChecklistContains) !== -1) {
                     console.log('Found the reviewer checklist!');
                     foundReviewerChecklist = true;
-                    numberOfFinishedChecklistItems = (comment.match(/- \[x\]/gi) ?? []).length;
-                    numberOfUnfinishedChecklistItems = (comment.match(/- \[ \]/g) ?? []).length;
+                    numberOfFinishedChecklistItems = (comment?.match(/- \[x\]/gi) ?? []).length;
+                    numberOfUnfinishedChecklistItems = (comment?.match(/- \[ \]/g) ?? []).length;
                 }
             }
 
@@ -90,7 +90,7 @@ function checkIssueForCompletedChecklist(numberOfChecklistItems: number) {
 
 getNumberOfItemsFromReviewerChecklist()
     .then(checkIssueForCompletedChecklist)
-    .catch((err) => {
+    .catch((err: string | Error) => {
         console.error(err);
         core.setFailed(err);
     });

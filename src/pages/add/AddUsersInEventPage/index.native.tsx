@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type {StackScreenProps} from '@react-navigation/stack';
 import {useQuery} from '@realm/react';
-import _ from 'lodash';
+// eslint-disable-next-line lodash/import-scope
 import lodashGet from 'lodash/get';
 import React from 'react';
 import {emptyEventTag, emptyRestaurantTag} from '@libs/ieatta/editFormUtils';

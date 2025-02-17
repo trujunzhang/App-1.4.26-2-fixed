@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unused-prop-types */
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import type {ReactNode} from 'react';
 import React, {useEffect, useRef} from 'react';
@@ -5,7 +7,7 @@ import {Image as RNImage, View} from 'react-native';
 import FullPageNotFoundView from '@components/BlockingViews/FullPageNotFoundView';
 import FullScreenLoadingIndicator from '@components/FullscreenLoadingIndicator';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
-import * as Expensicons from '@components/Icon/Expensicons';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
 import {PressableWithFeedback} from '@components/Pressable';
 import ScreenWrapper from '@components/ScreenWrapper';
 import ScrollViewWithContext from '@components/ScrollViewWithContext';
@@ -13,6 +15,7 @@ import Tooltip from '@components/Tooltip';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import {setIsLoading} from '@libs/actions/FormActions';
+import {clearDraftValuesByDraftId} from '@libs/ieatta/editFormUtils';
 import Navigation from '@libs/Navigation/Navigation';
 import type {OnyxFormKey} from '@src/ONYXKEYS';
 import type {Route} from '@src/ROUTES';
@@ -86,7 +89,7 @@ function EditPageWithSections({children = () => null, footer = null, headerText,
                 accessibilityLabel={translate('edit.reset')}
             >
                 <RNImage
-                    source={Expensicons.ResetIcon}
+                    source={Ieattaicons.ResetIcon}
                     style={[{width: 24, height: 24}]}
                 />
             </PressableWithFeedback>

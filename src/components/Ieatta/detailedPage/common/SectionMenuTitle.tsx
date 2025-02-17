@@ -1,6 +1,6 @@
 import React from 'react';
-import type {ISectionTitleRow} from '@libs/Firebase/list/types/rows/common';
-import type {IMenusInRestaurantRow} from '@libs/Firebase/list/types/rows/restaurant';
+import type {ISectionTitleRow} from '@libs/FirebaseIeatta/list/types/rows/common';
+import type {IMenusInRestaurantRow} from '@libs/FirebaseIeatta/list/types/rows/restaurant';
 import {navigationToEditRecipe} from '@libs/ieatta/editFormUtils';
 import SectionCommonTitle from './SectionCommonTitle';
 

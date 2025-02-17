@@ -1,9 +1,10 @@
 import type {StackScreenProps} from '@react-navigation/stack';
 import {useObject} from '@realm/react';
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import React from 'react';
-import {ReviewType} from '@libs/Firebase/constant';
+import {ReviewType} from '@libs/FirebaseIeatta/constant';
 import {emptyReviewTag} from '@libs/ieatta/editFormUtils';
 import type {RightIeattaNavigatorParamList} from '@libs/Navigation/types';
 import {RealmCollections} from '@libs/Realm/constant';

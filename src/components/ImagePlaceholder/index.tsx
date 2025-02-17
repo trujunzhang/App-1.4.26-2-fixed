@@ -4,23 +4,16 @@
 
 /* eslint-disable react/jsx-props-no-spreading */
 import React, {useState} from 'react';
+import type {ImageLoadEventData, ImageResizeMode, ImageSourcePropType, ImageStyle, NativeSyntheticEvent, StyleProp, TextStyle} from 'react-native';
 import {Image as RNImage, View} from 'react-native';
-import * as Expensicons from '@components/Icon/Expensicons';
+import type {SvgProps} from 'react-native-svg';
 import Image from '@components/Image';
+import type {ImageOnLoadEvent} from '@components/Image/types';
 import ImageSVG from '@components/ImageSVG';
 import useThemeStyles from '@hooks/useThemeStyles';
 import Log from '@libs/Log';
-
-type ImagePlaceholderProps = {
-    // placeholder: AvatarSource | ImageSourcePropType;
-    placeholder: any;
-    onLoad?: () => void;
-    imageType?: 'svg' | 'png';
-    // source?: AvatarSource | ImageURISource | number | string;
-    sourceUri: string | undefined;
-    // style?: StyleProp<ImageStyle> | undefined;
-    style?: any;
-};
+import type IconAsset from '@src/types/utils/IconAsset';
+import type {ImagePlaceholderProps} from './types';
 
 function ImagePlaceholder(props: ImagePlaceholderProps) {
     const {placeholder, onLoad, imageType, sourceUri = '', ...restProps} = props;
@@ -32,21 +25,25 @@ function ImagePlaceholder(props: ImagePlaceholderProps) {
         <View style={[styles.pAbsolute, styles.t0, styles.l0, styles.r0, styles.b0, {backgroundColor: 'transparent'}]}>
             {imageType === 'svg' ? (
                 <ImageSVG
-                    src={placeholder}
+                    src={placeholder as IconAsset}
                     // src={Expensicons.LargeEmptyBizSkyline}
                 />
             ) : (
                 <RNImage
                     style={[styles.w100, styles.h100, restProps.style]}
                     resizeMode="cover"
-                    source={placeholder}
+                    source={placeholder as ImageSourcePropType}
                     // source={Expensicons.PNGBusinessMediumSquare}
                 />
             )}
         </View>
     );
 
-    const imageUri = sourceUri.replace('http://res.cloudinary.com', 'https://res.cloudinary.com');
+    if (sourceUri === undefined || sourceUri === null || sourceUri === '') {
+        return placeContent;
+    }
+
+    const imageUri = (sourceUri || '').replace('http://res.cloudinary.com', 'https://res.cloudinary.com');
 
     // Log.info('');
     // Log.info('================================');
@@ -58,7 +55,7 @@ function ImagePlaceholder(props: ImagePlaceholderProps) {
         <Image
             {...restProps}
             source={{uri: imageUri}}
-            onLoad={() => {
+            onLoad={(event: ImageOnLoadEvent) => {
                 setShowPlaceholder(false);
             }}
             onError={() => {

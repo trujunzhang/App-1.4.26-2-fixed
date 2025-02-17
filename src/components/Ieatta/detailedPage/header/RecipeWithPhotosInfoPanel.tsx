@@ -6,9 +6,9 @@ import {PhotoCarouselScrollView} from '@components/Ieatta/components/PhotosCarou
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
-import {FBCollections, PhotoType, ReviewType} from '@libs/Firebase/constant';
-import {calcRateForRestaurant} from '@libs/Firebase/utils/rate_utils';
-import {formatByTimeAgo} from '@libs/Firebase/utils/timeago_helper';
+import {FBCollections, PhotoType, ReviewType} from '@libs/FirebaseIeatta/constant';
+import {calcRateForRestaurant} from '@libs/FirebaseIeatta/utils/rate_utils';
+import {formatByTimeAgo} from '@libs/FirebaseIeatta/utils/timeago_helper';
 import {navigationToEditRecipe, navigationToEditReview} from '@libs/ieatta/editFormUtils';
 import Navigation from '@libs/Navigation/Navigation';
 import TailwindColors from '@styles/tailwindcss/colors';

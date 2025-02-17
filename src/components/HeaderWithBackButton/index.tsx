@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, {useMemo} from 'react';
 import {Keyboard, StyleSheet, View} from 'react-native';
 import Avatar from '@components/Avatar';
@@ -8,6 +7,7 @@ import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
 import PinButton from '@components/PinButton';
 import PressableWithoutFeedback from '@components/Pressable/PressableWithoutFeedback';
+import SearchButton from '@components/Search/SearchRouter/SearchButton';
 import ThreeDotsMenu from '@components/ThreeDotsMenu';
 import Tooltip from '@components/Tooltip';
 import useKeyboardState from '@hooks/useKeyboardState';
@@ -33,7 +33,7 @@ function HeaderWithBackButton({
     onCloseButtonPress = () => Navigation.dismissModal(),
     onDownloadButtonPress = () => {},
     onThreeDotsButtonPress = () => {},
-    report = null,
+    report,
     policy,
     policyAvatar,
     shouldShowReportAvatarWithDisplay = false,
@@ -56,11 +56,14 @@ function HeaderWithBackButton({
         horizontal: 0,
     },
     threeDotsMenuItems = [],
+    threeDotsMenuIcon,
+    threeDotsMenuIconFill,
     shouldEnableDetailPageNavigation = false,
     children = null,
     shouldOverlayDots = false,
     shouldOverlay = false,
     shouldNavigateToTopMostReport = false,
+    shouldDisplaySearchRouter = false,
     progressBarPercentage,
     style,
 }: HeaderWithBackButtonProps) {
@@ -111,6 +114,7 @@ function HeaderWithBackButton({
         );
     }, [
         StyleUtils,
+        isCentralPaneSettings,
         policy,
         progressBarPercentage,
         report,
@@ -119,16 +123,19 @@ function HeaderWithBackButton({
         stepCounter,
         styles.flexGrow1,
         styles.headerProgressBar,
+        styles.headerProgressBarContainer,
+        styles.headerProgressBarFill,
         styles.textHeadlineH2,
         subtitle,
         title,
+        titleColor,
         translate,
     ]);
 
     return (
         <View
             // Hover on some part of close icons will not work on Electron if dragArea is true
-            // https://github.com/Ieatta/App/issues/29598
+            // https://github.com/Expensify/App/issues/29598
             dataSet={{dragArea: false}}
             style={[
                 styles.headerBar,
@@ -153,15 +160,16 @@ function HeaderWithBackButton({
                                 }
                                 const topmostReportId = Navigation.getTopmostReportId();
                                 if (shouldNavigateToTopMostReport && topmostReportId) {
-                                    Navigation.navigate(ROUTES.REPORT_WITH_ID.getRoute(topmostReportId));
+                                    // TODO: djzhang(2024/11/06)
+                                    // Navigation.navigate(ROUTES.REPORT_WITH_ID.getRoute(topmostReportId));
                                 } else {
                                     onBackButtonPress();
                                 }
                             }}
                             style={[styles.touchableButtonImage]}
-                            role="button"
+                            role={CONST.ROLE.BUTTON}
                             accessibilityLabel={translate('common.back')}
-                            nativeID={CONST.BACK_BUTTON_NATIVE_ID}
+                            id={CONST.BACK_BUTTON_NATIVE_ID}
                         >
                             <Icon
                                 src={Expensicons.BackArrow}
@@ -181,11 +189,9 @@ function HeaderWithBackButton({
                 {policyAvatar && (
                     <Avatar
                         containerStyles={[StyleUtils.getWidthAndHeightStyle(StyleUtils.getAvatarSize(CONST.AVATAR_SIZE.DEFAULT)), styles.mr3]}
-                        avatarUrl={policyAvatar?.avatarUrl}
-                        shouldShowAsAvatar={_.isUndefined(policyAvatar?.avatarUrl) === false}
                         source={policyAvatar?.source}
                         name={policyAvatar?.name}
-                        accountID={policyAvatar?.id}
+                        avatarID={policyAvatar?.id}
                         type={policyAvatar?.type}
                     />
                 )}
@@ -237,6 +243,8 @@ function HeaderWithBackButton({
                     {shouldShowPinButton && !!report && <PinButton report={report} />}
                     {shouldShowThreeDotsButton && (
                         <ThreeDotsMenu
+                            icon={threeDotsMenuIcon}
+                            iconFill={threeDotsMenuIconFill}
                             disabled={shouldDisableThreeDotsButton}
                             menuItems={threeDotsMenuItems}
                             onIconPress={onThreeDotsButtonPress}
@@ -260,6 +268,7 @@ function HeaderWithBackButton({
                             </PressableWithoutFeedback>
                         </Tooltip>
                     )}
+                    {shouldDisplaySearchRouter && <SearchButton style={styles.ml2} />}
                 </View>
             </View>
         </View>

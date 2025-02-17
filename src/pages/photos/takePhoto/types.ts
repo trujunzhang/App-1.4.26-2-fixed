@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 import type {StackScreenProps} from '@react-navigation/stack';
 import type {OnyxEntry} from 'react-native-onyx';
-import type {WithCurrentUserPersonalDetailsProps} from '@components/withCurrentUserPersonalDetails';
 import type {RightIeattaNavigatorParamList} from '@libs/Navigation/types';
-import type {WithWritableReportOrNotFoundProps} from '@src/expPages/iou/request/step/withWritableReportOrNotFound';
+import type {WithWritableReportOrNotFoundProps} from '@expPages/iou/request/step/withWritableReportOrNotFound';
 import type SCREENS from '@src/SCREENS';
 import type * as OnyxTypes from '@src/types/onyx';
 
@@ -14,7 +13,6 @@ type IEATTATakePhotoPageOnyxProps = {};
 
 type IEATTATakePhotoPageProps = IEATTATakePhotoNavigationProps &
     IEATTATakePhotoPageOnyxProps &
-    WithCurrentUserPersonalDetailsProps &
     WithWritableReportOrNotFoundProps<typeof SCREENS.MONEY_REQUEST.STEP_SCAN | typeof SCREENS.MONEY_REQUEST.CREATE> & {
         /** Holds data related to Money Request view state, rather than the underlying Money Request data. */
         transaction: OnyxEntry<OnyxTypes.Transaction>;

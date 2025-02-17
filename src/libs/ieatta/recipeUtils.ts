@@ -1,3 +1,4 @@
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import {ChoiceRecipeItem} from '@components/Ieatta/components/Selections/types';
 import {SectionListDataType} from '@components/SelectionList/types';

@@ -3,19 +3,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import lodashGet from 'lodash/get';
 import Onyx from 'react-native-onyx';
-import {updateDraftValuesForEditModelId} from '@libs/actions/FormActions';
-import {FBCollections} from '@libs/Firebase/constant';
+import {FBCollections} from '@libs/FirebaseIeatta/constant';
 import Navigation from '@libs/Navigation/Navigation';
 import CONST from '@src/CONST';
+import type {OnyxFormDraftKey, OnyxFormKey} from '@src/ONYXKEYS';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
 import type {EditEventForm} from '@src/types/form/ieatta/EditEventForm';
+import type {EditPhotoForm} from '@src/types/form/ieatta/EditPhotoForm';
 import type {EditRecipeForm} from '@src/types/form/ieatta/EditRecipeForm';
 import type {EditRestaurantForm} from '@src/types/form/ieatta/EditRestaurantForm';
 import type {EditReviewForm} from '@src/types/form/ieatta/EditReviewForm';
 
 // Current restaurat draft model is needed for handling
-let restaurantDraft: EditRestaurantForm | null = null;
+// let restaurantDraft: EditRestaurantForm | null = null;
+let restaurantDraft: EditRestaurantForm | undefined;
+// let restaurantDraft: OnyxEntry<EditRestaurantForm> = {};
 Onyx.connect({
     key: ONYXKEYS.FORMS.IEATTA_RESTAURANT_DRAFT,
     callback: (val) => {
@@ -24,7 +27,8 @@ Onyx.connect({
 });
 
 // Current event draft model is needed for handling
-let eventDraft: EditEventForm | null = null;
+// let eventDraft: EditEventForm | null = null;
+let eventDraft: EditEventForm | undefined;
 Onyx.connect({
     key: ONYXKEYS.FORMS.IEATTA_EVENT_DRAFT,
     callback: (val) => {
@@ -33,7 +37,8 @@ Onyx.connect({
 });
 
 // Current recipe draft model is needed for handling
-let recipeDraft: EditRecipeForm | null = null;
+// let recipeDraft: EditRecipeForm | null = null;
+let recipeDraft: EditRecipeForm | undefined;
 Onyx.connect({
     key: ONYXKEYS.FORMS.IEATTA_RECIPE_DRAFT,
     callback: (val) => {
@@ -41,8 +46,19 @@ Onyx.connect({
     },
 });
 
+// Current photo draft model is needed for handling
+// let photoDraft: EditRecipeForm | null = null;
+let photoDraft: EditPhotoForm | undefined;
+Onyx.connect({
+    key: ONYXKEYS.FORMS.IEATTA_PHOTO_DRAFT,
+    callback: (val) => {
+        photoDraft = val;
+    },
+});
+
 // Current review draft model is needed for handling
-let reviewDraft: EditReviewForm | null = null;
+// let reviewDraft: EditReviewForm | null = null;
+let reviewDraft: EditReviewForm | undefined;
 Onyx.connect({
     key: ONYXKEYS.FORMS.IEATTA_REVIEW_DRAFT,
     callback: (val) => {
@@ -50,8 +66,32 @@ Onyx.connect({
     },
 });
 
+type UpdateDraftValuesForEditModelIdParams = {formID: OnyxFormKey; editFormUniqueId: string; lastEditFormUniqueId: string};
+
+/**
+ * @param draftID
+ * @param editFormUniqueId
+ * @param lastEditFormUniqueId
+ */
+function updateDraftValuesForEditModelId({formID, editFormUniqueId, lastEditFormUniqueId}: UpdateDraftValuesForEditModelIdParams) {
+    if (editFormUniqueId === lastEditFormUniqueId) {
+        return;
+    }
+    // eslint-disable-next-line rulesdir/prefer-actions-set-data
+    Onyx.set(`${formID}Draft`, {editFormUniqueId});
+}
+
+/**
+ * @param draftID
+ */
+function clearDraftValuesByDraftId(formID: OnyxFormKey) {
+    // eslint-disable-next-line rulesdir/prefer-actions-set-data
+    Onyx.set(`${formID}Draft`, {});
+}
+
 const emptyRestaurantTag = `${FBCollections.Restaurants}-${CONST.IEATTA_MODEL_ID_EMPTY}`;
 const emptyEventTag = `${FBCollections.Events}-${CONST.IEATTA_MODEL_ID_EMPTY}`;
+const emptyPhotoTag = `${FBCollections.Photos}-${CONST.IEATTA_MODEL_ID_EMPTY}`;
 const emptyRecipeTag = `${FBCollections.Recipes}-${CONST.IEATTA_MODEL_ID_EMPTY}`;
 const emptyReviewTag = `${FBCollections.Reviews}-${CONST.IEATTA_MODEL_ID_EMPTY}`;
 const emptyPeopleInEventTag = `${FBCollections.PeopleInEvent}-${CONST.IEATTA_MODEL_ID_EMPTY}`;
@@ -81,7 +121,7 @@ function getEditFormValidDraftValues(formID: string, currentEditFormUniqueId: st
     return currentDraftValues;
 }
 
-function navigationToEditRestaurant(restaurantId: string) {
+function navigationToEditRestaurant({restaurantId = CONST.IEATTA_EDIT_MODEL_NEW}: {restaurantId?: string}) {
     updateDraftValuesForEditModelId({
         formID: ONYXKEYS.FORMS.IEATTA_RESTAURANT,
         editFormUniqueId: restaurantId,
@@ -105,6 +145,14 @@ function navigationToEditRecipe({recipeId = CONST.IEATTA_EDIT_MODEL_NEW, restaur
     });
     Navigation.navigate(ROUTES.EDIT_RECIPE.getRoute({recipeId, restaurantId}));
 }
+function navigationToEditPhoto({photoId = CONST.IEATTA_EDIT_MODEL_NEW}: {photoId?: string}) {
+    updateDraftValuesForEditModelId({
+        formID: ONYXKEYS.FORMS.IEATTA_RECIPE,
+        editFormUniqueId: photoId,
+        lastEditFormUniqueId: lodashGet(photoDraft ?? {}, 'editFormUniqueId', ''),
+    });
+    Navigation.navigate(ROUTES.EDIT_PHOTO.getRoute(photoId));
+}
 
 function navigationToEditReview({reviewId = CONST.IEATTA_EDIT_MODEL_NEW, relatedId, reviewType}: {reviewId?: string; relatedId: string; reviewType: string}) {
     updateDraftValuesForEditModelId({
@@ -120,10 +168,14 @@ export {
     navigationToEditEvent,
     navigationToEditRecipe,
     navigationToEditReview,
+    navigationToEditPhoto,
     getEditFormValidDraftValues,
     emptyRestaurantTag,
     emptyEventTag,
     emptyRecipeTag,
+    emptyPhotoTag,
     emptyReviewTag,
     emptyPeopleInEventTag,
+    updateDraftValuesForEditModelId,
+    clearDraftValuesByDraftId,
 };

@@ -3,13 +3,19 @@ title: Create categories
 description: Use categories to classify and organize expenses
 ---
 
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
-Categories can help you classify expenses by expense type. For example, Ieatta automatically provides default categories like fees, office supplies, travel, and more. 
+Categories can help you classify expenses by expense type. For example, Expensify automatically provides default categories like fees, office supplies, travel, and more. 
 
-You can choose to enable, disable, or edit the default Ieatta categories, or you can add or import your own custom categories. You can also add subcategories underneath existing categories.
+You can choose to enable, disable, or edit the default Expensify categories, or you can add or import your own custom categories. You can also add subcategories underneath existing categories.
 
 # Enable, disable, or edit default categories 
+
+Once you have manually added your categories or automatically imported them from a connected accounting system, you can enable or disable the categories to determine whether they can be added to expenses.
+
+{% include info.html %}
+Importing GL & payroll codes from your accounting system is only available on the Control plan.
+{% include end-info.html %}
 
 1. Hover over Settings, then click **Workspaces**. 
 2. Click the **Group** tab on the left. 
@@ -24,9 +30,9 @@ You can choose to enable, disable, or edit the default Ieatta categories, or you
 
 ## Automatic import with accounting integration
 
-Ieatta automatically imports your expense-related general ledger accounts as categories when you use an accounting integration (for example, QuickBooks Online, QuickBooks Desktop, Sage Intacct, Xero, or NetSuite).
+Expensify automatically imports your expense-related general ledger accounts as categories when you use an accounting integration (for example, QuickBooks Online, QuickBooks Desktop, Sage Intacct, Xero, or NetSuite).
 
-To update your categories in Ieatta, you must first update the category in your accounting system. Then in Ieatta, 
+To update your categories in Expensify, you must first update the category in your accounting system. Then in Expensify, 
 
 1. Hover over Settings, then click **Workspaces**. 
 2. Click the **Group** tab on the left. 
@@ -56,7 +62,7 @@ You can add a list of categories by importing them in a .csv, .txt, .xls, or .xl
    - Comments (Required/ Not Required)
    - Comment Hint
    - Expense Limit Type
-2. In Ieatta, hover over Settings, then click **Workspaces**. 
+2. In Expensify, hover over Settings, then click **Workspaces**. 
 3. Click the **Group** tab on the left. 
 4. Click the desired workspace name. 
 5. Click the **Categories** tab on the left.  
@@ -64,7 +70,7 @@ You can add a list of categories by importing them in a .csv, .txt, .xls, or .xl
 7. Review the guidelines, select the checkbox if your file has headers as the first row, and click **Upload File**. 
 
 {% include info.html %}
-Each time you upload a list of categories, it will override your previous list. To avoid losing categories, update your current spreadsheet and re-import it into Ieatta.
+Each time you upload a list of categories, it will override your previous list. To avoid losing categories, update your current spreadsheet and re-import it into Expensify.
 {% include end-info.html %}
 
 # Add subcategories

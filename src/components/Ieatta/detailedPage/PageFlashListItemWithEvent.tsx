@@ -6,22 +6,22 @@ import Hoverable from '@components/Hoverable';
 import {PressableWithFeedback} from '@components/Pressable';
 import PressableWithSecondaryInteraction from '@components/PressableWithSecondaryInteraction';
 import useLocalize from '@hooks/useLocalize';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
 import ControlSelection from '@libs/ControlSelection';
 import * as DeviceCapabilities from '@libs/DeviceCapabilities';
 import DomUtils from '@libs/DomUtils';
-import {RowPressableType} from '@libs/Firebase/list/constant';
+import {RowPressableType} from '@libs/FirebaseIeatta/list/constant';
 import {pageItemNavigateTo} from '@libs/ieatta/pageNavigationUtils';
 import CONST from '@src/CONST';
 import * as DetailedPageActionContextMenu from './ContextMenu/DetailedPageActionContextMenu';
 import PageFlashListItem from './PageFlashListItem';
 import type {PageFlashListItemEventProps} from './types';
 
-function PageFlashListItemWithEvent({item}: PageFlashListItemEventProps) {
+function PageFlashListItemWithEvent({pageRow}: PageFlashListItemEventProps) {
     const styles = useThemeStyles();
     const {translate} = useLocalize();
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
     const popoverAnchor = useRef<View>(null);
     const [isContextMenuActive, setIsContextMenuActive] = useState(() => false);
 
@@ -36,34 +36,34 @@ function PageFlashListItemWithEvent({item}: PageFlashListItemEventProps) {
             DetailedPageActionContextMenu.showContextMenu(
                 CONST.CONTEXT_MENU_TYPES.PAGE_ACTION,
                 event,
-                item,
+                pageRow,
                 popoverAnchor.current,
                 () => {},
                 () => setIsContextMenuActive(false),
             );
         },
-        [item],
+        [pageRow],
     );
 
     const content = (hovered: boolean) => (
         <PageFlashListItem
-            item={item}
+            pageRow={pageRow}
             hovered={hovered || isContextMenuActive}
         />
     );
 
     const renderItemWithEvent = () => {
-        switch (item.pressType) {
+        switch (pageRow.pressType) {
             case RowPressableType.SINGLE_PRESS: {
                 return (
                     <PressableWithFeedback
                         onPress={(event) => {
-                            pageItemNavigateTo(item);
+                            pageItemNavigateTo(pageRow);
                         }}
                         wrapperStyle={[]}
                         style={[]}
                         hoverStyle={[]}
-                        id={item.rowKey}
+                        id={pageRow.rowKey}
                         accessibilityLabel=""
                         role={CONST.ROLE.BUTTON}
                         hoverDimmingValue={1}
@@ -80,7 +80,7 @@ function PageFlashListItemWithEvent({item}: PageFlashListItemEventProps) {
                         onPressIn={() => isSmallScreenWidth && DeviceCapabilities.canUseTouchScreen() && ControlSelection.block()}
                         onPressOut={() => ControlSelection.unblock()}
                         onPress={() => {
-                            pageItemNavigateTo(item);
+                            pageItemNavigateTo(pageRow);
                         }}
                         onSecondaryInteraction={(event) => {
                             showPopover(event);

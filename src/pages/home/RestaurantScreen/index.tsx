@@ -1,14 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import {useCollectionOnce, useDocumentData} from 'react-firebase-hooks/firestore';
 import {usePagination} from 'react-firebase-pagination-hooks';
 import {DetailedPageSkeletonView} from '@components/Ieatta/components/SkeletonViews';
-import {FBCollections, ReviewType} from '@libs/Firebase/constant';
-import {getRestaurantID} from '@libs/Firebase/helper/RestaurantUtils';
-import type {RestartScreenNavigationProps} from '@libs/Firebase/helper/RestaurantUtils';
-import {defaultSortObject, SortTag} from '@libs/Firebase/review-sort';
-import * as FirebaseQuery from '@libs/Firebase/services/firebase-query';
-import {FirebaseReviewQuery} from '@libs/Firebase/services/review-query';
+import {FBCollections, ReviewType} from '@libs/FirebaseIeatta/constant';
+import type {RestartScreenNavigationProps} from '@libs/FirebaseIeatta/helper/RestaurantUtils';
+import {getRestaurantID} from '@libs/FirebaseIeatta/helper/RestaurantUtils';
+import {defaultSortObject} from '@libs/FirebaseIeatta/review-sort';
+import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
+import {FirebaseReviewQuery} from '@libs/FirebaseIeatta/services/review-query';
 import Variables from '@styles/variables';
 import type {IFBEvent, IFBRestaurant, IFBReview} from '@src/types/firebase';
 import BaseRestaurantScreen from './BaseRestaurantScreen';
@@ -90,17 +92,17 @@ function RestaurantScreen({route, navigation}: RestaurantScreenProps) {
 
     return (
         <BaseRestaurantScreen
-            restaurant={restaurant}
-            route={route}
-            fetchMoreReviews={fetchMoreReviews}
-            restaurantId={restaurantId}
             navigation={navigation}
+            route={route}
+            restaurantId={restaurantId}
+            restaurant={restaurant}
             eventsInRestaurant={{events, loadingForEvents}}
             reviews={reviews}
             shouldShowLoading={loadingForRestaurant}
             loadingContent={<DetailedPageSkeletonView />}
             onReviewSearchChanged={onReviewSearchChanged}
             onReviewSortChanged={onReviewSortChanged}
+            fetchMoreReviews={fetchMoreReviews}
         />
     );
 }

@@ -1,15 +1,15 @@
 <div align="center">
     <div style="display: flex; justify-content: center; align-items: center;">
-        <a href="https://new.ieatta.com">
-            <img src="https://raw.githubusercontent.com/Ieatta/App/main/web/favicon.png" width="64" height="64" alt="New Ieatta Icon">
+        <a href="https://new.expensify.com">
+            <img src="https://raw.githubusercontent.com/Expensify/App/main/web/favicon.png" width="64" height="64" alt="New Ieatta Icon">
         </a>
         <h1 style="margin: 24px">+</h1>
         <a href="https://www.electronjs.org/">
-            <img src="https://raw.githubusercontent.com/Ieatta/App/main/desktop/electron.png" width="64" height="64" alt="Electron Icon"/>
+            <img src="https://raw.githubusercontent.com/Expensify/App/main/desktop/electron.png" width="64" height="64" alt="Electron Icon"/>
         </a>
     </div>
     <h1>
-        <a href="https://new.ieatta.com">
+        <a href="https://new.expensify.com">
             New Ieatta
         </a>
         +
@@ -31,15 +31,15 @@ The New Ieatta desktop app is built using [Electron.js](https://www.electronjs.o
 The desktop app is organized in three pieces:
 
 1. The Electron main process 
-   - Implemented in https://github.com/Ieatta/App/blob/main/desktop/main.ts.
+   - Implemented in https://github.com/Expensify/App/blob/main/desktop/main.ts.
    - This file has access to the full set of Electron and Node.JS APIs. 
 2. The Electron renderer process
    - This is the webpack-bundled version of our react-native-web app (except using `index.desktop.js` files instead of `index.website.js`, where applicable)
    - This is _very_ similar to our web app, and code in this process should assume it will be run in the context of a browser (no access to `require`, Electron, or Node.js APIs)
 3. The context bridge
-   - Implemented in https://github.com/Ieatta/App/blob/main/desktop/contextBridge.ts
+   - Implemented in https://github.com/Expensify/App/blob/main/desktop/contextBridge.ts
    - The context bridge enables communication between the main and renderer processes. For example, if the renderer process needs to make use of a Node.js or Electron API it must:
-     1. Define an event in https://github.com/Ieatta/App/blob/main/desktop/ELECTRON_EVENTS.ts
+     1. Define an event in https://github.com/Expensify/App/blob/main/desktop/ELECTRON_EVENTS.ts
      2. Add that event to the whitelist defined in the context bridge
      3. Set up a handler for the event in the main process that can respond to the renderer process back through the bridge, if necessary.
 
@@ -48,7 +48,7 @@ Testing the auto-update process can be a little involved. The most effective way
 
 **Note:** In order to test with a notarized build, you'll need to have a paid Apple developer account.
 
-You can inspect auto-update related logs in the log file at `~/Library/Logs/new.ieatta.desktop/main.log`
+You can inspect auto-update related logs in the log file at `~/Library/Logs/new.expensify.desktop/main.log`
 
 ## Setting up Min.IO
 Rather than pushing new builds to the production S3 bucket, the best way to test locally is to use [Min.IO](https://min.io). Min.IO is an S3-compatible service that you can set up and deploy locally. In order to set up a local Min.IO instance to emulate an S3 bucket, follow these steps:
@@ -99,7 +99,7 @@ If you've already gone through the setup below, you can just run step 3 and then
 
 ## Local Changes to the App
 
-Once you have Min.IO setup and running, the next step is to temporarily revert some changes from https://github.com/Ieatta/App/commit/b640b3010fd7a40783d1c04faf4489836e98038d, specifically.
+Once you have Min.IO setup and running, the next step is to temporarily revert some changes from https://github.com/Expensify/App/commit/b640b3010fd7a40783d1c04faf4489836e98038d, specifically.
 
 1. Update the `desktop-build` command in `package.json` to add `--publish always` at the end
 2. Update `electronBuilder.config.js` to replace the `publish` value with the following:
@@ -148,11 +148,11 @@ The other half is about bundling the `main.ts` script which initializes Electron
 
 ## See what is getting packaged in the app
 If you suspect unnecessary items might be getting packaged, you can inspect the package content in `desktop-build/`. 
-The app content (`dist/www`) is archived under `/New\ Ieatta.app/Contents/Resources/app.asar`. 
+The app content (`dist/www`) is archived under `/New\ Expensify.app/Contents/Resources/app.asar`. 
 To see the actual `app.asar` content, run the following script:
 
 ```shell
-npx asar extract desktop-build/mac/New\ Ieatta.app/Contents/Resources/app.asar ./unpacked-asar
+npx asar extract desktop-build/mac/New\ Expensify.app/Contents/Resources/app.asar ./unpacked-asar
 ```
 
 The expected size of `app.asar` = `desktop/dist/www/` + `desktop/node_modules/`;
@@ -160,5 +160,5 @@ The expected size of `app.asar` = `desktop/dist/www/` + `desktop/node_modules/`;
 
 # Logging
 
-- `main` process logs are written to `~/Library/Logs/new.ieatta.desktop/main.log`
+- `main` process logs are written to `~/Library/Logs/new.expensify.desktop/main.log`
 - `renderer` logs can be observed live in the developer console (⌘ Cmd + ⌥ Option + I)

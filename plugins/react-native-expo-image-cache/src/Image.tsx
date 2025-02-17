@@ -1,11 +1,31 @@
-// @flow
+/* eslint-disable rulesdir/prefer-early-return */
+
+/* eslint-disable @lwc/lwc/no-async-await */
+
+/* eslint-disable react/state-in-constructor */
+
+/* eslint-disable react/static-property-placement */
+
+/* eslint-disable lodash/import-scope */
+
+/* eslint-disable no-restricted-imports */
+
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+
+/* eslint-disable @typescript-eslint/no-use-before-define */
+
+/* eslint-disable react/jsx-props-no-spreading */
 import * as _ from 'lodash';
 import * as React from 'react';
-import {Animated, ImageSourcePropType, ImageStyle, ImageURISource, Platform, Image as RNImage, StyleProp, StyleSheet, TextStyle, View} from 'react-native';
+import type {ImageLoadEventData, ImageSourcePropType, ImageStyle, ImageURISource, NativeSyntheticEvent, StyleProp, TextStyle} from 'react-native';
+import {Animated, Platform, Image as RNImage, StyleSheet, View} from 'react-native';
 // import { BlurView } from "expo-blur";
-import CacheManager, {DownloadOptions} from './CacheManager';
+import type {DownloadOptions} from './CacheManager';
+import CacheManager from './CacheManager';
 
-interface ImageProps {
+type ImageProps = {
     style?: StyleProp<TextStyle> | StyleProp<ImageStyle>;
     defaultSource?: ImageURISource | number;
     preview?: ImageSourcePropType;
@@ -13,13 +33,16 @@ interface ImageProps {
     uri: string;
     transitionDuration?: number;
     tint?: 'dark' | 'light';
-    onError: (error: {nativeEvent: {error: Error}}) => void;
-}
+    // onError: (error: { nativeEvent: { error: Error } }) => void;
 
-interface ImageState {
+    onError?: (error: {nativeEvent: {error: Error}}) => void;
+    onLoad?: (event: NativeSyntheticEvent<ImageLoadEventData>) => void;
+};
+
+type ImageState = {
     uri: string | undefined;
     intensity: Animated.Value;
-}
+};
 
 export default class Image extends React.Component<ImageProps, ImageState> {
     mounted = true;
@@ -60,22 +83,28 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     async load({uri, options = {}, onError}: ImageProps): Promise<void> {
         if (uri) {
             try {
-                const path = await CacheManager.get(uri, options).getPath();
-                if (this.mounted) {
-                    if (path) {
-                        this.setState({uri: path});
-                    } else {
-                        onError({nativeEvent: {error: new Error('Could not load image')}});
+                if (uri.startsWith('file://')) {
+                    if (this.mounted) {
+                        this.setState({uri});
+                    }
+                } else {
+                    const path = await CacheManager.get(uri, options).getPath();
+                    if (this.mounted) {
+                        if (path) {
+                            this.setState({uri: path});
+                        } else {
+                            // onError({nativeEvent: {error: new Error('Could not load image')}});
+                        }
                     }
                 }
             } catch (error: any) {
-                onError({nativeEvent: {error}});
+                // onError({nativeEvent: {error}});
             }
         }
     }
 
     render() {
-        const {preview, style, defaultSource, tint, ...otherProps} = this.props;
+        const {preview, style, defaultSource, tint, onError, onLoad, ...otherProps} = this.props;
         // const {uri, intensity} = this.state;
         const {uri} = this.state;
         const isImageReady = !!uri;
@@ -112,13 +141,15 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                     <RNImage
                         source={{uri}}
                         style={computedStyle}
+                        onError={onError}
+                        onLoad={onLoad}
                         {...otherProps}
                     />
                 )}
-                {/*{!!preview && Platform.OS === "ios" && <AnimatedBlurView style={computedStyle} {...{ intensity, tint }} />}*/}
-                {/*{!!preview && Platform.OS === "android" && (*/}
-                {/*  <Animated.View style={[computedStyle, { backgroundColor: tint === "dark" ? black : white, opacity }]} />*/}
-                {/*)}*/}
+                {/* {!!preview && Platform.OS === "ios" && <AnimatedBlurView style={computedStyle} {...{ intensity, tint }} />} */}
+                {/* {!!preview && Platform.OS === "android" && ( */}
+                {/*  <Animated.View style={[computedStyle, { backgroundColor: tint === "dark" ? black : white, opacity }]} /> */}
+                {/* )} */}
             </View>
         );
     }

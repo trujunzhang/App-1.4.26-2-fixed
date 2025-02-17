@@ -1,4 +1,4 @@
-# [New Ieatta](https://new.ieatta.com) GitHub Workflows
+# [New Expensify](https://new.expensify.com) GitHub Workflows
 
 ## Important tip for creating GitHub Workflows
 All inputs and outputs to GitHub Actions and any data passed between jobs or workflows is JSON-encoded (AKA, strings). Keep this in mind whenever writing GitHub workflows – you may need to JSON-decode variables to access them accurately. Here's an example of a common way to misuse GitHub Actions data:
@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: myTrueAction
-        uses: Ieatta/my-action-outputs-true@main
+        uses: Expensify/my-action-outputs-true@main
 
       - id: myFalseAction
-        uses: Ieatta/my-action-outputs-false@main
+        uses: Expensify/my-action-outputs-false@main
 
       # This correctly outputs `true`, but it's a string
       - run: echo ${{ steps.myTrueAction.outputs.isTrue }}
@@ -88,7 +88,7 @@ The GitHub workflows require a large list of secrets to deploy, notify and test 
    1. `ios/NewApp_AppStore.mobileprovision.gpg`
    1. `ios/NewApp_AppStore_Notification_Service.mobileprovision.gpg`
    1. `ios/Certificates.p12.gpg`
-1. `SLACK_WEBHOOK` - Sends Slack notifications via Slack WebHook https://ieatta.slack.com/services/B01AX48D7MM
+1. `SLACK_WEBHOOK` - Sends Slack notifications via Slack WebHook https://expensify.slack.com/services/B01AX48D7MM
 1. `OS_BOTIFY_TOKEN` - Personal access token for @OSBotify user in GitHub
 1. `CLA_BOTIFY_TOKEN` - Personal access token for @CLABotify user in GitHub
 1. `CSC_LINK` - Required to be set for desktop code signing: https://www.electron.build/code-signing.html#travis-appveyor-and-other-ci-servers
@@ -98,8 +98,8 @@ The GitHub workflows require a large list of secrets to deploy, notify and test 
 1. `AWS_ACCESS_KEY_ID` - Required for hosting website and desktop compiled code
 1. `AWS_SECRET_ACCESS_KEY` - Required for hosting website and desktop compiled code
 1. `CLOUDFLARE_TOKEN` - Required for hosting website
-1. `APPLE_CONTACT_EMAIL` - Email used for contact between Ieatta and Apple for https://appstoreconnect.apple.com/
-1. `APPLE_CONTACT_PHONE` - Phone number used for contact between Ieatta and Apple for https://appstoreconnect.apple.com/
+1. `APPLE_CONTACT_EMAIL` - Email used for contact between Expensify and Apple for https://appstoreconnect.apple.com/
+1. `APPLE_CONTACT_PHONE` - Phone number used for contact between Expensify and Apple for https://appstoreconnect.apple.com/
 1. `APPLE_DEMO_EMAIL` - Demo account email used for https://appstoreconnect.apple.com/
 1. `APPLE_DEMO_PASSWORD` - Demo account password used for https://appstoreconnect.apple.com/
 1. `BROWSERSTACK` - Used to access Browserstack's API
@@ -113,7 +113,7 @@ Furthermore, secrets are not accessible in actions. If you need to access a secr
 
 All these _workflows_ are comprised of atomic _actions_. Most of the time, we can use pre-made and independently maintained actions to create powerful workflows that meet our needs. However, when we want to do something very specific or have a more complex or robust action in mind, we can create our own _actions_.
 
-All our actions are stored in the neighboring directory [`.github/actions`](https://github.com/Ieatta/App/tree/main/.github/actions). There are two kinds of actions, [composite actions](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action), and [JavaScript actions](https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action).
+All our actions are stored in the neighboring directory [`.github/actions`](https://github.com/Expensify/App/tree/main/.github/actions). There are two kinds of actions, [composite actions](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action), and [JavaScript actions](https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action).
 
 All actions must have an "action metadata file" called `action.yml`. This describes the action, gives it a name, and defines its inputs and outputs. For composite actions, it also includes the run steps.
 

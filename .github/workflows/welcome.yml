@@ -21,10 +21,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - name: Check whether the PR author is member of Ieatta/ieatta team
-        id: isIeattaEmployee
+      - name: Check whether the PR author is member of Expensify/expensify team
+        id: isExpensifyEmployee
         run: |
-          if gh api /orgs/Ieatta/teams/ieatta-ieatta/memberships/${{ steps.getMergedPullRequest.outputs.author }} --silent; then
+          if gh api /orgs/Expensify/teams/expensify-expensify/memberships/${{ steps.getMergedPullRequest.outputs.author }} --silent; then
             echo "IS_EXPENSIFY_EMPLOYEE=true" >> "$GITHUB_OUTPUT"
           else
             echo "IS_EXPENSIFY_EMPLOYEE=false" >> "$GITHUB_OUTPUT"
@@ -42,9 +42,9 @@ jobs:
         if: ${{ fromJSON(steps.getPRCount.outputs.PR_COUNT) == 1 }}
         run: |
           gh pr comment ${{ steps.getMergedPullRequest.outputs.number }} --body \
-          "@${{ steps.getMergedPullRequest.outputs.author }}, Great job getting your first Ieatta/App pull request over the finish line! :tada:
+          "@${{ steps.getMergedPullRequest.outputs.author }}, Great job getting your first Expensify/App pull request over the finish line! :tada:
 
-          I know there's a lot of information in our [contributing guidelines](https://github.com/Ieatta/App/blob/main/contributingGuides/CONTRIBUTING.md), so here are some points to take note of :memo::
+          I know there's a lot of information in our [contributing guidelines](https://github.com/Expensify/App/blob/main/contributingGuides/CONTRIBUTING.md), so here are some points to take note of :memo::
 
           1. Now that your first PR has been merged, you can be hired for another issue. Once you've completed a few issues, you may be eligible to work on more than one job at a time.
           2. Once your PR is deployed to our staging servers, it will undergo quality assurance (QA) testing. If we find that it doesn't work as expected or causes a regression, you'll be responsible for fixing it. Typically, we would revert this PR and give you another chance to create a similar PR without causing a regression.

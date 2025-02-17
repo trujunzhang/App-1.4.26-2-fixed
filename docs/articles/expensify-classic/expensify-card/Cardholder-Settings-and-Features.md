@@ -1,86 +1,63 @@
 ---
 title:  Cardholder Settings and Features
-description: Ieatta Card Settings for Employees
+description: Expensify Card Settings for Employees
 ---
 
-# How to use your Ieatta Visa® Commercial Card
-Once you receive your card, you can start using it right away. 
+# Using Your Expensify Visa® Commercial Card
 
-First, you'll want to take note of the Smart Limit tied to your card – this is listed in your card settings via **Settings > Account > Credit Card Import**. This limit represents the total amount of unapproved expenses you can have on the card.
+### Activate Your Card
+You can start using your card immediately upon receipt by logging into your Expensify account, heading to your Home tab, and following the prompts on the _**Activate your Expensify Card**_ task. 
 
-It's crucial to continuously submit your expenses promptly, as that'll ensure they can be approved and restore your full limit. You can always chat with your admin if you need your limit adjusted.
+### Review your Card's Smart Limit
+Check your card’s Smart Limit via  _**Settings > Account > Credit Card Import**_: 
+- This limit is the total amount of unapproved expenses you can have on the card.
+- If a purchase is more than your card's Smart Limit, it will be declined. 
 
-You can swipe your Ieatta Card like you would with any other card. As you make purchases, you'll get instant alerts on your phone letting you know if you need to SmartScan receipts. Any SmartScanned receipts should merge with the card expense automatically.
+## Managing Expenses
+- **Submit Expenses Promptly**: Submit your expenses regularly to restore your full limit. Contact your admin if you need a limit adjustment.
+- **Using Your Card**: Swipe your Expensify Card like any other card. You’ll receive instant alerts on your phone for SmartScan receipts. SmartScanned receipts will merge automatically with card expenses.
+- **eReceipts**: If your organization doesn’t require itemized receipts, Expensify will generate IRS-compliant eReceipts for all non-lodging transactions.
+- **Reporting Expenses**: Report and submit Expensify Card expenses as usual. Approved expenses refresh your Smart Limit.
 
-If your organization doesn't require itemized receipts, you can rely on eReceipts instead. As long as the expense isn't lodging-related, Ieatta will automatically generate an IRS-compliant eReceipt for every transaction.
+## Enabling Notifications
+Download the Expensify mobile app and enable push notifications to stay updated on spending activity and potential fraud.
 
-You can report and submit Ieatta Card expenses just like any other expenses. As they're approved, your Smart Limit will be refreshed accordingly, allowing you to keep making purchases.
+#### For iPhone:
+1. Open the Expensify app and tap the three-bar icon in the upper-left corner.
+2. Tap _**Settings > enable Receive real-time alerts**_.
+3. Accept the confirmation to access your iPhone’s notification settings for Expensify.
+4. Turn on **Allow Notifications** and select your notification types.
 
-## Enable Notifications
-Download the Ieatta mobile app and enable push notifications to stay current on your spending activity. Your card is connected to your Ieatta account, so each transaction on your card will trigger a push notification. We'll also send you a push notification if we detect potentially fraudulent activity and allow you to confirm your purchase. 
+#### For Android:
+1. Go to _**Settings > Apps and Notifications**_.
+2. Find and open Expensify and enable notifications.
+3. Customize your alerts based on your phone model.
 
-Follow the steps below to enable real-time alerts on your mobile device.
+## Using Your Virtual Card
+- **Access Details**: You can view your virtual card details (card number, expiration date, CVC) via _**Settings > Account > Credit Card Import > Show Details**_. The virtual and physical cards share the same limit.
+- **Purchases**: Use the virtual card for online, in-app, and in-person payments when linked to a mobile wallet (Apple Pay or Google Pay).
 
-**If you have an iPhone**:
-1. Open the Ieatta app and tap the three-bar icon in the upper-left corner
-2. Tap **Settings** and enable **Receive realtime alerts**
-3. Accept the confirmation dialogue to go to your iPhone's notification settings for Ieatta. Turn on Allow Notifications, and choose the notification types you’d like!
+#### Adding to a Digital Wallet
+To add your Expensify Card to a digital wallet, follow the steps below:
+  1. Tap the three-bar icon in the upper-left corner.
+  2. Tap _**Settings > Connected Cards**_.
+  3. Tap **Add to Apple Wallet** or **Add to Gpay**, depending on your device.
+  4. Complete the steps as prompted.
 
-**If you have an Android**:
-1. Go to Settings and open 'Apps and Notifications'.
-2. Find and open Ieatta and enable notifications.
-3. Customize your alerts. Depending on your phone model, you may have extra options to customize the types of notifications you receive.
-
-## Your virtual card
-Once you're assigned a limit, you'll be able to use your virtual card immediately. You can view your virtual card details via **Settings > Account > Credit Card Import > Show Details**. Keep in mind that your virtual card and physical card share a limit.
-
-The virtual Ieatta Card includes a card number, expiration date, and security code (CVC). You can use the virtual card for online purchases, in-app transactions, and in-person payments once it's linked to a mobile wallet (Apple Pay or Google Pay).
-
-## How to access your virtual card details
-Here's how to access your virtual card details via the Ieatta mobile app:
-1. Tap the three-bar icon in the upper-left corner 
-2. Tap **Settings > Connected Cards**
-3. Under **Virtual Card**, tap **Show Details**
-
-From there, you can view your virtual card's number, CVV, expiration date, and billing address. 
-
-Here's how to access your virtual card details via the Ieatta web app:
-1. Head to **Settings > Account > Credit Card Import**
-2. Under **Virtual Card**, click **Show Details**
-
-From there, you can view your virtual card's card number, CVV, expiration date, and billing address.
-
-## How to add your virtual card to a digital wallet (Apple Pay or Google Pay)
-
-To use the Ieatta Card for contactless payment, add it to your digital wallet from the mobile app:
-1. Tap the three-bar icon in the upper-left corner 
-2. Tap **Settings > Connected Cards**
-3. Depending on your device, tap **Add to Apple Wallet** or **Add to Gpay** 
-4. Complete the remaining steps
-
-## Ieatta Card declines
-As long as you've enabled 'Receive real-time alerts', you'll get a notification explaining the reason for each decline. You can enable alerts in the mobile app by clicking on the three-bar icon in the upper-left corner > **Settings** > toggle **Receive real-time alerts**. 
-
-Here are some reasons an Ieatta Card transaction might be declined:
-
-- You have an insufficient card limit
-     - If a transaction exceeds your Ieatta Card's available limit, the transaction will be declined. You can see the remaining limit in the mobile app under **Settings > Connected Cards** or in the web app under **Settings > Account > Credit Card Import**. 
-     - Submitting expenses and getting them approved will free up your limit for more spending.
-
-- Your card isn't active yet or it was disabled by your Domain Admin
-- Your card information was entered incorrectly with the merchant. Entering incorrect card information, such as the CVC, ZIP, or expiration date, will also lead to declines. 
-There was suspicious activity
-- If Ieatta detects unusual or suspicious activity, we may block transactions as a security measure
-     - This could happen due to irregular spending patterns, attempted purchases from risky vendors, or multiple rapid transactions. 
-     - Check your Ieatta Home page to approve unusual merchants and try again.
-     - If the spending looks suspicious, we may complete a manual due diligence check, and our team will do this as quickly as possible - your cards will all be locked while this happens.  
-- The merchant is located in a restricted country
+## Handling Declines
+- **Real-Time Alerts**: Enable real-time alerts in the mobile app (_**Settings > toggle Receive real-time alerts**_) to get notifications for declines.
+- **Common Decline Reasons**:
+  - **Insufficient Limit**: Transactions exceeding the available limit will be declined. You can check your limit in _**Settings > Connected Cards**_ or _**Settings > Account > Credit Card Import**_.
+  - **Inactive or Disabled Card**: Ensure your card is active and not disabled by your Domain Admin.
+  - **Incorrect Information**: Entering incorrect card details (CVC, ZIP, expiration date) will result in declines.
+  - **Suspicious Activity**: Transactions may be blocked for unusual or suspicious activity. Check the Expensify Home page to approve unusual merchants. Suspicious spending may prompt a manual due diligence check, during which your cards will be locked.
+  - **Restricted Country**: Transactions from restricted countries will be declined.
 
 {% include faq-begin.md %}
-## Can I use Smart Limits with a free Ieatta account? 
+## Can I use Smart Limits with a free Expensify account? 
 If you're on the Free plan, you won't have the option to use Smart Limits. Your card limit will simply reset at the end of each calendar month.
 
-## I still haven't received my Ieatta Card. What should I do? 
-For more information on why your card hasn't arrived, you can check out this resource on [Requesting a Card](https://help.ieatta.com/articles/ieatta-classic/expensify-card/Request-the-Card#what-if-i-havent-received-my-card-after-multiple-weeks).
+## I still haven't received my Expensify Card. What should I do? 
+For more information on why your card hasn't arrived, you can check out this resource on [Requesting a Card](https://help.expensify.com/articles/expensify-classic/expensify-card/Request-the-Card#what-if-i-havent-received-my-card-after-multiple-weeks).
 
 {% include faq-end.md %}

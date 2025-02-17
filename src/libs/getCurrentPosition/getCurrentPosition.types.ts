@@ -1,5 +1,4 @@
 import type {ValueOf} from 'type-fest';
-import {watchCurrentPosition} from '@libs/getCurrentPosition/index.android';
 
 type GeolocationSuccessCallback = (position: {
     coords: {
@@ -16,7 +15,7 @@ type GeolocationSuccessCallback = (position: {
 
 type GeolocationErrorCodeType = ValueOf<typeof GeolocationErrorCode> | null;
 
-type GeolocationErrorCallback = (error: {
+type GeolocationErrorCallback = (error?: {
     code: GeolocationErrorCodeType;
     message: string;
     PERMISSION_DENIED: typeof GeolocationErrorCode.PERMISSION_DENIED;
@@ -54,8 +53,7 @@ type GeolocationOptions = {
 
 type GetCurrentPosition = (success: GeolocationSuccessCallback, error: GeolocationErrorCallback, options?: GeolocationOptions) => void;
 
-type WatchCurrentPosition = (success: GeolocationSuccessCallback, error: GeolocationErrorCallback, options?: GeolocationOptions) => void;
-
 export {GeolocationErrorCode};
 
+type WatchCurrentPosition = (success: GeolocationSuccessCallback, error: GeolocationErrorCallback, options?: GeolocationOptions) => void;
 export type {GeolocationSuccessCallback, GeolocationErrorCallback, GeolocationOptions, GetCurrentPosition, WatchCurrentPosition, GeolocationErrorCodeType};

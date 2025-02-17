@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
@@ -8,10 +10,11 @@
 
 /* eslint-disable no-restricted-imports */
 import type {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import type Realm from 'realm';
-import {ParseModelEvents, ParseModelPeopleInEvent, ParseModelRestaurants} from '@libs/Firebase/appModel';
-import type {IFirebaseDocumentData, IFirebaseQuerySnapshot} from '@libs/Firebase/types';
+import {ParseModelEvents, ParseModelPeopleInEvent, ParseModelRestaurants} from '@libs/FirebaseIeatta/appModel';
+import type {IFirebaseDocumentData} from '@libs/FirebaseIeatta/types';
 import Log from '@libs/Log';
 import {RealmCollections, RealmWriteMode} from '@libs/Realm/constant';
 import RealmHelper from '@libs/Realm/services/realm-helper';

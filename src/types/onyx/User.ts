@@ -1,3 +1,4 @@
+/** Model of user data */
 type User = {
     /** Whether or not the user is subscribed to news updates */
     isSubscribedToNewsletter: boolean;
@@ -14,10 +15,10 @@ type User = {
     /** Whether or not the user is on a public domain email account or not */
     isFromPublicDomain: boolean;
 
-    /** Whether or not the user use ieatta card */
-    isUsingIeattaCard: boolean;
+    /** Whether or not the user use expensify card */
+    isUsingExpensifyCard: boolean;
 
-    /** Whever Ieatta Card approval flow is ongoing - checking loginList for private domains */
+    /** Whever Expensify Card approval flow is ongoing - checking loginList for private domains */
     isCheckingDomain?: boolean;
 
     /** Whether or not the user has lounge access */
@@ -28,6 +29,12 @@ type User = {
 
     /** Whether the form is being submitted */
     loading?: boolean;
+
+    /** Whether the user is Expensify Guide */
+    isGuide?: boolean;
+
+    /** Whether the debug mode is currently enabled */
+    isDebugModeEnabled?: boolean;
 };
 
 export default User;

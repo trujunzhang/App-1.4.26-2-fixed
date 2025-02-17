@@ -1,11 +1,11 @@
-import type {IPageRow} from '@libs/Firebase/list/types/page-row';
+import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
 
 type PageFlashListItemEventProps = {
-    item: IPageRow;
+    pageRow: IPageRow;
 };
 
 type PageFlashListItemProps = {
-    item: IPageRow;
+    pageRow: IPageRow;
     hovered: boolean;
 };
 

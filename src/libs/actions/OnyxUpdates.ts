@@ -1,4 +1,4 @@
-import type {OnyxEntry, OnyxUpdate} from 'react-native-onyx';
+import type {OnyxUpdate} from 'react-native-onyx';
 import Onyx from 'react-native-onyx';
 import type {Merge} from 'type-fest';
 import Log from '@libs/Log';
@@ -13,7 +13,7 @@ import * as QueuedOnyxUpdates from './QueuedOnyxUpdates';
 
 // This key needs to be separate from ONYXKEYS.ONYX_UPDATES_FROM_SERVER so that it can be updated without triggering the callback when the server IDs are updated. If that
 // callback were triggered it would lead to duplicate processing of server updates.
-let lastUpdateIDAppliedToClient: OnyxEntry<number> = 0;
+let lastUpdateIDAppliedToClient: number | undefined = 0;
 Onyx.connect({
     key: ONYXKEYS.ONYX_UPDATES_LAST_UPDATE_ID_APPLIED_TO_CLIENT,
     callback: (val) => (lastUpdateIDAppliedToClient = val),
@@ -23,17 +23,18 @@ Onyx.connect({
 // even when such events are received over multiple separate pusher updates.
 let pusherEventsPromise = Promise.resolve();
 
+let airshipEventsPromise = Promise.resolve();
+
 function applyHTTPSOnyxUpdates(request: Request, response: Response) {
     console.debug('[OnyxUpdateManager] Applying https update');
     // For most requests we can immediately update Onyx. For write requests we queue the updates and apply them after the sequential queue has flushed to prevent a replay effect in
-    // the UI. See https://github.com/Ieatta/App/issues/12775 for more info.
+    // the UI. See https://github.com/Expensify/App/issues/12775 for more info.
     const updateHandler: (updates: OnyxUpdate[]) => Promise<unknown> = request?.data?.apiRequestType === CONST.API_REQUEST_TYPE.WRITE ? QueuedOnyxUpdates.queueOnyxUpdates : Onyx.update;
 
     // First apply any onyx data updates that are being sent back from the API. We wait for this to complete and then
     // apply successData or failureData. This ensures that we do not update any pending, loading, or other UI states contained
     // in successData/failureData until after the component has received and API data.
     const onyxDataUpdatePromise = response.onyxData ? updateHandler(response.onyxData) : Promise.resolve();
-
     return onyxDataUpdatePromise
         .then(() => {
             // Handle the request's success/failure data (client-side data)
@@ -41,6 +42,14 @@ function applyHTTPSOnyxUpdates(request: Request, response: Response) {
                 return updateHandler(request.successData);
             }
             if (response.jsonCode !== 200 && request.failureData) {
+                // 460 jsonCode in Expensify world means "admin required".
+                // Typically, this would only happen if a user attempts an API command that requires policy admin access when they aren't an admin.
+                // In this case, we don't want to apply failureData because it will likely result in a RedBrickRoad error on a policy field which is not accessible.
+                // Meaning that there's a red dot you can't dismiss.
+                if (response.jsonCode === 460) {
+                    Log.info('[OnyxUpdateManager] Received 460 status code, not applying failure data');
+                    return Promise.resolve();
+                }
                 return updateHandler(request.failureData);
             }
             return Promise.resolve();
@@ -69,6 +78,20 @@ function applyPusherOnyxUpdates(updates: OnyxUpdateEvent[]) {
         });
 
     return pusherEventsPromise;
+}
+
+function applyAirshipOnyxUpdates(updates: OnyxUpdateEvent[]) {
+    airshipEventsPromise = airshipEventsPromise.then(() => {
+        console.debug('[OnyxUpdateManager] Applying Airship updates');
+    });
+
+    airshipEventsPromise = updates
+        .reduce((promise, update) => promise.then(() => Onyx.update(update.data)), airshipEventsPromise)
+        .then(() => {
+            console.debug('[OnyxUpdateManager] Done applying Airship updates');
+        });
+
+    return airshipEventsPromise;
 }
 
 /**
@@ -102,14 +125,17 @@ function apply({lastUpdateID, type, request, response, updates}: OnyxUpdatesFrom
 
         return Promise.resolve();
     }
-    if (lastUpdateID && (lastUpdateIDAppliedToClient === null || Number(lastUpdateID) > lastUpdateIDAppliedToClient)) {
+    if (lastUpdateID && (lastUpdateIDAppliedToClient === undefined || Number(lastUpdateID) > lastUpdateIDAppliedToClient)) {
         Onyx.merge(ONYXKEYS.ONYX_UPDATES_LAST_UPDATE_ID_APPLIED_TO_CLIENT, Number(lastUpdateID));
     }
     if (type === CONST.ONYX_UPDATE_TYPES.HTTPS && request && response) {
         return applyHTTPSOnyxUpdates(request, response);
     }
-    if ((type === CONST.ONYX_UPDATE_TYPES.PUSHER || type === CONST.ONYX_UPDATE_TYPES.AIRSHIP) && updates) {
+    if (type === CONST.ONYX_UPDATE_TYPES.PUSHER && updates) {
         return applyPusherOnyxUpdates(updates);
+    }
+    if (type === CONST.ONYX_UPDATE_TYPES.AIRSHIP && updates) {
+        return applyAirshipOnyxUpdates(updates);
     }
 }
 
@@ -144,11 +170,16 @@ function doesClientNeedToBeUpdated(previousUpdateID = 0, clientLastUpdateID = 0)
 
     // If we don't have any value in lastUpdateIDFromClient, this is the first time we're receiving anything, so we need to do a last reconnectApp
     if (!lastUpdateIDFromClient) {
+        Log.info('We do not have lastUpdateIDFromClient, client needs updating');
+        return true;
+    }
+    if (lastUpdateIDFromClient < previousUpdateID) {
+        Log.info('lastUpdateIDFromClient is less than the previousUpdateID received, client needs updating', false, {lastUpdateIDFromClient, previousUpdateID});
         return true;
     }
 
-    return lastUpdateIDFromClient < previousUpdateID;
+    return false;
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export {saveUpdateInformation, doesClientNeedToBeUpdated, apply};
+export {apply, doesClientNeedToBeUpdated, saveUpdateInformation};

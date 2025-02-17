@@ -6,6 +6,9 @@ import type {ViewStyle} from 'react-native';
  * https://getbootstrap.com/docs/5.0/utilities/sizing/
  */
 export default {
+    h0: {
+        height: 0,
+    },
     h100: {
         height: '100%',
     },
@@ -16,10 +19,6 @@ export default {
 
     h13: {
         height: 52,
-    },
-
-    h80: {
-        height: '80%',
     },
 
     w15: {
@@ -38,8 +37,27 @@ export default {
         maxHeight: '100%',
     },
 
+    mh85vh: {
+        maxHeight: '85vh',
+    },
+
     mnh100: {
         minHeight: '100%',
+    },
+
+    mnh20: {
+        minHeight: 80,
+    },
+    mnh40: {
+        minHeight: 40,
+    },
+
+    mnh0: {
+        minHeight: 0,
+    },
+
+    mnw0: {
+        minWidth: 0,
     },
 
     mnw2: {
@@ -78,16 +96,16 @@ export default {
         width: '80%',
     },
 
-    w90: {
-        width: '90%',
-    },
-
     w100: {
         width: '100%',
     },
 
     mwn: {
         maxWidth: 'auto',
+    },
+
+    mw50: {
+        maxWidth: '50%',
     },
 
     mw75: {
@@ -97,8 +115,10 @@ export default {
     mw100: {
         maxWidth: '100%',
     },
-
     wAuto: {
         width: 'auto',
+    },
+    wFitContent: {
+        width: 'fit-content',
     },
 } satisfies Record<string, ViewStyle>;

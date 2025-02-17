@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import lodashGet from 'lodash/get';
 import Onyx from 'react-native-onyx';
 import Log from '@libs/Log';

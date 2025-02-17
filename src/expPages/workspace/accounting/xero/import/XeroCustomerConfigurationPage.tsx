@@ -1,25 +1,23 @@
 import React from 'react';
-import {View} from 'react-native';
 import ConnectionLayout from '@components/ConnectionLayout';
 import MenuItemWithTopDescription from '@components/MenuItemWithTopDescription';
-import OfflineWithFeedback from '@components/OfflineWithFeedback';
-import Switch from '@components/Switch';
-import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
-import * as Connections from '@libs/actions/connections';
-import variables from '@styles/variables';
+import * as ErrorUtils from '@libs/ErrorUtils';
+import * as PolicyUtils from '@libs/PolicyUtils';
+import type {WithPolicyProps} from '@expPages/workspace/withPolicy';
+import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
+import ToggleSettingOptionRow from '@expPages/workspace/workflows/ToggleSettingsOptionRow';
+import {updateXeroImportCustomers} from '@userActions/connections/Xero';
+import * as Policy from '@userActions/Policy/Policy';
 import CONST from '@src/CONST';
-import type {WithPolicyProps} from '@src/expPages/workspace/withPolicy';
-import withPolicyConnections from '@src/expPages/workspace/withPolicyConnections';
 
 function XeroCustomerConfigurationPage({policy}: WithPolicyProps) {
     const {translate} = useLocalize();
     const styles = useThemeStyles();
-    const policyID = policy?.id ?? '';
-    const {importCustomers, pendingFields} = policy?.connections?.xero?.config ?? {};
-
-    const isSwitchOn = Boolean(importCustomers);
+    const policyID = policy?.id ?? '-1';
+    const xeroConfig = policy?.connections?.xero?.config;
+    const isSwitchOn = !!xeroConfig?.importCustomers;
 
     return (
         <ConnectionLayout
@@ -29,33 +27,26 @@ function XeroCustomerConfigurationPage({policy}: WithPolicyProps) {
             accessVariants={[CONST.POLICY.ACCESS_VARIANTS.ADMIN]}
             policyID={policyID}
             featureName={CONST.POLICY.MORE_FEATURES.ARE_CONNECTIONS_ENABLED}
+            contentContainerStyle={[[styles.pb2, styles.ph5]]}
+            connectionName={CONST.POLICY.CONNECTIONS.NAME.XERO}
         >
-            <View>
-                <View style={[styles.flexRow, styles.mb4, styles.alignItemsCenter, styles.justifyContentBetween]}>
-                    <View style={styles.flex1}>
-                        <Text fontSize={variables.fontSizeNormal}>{translate('workspace.accounting.import')}</Text>
-                    </View>
-                    <OfflineWithFeedback pendingAction={pendingFields?.importCustomers}>
-                        <View style={[styles.flex1, styles.alignItemsEnd, styles.pl3]}>
-                            <Switch
-                                accessibilityLabel={translate('workspace.xero.customers')}
-                                isOn={isSwitchOn}
-                                onToggle={() => Connections.updatePolicyConnectionConfig(policyID, CONST.POLICY.CONNECTIONS.NAME.XERO, CONST.XERO_CONFIG.IMPORT_CUSTOMERS, !importCustomers)}
-                            />
-                        </View>
-                    </OfflineWithFeedback>
-                </View>
-                {isSwitchOn && (
-                    <OfflineWithFeedback pendingAction={pendingFields?.importCustomers}>
-                        <MenuItemWithTopDescription
-                            interactive={false}
-                            title={translate('workspace.common.tags')}
-                            description={translate('workspace.qbo.displayedAs')}
-                            wrapperStyle={styles.sectionMenuItemTopDescription}
-                        />
-                    </OfflineWithFeedback>
-                )}
-            </View>
+            <ToggleSettingOptionRow
+                title={translate('workspace.accounting.import')}
+                switchAccessibilityLabel={translate('workspace.xero.customers')}
+                subMenuItems={
+                    <MenuItemWithTopDescription
+                        interactive={false}
+                        title={translate('workspace.common.tags')}
+                        description={translate('workspace.common.displayedAs')}
+                        wrapperStyle={styles.sectionMenuItemTopDescription}
+                    />
+                }
+                isActive={isSwitchOn}
+                onToggle={() => updateXeroImportCustomers(policyID, !xeroConfig?.importCustomers, xeroConfig?.importCustomers)}
+                errors={ErrorUtils.getLatestErrorField(xeroConfig ?? {}, CONST.XERO_CONFIG.IMPORT_CUSTOMERS)}
+                onCloseError={() => Policy.clearXeroErrorField(policyID, CONST.XERO_CONFIG.IMPORT_CUSTOMERS)}
+                pendingAction={PolicyUtils.settingsPendingAction([CONST.XERO_CONFIG.IMPORT_CUSTOMERS], xeroConfig?.pendingFields)}
+            />
         </ConnectionLayout>
     );
 }

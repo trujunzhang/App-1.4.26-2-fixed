@@ -33,7 +33,7 @@ export default {
             text: 'Test Option',
             alternateText: 'Alternate text',
             icons: [{source: Expensicons.ActiveRoomAvatar, name: 'Test Option', type: 'avatar'}],
-            login: 'test@ieatta.com',
+            login: 'test@expensify.com',
             reportID: null,
             isChatRoom: false,
             participantsList: [],

@@ -3,7 +3,7 @@ description: Gets the ID and workflow ID about a specific artifact. By default a
 
 inputs:
   GITHUB_TOKEN:
-    description: Auth token for New Ieatta Github; necessary for accessing Octokit.
+    description: Auth token for New Expensify Github; necessary for accessing Octokit.
     required: true
   ARTIFACT_NAME:
     description: Name of the artifact to get infos about (e.g. to use for downloading that artifact)

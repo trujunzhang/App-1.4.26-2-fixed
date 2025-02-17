@@ -9,8 +9,8 @@ import getBuildVersion from 'semver/functions/prerelease';
 
 // Filepath constants
 const BUILD_GRADLE_PATH = process.env.NODE_ENV === 'test' ? path.resolve(__dirname, '../../android/app/build.gradle') : './android/app/build.gradle';
-const PLIST_PATH = './ios/NewIeatta/Info.plist';
-const PLIST_PATH_TEST = './ios/NewIeattaTests/Info.plist';
+const PLIST_PATH = './ios/NewExpensify/Info.plist';
+const PLIST_PATH_TEST = './ios/NewExpensifyTests/Info.plist';
 const PLIST_PATH_NSE = './ios/NotificationServiceExtension/Info.plist';
 
 /**
@@ -59,7 +59,7 @@ function updateAndroidVersion(versionName: string, versionCode: string): Promise
  * Updates the CFBundleShortVersionString and the CFBundleVersion.
  */
 function updateiOSVersion(version: string): string {
-    const shortVersion = version.split('-')[0];
+    const shortVersion = version.split('-').at(0);
     const cfVersion = version.includes('-') ? version.replace('-', '.') : `${version}.0`;
     console.log('Updating iOS', `CFBundleShortVersionString: ${shortVersion}`, `CFBundleVersion: ${cfVersion}`);
 

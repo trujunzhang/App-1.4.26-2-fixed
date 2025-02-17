@@ -2,7 +2,7 @@ import React from 'react';
 import {View} from 'react-native';
 import type {OnyxEntry} from 'react-native-onyx';
 import {withOnyx} from 'react-native-onyx';
-import IeattaCardImage from '@assets/images/expensify-card.svg';
+import ExpensifyCardImage from '@assets/images/expensify-card.svg';
 import useThemeStyles from '@hooks/useThemeStyles';
 import variables from '@styles/variables';
 import ONYXKEYS from '@src/ONYXKEYS';
@@ -28,7 +28,7 @@ function CardPreview({privatePersonalDetails, session}: CardPreviewProps) {
         <View style={styles.walletCard}>
             <ImageSVG
                 contentFit="contain"
-                src={IeattaCardImage}
+                src={ExpensifyCardImage}
                 pointerEvents="none"
                 height={variables.cardPreviewHeight}
                 width={variables.cardPreviewWidth}

@@ -36,7 +36,7 @@ jobs:
               path-to-signatures: '${{ github.repository }}/cla.json'
               path-to-document: 'https://github.com/${{ github.repository }}/blob/main/contributingGuides/CLA.md'
               branch: 'main'
-              remote-organization-name: 'Ieatta'
+              remote-organization-name: 'Expensify'
               remote-repository-name: 'CLA'
               lock-pullrequest-aftermerge: false
               allowlist: OSBotify,snyk-bot

@@ -1,10 +1,11 @@
 import type Realm from 'realm';
 import {UpdateMode} from 'realm';
-import Log from '@libs/Log';
+import {ParseModelSqlPhotos} from '@libs/FirebaseIeatta/appModel';
 import {RealmCollections, RealmWriteMode} from '@libs/Realm/constant';
-import type {IeattaModelsWithoutUser, IeattaModelsWithUser, IFBEvent, IFBPeopleInEvent, IFBPhoto, IFBRecipe, IFBRestaurant, IFBReview, IFBUser} from '@src/types/firebase';
-import type {DeleteData, GetData, SetData} from './types';
+import type {IeattaModelsWithUser, IFBSqlPhoto} from '@src/types/firebase';
+import type {SQLPhotoCoverType} from '@src/types/firebase';
 import type IRealmHelper from './types';
+import type {DeleteData, SetData, UpdateSqlPhotoCover} from './types';
 
 class RealmHelper implements IRealmHelper {
     private readonly realm: Realm;
@@ -59,6 +60,25 @@ class RealmHelper implements IRealmHelper {
                         break;
                     }
                 }
+            });
+        }
+        return Promise.resolve();
+    }
+
+    /**
+     |--------------------------------------------------
+     | Update sqlPhoto's cover 
+     |--------------------------------------------------
+     */
+    updateSqlPhotoCover({firebasePhotoId, coverId, coverType}: UpdateSqlPhotoCover): Promise<void> {
+        const realm: Realm = this.realm;
+
+        const existObjects = realm.objects<IFBSqlPhoto>(RealmCollections.SqlPhotos).filtered(`firebasePhotoId = "${firebasePhotoId}"`);
+        if (existObjects.length === 1) {
+            const lastModal: IFBSqlPhoto = existObjects[0] as IFBSqlPhoto;
+            const nextModal = ParseModelSqlPhotos.updateCover({model: lastModal, coverId, coverType});
+            realm.write(() => {
+                realm.create<IeattaModelsWithUser>(RealmCollections.SqlPhotos, nextModal, UpdateMode.Modified);
             });
         }
         return Promise.resolve();

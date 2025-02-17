@@ -1,4 +1,4 @@
-import type {WindowDimensionsProps} from '@components/withWindowDimensions/types';
+// import type {WindowDimensionsProps} from '@components/withWindowDimensions/types';
 import type {IFBPhoto} from '@src/types/firebase';
 
 type PhotoCarouselScrollViewProps = {
@@ -12,11 +12,12 @@ type PhotoCarouselScrollViewProps = {
     onRightArrowPress?: () => void;
 };
 
-type PhotoCarouselPageViewProps = WindowDimensionsProps &
+type PhotoCarouselPageViewProps =
+    // WindowDimensionsProps &
     PhotoCarouselScrollViewProps & {
         // initialPhotoId: string;
         pageIndex: number;
-        onPhotoChanged: (photo: IFBPhoto) => void;
+        onPhotoChanged: (photoIndex: number, photo?: IFBPhoto) => void;
     };
 
 // export {propTypes, defaultProps, pagePropTypes, pageDefaultProps};

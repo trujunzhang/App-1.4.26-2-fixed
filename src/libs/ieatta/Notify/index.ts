@@ -1,6 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import {toast} from 'react-toastify';
 import {initialAndShowNotifyOnSmallScreen, updateNotifyOnSmallScreen} from './notifyForSmallscreen';
-import type {InitialAndShowNotify, ToastType, UpdateNotify} from './types';
+import type {InitialAndShowNotify, UpdateNotify} from './types';
 
 const initialAndShowNotify: InitialAndShowNotify = ({isSmallScreenWidth, message, type = 'info', autoClose = 5000}) => {
     if (isSmallScreenWidth === false) {

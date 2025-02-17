@@ -1,7 +1,7 @@
 import React from 'react';
 import Text from '@components/Text';
 import useThemeStyles from '@hooks/useThemeStyles';
-import type {IDisplayNameTitleRow} from '@libs/Firebase/list/types/rows/common';
+import type {IDisplayNameTitleRow} from '@libs/FirebaseIeatta/list/types/rows/common';
 import TailwindColors from '@styles/tailwindcss/colors';
 
 type DisplayNameTitleProps = {hovered: boolean; rowData: IDisplayNameTitleRow};

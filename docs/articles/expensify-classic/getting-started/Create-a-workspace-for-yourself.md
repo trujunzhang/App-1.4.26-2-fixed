@@ -1,23 +1,23 @@
 ---
 title: Create a workspace for yourself
-description: Get started with Ieatta by creating an individual workspace for yourself
+description: Get started with Expensify by creating an individual workspace for yourself
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 # Overview
 
-Welcome to Ieatta! If you are a freelancer or tracking your personal expenses, follow the steps below to get started.
+Welcome to Expensify! If you are a freelancer or tracking your personal expenses, follow the steps below to get started.
 
 # 1. Download the mobile app
 
-Upload your expenses and check your reports right from your phone by downloading the Ieatta mobile app. You can search for “Ieatta” in the app store, or tap one of the links below. 
+Upload your expenses and check your reports right from your phone by downloading the Expensify mobile app. You can search for “Expensify” in the app store, or tap one of the links below. 
 
-[iOS](https://apps.apple.com/us/app/ieatta-expense-tracker/id471713959) 
-| [Android](https://play.google.com/store/apps/details?id=org.me.mobiieattag&hl=en_US&gl=US)
+[iOS](https://apps.apple.com/us/app/expensify-expense-tracker/id471713959) 
+| [Android](https://play.google.com/store/apps/details?id=org.me.mobiexpensifyg&hl=en_US&gl=US)
 
 # 2. Meet Concierge
 
-Your personal assistant, Concierge, lives on your Ieatta Home page on both desktop and the mobile app.
+Your personal assistant, Concierge, lives on your Expensify Home page on both desktop and the mobile app.
 
 Concierge will walk you through setting up your account and also provide:
 - Reminders to do things like submit your expenses
@@ -28,7 +28,7 @@ You can also get support at any time by clicking the green chat bubble in the ri
  
 # 3. Create a workspace
 
-All Ieatta accounts automatically come with an individual workspace already set up. You can use this space for your personal expenses, or you can create a group workspace—even if you will be the only person in the group. 
+All Expensify accounts automatically come with an individual workspace already set up. You can use this space for your personal expenses, or you can create a group workspace—even if you will be the only person in the group. 
 
 Here’s how to determine whether a personal or group workspace might be best for you:
 - A *personal workspace* is a private workspace just for you. 
@@ -58,7 +58,7 @@ You can create an expense automatically by SmartScanning a receipt, or you can e
 
 ## SmartScan a receipt
 
-You can upload pictures of your receipts to Ieatta and SmartScan will automatically capture the receipt details including the merchant, date, total, and currency.
+You can upload pictures of your receipts to Expensify and SmartScan will automatically capture the receipt details including the merchant, date, total, and currency.
 
 {% include selector.html values="desktop, mobile" %}
 
@@ -90,7 +90,7 @@ You can upload pictures of your receipts to Ieatta and SmartScan will automatica
 You can open any receipt and select **Fill out details myself** to add or edit the merchant, date, total, description, category, or add attendees who took part in the expense. You can also split the expense if multiple expenses are included on one receipt.
 
 {% include info.html %}
-You can also email receipts to SmartScan by sending them to receipts@ieatta.com from an email address tied to your Ieatta account (either a primary or secondary email). SmartScan will automatically pull all of the details from the receipt, fill them in for you, and add the receipt to the Expenses tab on your account.
+You can also email receipts to SmartScan by sending them to receipts@expensify.com from an email address tied to your Expensify account (either a primary or secondary email). SmartScan will automatically pull all of the details from the receipt, fill them in for you, and add the receipt to the Expenses tab on your account.
 {% include end-info.html %}
 
 ## Manually enter an expense
@@ -111,7 +111,7 @@ You can also email receipts to SmartScan by sending them to receipts@ieatta.com 
            <li>Distance: Create an expense based on distance.</li>
                <ul>
                   <li>Manually Create: Manually enter the distance details for the expense.</li>
-                  <li>Create from Map: Enter the start and end destination and Ieatta will help you create a receipt for the trip.</li>
+                  <li>Create from Map: Enter the start and end destination and Expensify will help you create a receipt for the trip.</li>
                </ul>
        </ul>
   <li>Click <b>Save</b>.</li>
@@ -129,7 +129,7 @@ You can also email receipts to SmartScan by sending them to receipts@ieatta.com 
            <li>Time: Enter work time and rate.</li>
            <li>Manually create (Distance): Manually enter trip details by total distance.</li>
            <li>Odometer: Manually enter trip details by start and end odometer readings.</li>
-           <li>Start GPS: Track distance while using the Ieatta app to automatically calculate the distance in real time during the trip.</li>
+           <li>Start GPS: Track distance while using the Expensify app to automatically calculate the distance in real time during the trip.</li>
        </ul>
   <li>Tap <b>Save</b>.</li>
 </ol>           
@@ -139,8 +139,8 @@ You can also email receipts to SmartScan by sending them to receipts@ieatta.com 
 
 # 5. Connect your expense accounts
 
-You can connect your bank account(s) and personal credit card(s) to import and track your transactions in Ieatta. This will: 
-- Automatically sync your bank/card transactions with your Ieatta account 
+You can connect your bank account(s) and personal credit card(s) to import and track your transactions in Expensify. This will: 
+- Automatically sync your bank/card transactions with your Expensify account 
 - Merge any expenses added with SmartScan with the tracked bank expense
 - Generate IRS-compliant eReceipts (if enabled for the workspace)
 
@@ -185,7 +185,7 @@ You can connect your bank account(s) and personal credit card(s) to import and t
 The Insights dashboard allows you to monitor all aspects of company spend across categories, employees, projects, departments, and more. You can see trends in real time, forecast company budgets, and build unlimited custom reports with help from our trained specialist team.
 
 {% include info.html %}
-This process is currently not available from the mobile app and must be completed from the Ieatta website.
+This process is currently not available from the mobile app and must be completed from the Expensify website.
 {% include end-info.html %}  
 
 <ol type="a">
@@ -216,8 +216,8 @@ Add an extra layer of security to help keep your financial data safe and secure 
    <li>Download or open your authenticator app and either:</li>
        <ul>
            <li>Scan the QR code shown on your computer screen.</li>
-           <li>Enter the 6-digit code from your authenticator app into Ieatta and click <b>Verify</b>.</li>
+           <li>Enter the 6-digit code from your authenticator app into Expensify and click <b>Verify</b>.</li>
        </ul>
 </ol>
 
-When you log in to Ieatta in the future, you’ll be emailed a magic code that you’ll use to log in with. Then you’ll be prompted to open your authenticator app to get the 6-digit code and enter it into Ieatta. A new code regenerates every few seconds, so the code is always different. If the code time runs out, you can generate a new code as needed.
+When you log in to Expensify in the future, you’ll be emailed a magic code that you’ll use to log in with. Then you’ll be prompted to open your authenticator app to get the 6-digit code and enter it into Expensify. A new code regenerates every few seconds, so the code is always different. If the code time runs out, you can generate a new code as needed.

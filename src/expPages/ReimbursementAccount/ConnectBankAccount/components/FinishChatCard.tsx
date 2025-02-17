@@ -8,9 +8,9 @@ import Section from '@components/Section';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
+import WorkspaceResetBankAccountModal from '@expPages/workspace/WorkspaceResetBankAccountModal';
 import * as BankAccounts from '@userActions/BankAccounts';
 import * as Report from '@userActions/Report';
-import WorkspaceResetBankAccountModal from '@src/expPages/workspace/WorkspaceResetBankAccountModal';
 import type {ReimbursementAccount} from '@src/types/onyx';
 import Enable2FACard from './Enable2FACard';
 
@@ -25,7 +25,7 @@ type FinishChatCardProps = {
 function FinishChatCard({requiresTwoFactorAuth, reimbursementAccount}: FinishChatCardProps) {
     const {translate} = useLocalize();
     const styles = useThemeStyles();
-    const policyID = reimbursementAccount?.achData?.policyID ?? '';
+    const policyID = reimbursementAccount?.achData?.policyID ?? '-1';
     const shouldShowResetModal = reimbursementAccount.shouldShowResetModal ?? false;
     const handleNavigateToConciergeChat = () => Report.navigateToConciergeChat(true);
 

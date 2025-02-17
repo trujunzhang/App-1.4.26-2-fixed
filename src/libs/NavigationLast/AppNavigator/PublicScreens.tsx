@@ -1,14 +1,16 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
+import {NativeModules} from 'react-native';
 import type {PublicScreensParamList} from '@navigation/types';
-import ConnectionCompletePage from '@src/expPages/ConnectionCompletePage';
-import LogInWithShortLivedAuthTokenPage from '@src/expPages/LogInWithShortLivedAuthTokenPage';
-import AppleSignInDesktopPage from '@src/expPages/signin/AppleSignInDesktopPage';
-import GoogleSignInDesktopPage from '@src/expPages/signin/GoogleSignInDesktopPage';
-import SAMLSignInPage from '@src/expPages/signin/SAMLSignInPage';
-import SignInPage from '@src/expPages/signin/SignInPage';
-import UnlinkLoginPage from '@src/expPages/UnlinkLoginPage';
-import ValidateLoginPage from '@src/expPages/ValidateLoginPage';
+import ConnectionCompletePage from '@expPages/ConnectionCompletePage';
+import SessionExpiredPage from '@expPages/ErrorPage/SessionExpiredPage';
+import LogInWithShortLivedAuthTokenPage from '@expPages/LogInWithShortLivedAuthTokenPage';
+import AppleSignInDesktopPage from '@expPages/signin/AppleSignInDesktopPage';
+import GoogleSignInDesktopPage from '@expPages/signin/GoogleSignInDesktopPage';
+import SAMLSignInPage from '@expPages/signin/SAMLSignInPage';
+import SignInPage from '@expPages/signin/SignInPage';
+import UnlinkLoginPage from '@expPages/UnlinkLoginPage';
+import ValidateLoginPage from '@expPages/ValidateLoginPage';
 import NAVIGATORS from '@src/NAVIGATORS';
 import SCREENS from '@src/SCREENS';
 import defaultScreenOptions from './defaultScreenOptions';
@@ -22,7 +24,7 @@ function PublicScreens() {
             <RootStack.Screen
                 name={NAVIGATORS.BOTTOM_TAB_NAVIGATOR}
                 options={defaultScreenOptions}
-                component={SignInPage}
+                component={NativeModules.HybridAppModule ? SessionExpiredPage : SignInPage}
             />
             <RootStack.Screen
                 name={SCREENS.TRANSITION_BETWEEN_APPS}

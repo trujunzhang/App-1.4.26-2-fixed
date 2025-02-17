@@ -46,7 +46,8 @@ function SearchWithLabel({onPress, placeholder, tooltip, style, containerStyle}:
                 >
                     <Hoverable>
                         {(hovered: boolean) => (
-                            <View style={[styles.searchContainer, hovered && styles.searchContainerHovered, style]}>
+                            // <View style={[styles.searchContainer, hovered && styles.searchContainerHovered, style]}>
+                            <View style={[styles.searchContainer, styles.backgroundHoverComponentBG, hovered && styles.backgroundBorder, style]}>
                                 <Icon
                                     src={Expensicons.MagnifyingGlass}
                                     width={variables.iconSizeSmall}

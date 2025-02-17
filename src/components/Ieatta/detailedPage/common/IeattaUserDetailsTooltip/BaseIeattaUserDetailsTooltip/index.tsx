@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import lodashGet from 'lodash/get';
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
@@ -12,7 +13,7 @@ import type {PersonalDetails} from '@src/types/onyx';
 
 function BaseIeattaUserDetailsTooltip({userId, children}: IeattaUserDetailsTooltipProps) {
     const styles = useThemeStyles();
-    const personalDetails = usePersonalDetails() ?? CONST.EMPTY_OBJECT;
+    const personalDetails: Record<string, any> = usePersonalDetails() ?? CONST.EMPTY_OBJECT;
     const user: PersonalDetails | null = personalDetails[userId];
 
     const renderTooltipContent = useCallback(() => {
@@ -31,7 +32,18 @@ function BaseIeattaUserDetailsTooltip({userId, children}: IeattaUserDetailsToolt
                 <Text style={[styles.mt2, styles.textMicroBold, styles.textReactionSenders, styles.textAlignCenter]}>{user?.displayName}</Text>
             </View>
         );
-    }, [styles.alignItemsCenter, styles.ph2, styles.pv2, styles.emptyAvatar, styles.actionAvatar, styles.mt2, styles.textMicroBold, styles.textReactionSenders, styles.textAlignCenter]);
+    }, [
+        user,
+        styles.alignItemsCenter,
+        styles.ph2,
+        styles.pv2,
+        styles.emptyAvatar,
+        styles.actionAvatar,
+        styles.mt2,
+        styles.textMicroBold,
+        styles.textReactionSenders,
+        styles.textAlignCenter,
+    ]);
 
     return (
         <Tooltip

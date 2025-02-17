@@ -2,7 +2,7 @@
 title: Submit or retract a report
 description: Submit a report for reimbursement or retract a submitted report to make corrections
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 Once your report is ready to send, you can submit your expenses for approval. Depending on your workspace settings, your reports may be automatically submitted for you, or you may have to manually submit them. 
 

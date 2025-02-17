@@ -9,12 +9,13 @@ import ONYXKEYS from '@src/ONYXKEYS';
 import * as TestHelper from '../utils/TestHelper';
 import waitForNetworkPromises from '../utils/waitForNetworkPromises';
 
+type FormDataObject = {body: TestHelper.FormData};
+
 Onyx.init({
     keys: ONYXKEYS,
 });
 
 beforeAll(() => {
-    // @ts-expect-error TODO: Remove this once TestHelper (https://github.com/Ieatta/App/issues/25318) is migrated to TypeScript.
     global.fetch = TestHelper.getGlobalFetchMock();
 });
 
@@ -49,10 +50,21 @@ describe('Middleware', () => {
             await waitForNetworkPromises();
 
             expect(global.fetch).toHaveBeenCalledTimes(2);
-            expect(global.fetch).toHaveBeenLastCalledWith('https://www.ieatta.com.dev/api/AddComment?', expect.anything());
-            TestHelper.assertFormDataMatchesObject((global.fetch as jest.Mock).mock.calls[1][1].body, {reportID: '1234', reportActionID: '5678'});
-            expect(global.fetch).toHaveBeenNthCalledWith(1, 'https://www.ieatta.com.dev/api/OpenReport?', expect.anything());
-            TestHelper.assertFormDataMatchesObject((global.fetch as jest.Mock).mock.calls[0][1].body, {reportID: '1234'});
+            expect(global.fetch).toHaveBeenLastCalledWith('https://www.expensify.com.dev/api/AddComment?', expect.anything());
+            TestHelper.assertFormDataMatchesObject(
+                {
+                    reportID: '1234',
+                    reportActionID: '5678',
+                },
+                ((global.fetch as jest.Mock).mock.calls.at(1) as FormDataObject[]).at(1)?.body,
+            );
+            expect(global.fetch).toHaveBeenNthCalledWith(1, 'https://www.expensify.com.dev/api/OpenReport?', expect.anything());
+            TestHelper.assertFormDataMatchesObject(
+                {
+                    reportID: '1234',
+                },
+                ((global.fetch as jest.Mock).mock.calls.at(0) as FormDataObject[]).at(1)?.body,
+            );
         });
 
         test('Request with preexistingReportID', async () => {
@@ -93,10 +105,16 @@ describe('Middleware', () => {
             await waitForNetworkPromises();
 
             expect(global.fetch).toHaveBeenCalledTimes(2);
-            expect(global.fetch).toHaveBeenLastCalledWith('https://www.ieatta.com.dev/api/AddComment?', expect.anything());
-            TestHelper.assertFormDataMatchesObject((global.fetch as jest.Mock).mock.calls[1][1].body, {reportID: '5555', reportActionID: '5678'});
-            expect(global.fetch).toHaveBeenNthCalledWith(1, 'https://www.ieatta.com.dev/api/OpenReport?', expect.anything());
-            TestHelper.assertFormDataMatchesObject((global.fetch as jest.Mock).mock.calls[0][1].body, {reportID: '1234'});
+            expect(global.fetch).toHaveBeenLastCalledWith('https://www.expensify.com.dev/api/AddComment?', expect.anything());
+            TestHelper.assertFormDataMatchesObject(
+                {
+                    reportID: '5555',
+                    reportActionID: '5678',
+                },
+                ((global.fetch as jest.Mock).mock.calls.at(1) as FormDataObject[]).at(1)?.body,
+            );
+            expect(global.fetch).toHaveBeenNthCalledWith(1, 'https://www.expensify.com.dev/api/OpenReport?', expect.anything());
+            TestHelper.assertFormDataMatchesObject({reportID: '1234'}, ((global.fetch as jest.Mock).mock.calls.at(0) as FormDataObject[]).at(1)?.body);
         });
     });
 });

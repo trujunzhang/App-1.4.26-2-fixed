@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import type {IReviewInPageRow} from '@libs/Firebase/list/types/rows/review';
+import type {IReviewInPageRow} from '@libs/FirebaseIeatta/list/types/rows/review';
 import ReviewItemMessage from './ReviewItemMessage';
 import ReviewItemSingle from './ReviewItemSingle';
 

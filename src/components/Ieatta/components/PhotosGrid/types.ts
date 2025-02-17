@@ -1,5 +1,7 @@
-import React from 'react';
-import type {PhotoType} from '@libs/Firebase/constant';
+import type React from 'react';
+import type {PhotoType} from '@libs/FirebaseIeatta/constant';
+import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
+import type {OnCarouselItemPressed} from '@libs/FirebaseIeatta/list/types/rows/photo';
 import type {IFBPhoto, IFBSqlPhoto} from '@src/types/firebase';
 
 type CommonPhotosGridListProps = {
@@ -17,8 +19,14 @@ type FBPhotosGridListProps = CommonPhotosGridListProps & {
     photoType: PhotoType | string;
 };
 
-type BasePhotosGridListProps = CommonPhotosGridListProps & {
-    renderPhoto: (item: IFBPhoto | IFBSqlPhoto, itemHeight: number) => React.ReactNode;
+type AddWaitersGridListProps = FBPhotosGridListProps & {
+    onCarouselItemPressed: OnCarouselItemPressed;
 };
 
-export type {BasePhotosGridListProps, CommonPhotosGridListProps, FBPhotosGridListProps};
+type BasePhotosGridListProps = CommonPhotosGridListProps & {
+    initialPanelWidth?: number;
+    isCoverPage?: boolean;
+    generatePageRow: (item: IFBPhoto | IFBSqlPhoto, itemWidth: number, itemHeight: number) => IPageRow;
+};
+
+export type {BasePhotosGridListProps, CommonPhotosGridListProps, FBPhotosGridListProps, AddWaitersGridListProps};

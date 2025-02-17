@@ -1,5 +1,5 @@
-import React from 'react';
 import type {ForwardedRef} from 'react';
+import React from 'react';
 import {View} from 'react-native';
 import type {Camera} from 'react-native-vision-camera';
 import Webcam from 'react-webcam';

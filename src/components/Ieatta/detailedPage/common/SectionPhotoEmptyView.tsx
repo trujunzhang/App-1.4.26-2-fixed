@@ -1,7 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
 import Icon from '@components/Icon';
-import * as Expensicons from '@components/Icon/Expensicons';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
 import useThemeStyles from '@hooks/useThemeStyles';
 import TailwindColors from '@styles/tailwindcss/colors';
 import variables from '@styles/variables';
@@ -26,7 +26,7 @@ function SectionPhotoEmptyView() {
                     fill={TailwindColors.gray400}
                     width={variables.iconSizeSuperLarge}
                     height={variables.iconSizeSuperLarge}
-                    src={Expensicons.EmptyCamera}
+                    src={Ieattaicons.EmptyCamera}
                 />
             </View>
         </View>

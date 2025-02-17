@@ -1,6 +1,6 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {CONST as COMMON_CONST} from 'expensify-common/lib/CONST';
-import _ from 'lodash';
+import {CONST as COMMON_CONST} from 'expensify-common';
+import isEmpty from 'lodash/isEmpty';
 import React, {useCallback, useMemo, useState} from 'react';
 import {View} from 'react-native';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
@@ -60,16 +60,16 @@ function StateSelectionPage() {
             // Determine navigation action based on "backTo" presence and route stack length.
             if (navigation.getState()?.routes.length === 1) {
                 // If this is the only page in the navigation stack (examples include direct navigation to this page via URL or page reload).
-                if (_.isEmpty(backTo)) {
+                if (isEmpty(backTo)) {
                     // No "backTo": default back navigation.
                     Navigation.goBack();
                 } else {
                     // "backTo" provided: navigate back to "backTo" with state parameter.
-                    Navigation.goBack(appendParam(backTo, 'state', option.value) as Route);
+                    Navigation.goBack(appendParam(backTo, 'state', option.value));
                 }
-            } else if (!_.isEmpty(backTo)) {
+            } else if (!isEmpty(backTo)) {
                 // Most common case: Navigation stack has multiple routes and "backTo" is defined: navigate to "backTo" with state parameter.
-                Navigation.navigate(appendParam(backTo, 'state', option.value) as Route);
+                Navigation.navigate(appendParam(backTo, 'state', option.value));
             } else {
                 // This is a fallback block and should never execute if StateSelector is correctly appending the "backTo" route.
                 // Navigation stack has multiple routes but no "backTo" defined: default back navigation.
@@ -91,21 +91,21 @@ function StateSelectionPage() {
                 shouldShowBackButton
                 onBackButtonPress={() => {
                     const backTo = params?.backTo ?? '';
-                    let backToRoute = '';
+                    let backToRoute: Route | undefined;
 
                     if (backTo) {
                         backToRoute = appendParam(backTo, 'state', currentState ?? '');
                     }
 
-                    // @ts-expect-error Navigation.goBack does take a param
                     Navigation.goBack(backToRoute);
                 }}
             />
-            {/* This empty, non-harmful view fixes the issue with SelectionList scrolling and shouldUseDynamicMaxToRenderPerBatch. It can be removed without consequences if a solution for SelectionList is found. See comment https://github.com/Ieatta/App/pull/36770#issuecomment-2017028096 */}
+            {/* This empty, non-harmful view fixes the issue with SelectionList scrolling and shouldUseDynamicMaxToRenderPerBatch. It can be removed without consequences if a solution for SelectionList is found. See comment https://github.com/Expensify/App/pull/36770#issuecomment-2017028096 */}
             <View />
 
             <SelectionList
                 onSelectRow={selectCountryState}
+                shouldSingleExecuteRowSelect
                 headerMessage={headerMessage}
                 // Label can be an empty string
                 // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing

@@ -2,7 +2,7 @@
 title: Require review for over-limit expenses
 description: Require a manual review for expenses that exceed a set amount
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 You can set rules that require a manual review for expenses that exceed a specific amount. These rules can be set for all expenses under a workspace and/or for a specific member of your workspace. 
 

@@ -7,9 +7,9 @@ type GoogleProviderProps = {
 };
 
 function GoogleProvider(props: GoogleProviderProps) {
-    return <GoogleOAuthProvider clientId={CONFIG.GOOGLE_SIGN_IN.WEB_CLIENT_ID}>{props.children}</GoogleOAuthProvider>;
+    return <GoogleOAuthProvider clientId={CONFIG.APP_GOOGLE_SIGN_IN.WEB_CLIENT_ID}>{props.children}</GoogleOAuthProvider>;
 }
 
-GoogleProvider.displayName = 'HTMLEngineProvider';
+GoogleProvider.displayName = 'GoogleProvider';
 
 export default GoogleProvider;

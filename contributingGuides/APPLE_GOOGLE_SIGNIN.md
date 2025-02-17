@@ -4,11 +4,11 @@
 
 ## Terms
 
-The **client app**, or **client**: this refers to the application that is attempting to access a user's resources hosted by a third party. In this case, this is the Ieatta app.
+The **client app**, or **client**: this refers to the application that is attempting to access a user's resources hosted by a third party. In this case, this is the Expensify app.
 
-The **third party**: this is any other service that the client app (Ieatta) wants to interact with on behalf of a user. In this case, Apple or Google. Since this flow is specifically concerned with authentication, it may also be called the **third-party authentication provider**.
+The **third party**: this is any other service that the client app (Expensify) wants to interact with on behalf of a user. In this case, Apple or Google. Since this flow is specifically concerned with authentication, it may also be called the **third-party authentication provider**.
 
-**Third-party sign-in**: a general phrase to refer to either "Sign in with Apple" or "Sign in with Google" (or any future similar features). Any authentication method that involves authentication with a service not provided by Ieatta.
+**Third-party sign-in**: a general phrase to refer to either "Sign in with Apple" or "Sign in with Google" (or any future similar features). Any authentication method that involves authentication with a service not provided by Expensify.
 
 ## How third-party sign-in works
 
@@ -70,9 +70,9 @@ These are the specific issues we've seen:
 1. [Google stopped allowing its sign-in page to render inside embedded browser frameworks](https://security.googleblog.com/2019/04/better-protection-against-man-in-middle.html) such as Electron. This means we can't open the sign-in flow inside the an Electron window. However, opening the sign-in form in the user's default web browser did work.
 2. On the other hand, opening the Sign in with Apple form in the user's default browser instead of Electron does _not_ work, and renders an Apple page with an empty body instead of the sign-in form.
 
-We decided to instead redirect the user to a dedicated page in the web app to sign in. Apple and Google each have their own routes, `/sign-in-with-apple` and `/sign-in-with-google`, where the user is shown another button to click to start the sign-in process on web (since it shows a pop-up, the user must click the button directly, otherwise the pop-up would be blocked). After signing in, the user will be shown a deep link prompt in the browser to open the desktop app, where they will be signed in using a short-lived token from the Ieatta API.
+We decided to instead redirect the user to a dedicated page in the web app to sign in. Apple and Google each have their own routes, `/sign-in-with-apple` and `/sign-in-with-google`, where the user is shown another button to click to start the sign-in process on web (since it shows a pop-up, the user must click the button directly, otherwise the pop-up would be blocked). After signing in, the user will be shown a deep link prompt in the browser to open the desktop app, where they will be signed in using a short-lived token from the Expensify API.
 
-Due to Ieatta's expectation that a user will be using the same account on web and desktop, we do not go through this process if the user was already signed in, but instead the web app prompts the user to go back to desktop again, which will also sign them in on the desktop app.
+Due to Expensify's expectation that a user will be using the same account on web and desktop, we do not go through this process if the user was already signed in, but instead the web app prompts the user to go back to desktop again, which will also sign them in on the desktop app.
 
 ## Additional design constraints
 
@@ -87,8 +87,8 @@ This means the button is limited in design: there are no offline or hover states
 Unlike Google, Apple does not allow `localhost` as a domain to host a pop-up or redirect to. In order to test Sign in with Apple on web or desktop, this means we have to:
 
 1. Use SSH tunneling to host the app on an HTTPS domain
-2. Create a test Apple Service ID configuration in the Apple developer console, to allow testing the sign-in flow from its start until the point Apple sends its token to the Ieatta app.
-3. Use token interception on Android to test the web and desktop sign-in flow from the point where the front-end Ieatta app has received a token, until the point where the user is signed in to Ieatta using that token.
+2. Create a test Apple Service ID configuration in the Apple developer console, to allow testing the sign-in flow from its start until the point Apple sends its token to the Expensify app.
+3. Use token interception on Android to test the web and desktop sign-in flow from the point where the front-end Expensify app has received a token, until the point where the user is signed in to Expensify using that token.
 
 These steps are covered in more detail in the "testing" section below.
 
@@ -96,14 +96,87 @@ These steps are covered in more detail in the "testing" section below.
 
 Due to some technical constraints, Apple and Google sign-in may require additional configuration to be able to work in the development environment as expected. This document describes any additional steps for each platform. 
 
+## Show Apple / Google SSO buttons development environment
+
+The Apple/Google Sign In button renders differently in development mode. To prevent confusion
+for developers about a possible regression, we decided to not render third party buttons in
+development mode.
+
+To re-enable the SSO buttons in development mode, remove this [condition](https://github.com/Expensify/App/blob/c2a718c9100e704c89ad9564301348bc53a49777/src/pages/signin/LoginForm/BaseLoginForm.tsx#L300) so that we always render the SSO button components:
+
+```diff
+diff --git a/src/pages/signin/LoginForm/BaseLoginForm.tsx b/src/pages/signin/LoginForm/BaseLoginForm.tsx
+index 4286a26033..850f8944ca 100644
+--- a/src/pages/signin/LoginForm/BaseLoginForm.tsx
++++ b/src/pages/signin/LoginForm/BaseLoginForm.tsx
+@@ -288,7 +288,7 @@ function BaseLoginForm({account, credentials, closeAccount, blurOnSubmit = false
+                            // for developers about possible regressions, we won't render buttons in development mode.
+                            // For more information about these differences and how to test in development mode,
+                            // see`Expensify/App/contributingGuides/APPLE_GOOGLE_SIGNIN.md`
+-                            CONFIG.ENVIRONMENT !== CONST.ENVIRONMENT.DEV && (
++                            (
+                                <View style={[getSignInWithStyles()]}>
+                                    <Text
+                                        accessibilityElementsHidden
+```
+
+## Desktop-specific setup
+
+1. Update `NEW_EXPENSIFY_URL` in `.env.staging`, setting it to the URL where the development web app can be found. This URL will vary based on whether you're testing for Apple or Google
+    - For Google, use http://localhost:8082 (make sure the port matches whatever you see in the browser when you run `npm run web`)
+    - For Apple, see [Configure the SSH tunneling](#configure-the-ssh-tunneling)
+2. Download and install the latest version of [SwiftDefaultApps](https://github.com/Lord-Kamina/SwiftDefaultApps?tab=readme-ov-file#installing--uninstalling).
+3. Open `System Settings` => `Swift Default Apps` => `URI Schemes` => `new-expensify` and select `New Ieatta.app`
+4. Note that a dev build of the desktop app will not work. You'll create and install a local staging build:
+   1. Update `build-desktop.sh` replacing `--publish always` with `--publish never`. 
+   2. Run `npm run desktop-build-staging` and install the locally-generated desktop app to test.
+5. (Google only) apply the following diff:
+
+    ```diff
+    diff --git a/src/components/DeeplinkWrapper/index.website.tsx b/src/components/DeeplinkWrapper/index.website.tsx
+    index 765fbab038..4318528b4c 100644
+    --- a/src/components/DeeplinkWrapper/index.website.tsx
+    +++ b/src/components/DeeplinkWrapper/index.website.tsx
+    @@ -63,14 +63,7 @@ function DeeplinkWrapper({children, isAuthenticated, autoAuthState}: DeeplinkWra
+             const isUnsupportedDeeplinkRoute = routeRegex.test(window.location.pathname);
+     
+             // Making a few checks to exit early before checking authentication status
+    -        if (
+    -            !isMacOSWeb() ||
+    -            isUnsupportedDeeplinkRoute ||
+    -            hasShownPrompt ||
+    -            CONFIG.ENVIRONMENT === CONST.ENVIRONMENT.DEV ||
+    -            autoAuthState === CONST.AUTO_AUTH_STATE.NOT_STARTED ||
+    -            Session.isAnonymousUser()
+    -        ) {
+    +        if (!isMacOSWeb() || isUnsupportedDeeplinkRoute || hasShownPrompt || autoAuthState === CONST.AUTO_AUTH_STATE.NOT_STARTED || Session.isAnonymousUser()) {
+                 return;
+             }
+             // We want to show the prompt immediately if the user is already authenticated.
+    diff --git a/src/libs/Navigation/linkingConfig/prefixes.ts b/src/libs/Navigation/linkingConfig/prefixes.ts
+    index ca2da6f56b..2c191598f0 100644
+    --- a/src/libs/Navigation/linkingConfig/prefixes.ts
+    +++ b/src/libs/Navigation/linkingConfig/prefixes.ts
+    @@ -8,6 +8,7 @@ const prefixes: LinkingOptions<RootStackParamList>['prefixes'] = [
+         'https://www.expensify.cash',
+         'https://staging.expensify.cash',
+         'https://dev.new.expensify.com',
+    +    'http://localhost',
+         CONST.NEW_EXPENSIFY_URL,
+         CONST.STAGING_NEW_EXPENSIFY_URL,
+     ];
+    ```
+
+6. Run `npm run web`
+
 ## Apple
 
 #### Port requirements
 
-The Sign in with Apple process will break after the user signs in if the pop-up process is not started from a page at an HTTPS domain registered with Apple. To fix this, you could make a new configuration with your own HTTPS domain, but then the Apple configuration won't match that of Ieatta's backend.
+The Sign in with Apple process will break after the user signs in if the pop-up process is not started from a page at an HTTPS domain registered with Apple. To fix this, you could make a new configuration with your own HTTPS domain, but then the Apple configuration won't match that of Expensify's backend.
 
 So to be able to test this, we have two parts:
-1. Create a valid Sign in with Apple token using valid configuration for the Ieatta app, by creating and intercepting one on Android
+1. Create a valid Sign in with Apple token using valid configuration for the Expensify app, by creating and intercepting one on Android
 2. Host the development web app at an HTTPS domain using SSH tunneling, and in the web app use a custom Apple config with this HTTPS domain registered
 
 Requirements:
@@ -114,7 +187,7 @@ Requirements:
 
 **Note**: complete this step before changing other configuration to test Apple on web and desktop, as updating those will cause Android to stop working while the configuration is changed.
 
-On an Android build, alter the `AppleSignIn` component to log the token generated, instead of sending it to the Ieatta API:
+On an Android build, alter the `AppleSignIn` component to log the token generated, instead of sending it to the Expensify API:
 
 ```js
 //          .then((token) => Session.beginAppleSignIn(token))
@@ -140,10 +213,10 @@ function beginAppleSignIn(idToken) {
 
 You can use any SSH tunneling service that allows you to configure custom subdomains so that we have a consistent address to use. We'll use ngrok in these examples, but ngrok requires a paid account for this. If you need a free option, try [serveo.net](https://serveo.net).
 
-After you've set ngrok up to be able to run on your machine (requires configuring a key with the command line tool, instructions provided by the ngrok website after you create an account), test hosting the web app on a custom subdomain. This example assumes the development web app is running at `dev.new.ieatta.com:8082`:
+After you've set ngrok up to be able to run on your machine (requires configuring a key with the command line tool, instructions provided by the ngrok website after you create an account), test hosting the web app on a custom subdomain. This example assumes the development web app is running at `dev.new.expensify.com:8082`:
 
 ```shell
-ngrok http 8082 --host-header="dev.new.ieatta.com:8082" --subdomain=mysubdomain
+ngrok http 8082 --host-header="dev.new.expensify.com:8082" --subdomain=mysubdomain
 ```
 
 The `--host-header` flag is there to avoid webpack errors with header validation. In addition, add `allowedHosts: 'all'` to the dev server config in `webpack.dev.ts`:
@@ -191,59 +264,13 @@ NEW_EXPENSIFY_URL=https://subdomain.ngrok-free.app
 
 This is required because the desktop app needs to know the address of the web app, and must open it at the HTTPS domain configured to work with Sign in with Apple.
 
-Note that changing this value to a domain that isn't configured for use with Ieatta will cause Android to break, as it is still using the real client ID, but now has an incorrect value for `redirectURI`.
+Note that changing this value to a domain that isn't configured for use with Expensify will cause Android to break, as it is still using the real client ID, but now has an incorrect value for `redirectURI`.
 
-#### Set Environment to something other than "Development"
+## Google
 
-The `DeepLinkWrapper` component will not handle deep links in the development environment. To be able to test deep linking, you must set the environment to something other than "Development".
+Unlike with Apple, to test Google Sign-In we don't need to set up any http/ssh tunnels. We can just use `localhost`. But we need to set up the web and desktop environments to use `localhost` instead of `dev.new.expensify.com`
 
-Within the `.env` file, set `envName` to something other than "Development", for example:
-
-```
-envName=Staging
-```
-
-Alternatively, within the `DeepLinkWrapper/index.website.js` file, you can set the `CONFIG.ENVIRONMENT` to something other than "Development".
-
-#### Handle deep links in dev on MacOS
-
-If developing on MacOS, the development desktop app can't handle deeplinks correctly. To be able to test deeplinking back to the app, follow these steps:
-
-1. Create a "real" build of the desktop app, which can handle deep links, open the build folder, and install the dmg there:
-
-```shell
-npm run desktop-build
-open desktop-build
-# Then double-click "NewIeatta.dmg" in Finder window
-```
-
-2. Even with this build, the deep link may not be handled by the correct app, as the development Electron config seems to intercept it sometimes. To manage this, install [SwiftDefaultApps](https://github.com/Lord-Kamina/SwiftDefaultApps), which adds a preference pane that can be used to configure which app should handle deep links.
-
-### Test the Apple / Google SSO buttons in development environment
-
-The Apple/Google Sign In button renders differently in development mode. To prevent confusion
-for developers about a possible regression, we decided to not render third party buttons in
-development mode.
-
-Here's how you can re-enable the SSO buttons in development mode:
-
-- Remove this [condition](https://github.com/Ieatta/App/blob/c2a718c9100e704c89ad9564301348bc53a49777/src/pages/signin/LoginForm/BaseLoginForm.tsx#L300) so that we always render the SSO button components
-    ```diff
-    diff --git a/src/pages/signin/LoginForm/BaseLoginForm.tsx b/src/pages/signin/LoginForm/BaseLoginForm.tsx
-    index 4286a26033..850f8944ca 100644
-    --- a/src/pages/signin/LoginForm/BaseLoginForm.tsx
-    +++ b/src/pages/signin/LoginForm/BaseLoginForm.tsx
-    @@ -288,7 +288,7 @@ function BaseLoginForm({account, credentials, closeAccount, blurOnSubmit = false
-                                // for developers about possible regressions, we won't render buttons in development mode.
-                                // For more information about these differences and how to test in development mode,
-                                // see`Ieatta/App/contributingGuides/APPLE_GOOGLE_SIGNIN.md`
-    -                            CONFIG.ENVIRONMENT !== CONST.ENVIRONMENT.DEV && (
-    +                            (
-                                    <View style={[getSignInWithStyles()]}>
-                                        <Text
-                                            accessibilityElementsHidden
-    ```
-- Update the webpack.dev.ts [config](https://github.com/Ieatta/App/blob/1d6bb1d14cff3dd029868a0a7c8ee14ae78c527b/config/webpack/webpack.dev.js#L47-L49) to change `host` from `dev.new.ieatta.com` to `localhost` and server type from `https` to `http`. The reason for this is that Google Sign In allows localhost, but `dev.new.ieatta.com` is not a registered Google Sign In domain.
+- (web/desktop) Update the webpack.dev.ts [config](https://github.com/Expensify/App/blob/1d6bb1d14cff3dd029868a0a7c8ee14ae78c527b/config/webpack/webpack.dev.js#L47-L49) to change `host` from `dev.new.expensify.com` to `localhost` and server type from `https` to `http`. The reason for this is that Google Sign In allows localhost, but `dev.new.expensify.com` is not a registered Google Sign In domain.
     ```diff
     diff --git a/config/webpack/webpack.dev.ts b/config/webpack/webpack.dev.ts
     index e28383eff5..b14f6f34aa 100644
@@ -253,7 +280,7 @@ Here's how you can re-enable the SSO buttons in development mode:
                     ...proxySettings,
                     historyApiFallback: true,
                     port,
-    -                host: 'dev.new.ieatta.com',
+    -                host: 'dev.new.expensify.com',
     +                host: 'localhost',
                     server: {
     -                    type: 'https',
@@ -262,7 +289,49 @@ Here's how you can re-enable the SSO buttons in development mode:
                             key: path.join(__dirname, 'key.pem'),
                             cert: path.join(__dirname, 'certificate.pem'),
     ```
+  
+- (desktop) Update the start script to use localhost:
 
-#### Set Environment to something other than "Development"
+    ```diff
+    diff --git a/desktop/start.ts b/desktop/start.ts
+    index 030bee95ce..7f7e115cf3 100644
+    --- a/desktop/start.ts
+    +++ b/desktop/start.ts
+    @@ -34,7 +34,7 @@ portfinder
+    env,
+    },
+    {
+    -                command: `wait-port dev.new.expensify.com:${port} && npx electronmon ./desktop/dev.js`,
+    +                command: `wait-port localhost:${port} && npx electronmon ./desktop/dev.js`,
+                     name: 'Electron',
+                     prefixColor: 'cyan.dim',
+                     env,
+    ```
+  
+- (desktop) Update the main process to use localhost w/ http:
 
-The DeepLinkWrapper component will not handle deep links in the development environment. To be able to test deep linking, you must set the environment to something other than "Development".
+    ```diff
+    diff --git a/desktop/main.ts b/desktop/main.ts
+    index 0f4774d3b7..4cb7fe3683 100644
+    --- a/desktop/main.ts
+    +++ b/desktop/main.ts
+    @@ -98,7 +98,7 @@ Object.assign(console, log.functions);
+     // until it detects that it has been upgraded to the correct version.
+     
+     const EXPECTED_UPDATE_VERSION_FLAG = '--expected-update-version';
+    -const APP_DOMAIN = __DEV__ ? `https://dev.new.expensify.com:${port}` : 'app://-';
+    +const APP_DOMAIN = __DEV__ ? `http://localhost:${port}` : 'app://-';
+     
+     let expectedUpdateVersion: string;
+     process.argv.forEach((arg) => {
+    @@ -246,7 +246,7 @@ const mainWindow = (): Promise<void> => {
+         let deeplinkUrl: string;
+         let browserWindow: BrowserWindow;
+     
+    -    const loadURL = __DEV__ ? (win: BrowserWindow): Promise<void> => win.loadURL(`https://dev.new.expensify.com:${port}`) : serve({directory: `${__dirname}/www`});
+    +    const loadURL = __DEV__ ? (win: BrowserWindow): Promise<void> => win.loadURL(`http://localhost:${port}`) : serve({directory: `${__dirname}/www`});
+     
+         // Prod and staging set the icon in the electron-builder config, so only update it here for dev
+         if (__DEV__) {
+    ```
+

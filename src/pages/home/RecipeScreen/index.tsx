@@ -1,15 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
-import React, {useCallback, useState} from 'react';
-import {useCollectionOnce, useDocumentData} from 'react-firebase-hooks/firestore';
+import React, {useCallback} from 'react';
+import {useDocumentData} from 'react-firebase-hooks/firestore';
 import {usePagination} from 'react-firebase-pagination-hooks';
 import {DetailedPageSkeletonView} from '@components/Ieatta/components/SkeletonViews';
-import ReportActionsSkeletonView from '@components/ReportActionsSkeletonView';
-import {FBCollections, ReviewType} from '@libs/Firebase/constant';
-import type {RecipeScreenNavigationProps} from '@libs/Firebase/helper/RecipeUtils';
-import {getRecipeID} from '@libs/Firebase/helper/RecipeUtils';
-import {defaultSortObject} from '@libs/Firebase/review-sort';
-import * as FirebaseQuery from '@libs/Firebase/services/firebase-query';
-import {FirebaseReviewQuery} from '@libs/Firebase/services/review-query';
+import {FBCollections, ReviewType} from '@libs/FirebaseIeatta/constant';
+import type {RecipeScreenNavigationProps} from '@libs/FirebaseIeatta/helper/RecipeUtils';
+import {getRecipeID} from '@libs/FirebaseIeatta/helper/RecipeUtils';
+import {defaultSortObject} from '@libs/FirebaseIeatta/review-sort';
+import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
+import {FirebaseReviewQuery} from '@libs/FirebaseIeatta/services/review-query';
 import Variables from '@styles/variables';
 import type {IFBRecipe, IFBReview} from '@src/types/firebase';
 import BaseRecipeScreen from './BaseRecipeScreen';

@@ -1,8 +1,8 @@
 ---
-title: Ieatta Chat rooms for admins
+title: Expensify Chat rooms for admins
 description: Use the announce and admins chat rooms
 ---
-<div id="new-ieatta" markdown="1">
+<div id="new-expensify" markdown="1">
 
 When a workspace is created, an #announce and #admins chat room is automatically created. 
 
@@ -37,14 +37,14 @@ To allow only admins to post in an #announce room,
 # #admins
 
 Only Workspace Admins can access this room to collaborate with the other admins in the workspace. You can also use this space to:
-- Chat with your dedicated Ieatta Setup Specialist. 
+- Chat with your dedicated Expensify Setup Specialist. 
 - Chat with your Account Manager (if you have a subscription with 10 or more members).
-- Review changes made to your Workspace settings (includes changes made by someone on your team, your dedicated Ieatta Setup Specialist, or your dedicated Account Manager).
+- Review changes made to your Workspace settings (includes changes made by someone on your team, your dedicated Expensify Setup Specialist, or your dedicated Account Manager).
 
 # FAQs
 
 **Someone I don’t recognize is in my #admins room for my Workspace.**
 
-Your #admins room also includes your dedicated Ieatta Setup Specialist who will help you onboard and answer your questions. You can chat with them directly from your #admins room. If you have a subscription of 10 or more members, you can chat with your dedicated Account Manager, who is also added to your #admins room for ongoing product support.
+Your #admins room also includes your dedicated Expensify Setup Specialist who will help you onboard and answer your questions. You can chat with them directly from your #admins room. If you have a subscription of 10 or more members, you can chat with your dedicated Account Manager, who is also added to your #admins room for ongoing product support.
 
 </div>

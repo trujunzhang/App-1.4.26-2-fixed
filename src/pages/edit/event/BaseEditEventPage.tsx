@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import React from 'react';
@@ -12,15 +13,17 @@ import EventDatePicker from '@components/Ieatta/components/EventDatePicker';
 import EditPageWithSections from '@components/Ieatta/edit/EditPageWithSections';
 import OfflineWithFeedback from '@components/OfflineWithFeedback';
 import TextInput from '@components/TextInput';
-import type {WithCurrentUserPersonalDetailsProps} from '@components/withCurrentUserPersonalDetails';
-import withCurrentUserPersonalDetails from '@components/withCurrentUserPersonalDetails';
+import useCurrentUserPersonalDetails from '@hooks/useCurrentUserPersonalDetails';
 import useLocalize from '@hooks/useLocalize';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
-import {clearDraftValuesByDraftId, setIsLoading} from '@libs/actions/FormActions';
-import {ParseModelEvents} from '@libs/Firebase/appModel';
-import {FBCollections} from '@libs/Firebase/constant';
-import {getAuthUserFromPersonalDetails} from '@libs/Firebase/models/auth_user_model';
-import FirebaseHelper from '@libs/Firebase/services/firebase-helper';
+import {setIsLoading} from '@libs/actions/FormActions';
+import {ParseModelEvents} from '@libs/FirebaseIeatta/appModel';
+import {FBCollections} from '@libs/FirebaseIeatta/constant';
+import {getAuthUserFromPersonalDetails} from '@libs/FirebaseIeatta/models/auth_user_model';
+import FirebaseHelper from '@libs/FirebaseIeatta/services/firebase-helper';
+import {clearDraftValuesByDraftId} from '@libs/ieatta/editFormUtils';
+import * as ShowNotify from '@libs/ieatta/Notify';
 import Log from '@libs/Log';
 import Navigation from '@libs/Navigation/Navigation';
 import CONST from '@src/CONST';
@@ -32,16 +35,21 @@ import INPUT_IDS from '@src/types/form/ieatta/EditEventForm';
 const editFormID = ONYXKEYS.FORMS.IEATTA_EVENT;
 const editFormDraftID = ONYXKEYS.FORMS.IEATTA_EVENT_DRAFT;
 
-type BaseEditEventPageProps = WithCurrentUserPersonalDetailsProps & {
+type BaseEditEventPageProps = {
     restaurantId: string;
     eventId: string;
     event: IFBEvent | undefined;
     isNewModel: boolean;
 };
 
-function BaseEditEventPage({restaurantId, eventId, event, isNewModel, currentUserPersonalDetails}: BaseEditEventPageProps) {
+function BaseEditEventPage({restaurantId, eventId, event, isNewModel}: BaseEditEventPageProps) {
     const styles = useThemeStyles();
     const {translate} = useLocalize();
+
+    const personalData = useCurrentUserPersonalDetails();
+
+    const {isSmallScreenWidth} = useResponsiveLayout();
+    const toastId = React.useRef<number | string | null>(null);
 
     const saveModel = (values: FormOnyxValues<typeof editFormID>) => {
         console.log('');
@@ -57,14 +65,18 @@ function BaseEditEventPage({restaurantId, eventId, event, isNewModel, currentUse
         Log.info('');
 
         setIsLoading(editFormID, true);
+        toastId.current = ShowNotify.initialAndShowNotify({
+            isSmallScreenWidth,
+            message: translate('notify.save.start', {modalName: 'Restaurant'}),
+            autoClose: false,
+        });
+
         const {eventDisplayName: displayName, eventWhatWhy: want, eventStartDate: startString, eventEndDate: endString} = values;
         let lastModel = event;
         if (isNewModel) {
-            const authUserModel = getAuthUserFromPersonalDetails(currentUserPersonalDetails);
+            const authUserModel = getAuthUserFromPersonalDetails(personalData);
             if (_.isUndefined(authUserModel)) {
-                // toast.show({
-                // description: 'No User Data!'
-                // })
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.auth.unAuthed')});
                 return;
             }
             lastModel = ParseModelEvents.emptyEvent({
@@ -93,12 +105,16 @@ function BaseEditEventPage({restaurantId, eventId, event, isNewModel, currentUse
             .then(() => {
                 clearDraftValuesByDraftId(editFormID);
             })
+            .then(() => {
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: 'Event'})});
+                Navigation.goBack();
+            })
             .catch((error) => {
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: 'Event'})});
                 console.log(error);
             })
             .finally(() => {
                 setIsLoading(editFormID, false);
-                Navigation.goBack();
             });
     };
 
@@ -114,6 +130,8 @@ function BaseEditEventPage({restaurantId, eventId, event, isNewModel, currentUse
         }
         return errors;
     };
+
+    const currentDateString: string = new Date().toISOString();
 
     return (
         <EditPageWithSections
@@ -177,7 +195,7 @@ function BaseEditEventPage({restaurantId, eventId, event, isNewModel, currentUse
                             <InputWrapper
                                 InputComponent={EventDatePicker}
                                 inputID={INPUT_IDS.START_DATE}
-                                defaultValue={lodashGet(event, 'start', '')}
+                                defaultValue={lodashGet(event, 'start', currentDateString)}
                                 label={translate('edit.event.form.start.title')}
                                 aria-label={translate('edit.event.form.start.placeholder')}
                                 placeholder={translate('edit.event.form.start.placeholder')}
@@ -188,7 +206,7 @@ function BaseEditEventPage({restaurantId, eventId, event, isNewModel, currentUse
                             <InputWrapper
                                 InputComponent={EventDatePicker}
                                 inputID={INPUT_IDS.END_DATE}
-                                defaultValue={lodashGet(event, 'end', '')}
+                                defaultValue={lodashGet(event, 'end', currentDateString)}
                                 label={translate('edit.event.form.end.title')}
                                 aria-label={translate('edit.event.form.end.placeholder')}
                                 placeholder={translate('edit.event.form.end.placeholder')}
@@ -204,6 +222,4 @@ function BaseEditEventPage({restaurantId, eventId, event, isNewModel, currentUse
 
 BaseEditEventPage.displayName = 'BaseEditEventPage';
 
-export default withCurrentUserPersonalDetails(BaseEditEventPage);
-
-// export default BaseEditEventPage;
+export default BaseEditEventPage;

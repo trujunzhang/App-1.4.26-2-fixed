@@ -1,7 +1,8 @@
 import React, {memo} from 'react';
-import {withOnyx} from 'react-native-onyx';
+import {useOnyx} from 'react-native-onyx';
 import type {OnyxEntry} from 'react-native-onyx';
 import type {CustomRendererProps, TBlock} from 'react-native-render-html';
+import {AttachmentContext} from '@components/AttachmentContext';
 import * as Expensicons from '@components/Icon/Expensicons';
 import PressableWithoutFocus from '@components/Pressable/PressableWithoutFocus';
 import {ShowContextMenuContext, showContextMenuForReport} from '@components/ShowContextMenuContext';
@@ -44,21 +45,22 @@ function ImageRenderer({tnode}: ImageRendererProps) {
     //
     //     - Non-Attachment Images
     //
-    //           These could be hosted from anywhere (Ieatta or another source)
+    //           These could be hosted from anywhere (Expensify or another source)
     //           and are not protected by any kind of access control e.g. certain
     //           Concierge responder attachments are uploaded to S3 without any access
     //           control and thus require no authToken to verify access.
     //
     const attachmentSourceAttribute = htmlAttribs[CONST.ATTACHMENT_SOURCE_ATTRIBUTE];
-    const isAttachmentOrReceipt = Boolean(attachmentSourceAttribute);
+    const isAttachmentOrReceipt = !!attachmentSourceAttribute;
 
     // Files created/uploaded/hosted by App should resolve from API ROOT. Other URLs aren't modified
     const previewSource = tryResolveUrlFromApiRoot(htmlAttribs.src);
     const source = tryResolveUrlFromApiRoot(isAttachmentOrReceipt ? attachmentSourceAttribute : htmlAttribs.src);
 
-    const imageWidth = (htmlAttribs['data-ieatta-width'] && parseInt(htmlAttribs['data-ieatta-width'], 10)) || undefined;
-    const imageHeight = (htmlAttribs['data-ieatta-height'] && parseInt(htmlAttribs['data-ieatta-height'], 10)) || undefined;
-    const imagePreviewModalDisabled = htmlAttribs['data-ieatta-preview-modal-disabled'] === 'true';
+    const alt = htmlAttribs.alt;
+    const imageWidth = (htmlAttribs['data-expensify-width'] && parseInt(htmlAttribs['data-expensify-width'], 10)) || undefined;
+    const imageHeight = (htmlAttribs['data-expensify-height'] && parseInt(htmlAttribs['data-expensify-height'], 10)) || undefined;
+    const imagePreviewModalDisabled = htmlAttribs['data-expensify-preview-modal-disabled'] === 'true';
 
     const fileType = FileUtils.getFileType(attachmentSourceAttribute);
     const fallbackIcon = fileType === CONST.ATTACHMENT_FILE_TYPE.FILE ? Expensicons.Document : Expensicons.Gallery;
@@ -70,6 +72,7 @@ function ImageRenderer({tnode}: ImageRendererProps) {
             fallbackIcon={fallbackIcon}
             imageWidth={imageWidth}
             imageHeight={imageHeight}
+            altText={alt}
         />
     );
 
@@ -77,20 +80,33 @@ function ImageRenderer({tnode}: ImageRendererProps) {
         thumbnailImageComponent
     ) : (
         <ShowContextMenuContext.Consumer>
-            {({anchor, report, action, checkIfContextMenuActive}) => (
-                <PressableWithoutFocus
-                    style={[styles.noOutline]}
-                    onPress={() => {
-                        const route = ROUTES.REPORT_ATTACHMENTS.getRoute(report?.reportID ?? '', source);
-                        Navigation.navigate(route);
-                    }}
-                    onLongPress={(event) => showContextMenuForReport(event, anchor, report?.reportID ?? '', action, checkIfContextMenuActive, ReportUtils.isArchivedRoom(report))}
-                    shouldUseHapticsOnLongPress
-                    accessibilityRole={CONST.ACCESSIBILITY_ROLE.IMAGEBUTTON}
-                    accessibilityLabel={translate('accessibilityHints.viewAttachment')}
-                >
-                    {thumbnailImageComponent}
-                </PressableWithoutFocus>
+            {({anchor, report, reportNameValuePairs, action, checkIfContextMenuActive, isDisabled}) => (
+                <AttachmentContext.Consumer>
+                    {({reportID, accountID, type}) => (
+                        <PressableWithoutFocus
+                            style={[styles.noOutline]}
+                            onPress={() => {
+                                if (!source || !type) {
+                                    return;
+                                }
+
+                                const route = ROUTES.ATTACHMENTS?.getRoute(reportID ?? '-1', type, source, accountID, isAttachmentOrReceipt);
+                                Navigation.navigate(route);
+                            }}
+                            onLongPress={(event) => {
+                                if (isDisabled) {
+                                    return;
+                                }
+                                showContextMenuForReport(event, anchor, report?.reportID ?? '-1', action, checkIfContextMenuActive, ReportUtils.isArchivedRoom(report, reportNameValuePairs));
+                            }}
+                            shouldUseHapticsOnLongPress
+                            accessibilityRole={CONST.ROLE.BUTTON}
+                            accessibilityLabel={translate('accessibilityHints.viewAttachment')}
+                        >
+                            {thumbnailImageComponent}
+                        </PressableWithoutFocus>
+                    )}
+                </AttachmentContext.Consumer>
             )}
         </ShowContextMenuContext.Consumer>
     );
@@ -98,13 +114,20 @@ function ImageRenderer({tnode}: ImageRendererProps) {
 
 ImageRenderer.displayName = 'ImageRenderer';
 
-export default withOnyx<ImageRendererProps, ImageRendererWithOnyxProps>({
-    user: {
-        key: ONYXKEYS.USER,
-    },
-})(
-    memo(
-        ImageRenderer,
-        (prevProps, nextProps) => prevProps.tnode.attributes === nextProps.tnode.attributes && prevProps.user?.shouldUseStagingServer === nextProps.user?.shouldUseStagingServer,
-    ),
+const ImageRendererMemorize = memo(
+    ImageRenderer,
+    (prevProps, nextProps) => prevProps.tnode.attributes === nextProps.tnode.attributes && prevProps.user?.shouldUseStagingServer === nextProps.user?.shouldUseStagingServer,
 );
+
+function ImageRendererWrapper(props: CustomRendererProps<TBlock>) {
+    const [user] = useOnyx(ONYXKEYS.USER);
+    return (
+        <ImageRendererMemorize
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...props}
+            user={user}
+        />
+    );
+}
+
+export default ImageRendererWrapper;

@@ -2,7 +2,7 @@
 title: Add expenses to a report
 description: Add expenses to a report to submit them for approval
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 To submit expenses for approval, they must be added to a report. 
 

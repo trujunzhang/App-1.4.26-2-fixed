@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useMemo} from 'react';
 import type {TextProps} from 'react-native';
 import {HTMLContentModel, HTMLElementModel, RenderHTMLConfigProvider, TRenderEngineProvider} from 'react-native-render-html';
@@ -42,6 +43,11 @@ function BaseHTMLEngineProvider({textSelectable = false, children, enableExperim
                 mixedUAStyles: {...styles.colorMuted, ...styles.mb0},
                 contentModel: HTMLContentModel.block,
             }),
+            'muted-text-label': HTMLElementModel.fromCustomModel({
+                tagName: 'muted-text-label',
+                mixedUAStyles: {...styles.mutedNormalTextLabel, ...styles.mb0},
+                contentModel: HTMLContentModel.block,
+            }),
             comment: HTMLElementModel.fromCustomModel({
                 tagName: 'comment',
                 mixedUAStyles: {whiteSpace: 'pre'},
@@ -77,40 +83,61 @@ function BaseHTMLEngineProvider({textSelectable = false, children, enableExperim
                 mixedUAStyles: {...styles.textSupporting, ...styles.textLineThrough},
                 contentModel: HTMLContentModel.textual,
             }),
+            blockquote: HTMLElementModel.fromCustomModel({
+                tagName: 'blockquote',
+                contentModel: HTMLContentModel.block,
+                getMixedUAStyles: (tnode) => {
+                    if (tnode.attributes.isemojisonly === undefined) {
+                        return;
+                    }
+                    return styles.onlyEmojisTextLineHeight;
+                },
+            }),
         }),
-        [styles.formError, styles.mb0, styles.colorMuted, styles.textLabelSupporting, styles.lh16, styles.textSupporting, styles.textLineThrough],
+        [
+            styles.formError,
+            styles.mb0,
+            styles.colorMuted,
+            styles.textLabelSupporting,
+            styles.lh16,
+            styles.textSupporting,
+            styles.textLineThrough,
+            styles.mutedNormalTextLabel,
+            styles.onlyEmojisTextLineHeight,
+        ],
     );
     /* eslint-enable @typescript-eslint/naming-convention */
 
     // We need to memoize this prop to make it referentially stable.
     const defaultTextProps: TextProps = useMemo(() => ({selectable: textSelectable, allowFontScaling: false, textBreakStrategy: 'simple'}), [textSelectable]);
     const defaultViewProps = {style: [styles.alignItemsStart, styles.userSelectText]};
-    return (
-        <TRenderEngineProvider
-            customHTMLElementModels={customHTMLElementModels}
-            baseStyle={styles.webViewStyles.baseFontStyle}
-            tagsStyles={styles.webViewStyles.tagStyles}
-            enableCSSInlineProcessing={false}
-            systemFonts={Object.values(FontUtils.fontFamily.single)}
-            htmlParserOptions={{
-                recognizeSelfClosing: true,
-            }}
-            domVisitors={{
-                // eslint-disable-next-line no-param-reassign
-                onText: (text) => (text.data = convertToLTR(text.data)),
-            }}
-        >
-            <RenderHTMLConfigProvider
-                defaultTextProps={defaultTextProps}
-                defaultViewProps={defaultViewProps}
-                renderers={htmlRenderers}
-                computeEmbeddedMaxWidth={HTMLEngineUtils.computeEmbeddedMaxWidth}
-                enableExperimentalBRCollapsing={enableExperimentalBRCollapsing}
-            >
-                {children}
-            </RenderHTMLConfigProvider>
-        </TRenderEngineProvider>
-    );
+    // return (
+    //     <TRenderEngineProvider
+    //         customHTMLElementModels={customHTMLElementModels}
+    //         baseStyle={styles.webViewStyles.baseFontStyle}
+    //         tagsStyles={styles.webViewStyles.tagStyles}
+    //         enableCSSInlineProcessing={false}
+    //         systemFonts={Object.values(FontUtils.fontFamily.single).map((font) => font.fontFamily)}
+    //         htmlParserOptions={{
+    //             recognizeSelfClosing: true,
+    //         }}
+    //         domVisitors={{
+    //             // eslint-disable-next-line no-param-reassign
+    //             onText: (text) => (text.data = convertToLTR(text.data)),
+    //         }}
+    //     >
+    //         <RenderHTMLConfigProvider
+    //             defaultTextProps={defaultTextProps}
+    //             defaultViewProps={defaultViewProps}
+    //             renderers={htmlRenderers}
+    //             computeEmbeddedMaxWidth={HTMLEngineUtils.computeEmbeddedMaxWidth}
+    //             enableExperimentalBRCollapsing={enableExperimentalBRCollapsing}
+    //         >
+    //             {children}
+    //         </RenderHTMLConfigProvider>
+    //     </TRenderEngineProvider>
+    // );
+    return children;
 }
 
 BaseHTMLEngineProvider.displayName = 'BaseHTMLEngineProvider';

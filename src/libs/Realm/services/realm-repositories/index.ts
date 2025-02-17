@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable import/prefer-default-export */
-import type {IFirebaseQuerySnapshot} from '@libs/Firebase/types';
 import type {RealmCollections} from '@libs/Realm/constant';
 import type {IRealmRepositories} from './types';
 

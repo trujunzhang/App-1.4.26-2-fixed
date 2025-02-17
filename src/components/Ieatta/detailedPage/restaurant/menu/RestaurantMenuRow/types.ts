@@ -1,4 +1,4 @@
-import type {IMenusInRestaurantRow} from '@libs/Firebase/list/types/rows/restaurant';
+import type {IMenusInRestaurantRow} from '@libs/FirebaseIeatta/list/types/rows/restaurant';
 import type {IFBRecipe} from '@src/types/firebase';
 
 type RestaurantMenuRowProps = {

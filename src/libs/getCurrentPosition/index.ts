@@ -1,4 +1,4 @@
-import type {GetCurrentPosition} from './getCurrentPosition.types';
+import type {GetCurrentPosition, WatchCurrentPosition} from './getCurrentPosition.types';
 import {GeolocationErrorCode} from './getCurrentPosition.types';
 
 const getCurrentPosition: GetCurrentPosition = (success, error, options) => {
@@ -16,7 +16,7 @@ const getCurrentPosition: GetCurrentPosition = (success, error, options) => {
 
     navigator.geolocation.getCurrentPosition(success, error, options);
 };
-const watchCurrentPosition: GetCurrentPosition = (success, error, options) => {
+const watchCurrentPosition: WatchCurrentPosition = (success, error, options) => {
     if (navigator === undefined || !('geolocation' in navigator)) {
         error({
             code: GeolocationErrorCode.NOT_SUPPORTED,

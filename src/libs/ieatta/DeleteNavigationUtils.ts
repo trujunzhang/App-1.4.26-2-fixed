@@ -1,19 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {setRestaurantIdInSidebar} from '@libs/actions/ieatta/restaurant';
-import {ParseModelReviews} from '@libs/Firebase/appModel';
-import {FBCollections} from '@libs/Firebase/constant';
-import {PageSection} from '@libs/Firebase/list/constant';
-import type {IPageRow} from '@libs/Firebase/list/types/page-row';
-import type {IDisplayNameTitleRow, IEditModelButtonRow} from '@libs/Firebase/list/types/rows/common';
-import type {IPhotoCarouselItemRow, IPhotoItemRow} from '@libs/Firebase/list/types/rows/photo';
-import type {IEventsInRestaurantRow, IRestaurantSidebarRow} from '@libs/Firebase/list/types/rows/restaurant';
-import type {IReviewInPageRow, IReviewSubmitRow} from '@libs/Firebase/list/types/rows/review';
-import FirebaseHelper from '@libs/Firebase/services/firebase-helper';
-import Navigation from '@libs/Navigation/Navigation';
-import * as PhotosPageContextMenu from '@pages/photos/online/Popover/ContextMenu/PhotosPageContextMenu';
-import ROUTES from '@src/ROUTES';
+import {FBCollections} from '@libs/FirebaseIeatta/constant';
+import {PageSection} from '@libs/FirebaseIeatta/list/constant';
+import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
+import type {IUserInEventRow} from '@libs/FirebaseIeatta/list/types/rows/event';
+import type {IPhotoCarouselItemRow} from '@libs/FirebaseIeatta/list/types/rows/photo';
+import type {IEventsInRestaurantRow, IRestaurantSidebarRow} from '@libs/FirebaseIeatta/list/types/rows/restaurant';
+import type {IReviewInPageRow} from '@libs/FirebaseIeatta/list/types/rows/review';
+import FirebaseHelper from '@libs/FirebaseIeatta/services/firebase-helper';
+// import * as PhotosPageContextMenu from '@pages/photos/online/Popover/ContextMenu/PhotosPageContextMenu';
 import type {IFBRecipe} from '@src/types/firebase';
-import {navigationToEditEvent, navigationToEditRecipe, navigationToEditRestaurant, navigationToEditReview} from './editFormUtils';
 
 type ActionDeleteNavigateToParams = {
     item: IPageRow;
@@ -21,6 +16,7 @@ type ActionDeleteNavigateToParams = {
     onFailure: (error: any) => void;
 };
 function actionDeleteNavigateTo({item, onSuccess, onFailure}: ActionDeleteNavigateToParams) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const {rowData} = item;
     switch (item.rowType) {
         /**
@@ -119,6 +115,17 @@ function actionDeleteNavigateTo({item, onSuccess, onFailure}: ActionDeleteNaviga
             break;
         }
         case PageSection.RESTAURANT_MENU_ROW: {
+            break;
+        }
+        /**
+         |--------------------------------------------------
+         | Event
+         |--------------------------------------------------
+         */
+        case PageSection.EVENT_USER:
+        case PageSection.EVENT_USER_WEB: {
+            const {peopleInEvent, user, recipes, showDivide} = rowData as IUserInEventRow;
+            new FirebaseHelper().deleteData({path: FBCollections.PeopleInEvent, uniqueId: peopleInEvent.uniqueId});
             break;
         }
         default: {

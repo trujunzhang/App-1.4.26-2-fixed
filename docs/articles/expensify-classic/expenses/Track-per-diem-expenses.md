@@ -2,7 +2,7 @@
 title: Track per diem expenses
 description: Add daily allowance expenses for business travel
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 A per diem (also called “per diem allowance” or “daily allowance”) is a fixed daily payment provided by an employer to cover expenses during business or work-related travel. These allowances simplify travel expense tracking and reimbursement for meals, lodging, and incidental expenses. 
 

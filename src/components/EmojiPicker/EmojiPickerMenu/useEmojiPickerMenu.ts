@@ -1,6 +1,5 @@
 import type {FlashList} from '@shopify/flash-list';
-import {useCallback, useEffect, useMemo, useState} from 'react';
-import {useAnimatedRef} from 'react-native-reanimated';
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import emojis from '@assets/emojis';
 import {useFrequentlyUsedEmojis} from '@components/OnyxProvider';
 import useLocalize from '@hooks/useLocalize';
@@ -10,9 +9,9 @@ import useWindowDimensions from '@hooks/useWindowDimensions';
 import * as EmojiUtils from '@libs/EmojiUtils';
 
 const useEmojiPickerMenu = () => {
-    const emojiListRef = useAnimatedRef<FlashList<EmojiUtils.EmojiPickerListItem>>();
+    const emojiListRef = useRef<FlashList<EmojiUtils.EmojiPickerListItem>>(null);
     const frequentlyUsedEmojis = useFrequentlyUsedEmojis();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
     const allEmojis = useMemo(() => EmojiUtils.mergeEmojisWithFrequentlyUsedEmojis(emojis), [frequentlyUsedEmojis]);
     const headerEmojis = useMemo(() => EmojiUtils.getHeaderEmojis(allEmojis), [allEmojis]);
     const headerRowIndices = useMemo(() => headerEmojis.map((headerEmoji) => headerEmoji.index), [headerEmojis]);

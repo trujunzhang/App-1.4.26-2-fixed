@@ -1,5 +1,5 @@
 ## What is a Contributor+ (C+)?  
-C+ are contributors who are experienced at working with Ieatta and have gained the confidence of the internal Ieatta team. Accordingly, they are allocated additional opportunities and responsibilities:
+C+ are contributors who are experienced at working with Expensify and have gained the confidence of the internal Expensify team. Accordingly, they are allocated additional opportunities and responsibilities:
     - They review proposed solutions in external GitHub issues, validate them, and make recommendations to an internal Contributor Manager Engineer (CME).
     - Once a proposal has been accepted by a CME, the C+ will be the first person to review the pull request associated with that proposal.
 
@@ -10,7 +10,7 @@ C+ are contributors who are experienced at working with Ieatta and have gained t
 - Earning potential is variable, it depends on how much a C+ wants to work and other jobs they’re hired for.  We’ve seen C+ make ~$100k/year.  
 - There isn’t a set number of hours a C+ needs to work in a week. Proposals and PRs reviews are expected to be addressed within 24 hours on weekdays. 
 - Dedicated #contributor-plus Slack room to discuss issues, processes and proposals. 
-- If C+ ever applies to work at Ieatta, they’ve got a leg up on the competition because they're familiar with the company and processes.  View job openings at https://we.are.ieatta.com.
+- If C+ ever applies to work at Expensify, they’ve got a leg up on the competition because they're familiar with the company and processes.  View job openings at https://we.are.expensify.com.
 
 ## Requirements to join C+
 - Have had 10 PRs deployed to production without regressions.  
@@ -19,12 +19,12 @@ C+ are contributors who are experienced at working with Ieatta and have gained t
 - Clear communicator
 - Bonus points:
   - Help other contributors by commenting on their issues. 
-  - Actively involved in the #ieatta-open-source slack channel
+  - Actively involved in the #expensify-open-source slack channel
   - Adheres to the PR review guidelines
 
 ## How to join?
 
-Email contributors@ieatta.com and include "C+ Team Application" in the subject line if you’re interested in joining. Please include:
+Email contributors@expensify.com and include "C+ Team Application" in the subject line if you’re interested in joining. Please include:
 1. Your GitHub username.
-2. A link to the PRs you've authored that have been merged. ie. `https://github.com/Ieatta/App/pulls?q=is%3Apr+is%3Amerged+author%3Aparasharrajat`.
+2. A link to the PRs you've authored that have been merged. ie. `https://github.com/Expensify/App/pulls?q=is%3Apr+is%3Amerged+author%3Aparasharrajat`.
 3. Links to three GitHub issues that were particularly challenging and best demonstrate your skill level.

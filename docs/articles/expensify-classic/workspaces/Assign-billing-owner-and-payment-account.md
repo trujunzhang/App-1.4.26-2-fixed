@@ -2,7 +2,7 @@
 title: Assign billing owner and payment account
 description: Determine who will cover the cost of the workspace and link a payment method
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 The person who creates a workspace will automatically be responsible for the billing for that workspace. However, the existing billing owner can transfer the workspace’s billing ownership to any Admin on the workspace. 
 

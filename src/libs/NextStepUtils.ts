@@ -1,21 +1,21 @@
 import {format, lastDayOfMonth, setDate} from 'date-fns';
-import Str from 'expensify-common/lib/str';
+import {Str} from 'expensify-common';
 import Onyx from 'react-native-onyx';
-import type {OnyxCollection} from 'react-native-onyx';
+import type {OnyxCollection, OnyxEntry} from 'react-native-onyx';
 import type {ValueOf} from 'type-fest';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import type {Policy, Report, ReportNextStep} from '@src/types/onyx';
 import type {Message} from '@src/types/onyx/ReportNextStep';
 import type DeepValueOf from '@src/types/utils/DeepValueOf';
-import type {EmptyObject} from '@src/types/utils/EmptyObject';
+import {getNextApproverAccountID} from './actions/IOU';
 import DateUtils from './DateUtils';
 import EmailUtils from './EmailUtils';
-import * as PersonalDetailsUtils from './PersonalDetailsUtils';
 import * as PolicyUtils from './PolicyUtils';
 import * as ReportUtils from './ReportUtils';
 
 let currentUserAccountID = -1;
+let currentUserEmail = '';
 Onyx.connect({
     key: ONYXKEYS.SESSION,
     callback: (value) => {
@@ -24,6 +24,7 @@ Onyx.connect({
         }
 
         currentUserAccountID = value?.accountID ?? -1;
+        currentUserEmail = value?.email ?? '';
     },
 });
 
@@ -36,14 +37,20 @@ Onyx.connect({
 
 function parseMessage(messages: Message[] | undefined) {
     let nextStepHTML = '';
-
-    messages?.forEach((part) => {
+    messages?.forEach((part, index) => {
         const isEmail = Str.isValidEmail(part.text);
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         let tagType = part.type ?? 'span';
         let content = Str.safeEscape(part.text);
 
-        if (isEmail) {
+        const previousPart = index !== 0 ? messages.at(index - 1) : undefined;
+        const nextPart = messages.at(index + 1);
+
+        if (currentUserEmail === part.text || part.clickToCopyText === currentUserEmail) {
+            tagType = 'strong';
+            content = nextPart?.text === `'s` ? 'Your' : 'You';
+        } else if (part.text === `'s` && (previousPart?.text === currentUserEmail || previousPart?.clickToCopyText === currentUserEmail)) {
+            content = '';
+        } else if (isEmail) {
             tagType = 'next-step-email';
             content = EmailUtils.prefixMailSeparatorsWithBreakOpportunities(content);
         }
@@ -52,41 +59,53 @@ function parseMessage(messages: Message[] | undefined) {
     });
 
     const formattedHtml = nextStepHTML
-        .replace(/%expenses/g, 'these expenses')
-        .replace(/%Expenses/g, 'These expenses')
+        .replace(/%expenses/g, 'expense(s)')
+        .replace(/%Expenses/g, 'Expense(s)')
         .replace(/%tobe/g, 'are');
 
     return `<next-step>${formattedHtml}</next-step>`;
 }
 
-type BuildNextStepParameters = {
-    isPaidWithIeatta?: boolean;
-};
+function getNextApproverDisplayName(report: OnyxEntry<Report>) {
+    const approverAccountID = getNextApproverAccountID(report);
+
+    return ReportUtils.getDisplayNameForParticipant(approverAccountID) ?? ReportUtils.getPersonalDetailsForAccountID(approverAccountID).login;
+}
 
 /**
  * Generates an optimistic nextStep based on a current report status and other properties.
  *
  * @param report
  * @param predictedNextStatus - a next expected status of the report
- * @param parameters.isPaidWithIeatta - Whether a report has been paid with Ieatta or outside
+ * @param parameters.isPaidWithExpensify - Whether a report has been paid with Expensify or outside
  * @returns nextStep
  */
-function buildNextStep(report: Report | EmptyObject, predictedNextStatus: ValueOf<typeof CONST.REPORT.STATUS_NUM>, {isPaidWithIeatta}: BuildNextStepParameters = {}): ReportNextStep | null {
+function buildNextStep(report: OnyxEntry<Report>, predictedNextStatus: ValueOf<typeof CONST.REPORT.STATUS_NUM>): ReportNextStep | null {
     if (!ReportUtils.isExpenseReport(report)) {
         return null;
     }
 
-    const {policyID = '', ownerAccountID = -1, managerID = -1} = report;
+    const {policyID = '', ownerAccountID = -1} = report ?? {};
     const policy = allPolicies?.[`${ONYXKEYS.COLLECTION.POLICY}${policyID}`] ?? ({} as Policy);
-    const {harvesting, preventSelfApproval, autoReportingFrequency, autoReportingOffset} = policy;
-    const submitToAccountID = PolicyUtils.getSubmitToAccountID(policy, ownerAccountID);
-    const isOwner = currentUserAccountID === ownerAccountID;
-    const isManager = currentUserAccountID === managerID;
-    const isSelfApproval = currentUserAccountID === submitToAccountID;
-    const ownerLogin = PersonalDetailsUtils.getLoginsByAccountIDs([ownerAccountID])[0] ?? '';
-    const managerDisplayName = isSelfApproval ? 'you' : ReportUtils.getDisplayNameForParticipant(submitToAccountID) ?? '';
+    const {harvesting, autoReportingOffset} = policy;
+    const autoReportingFrequency = PolicyUtils.getCorrectedAutoReportingFrequency(policy);
+    const ownerDisplayName = ReportUtils.getDisplayNameForParticipant(ownerAccountID);
+    const nextApproverDisplayName = getNextApproverDisplayName(report);
+
+    const reimburserAccountID = PolicyUtils.getReimburserAccountID(policy);
+    const hasValidAccount = !!policy?.achAccount?.accountNumber;
     const type: ReportNextStep['type'] = 'neutral';
     let optimisticNextStep: ReportNextStep | null;
+
+    const noActionRequired = {
+        icon: CONST.NEXT_STEP.ICONS.CHECKMARK,
+        type,
+        message: [
+            {
+                text: 'No further action required!',
+            },
+        ],
+    };
 
     switch (predictedNextStatus) {
         // Generates an optimistic nextStep once a report has been opened
@@ -94,24 +113,24 @@ function buildNextStep(report: Report | EmptyObject, predictedNextStatus: ValueO
             // Self review
             optimisticNextStep = {
                 type,
-                title: 'Next Steps:',
+                icon: CONST.NEXT_STEP.ICONS.HOURGLASS,
                 message: [
                     {
                         text: 'Waiting for ',
                     },
                     {
-                        text: 'you',
+                        text: `${ownerDisplayName}`,
                         type: 'strong',
+                        clickToCopyText: ownerAccountID === currentUserAccountID ? currentUserEmail : '',
                     },
                     {
                         text: ' to ',
                     },
                     {
-                        text: 'submit',
-                        type: 'strong',
+                        text: 'add',
                     },
                     {
-                        text: ' these expenses.',
+                        text: ' %expenses.',
                     },
                 ],
             };
@@ -120,7 +139,19 @@ function buildNextStep(report: Report | EmptyObject, predictedNextStatus: ValueO
             if (harvesting?.enabled && autoReportingFrequency !== CONST.POLICY.AUTO_REPORTING_FREQUENCIES.MANUAL) {
                 optimisticNextStep.message = [
                     {
-                        text: 'These expenses are scheduled to ',
+                        text: 'Waiting for ',
+                    },
+                    {
+                        text: `${ownerDisplayName}`,
+                        type: 'strong',
+                        clickToCopyText: ownerAccountID === currentUserAccountID ? currentUserEmail : '',
+                    },
+                    {
+                        text: `'s`,
+                        type: 'strong',
+                    },
+                    {
+                        text: ' %expenses to automatically submit',
                     },
                 ];
                 let harvestingSuffix = '';
@@ -148,205 +179,107 @@ function buildNextStep(report: Report | EmptyObject, predictedNextStatus: ValueO
                         [CONST.POLICY.AUTO_REPORTING_FREQUENCIES.WEEKLY]: 'on Sunday',
                         [CONST.POLICY.AUTO_REPORTING_FREQUENCIES.SEMI_MONTHLY]: 'on the 1st and 16th of each month',
                         [CONST.POLICY.AUTO_REPORTING_FREQUENCIES.MONTHLY]: formattedDate ? `on the ${formattedDate} of each month` : '',
-                        [CONST.POLICY.AUTO_REPORTING_FREQUENCIES.TRIP]: 'at the end of your trip',
+                        [CONST.POLICY.AUTO_REPORTING_FREQUENCIES.TRIP]: 'at the end of their trip',
                         [CONST.POLICY.AUTO_REPORTING_FREQUENCIES.INSTANT]: '',
                         [CONST.POLICY.AUTO_REPORTING_FREQUENCIES.MANUAL]: '',
                     };
 
                     if (harvestingSuffixes[autoReportingFrequency]) {
-                        harvestingSuffix = ` ${harvestingSuffixes[autoReportingFrequency]}`;
+                        harvestingSuffix = `${harvestingSuffixes[autoReportingFrequency]}`;
                     }
                 }
 
-                optimisticNextStep.message.push(
-                    {
-                        text: `automatically submit${harvestingSuffix}!`,
-                        type: 'strong',
-                    },
-                    {
-                        text: ' No further action required!',
-                    },
-                );
-            }
-
-            // Prevented self submitting
-            if (preventSelfApproval && isSelfApproval) {
-                optimisticNextStep.message = [
-                    {
-                        text: "Oops! Looks like you're submitting to ",
-                    },
-                    {
-                        text: 'yourself',
-                        type: 'strong',
-                    },
-                    {
-                        text: '. Approving your own reports is ',
-                    },
-                    {
-                        text: 'forbidden',
-                        type: 'strong',
-                    },
-                    {
-                        text: ' by your policy. Please submit this report to someone else or contact your admin to change the person you submit to.',
-                    },
-                ];
+                optimisticNextStep.message.push({
+                    text: ` ${harvestingSuffix}`,
+                });
             }
 
             break;
 
         // Generates an optimistic nextStep once a report has been submitted
         case CONST.REPORT.STATUS_NUM.SUBMITTED: {
-            const verb = isManager ? 'review' : 'approve';
-
             // Another owner
             optimisticNextStep = {
                 type,
-                title: 'Next Steps:',
+                icon: CONST.NEXT_STEP.ICONS.HOURGLASS,
                 message: [
-                    {
-                        text: ownerLogin,
-                        type: 'strong',
-                    },
-                    {
-                        text: ' is waiting for ',
-                    },
-                    {
-                        text: 'you',
-                        type: 'strong',
-                    },
-                    {
-                        text: ' to ',
-                    },
-                    {
-                        text: verb,
-                        type: 'strong',
-                    },
-                    {
-                        text: ' these %expenses.',
-                    },
-                ],
-            };
-
-            // Self review & another reviewer
-            if (!isSelfApproval || (isSelfApproval && isOwner)) {
-                optimisticNextStep.message = [
                     {
                         text: 'Waiting for ',
                     },
                     {
-                        text: managerDisplayName,
+                        text: nextApproverDisplayName,
                         type: 'strong',
                     },
                     {
                         text: ' to ',
                     },
                     {
-                        text: verb,
-                        type: 'strong',
+                        text: 'approve',
                     },
                     {
                         text: ' %expenses.',
                     },
-                ];
-            }
+                ],
+            };
 
             break;
         }
 
         // Generates an optimistic nextStep once a report has been closed for example in the case of Submit and Close approval flow
         case CONST.REPORT.STATUS_NUM.CLOSED:
-            optimisticNextStep = {
-                type,
-                title: 'Finished!',
-                message: [
-                    {
-                        text: 'No further action required!',
-                    },
-                ],
-            };
-
-            break;
-
-        // Generates an optimistic nextStep once a report has been approved
-        case CONST.REPORT.STATUS_NUM.APPROVED:
-            // Self review
-            optimisticNextStep = {
-                type,
-                title: 'Next Steps:',
-                message: [
-                    {
-                        text: 'Waiting for ',
-                    },
-                    {
-                        text: 'you',
-                        type: 'strong',
-                    },
-                    {
-                        text: ' to ',
-                    },
-                    {
-                        text: 'pay',
-                        type: 'strong',
-                    },
-                    {
-                        text: ' %expenses.',
-                    },
-                ],
-            };
-
-            // Another owner
-            if (!isOwner) {
-                optimisticNextStep.message = [
-                    {
-                        text: 'Waiting for ',
-                    },
-                    {
-                        text: managerDisplayName,
-                        type: 'strong',
-                    },
-                    {
-                        text: ' to ',
-                    },
-                    {
-                        text: 'pay',
-                        type: 'strong',
-                    },
-                    {
-                        text: ' %expenses.',
-                    },
-                ];
-            }
+            optimisticNextStep = noActionRequired;
 
             break;
 
         // Generates an optimistic nextStep once a report has been paid
         case CONST.REPORT.STATUS_NUM.REIMBURSED:
-            // Paid with wallet
+            optimisticNextStep = noActionRequired;
+
+            break;
+
+        // Generates an optimistic nextStep once a report has been approved
+        case CONST.REPORT.STATUS_NUM.APPROVED:
+            if (
+                ReportUtils.isInvoiceReport(report) ||
+                !ReportUtils.isPayer(
+                    {
+                        accountID: currentUserAccountID,
+                        email: currentUserEmail,
+                    },
+                    report,
+                )
+            ) {
+                optimisticNextStep = noActionRequired;
+
+                break;
+            }
+            // Self review
             optimisticNextStep = {
                 type,
-                title: 'Finished!',
+                icon: CONST.NEXT_STEP.ICONS.HOURGLASS,
                 message: [
                     {
-                        text: 'You',
-                        type: 'strong',
+                        text: 'Waiting for ',
+                    },
+                    reimburserAccountID === -1
+                        ? {
+                              text: 'an admin',
+                          }
+                        : {
+                              text: ReportUtils.getDisplayNameForParticipant(reimburserAccountID),
+                              type: 'strong',
+                          },
+                    {
+                        text: ' to ',
                     },
                     {
-                        text: ' have marked these expenses as ',
+                        text: hasValidAccount ? 'pay' : 'finish setting up',
                     },
                     {
-                        text: 'paid',
-                        type: 'strong',
+                        text: hasValidAccount ? ' %expenses.' : ' a business bank account.',
                     },
                 ],
             };
-
-            // Paid outside of Ieatta
-            if (isPaidWithIeatta === false) {
-                optimisticNextStep.message?.push({text: ' outside of Ieatta'});
-            }
-
-            optimisticNextStep.message?.push({text: '.'});
-
             break;
 
         // Resets a nextStep

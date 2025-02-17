@@ -1,56 +1,48 @@
 import React from 'react';
-import {View} from 'react-native';
-import HeaderWithBackButton from '@components/HeaderWithBackButton';
-import OfflineWithFeedback from '@components/OfflineWithFeedback';
-import ScreenWrapper from '@components/ScreenWrapper';
-import ScrollView from '@components/ScrollView';
-import Switch from '@components/Switch';
+import ConnectionLayout from '@components/ConnectionLayout';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
-import * as Connections from '@libs/actions/connections';
-import variables from '@styles/variables';
+import * as QuickbooksOnline from '@libs/actions/connections/QuickBooksOnline';
+import * as ErrorUtils from '@libs/ErrorUtils';
+import Navigation from '@libs/Navigation/Navigation';
+import {settingsPendingAction} from '@libs/PolicyUtils';
+import type {WithPolicyProps} from '@expPages/workspace/withPolicy';
+import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
+import ToggleSettingOptionRow from '@expPages/workspace/workflows/ToggleSettingsOptionRow';
+import {clearQBOErrorField} from '@userActions/Policy/Policy';
 import CONST from '@src/CONST';
-import AccessOrNotFoundWrapper from '@src/expPages/workspace/AccessOrNotFoundWrapper';
-import type {WithPolicyProps} from '@src/expPages/workspace/withPolicy';
-import withPolicyConnections from '@src/expPages/workspace/withPolicyConnections';
+import ROUTES from '@src/ROUTES';
 
 function QuickbooksTaxesPage({policy}: WithPolicyProps) {
     const {translate} = useLocalize();
     const styles = useThemeStyles();
-    const policyID = policy?.id ?? '';
-    const {syncTax, pendingFields} = policy?.connections?.quickbooksOnline?.config ?? {};
+    const policyID = policy?.id ?? '-1';
+    const qboConfig = policy?.connections?.quickbooksOnline?.config;
+    const isJournalExportEntity = qboConfig?.reimbursableExpensesExportDestination === CONST.QUICKBOOKS_REIMBURSABLE_ACCOUNT_TYPE.JOURNAL_ENTRY;
     return (
-        <AccessOrNotFoundWrapper
+        <ConnectionLayout
+            displayName={QuickbooksTaxesPage.displayName}
+            headerTitle="workspace.accounting.taxes"
+            title="workspace.qbo.taxesDescription"
             accessVariants={[CONST.POLICY.ACCESS_VARIANTS.ADMIN]}
             policyID={policyID}
             featureName={CONST.POLICY.MORE_FEATURES.ARE_CONNECTIONS_ENABLED}
+            contentContainerStyle={[[styles.pb2, styles.ph5]]}
+            connectionName={CONST.POLICY.CONNECTIONS.NAME.QBO}
+            onBackButtonPress={() => Navigation.goBack(ROUTES.POLICY_ACCOUNTING_QUICKBOOKS_ONLINE_IMPORT.getRoute(policyID))}
         >
-            <ScreenWrapper
-                includeSafeAreaPaddingBottom={false}
-                shouldEnableMaxHeight
-                testID={QuickbooksTaxesPage.displayName}
-            >
-                <HeaderWithBackButton title={translate('workspace.accounting.taxes')} />
-                <ScrollView contentContainerStyle={[styles.pb2, styles.ph5]}>
-                    <Text style={styles.pb5}>{translate('workspace.qbo.taxesDescription')}</Text>
-                    <View style={[styles.flexRow, styles.mb4, styles.alignItemsCenter, styles.justifyContentBetween]}>
-                        <View style={styles.flex1}>
-                            <Text fontSize={variables.fontSizeNormal}>{translate('workspace.accounting.import')}</Text>
-                        </View>
-                        <OfflineWithFeedback pendingAction={pendingFields?.syncTax}>
-                            <View style={[styles.flex1, styles.alignItemsEnd, styles.pl3]}>
-                                <Switch
-                                    accessibilityLabel={translate('workspace.accounting.taxes')}
-                                    isOn={!!syncTax}
-                                    onToggle={() => Connections.updatePolicyConnectionConfig(policyID, CONST.POLICY.CONNECTIONS.NAME.QBO, CONST.QUICK_BOOKS_CONFIG.SYNC_TAX, !syncTax)}
-                                />
-                            </View>
-                        </OfflineWithFeedback>
-                    </View>
-                </ScrollView>
-            </ScreenWrapper>
-        </AccessOrNotFoundWrapper>
+            <ToggleSettingOptionRow
+                title={translate('workspace.accounting.import')}
+                switchAccessibilityLabel={translate('workspace.accounting.taxes')}
+                isActive={!!qboConfig?.syncTax}
+                onToggle={() => QuickbooksOnline.updateQuickbooksOnlineSyncTax(policyID, !qboConfig?.syncTax)}
+                pendingAction={settingsPendingAction([CONST.QUICKBOOKS_CONFIG.SYNC_TAX], qboConfig?.pendingFields)}
+                errors={ErrorUtils.getLatestErrorField(qboConfig, CONST.QUICKBOOKS_CONFIG.SYNC_TAX)}
+                onCloseError={() => clearQBOErrorField(policyID, CONST.QUICKBOOKS_CONFIG.SYNC_TAX)}
+            />
+            {!qboConfig?.syncTax && isJournalExportEntity && <Text style={[styles.mutedNormalTextLabel, styles.pt2]}>{translate('workspace.qbo.taxesJournalEntrySwitchNote')}</Text>}
+        </ConnectionLayout>
     );
 }
 

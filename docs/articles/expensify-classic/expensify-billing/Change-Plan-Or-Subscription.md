@@ -3,7 +3,7 @@ title: Changing your workspace plan
 description: How to change your plan or subscription
 ---
 # Overview
-Ieatta offers various plans depending on your needs: Track, Submit, Collect, Control, and Free. Your choice of plan depends on whether you want to manage your expenses individually or for a group or company. You may need to upgrade from an individual plan to a group plan if you recently hired additional employees that need should be added to a Group Workspace, or you need access to Ieatta's features that are only available on a paid plan.
+Expensify offers various plans depending on your needs: Track, Submit, Collect, Control, and Free. Your choice of plan depends on whether you want to manage your expenses individually or for a group or company. You may need to upgrade from an individual plan to a group plan if you recently hired additional employees that need should be added to a Group Workspace, or you need access to Expensify's features that are only available on a paid plan.
 
 # How to change a subscription on an Individual Plan
 ## Change Individual Plan
@@ -11,7 +11,7 @@ Ieatta offers various plans depending on your needs: Track, Submit, Collect, Con
 1. Go to **Settings > Workspaces > Individual > [Your Individual Workspace]**
 1. Click on **Plan** and select **Switch** under the plan you want to switch to
 ### Mobile
-Open the Ieatta app and:
+Open the Expensify app and:
 1. Tap the hamburger icon (three lines) on the top left
 1. Tap **Settings**
 1. Tap **View All** under your Workspace
@@ -28,13 +28,13 @@ To upgrade to a group plan, you will need to create a Group Workspace by heading
 1. Click on **Plan** and select **Switch** under the plan you want to switch to.
 
 ## Mobile
-1. In the Ieatta mobile app, navigate to **Settings > Workspaces > [Your Workspace] > Current Plan > Switch**.
+1. In the Expensify mobile app, navigate to **Settings > Workspaces > [Your Workspace] > Current Plan > Switch**.
 
 ## Adjust subscription size
 When you first create a subscription, you can manually set your size by entering a number in the Subscription Size field of your subscription settings by heading to **Settings > Workspaces > Group > Subscription**.
 
 If you choose not to set a size yourself, it will be calculated automatically for your first bill based on your depending on which scenario below fits your use case: 
-- If you’ve never had activity in Ieatta, your subscription size is set automatically to match the number of active users you had your first month of using Ieatta on your Annual Subscription. This means you’ll see the number update automatically after your first billing.
+- If you’ve never had activity in Expensify, your subscription size is set automatically to match the number of active users you had your first month of using Expensify on your Annual Subscription. This means you’ll see the number update automatically after your first billing.
 - For existing Workspaces switching to an annual subscription, the subscription size is set to the number of active users on your last month’s billing history. 
 
 ## Auto increase subscription size
@@ -56,13 +56,13 @@ If Auto Renew is disabled then the last bill at the annual rate will be issued o
 Note: Your subscription is a pre-purchase for 30 days of unlimited SmartScanning. This means that when you cancel, you do not get a refund and instead get to use the remainder of the month of unlimited SmartScanning you purchased.
 
 ## App Store
-If you subscribed via iOS, you must cancel your monthly subscription through the App Store by heading to App Store > click on your ID > Subscriptions. You can't cancel it directly in Ieatta.
+If you subscribed via iOS, you must cancel your monthly subscription through the App Store by heading to App Store > click on your ID > Subscriptions. You can't cancel it directly in Expensify.
 
 # How to downgrade to a free account from a Group Plan
 ## Pay-per-use
 If you have a Group Workspace and use Pay-Per-Use billing, you can downgrade by going to **Settings > Workspaces > Group** and clicking the cog button next to your Workspace name, then choosing **Delete**.
 
-Note: Deleting a Workspace removes its configurations and Workspace members but not their Ieatta accounts.
+Note: Deleting a Workspace removes its configurations and Workspace members but not their Expensify accounts.
 
 When deleting your final paid Workspace, if any Workspace members have been active that month (this means anybody who created, edited, submitted, approved, exported, or deleted a report) you will be billed for their activity as part of the downgrade flow.
 
@@ -74,7 +74,7 @@ If you recently started an annual subscription, you can downgrade for a full ref
 
 Note: Refunds apply to Collect or Control Group Workspaces with one month of billing and no previous balance.
 
-Once you’ve successfully downgraded to a free Ieatta account, your Workspace will be deleted and you will see a refund line item added to your Billing History.
+Once you’ve successfully downgraded to a free Expensify account, your Workspace will be deleted and you will see a refund line item added to your Billing History.
 
 {% include faq-begin.md %}
 ## Will I be charged for a monthly subscription even if I don't use SmartScans?

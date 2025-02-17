@@ -1,21 +1,21 @@
-const ieattaClassicContent = document.getElementById('ieatta-classic');
-const newIeattaContent = document.getElementById('new-ieatta');
+const expensifyClassicContent = document.getElementById('expensify-classic');
+const newExpensifyContent = document.getElementById('new-expensify');
 const platformTabs = document.getElementById('platform-tabs');
 
-if (ieattaClassicContent) {
+if (expensifyClassicContent) {
     const tab = document.createElement('div');
-    tab.innerHTML = 'Ieatta Classic';
-    tab.id = 'platform-tab-ieatta-classic';
+    tab.innerHTML = 'Expensify Classic';
+    tab.id = 'platform-tab-expensify-classic';
     tab.classList.add('active');
     platformTabs.appendChild(tab);
 }
 
-if (newIeattaContent) {
+if (newExpensifyContent) {
     const tab = document.createElement('div');
     tab.innerHTML = 'New Ieatta';
-    tab.id = 'platform-tab-new-ieatta';
+    tab.id = 'platform-tab-new-expensify';
 
-    if (!ieattaClassicContent) {
+    if (!expensifyClassicContent) {
         tab.classList.add('active');
     }
     platformTabs.appendChild(tab);

@@ -1,12 +1,13 @@
+// eslint-disable-next-line lodash/import-scope
 import {isEmpty} from 'lodash';
 import React, {memo} from 'react';
 import type {StyleProp, TextStyle} from 'react-native';
 import Text from '@components/Text';
 import ZeroWidthView from '@components/ZeroWidthView';
 import useLocalize from '@hooks/useLocalize';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
 import convertToLTR from '@libs/convertToLTR';
 import * as DeviceCapabilities from '@libs/DeviceCapabilities';
 import * as EmojiUtils from '@libs/EmojiUtils';
@@ -34,7 +35,7 @@ function TextCommentFragment({fragment, styleAsDeleted, styleAsMuted = false, st
     const styles = useThemeStyles();
     const {html = '', text} = fragment;
     const {translate} = useLocalize();
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
 
     const containsOnlyEmojis = EmojiUtils.containsOnlyEmojis(text);
     const message = isEmpty(iouMessage) ? text : iouMessage;

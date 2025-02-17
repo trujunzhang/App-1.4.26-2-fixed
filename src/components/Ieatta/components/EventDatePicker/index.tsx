@@ -4,7 +4,7 @@ import type {ForwardedRef} from 'react';
 import React, {forwardRef} from 'react';
 import {View} from 'react-native';
 import Text from '@components/Text';
-import {BaseTextInputRef} from '@components/TextInput/BaseTextInput/types';
+import type {BaseTextInputRef} from '@components/TextInput/BaseTextInput/types';
 import useThemeStyles from '@hooks/useThemeStyles';
 import BaseDateTimePicker from './BaseDateTimePicker';
 import type {BaseEventDatePickerProps} from './types';

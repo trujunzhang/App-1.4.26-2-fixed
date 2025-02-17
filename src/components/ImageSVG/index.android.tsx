@@ -17,7 +17,7 @@ function ImageSVG({src, width = '100%', height = '100%', fill, contentFit = 'cov
     return (
         <Image
             // Caching images to memory since some SVGs are being displayed with delay
-            // See issue: https://github.com/Ieatta/App/issues/34881
+            // See issue: https://github.com/Expensify/App/issues/34881
             cachePolicy="memory"
             contentFit={contentFit}
             source={src as ImageSourcePropType}

@@ -1,5 +1,4 @@
 import type {StackScreenProps} from '@react-navigation/stack';
-import ExpensiMark from 'expensify-common/lib/ExpensiMark';
 import React, {useCallback, useState} from 'react';
 import {View} from 'react-native';
 import FormProvider from '@components/Form/FormProvider';
@@ -14,20 +13,19 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import {renamePolicyTax, validateTaxName} from '@libs/actions/TaxRate';
 import Navigation from '@libs/Navigation/Navigation';
 import type {SettingsNavigatorParamList} from '@libs/Navigation/types';
+import Parser from '@libs/Parser';
 import * as PolicyUtils from '@libs/PolicyUtils';
+import NotFoundPage from '@expPages/ErrorPage/NotFoundPage';
+import AccessOrNotFoundWrapper from '@expPages/workspace/AccessOrNotFoundWrapper';
+import type {WithPolicyAndFullscreenLoadingProps} from '@expPages/workspace/withPolicyAndFullscreenLoading';
+import withPolicyAndFullscreenLoading from '@expPages/workspace/withPolicyAndFullscreenLoading';
 import CONST from '@src/CONST';
-import NotFoundPage from '@src/expPages/ErrorPage/NotFoundPage';
-import AccessOrNotFoundWrapper from '@src/expPages/workspace/AccessOrNotFoundWrapper';
-import type {WithPolicyAndFullscreenLoadingProps} from '@src/expPages/workspace/withPolicyAndFullscreenLoading';
-import withPolicyAndFullscreenLoading from '@src/expPages/workspace/withPolicyAndFullscreenLoading';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
 import type SCREENS from '@src/SCREENS';
 import INPUT_IDS from '@src/types/form/WorkspaceTaxNameForm';
 
 type NamePageProps = WithPolicyAndFullscreenLoadingProps & StackScreenProps<SettingsNavigatorParamList, typeof SCREENS.WORKSPACE.TAX_NAME>;
-
-const parser = new ExpensiMark();
 
 function NamePage({
     route: {
@@ -40,12 +38,16 @@ function NamePage({
     const currentTaxRate = PolicyUtils.getTaxByID(policy, taxID);
     const {inputCallbackRef} = useAutoFocusInput();
 
-    const [name, setName] = useState(() => parser.htmlToMarkdown(currentTaxRate?.name ?? ''));
+    const [name, setName] = useState(() => Parser.htmlToMarkdown(currentTaxRate?.name ?? ''));
 
-    const goBack = useCallback(() => Navigation.goBack(ROUTES.WORKSPACE_TAX_EDIT.getRoute(policyID ?? '', taxID)), [policyID, taxID]);
+    const goBack = useCallback(() => Navigation.goBack(ROUTES.WORKSPACE_TAX_EDIT.getRoute(policyID ?? '-1', taxID)), [policyID, taxID]);
 
     const submit = () => {
-        renamePolicyTax(policyID, taxID, name);
+        const taxName = name.trim();
+        // Do not call the API if the edited tax name is the same as the current tag name
+        if (currentTaxRate?.name !== taxName) {
+            renamePolicyTax(policyID, taxID, taxName);
+        }
         goBack();
     };
 

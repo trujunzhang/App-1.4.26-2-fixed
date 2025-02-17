@@ -13,8 +13,8 @@ import useNetwork from '@hooks/useNetwork';
 import type {SubStepProps} from '@hooks/useSubStep/types';
 import useThemeStyles from '@hooks/useThemeStyles';
 import * as ErrorUtils from '@libs/ErrorUtils';
+import getSubstepValues from '@expPages/EnablePayments/utils/getSubstepValues';
 import CONST from '@src/CONST';
-import getSubstepValues from '@src/expPages/EnablePayments/utils/getSubstepValues';
 import ONYXKEYS from '@src/ONYXKEYS';
 import INPUT_IDS from '@src/types/form/WalletAdditionalDetailsForm';
 
@@ -29,9 +29,10 @@ function ConfirmationStep({onNext, onMove}: SubStepProps) {
     const [walletAdditionalDetails] = useOnyx(ONYXKEYS.WALLET_ADDITIONAL_DETAILS);
     const [walletAdditionalDetailsDraft] = useOnyx(ONYXKEYS.FORMS.WALLET_ADDITIONAL_DETAILS_DRAFT);
 
-    const isLoading = walletAdditionalDetailsDraft?.isLoading ?? false;
+    const isLoading = walletAdditionalDetails?.isLoading ?? false;
     const error = ErrorUtils.getLatestErrorMessage(walletAdditionalDetails ?? {});
     const values = useMemo(() => getSubstepValues(PERSONAL_INFO_STEP_KEYS, walletAdditionalDetailsDraft, walletAdditionalDetails), [walletAdditionalDetails, walletAdditionalDetailsDraft]);
+    const shouldAskForFullSSN = walletAdditionalDetails?.errorCode === CONST.WALLET.ERROR.SSN;
 
     return (
         <SafeAreaConsumer>
@@ -76,7 +77,7 @@ function ConfirmationStep({onNext, onMove}: SubStepProps) {
                         }}
                     />
                     <MenuItemWithTopDescription
-                        description={translate('personalInfoStep.last4SSN')}
+                        description={translate(shouldAskForFullSSN ? 'common.ssnFull9' : 'personalInfoStep.last4SSN')}
                         title={values[PERSONAL_INFO_STEP_KEYS.SSN_LAST_4]}
                         shouldShowRightIcon
                         onPress={() => {

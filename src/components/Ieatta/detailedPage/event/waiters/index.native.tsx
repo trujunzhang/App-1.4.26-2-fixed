@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {useQuery} from '@realm/react';
 import React from 'react';
 import DetailedPhotosList from '@components/Ieatta/detailedPage/common/photoAndWaiter/DetailedPhotosList';
-import {PhotoType} from '@libs/Firebase/constant';
+import {PhotoType} from '@libs/FirebaseIeatta/constant';
 import {filterWaiters} from '@libs/ieatta/eventUtils';
 import {RealmCollections} from '@libs/Realm/constant';
 import {toRealmModelList} from '@libs/Realm/helpers/realmTypeHelper';
@@ -12,6 +13,11 @@ import type {WaitersRowInEventProps} from './types';
 function WaitersRowInEvent({waiterRow}: WaitersRowInEventProps) {
     const {event, eventId, restaurantId} = waiterRow;
 
+    /**
+     |--------------------------------------------------
+     | Waiters in the restaurant
+     |--------------------------------------------------
+     */
     const photos = useQuery(RealmCollections.Photos, RealmQuery.queryForRealmPhotos({relatedId: restaurantId, photoType: PhotoType.Waiter}));
     const waitersInRestaurant: IFBPhoto[] = toRealmModelList<IFBPhoto>(photos);
 

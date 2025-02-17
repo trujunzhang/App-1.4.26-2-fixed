@@ -1,12 +1,12 @@
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import React from 'react';
 import {Image, View} from 'react-native';
-import {withOnyx} from 'react-native-onyx';
 import type {OnyxEntry} from 'react-native-onyx';
-import {index} from 'realm';
+import {withOnyx} from 'react-native-onyx';
 import Text from '@components/Text';
 import useThemeStyles from '@hooks/useThemeStyles';
-import type {IPhotoLocalItemRow} from '@libs/Firebase/list/types/rows/photo';
+import type {IPhotoLocalItemRow} from '@libs/FirebaseIeatta/list/types/rows/photo';
 import TailwindColors from '@styles/tailwindcss/colors';
 import ONYXKEYS from '@src/ONYXKEYS';
 
@@ -34,7 +34,7 @@ function PhotoLocalItem({localItem, firebaseCurrentSyncId}: PhotoLocalItemProps)
                 source={{uri: `file://${item.offlinePath}`}}
                 style={[styles.w100, styles.h100]}
             />
-            {item.photoTableId === firebaseCurrentSyncId && (
+            {item.firebasePhotoId === firebaseCurrentSyncId && (
                 <View style={[styles.pAbsolute, styles.l0, styles.t0]}>
                     <Text
                         style={[

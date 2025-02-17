@@ -53,60 +53,27 @@ function OptionsListContextProvider({reports, children}: OptionsListProviderProp
 
     const personalDetails = usePersonalDetails() || CONST.EMPTY_OBJECT;
     const prevPersonalDetails = usePrevious(personalDetails);
-    const prevReports = usePrevious(reports);
 
     /**
-     * This effect is used to update the options list when a report is updated.
+     * This effect is used to update the options list when reports change.
      */
     useEffect(() => {
         // there is no need to update the options if the options are not initialized
-        if (!areOptionsInitialized.current) {
-            return;
-        }
-
-        const lastUpdatedReport = ReportUtils.getLastUpdatedReport();
-
-        if (!lastUpdatedReport) {
-            return;
-        }
-
-        const newOption = OptionsListUtils.createOptionFromReport(lastUpdatedReport, personalDetails);
-        const replaceIndex = options.reports.findIndex((option) => option.reportID === lastUpdatedReport.reportID);
-
-        if (replaceIndex === -1) {
-            return;
-        }
-
-        setOptions((prevOptions) => {
-            const newOptions = {...prevOptions};
-            newOptions.reports[replaceIndex] = newOption;
-            return newOptions;
-        });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [reports]);
-
-    /**
-     * This effect is used to add a new report option to the list of options when a new report is added to the collection.
-     */
-    useEffect(() => {
         if (!areOptionsInitialized.current || !reports) {
             return;
         }
-        const missingReportIds = Object.keys(reports).filter((key) => prevReports && !(key in prevReports));
+        // Since reports updates can happen in bulk, and some reports depend on other reports, we need to recreate the whole list from scratch.
+        const newReports = OptionsListUtils.createOptionList(personalDetails, reports).reports;
 
         setOptions((prevOptions) => {
-            const newOptions = {...prevOptions};
-            missingReportIds.forEach((missingReportId) => {
-                const report = missingReportId ? reports[missingReportId] : null;
-                if (!missingReportId || !report) {
-                    return;
-                }
-                const reportOption = OptionsListUtils.createOptionFromReport(report, personalDetails);
-                newOptions.reports.push(reportOption);
-            });
+            const newOptions = {
+                ...prevOptions,
+                reports: newReports,
+            };
+
             return newOptions;
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
     }, [reports]);
 
     /**
@@ -123,16 +90,16 @@ function OptionsListContextProvider({reports, children}: OptionsListProviderProp
             newReportOption: OptionsListUtils.SearchOption<Report>;
         }> = [];
 
-        Object.keys(personalDetails).forEach((accoutID) => {
-            const prevPersonalDetail = prevPersonalDetails?.[accoutID];
-            const personalDetail = personalDetails?.[accoutID];
+        Object.keys(personalDetails).forEach((accountID) => {
+            const prevPersonalDetail = prevPersonalDetails?.[accountID];
+            const personalDetail = personalDetails?.[accountID];
 
             if (isEqualPersonalDetail(prevPersonalDetail, personalDetail)) {
                 return;
             }
 
             Object.values(reports ?? {})
-                .filter((report) => Boolean(report?.participantAccountIDs?.includes(Number(accoutID))) || (ReportUtils.isSelfDM(report) && report?.ownerAccountID === Number(accoutID)))
+                .filter((report) => !!Object.keys(report?.participants ?? {}).includes(accountID) || (ReportUtils.isSelfDM(report) && report?.ownerAccountID === Number(accountID)))
                 .forEach((report) => {
                     if (!report) {
                         return;
@@ -157,7 +124,7 @@ function OptionsListContextProvider({reports, children}: OptionsListProviderProp
         });
 
         // This effect is used to update the options list when personal details change so we ignore all dependencies except personalDetails
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
     }, [personalDetails]);
 
     const loadOptions = useCallback(() => {

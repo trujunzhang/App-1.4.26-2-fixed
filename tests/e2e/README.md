@@ -4,7 +4,7 @@ This directory contains the scripts and configuration files for running the
 performance regression tests. These tests are called E2E tests because they
 run the actual app on a real device (physical or emulated).
 
-![Example of a e2e test run](https://raw.githubusercontent.com/hannojg/ieatta-app/5f945c25e2a0650753f47f3f541b984f4d114f6d/e2e/example.gif)
+![Example of a e2e test run](https://raw.githubusercontent.com/hannojg/expensify-app/5f945c25e2a0650753f47f3f541b984f4d114f6d/e2e/example.gif)
 
 
 ## Available CLI options
@@ -41,18 +41,16 @@ npm run android
 
 3. We need to modify the app entry to point to the one for the tests. Therefore rename `./index.js` to `./appIndex.js` temporarily.
 
-4. Create a new `./index.js` with the following content:
-```js
-require('./src/libs/E2E/reactNativeLaunchingTest');
-```
+4. Temporarily add to the `package.json` a `main` field pointing to the e2e entry file:
+  
+  ```diff
+  {
+    "private": true,
++ "main": "src/libs/E2E/reactNativeLaunchingTest.ts"
+  }
+  ```
 
-5. In `./src/libs/E2E/reactNativeLaunchingTest.ts` change the main app import to the new `./appIndex.js` file:
-```diff
-- import '../../../index';
-+ import '../../../appIndex';
-```
-
-6. You can now run the tests. This command will invoke the test runner:
+5. You can now run the tests. This command will invoke the test runner:
 
 ```sh
 npm run test:e2e:dev
@@ -148,7 +146,8 @@ const someDurationWeCollected = // ...
 
 E2EClient.submitTestResults({
     name: 'My test name',
-    duration: someDurationWeCollected,
+    metric: someDurationWeCollected,
+    unit: 'ms',
 });
 ```
 

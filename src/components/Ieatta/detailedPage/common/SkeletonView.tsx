@@ -1,7 +1,7 @@
 import React from 'react';
 import {DetailedPageSkeletonView} from '@components/Ieatta/components/SkeletonViews';
-import {SkeletonViewType} from '@libs/Firebase/list/constant';
-import type {ISkeletonViewRow} from '@libs/Firebase/list/types/rows/common';
+import {SkeletonViewType} from '@libs/FirebaseIeatta/list/constant';
+import type {ISkeletonViewRow} from '@libs/FirebaseIeatta/list/types/rows/common';
 
 type SkeletonViewProps = {
     rowData: ISkeletonViewRow;

@@ -23,13 +23,13 @@ What elements of this feature are pay-walled vs. free?
 As a Workspace admin, you have the ability to view, edit, and submit your employees' Open reports.
 
 
-We recommend beginning this process from the web version of Ieatta because it offers more functionality compared to the mobile app. Here's how to get started:
+We recommend beginning this process from the web version of Expensify because it offers more functionality compared to the mobile app. Here's how to get started:
 Click on the "Reports" tab.
 Select the "All Submitters" and "Open" filters.
 This will display all employee reports on your Workspaces that have not yet been submitted.
 ​
 ## Viewing Employee Reports
-Viewing employee reports can vary depending on whether you're using the web or mobile versions of Ieatta. We generally recommend using the web version for this purpose, as it offers the following advantages:
+Viewing employee reports can vary depending on whether you're using the web or mobile versions of Expensify. We generally recommend using the web version for this purpose, as it offers the following advantages:
 
 
 You will only receive reports directly submitted to you when using the mobile app.
@@ -44,7 +44,7 @@ When using the mobile app to view reports, please note the following:
 Tapping on the Reports list will only display your own reports; you won't see reports from other Workspace members.
 
 
-To view another Workspace member's report in the Ieatta app, it must be submitted directly to you, and you must access it through a link from an email or via Home.
+To view another Workspace member's report in the Expensify app, it must be submitted directly to you, and you must access it through a link from an email or via Home.
 
 
 When you access a report in this manner, you will have the option to approve/reject it or go through the review process if there are expenses that require your attention.
@@ -94,11 +94,11 @@ Rejecting a report will return the report back to the submitter in an Open statu
 You can click the red Unapprove button at the top of the report to undo approving a report. Keep in mind that you'll only see the Unapprove button if you're a report approver on an admin that has taken control of the report.​
 
 
-## Marking a Report as Reimbursed Outside of Ieatta
-If you are reimbursing reports via paper check, through payroll or any other method that takes place outside of Ieatta, you'll want to keep track of which reports have been taken care of by marking reports as reimbursed.
+## Marking a Report as Reimbursed Outside of Expensify
+If you are reimbursing reports via paper check, through payroll or any other method that takes place outside of Expensify, you'll want to keep track of which reports have been taken care of by marking reports as reimbursed.
 
 
-1. Log into your Ieatta account using your preferred web browser, (ie: Chrome or Safari)
+1. Log into your Expensify account using your preferred web browser, (ie: Chrome or Safari)
 2. Head to your Reports page and locate the report
 3. Click the report name to open it
 4. Click on Reimburse

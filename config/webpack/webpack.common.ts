@@ -4,14 +4,24 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
-import type {Configuration} from 'webpack';
+import type {Class} from 'type-fest';
+import type {Configuration, WebpackPluginInstance} from 'webpack';
 import {DefinePlugin, EnvironmentPlugin, IgnorePlugin, ProvidePlugin} from 'webpack';
 import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
 import CustomVersionFilePlugin from './CustomVersionFilePlugin';
 import type Environment from './types';
 
-// require is necessary, there are no types for this package and the declaration file can't be seen by the build process which causes an error.
-const PreloadWebpackPlugin = require('@vue/preload-webpack-plugin');
+type Options = {
+    rel: string;
+    as: string;
+    fileWhitelist: RegExp[];
+    include: string;
+};
+
+type PreloadWebpackPluginClass = Class<WebpackPluginInstance, [Options]>;
+
+// require is necessary, importing anything from @vue/preload-webpack-plugin causes an error
+const PreloadWebpackPlugin = require('@vue/preload-webpack-plugin') as PreloadWebpackPluginClass;
 
 const includeModules = [
     'react-native-toast-message',
@@ -38,7 +48,7 @@ const environmentToLogoSuffixMap: Record<string, string> = {
 };
 
 function mapEnvironmentToLogoSuffix(environmentFile: string): string {
-    let environment = environmentFile.split('.')[2];
+    let environment = environmentFile.split('.').at(2);
     if (typeof environment === 'undefined') {
         environment = 'dev';
     }
@@ -69,7 +79,7 @@ const getCommonConfiguration = ({file = '.env', platform = 'web'}: Environment):
         new HtmlWebpackPlugin({
             template: 'web/index.html',
             filename: 'index.html',
-            splashLogo: fs.readFileSync(path.resolve(__dirname, `../../assets/images/splash${mapEnvironmentToLogoSuffix(file)}.svg`), 'utf-8'),
+            splashLogo: fs.readFileSync(path.resolve(__dirname, `../../assets/images/new-expensify${mapEnvironmentToLogoSuffix(file)}.svg`), 'utf-8'),
             isWeb: platform === 'web',
             isProduction: file === '.env.production',
             isStaging: file === '.env.staging',
@@ -99,7 +109,7 @@ const getCommonConfiguration = ({file = '.env', platform = 'web'}: Environment):
                 {from: 'web/apple-touch-icon.png'},
                 {from: 'assets/images/expensify-app-icon.svg'},
                 {from: 'web/manifest.json'},
-                {from: 'web/gtm.js'},
+                {from: 'web/thirdPartyScripts.js'},
                 {from: 'assets/css', to: 'css'},
                 {from: 'assets/fonts/web', to: 'fonts'},
                 {from: 'assets/sounds', to: 'sounds'},
@@ -114,11 +124,18 @@ const getCommonConfiguration = ({file = '.env', platform = 'web'}: Environment):
                 {from: 'node_modules/pdfjs-dist/cmaps/', to: 'cmaps/'},
             ],
         }),
-        new EnvironmentPlugin({JEST_WORKER_ID: null}),
+        new EnvironmentPlugin({JEST_WORKER_ID: ''}),
         new IgnorePlugin({
             resourceRegExp: /^\.\/locale$/,
             contextRegExp: /moment$/,
         }),
+        ...(file === '.env.production' || file === '.env.staging'
+            ? [
+                  new IgnorePlugin({
+                      resourceRegExp: /@welldone-software\/why-did-you-render/,
+                  }),
+              ]
+            : []),
         ...(platform === 'web' ? [new CustomVersionFilePlugin()] : []),
         new DefinePlugin({
             ...(platform === 'desktop' ? {} : {process: {env: {}}}),
@@ -156,7 +173,7 @@ const getCommonConfiguration = ({file = '.env', platform = 'web'}: Environment):
             // We are importing this worker as a string by using asset/source otherwise it will default to loading via an HTTPS request later.
             // This causes issues if we have gone offline before the pdfjs web worker is set up as we won't be able to load it from the server.
             {
-                test: new RegExp('node_modules/pdfjs-dist/legacy/build/pdf.worker.js'),
+                test: new RegExp('node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs'),
                 type: 'asset/source',
             },
 
@@ -206,6 +223,7 @@ const getCommonConfiguration = ({file = '.env', platform = 'web'}: Environment):
     },
     resolve: {
         alias: {
+            lodash: 'lodash-es',
             // eslint-disable-next-line @typescript-eslint/naming-convention
             'react-native-config': 'react-web-config',
             // eslint-disable-next-line @typescript-eslint/naming-convention

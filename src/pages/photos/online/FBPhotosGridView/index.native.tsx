@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type {StackScreenProps} from '@react-navigation/stack';
 import {useQuery} from '@realm/react';
 import lodashGet from 'lodash/get';
 import React from 'react';
 import PhotosPageLayout from '@components/Ieatta/photos/PhotosPageLayout';
-import {PhotoType} from '@libs/Firebase/constant';
+import {PhotoType} from '@libs/FirebaseIeatta/constant';
 import type {AuthScreensParamList} from '@libs/Navigation/types';
 import {RealmCollections} from '@libs/Realm/constant';
 import {toRealmModelList} from '@libs/Realm/helpers/realmTypeHelper';
@@ -19,7 +20,7 @@ function FBPhotosGridView({route}: FBPhotosGridViewProps) {
     const relatedId = lodashGet(route, 'params.relatedId', CONST.IEATTA_MODEL_ID_EMPTY);
     const photoType = lodashGet(route, 'params.photoType', PhotoType.Unknown);
 
-    const photos = useQuery(RealmCollections.Photos, RealmQuery.queryForRealmPhotos({relatedId, photoType}));
+    const photos = useQuery<IFBPhoto>(RealmCollections.Photos, RealmQuery.queryForRealmPhotos({relatedId, photoType}), [relatedId, photoType]);
     const photosInPage: IFBPhoto[] = toRealmModelList<IFBPhoto>(photos);
 
     return (

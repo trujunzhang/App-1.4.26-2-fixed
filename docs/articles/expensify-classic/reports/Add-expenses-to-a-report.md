@@ -2,7 +2,7 @@
 title: Add expenses to a report
 description: Put your expenses on a report to submit them for reimbursement 
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 Once you’ve created your expenses, they may be automatically added to an expense report if your company has this feature enabled. If not, your next step will be to add your expenses to a report and submit them for payment. 
 

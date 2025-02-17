@@ -1,7 +1,10 @@
+import type {RouteProp} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import type {StackScreenProps} from '@react-navigation/stack';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {withOnyx} from 'react-native-onyx';
 import type {OnyxEntry} from 'react-native-onyx';
+import type {ValueOf} from 'type-fest';
 import FullPageNotFoundView from '@components/BlockingViews/FullPageNotFoundView';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
 import ScreenWrapper from '@components/ScreenWrapper';
@@ -11,10 +14,10 @@ import useLocalize from '@hooks/useLocalize';
 import Navigation from '@libs/Navigation/Navigation';
 import * as ReportUtils from '@libs/ReportUtils';
 import type {ReportSettingsNavigatorParamList} from '@navigation/types';
+import withReportOrNotFound from '@expPages/home/report/withReportOrNotFound';
+import type {WithReportOrNotFoundProps} from '@expPages/home/report/withReportOrNotFound';
 import * as ReportActions from '@userActions/Report';
 import CONST from '@src/CONST';
-import withReportOrNotFound from '@src/expPages/home/report/withReportOrNotFound';
-import type {WithReportOrNotFoundProps} from '@src/expPages/home/report/withReportOrNotFound';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
 import type SCREENS from '@src/SCREENS';
@@ -30,6 +33,7 @@ type WriteCapabilityPageProps = WriteCapabilityPageOnyxProps &
     StackScreenProps<ReportSettingsNavigatorParamList, typeof SCREENS.REPORT_SETTINGS.WRITE_CAPABILITY>;
 
 function WriteCapabilityPage({report, policy}: WriteCapabilityPageProps) {
+    const route = useRoute<RouteProp<ReportSettingsNavigatorParamList, typeof SCREENS.REPORT_SETTINGS.WRITE_CAPABILITY>>();
     const {translate} = useLocalize();
     const writeCapabilityOptions = Object.values(CONST.REPORT.WRITE_CAPABILITIES).map((value) => ({
         value,
@@ -40,6 +44,18 @@ function WriteCapabilityPage({report, policy}: WriteCapabilityPageProps) {
 
     const isAbleToEdit = ReportUtils.canEditWriteCapability(report, policy);
 
+    const goBack = useCallback(() => {
+        Navigation.goBack(ROUTES.REPORT_SETTINGS.getRoute(report.reportID, route.params.backTo));
+    }, [report.reportID, route.params.backTo]);
+
+    const updateWriteCapability = useCallback(
+        (newValue: ValueOf<typeof CONST.REPORT.WRITE_CAPABILITIES>) => {
+            ReportActions.updateWriteCapability(report, newValue);
+            goBack();
+        },
+        [report, goBack],
+    );
+
     return (
         <ScreenWrapper
             includeSafeAreaPaddingBottom={false}
@@ -49,12 +65,13 @@ function WriteCapabilityPage({report, policy}: WriteCapabilityPageProps) {
                 <HeaderWithBackButton
                     title={translate('writeCapabilityPage.label')}
                     shouldShowBackButton
-                    onBackButtonPress={() => Navigation.goBack(ROUTES.REPORT_SETTINGS.getRoute(report?.reportID ?? ''))}
+                    onBackButtonPress={goBack}
                 />
                 <SelectionList
                     sections={[{data: writeCapabilityOptions}]}
                     ListItem={RadioListItem}
-                    onSelectRow={(option) => report && ReportActions.updateWriteCapabilityAndNavigate(report, option.value)}
+                    onSelectRow={(option) => updateWriteCapability(option.value)}
+                    shouldSingleExecuteRowSelect
                     initiallyFocusedOptionKey={writeCapabilityOptions.find((locale) => locale.isSelected)?.keyForList}
                 />
             </FullPageNotFoundView>

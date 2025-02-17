@@ -1,13 +1,13 @@
 // eslint-disable-next-line no-restricted-imports
 import {parsePhoneNumber as originalParsePhoneNumber} from 'awesome-phonenumber';
 import type {ParsedPhoneNumber, ParsedPhoneNumberInvalid, PhoneNumberParseOptions} from 'awesome-phonenumber';
-import Str from 'expensify-common/lib/str';
+import {Str} from 'expensify-common';
 import CONST from '@src/CONST';
 
 /**
  * Wraps awesome-phonenumber's parsePhoneNumber function to handle the case where we want to treat
  * a US phone number that's technically valid as invalid. eg: +115005550009.
- * See https://github.com/Ieatta/App/issues/28492
+ * See https://github.com/Expensify/App/issues/28492
  */
 function parsePhoneNumber(phoneNumber: string, options?: PhoneNumberParseOptions): ParsedPhoneNumber {
     const parsedPhoneNumber = originalParsePhoneNumber(phoneNumber, options);
@@ -41,7 +41,7 @@ function parsePhoneNumber(phoneNumber: string, options?: PhoneNumberParseOptions
 }
 
 /**
- * Adds ieatta SMS domain (@ieatta.sms) if login is a phone number and if it's not included yet
+ * Adds expensify SMS domain (@expensify.sms) if login is a phone number and if it's not included yet
  */
 function addSMSDomainIfPhoneNumber(login: string): string {
     const parsedPhoneNumber = parsePhoneNumber(login);

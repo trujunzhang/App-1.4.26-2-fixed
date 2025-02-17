@@ -13,28 +13,28 @@
 
    2.1. Go to `Signing and Capabilities`, then in the section called `Signing (Debug/Development and Release/Development)`
    
-   ![Step 2.1 Screenshot](https://github.com/Ieatta/App/assets/104348397/4c668612-ab29-4a91-8e2d-a146e2940017)
+   ![Step 2.1 Screenshot](https://github.com/Expensify/App/assets/104348397/4c668612-ab29-4a91-8e2d-a146e2940017)
    
    2.2. Enable `Automatically manage Signing`
    
    2.3. Pick your personal team
    
-   2.4. Change the bundle identifier to something unique like `com.yourname.ieatta.chat.dev`
+   2.4. Change the bundle identifier to something unique like `com.yourname.expensify.chat.dev`
    
-   ![Step 2.4 Screenshot](https://github.com/Ieatta/App/assets/104348397/4ce3f250-4b7c-4e7c-9f1d-09df7bdfc5e0)
+   ![Step 2.4 Screenshot](https://github.com/Expensify/App/assets/104348397/4ce3f250-4b7c-4e7c-9f1d-09df7bdfc5e0)
 
 > [!Note]
->Please be aware that the app built with your own bundle id doesn't support authenticated services like push notification, Apple signin, deeplinking etc. which should be only available in Ieatta developer account.
+>Please be aware that the app built with your own bundle id doesn't support authenticated services like push notification, Apple signin, deeplinking etc. which should be only available in Expensify developer account.
    
    2.5. Scroll down and Remove Associated Domains, Communication Notifications, Push Notifications, and Sign In With Apple capabilities
 
-   ![Step 2.6 Screenshot](https://github.com/Ieatta/App/assets/104348397/850d35ac-ca49-4d44-8e3b-0b4ad10509d3)
+   ![Step 2.6 Screenshot](https://github.com/Expensify/App/assets/104348397/850d35ac-ca49-4d44-8e3b-0b4ad10509d3)
 
    2.6. Go to the `NotificationService` target and repeat Steps 2.2-2.4
    
    2.7. Go to the `Tests` target and repeat Steps 2.2-2.4
    
-   ![Step 2.7 Screenshot](https://github.com/Ieatta/App/assets/104348397/ad9fcc8e-10ad-40ca-9fb5-c67aec5dbdce)
+   ![Step 2.7 Screenshot](https://github.com/Expensify/App/assets/104348397/ad9fcc8e-10ad-40ca-9fb5-c67aec5dbdce)
 
 3. **Build and Run your app**
 

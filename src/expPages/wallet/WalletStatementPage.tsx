@@ -1,6 +1,6 @@
 import type {StackScreenProps} from '@react-navigation/stack';
 import {format, getMonth, getYear} from 'date-fns';
-import Str from 'expensify-common/lib/str';
+import {Str} from 'expensify-common';
 import React, {useEffect} from 'react';
 import {withOnyx} from 'react-native-onyx';
 import type {OnyxEntry} from 'react-native-onyx';
@@ -42,7 +42,7 @@ function WalletStatementPage({walletStatement, route}: WalletStatementPageProps)
         if (!yearMonth || yearMonth.length !== 6 || yearMonth > currentYearMonth) {
             Navigation.dismissModal();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps -- we want this effect to run only on mount
+        // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps -- we want this effect to run only on mount
     }, []);
 
     useEffect(() => {
@@ -56,7 +56,7 @@ function WalletStatementPage({walletStatement, route}: WalletStatementPageProps)
 
         if (walletStatement?.[yearMonth]) {
             // We already have a file URL for this statement, so we can download it immediately
-            const downloadFileName = `Ieatta_Statement_${yearMonth}.pdf`;
+            const downloadFileName = `Expensify_Statement_${yearMonth}.pdf`;
             const fileName = walletStatement[yearMonth];
             const pdfURL = `${CONFIG.EXPENSIFY.EXPENSIFY_URL}secure?secureType=pdfreport&filename=${fileName}&downloadName=${downloadFileName}`;
             fileDownload(pdfURL, downloadFileName);
@@ -70,7 +70,7 @@ function WalletStatementPage({walletStatement, route}: WalletStatementPageProps)
     const year = yearMonth?.substring(0, 4) || getYear(new Date());
     const month = yearMonth?.substring(4) || getMonth(new Date());
     const monthName = format(new Date(Number(year), Number(month) - 1), CONST.DATE.MONTH_FORMAT);
-    const title = translate('statementPage.title', year, monthName);
+    const title = translate('statementPage.title', {year, monthName});
     const url = `${CONFIG.EXPENSIFY.EXPENSIFY_URL}statement.php?period=${yearMonth}${themePreference === CONST.THEME.DARK ? '&isDarkMode=true' : ''}`;
 
     return (

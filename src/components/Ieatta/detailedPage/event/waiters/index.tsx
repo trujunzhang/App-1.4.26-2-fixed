@@ -1,10 +1,11 @@
-// eslint-disable-next-line no-restricted-imports
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+// eslint-disable-next-line no-restricted-imports, lodash/import-scope
 import _ from 'lodash';
 import React from 'react';
 import {useCollection} from 'react-firebase-hooks/firestore';
 import DetailedPhotosList from '@components/Ieatta/detailedPage/common/photoAndWaiter/DetailedPhotosList';
-import {PhotoType} from '@libs/Firebase/constant';
-import * as FirebaseQuery from '@libs/Firebase/services/firebase-query';
+import {PhotoType} from '@libs/FirebaseIeatta/constant';
+import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
 import {filterWaiters} from '@libs/ieatta/eventUtils';
 import type {IFBPhoto} from '@src/types/firebase';
 import type {WaitersRowInEventProps} from './types';
@@ -14,7 +15,7 @@ function WaitersRowInEvent({waiterRow}: WaitersRowInEventProps) {
 
     /**
      |--------------------------------------------------
-     | List(waiters)
+     | Waiters in the restaurant
      |--------------------------------------------------
      */
     const [photoSnapshot, loader] = useCollection(
@@ -23,8 +24,8 @@ function WaitersRowInEvent({waiterRow}: WaitersRowInEventProps) {
             photoType: PhotoType.Waiter,
         }),
     );
-
     const waitersInRestaurant = photoSnapshot === undefined ? [] : _.map(photoSnapshot.docs, (item) => item.data() as IFBPhoto);
+
     const waitersInEvent = filterWaiters(event, waitersInRestaurant);
 
     return (

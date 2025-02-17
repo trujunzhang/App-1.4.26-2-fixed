@@ -3,8 +3,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {useQuery} from '@realm/react';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {View} from 'react-native';
-import type {OnyxEntry} from 'react-native-onyx';
-import {withOnyx} from 'react-native-onyx';
+import {useOnyx} from 'react-native-onyx';
 import type {EdgeInsets} from 'react-native-safe-area-context';
 import {kmToRadians} from 'realm';
 import useLocalize from '@hooks/useLocalize';
@@ -18,24 +17,32 @@ import Variables from '@styles/variables';
 import {checkHaveSyncAllCollections, setIsFirstSyncFB} from '@userActions/Firebase/syncFB';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
-import {IFBRestaurant} from '@src/types/firebase';
-import type * as OnyxTypes from '@src/types/onyx';
+import type {IFBRestaurant} from '@src/types/firebase';
 import SidebarLinks from '../SidebarLinks';
 
-type SidebarLinksDataOnyxProps = {
-    isFBFirstSync: OnyxEntry<boolean>;
-    firebaseSyncStatus: OnyxEntry<OnyxTypes.FirebaseSyncStatus>;
-};
-type SidebarLinksDataProps = SidebarLinksDataOnyxProps & {
+type SidebarLinksDataProps = {
     insets: EdgeInsets;
 };
 
-function SidebarLinksData({insets, isFBFirstSync = true, firebaseSyncStatus}: SidebarLinksDataProps) {
+function SidebarLinksData({insets}: SidebarLinksDataProps) {
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 
+    const [isFBFirstSync] = useOnyx(ONYXKEYS.IS_FB_FIRST_SYNC, {initialValue: true});
+    const [firebaseSyncStatus] = useOnyx(ONYXKEYS.FIREBASE_SYNC_STATUS, {
+        initialValue: {
+            isUsersSyncCompleted: false,
+            isRestaurantsSyncCompleted: false,
+            isEventsSyncCompleted: false,
+            isRecipesSyncCompleted: false,
+            isReviewsSyncCompleted: false,
+            isPhotosSyncCompleted: false,
+            isPeopleInEventsSyncCompleted: false,
+        },
+    });
+
     const [currentIndex, setCurrentIndex] = useState<number>(Variables.paginationLimitInSidebar);
-    const [currentPosition, setCurrentPosition] = useState(CONST.DEFAULT_LOCATION);
+    const [currentPosition, setCurrentPosition] = useState<{longitude: number; latitude: number}>(CONST.DEFAULT_LOCATION);
     const hasAskedForLocationPermission = useRef(false);
 
     const isLoading = false;
@@ -67,7 +74,7 @@ function SidebarLinksData({insets, isFBFirstSync = true, firebaseSyncStatus}: Si
             watchCurrentPosition(
                 (params) => {
                     const currentCoords = {longitude: params.coords.longitude, latitude: params.coords.latitude};
-                    // setCurrentPosition(currentCoords);
+                    setCurrentPosition(currentCoords);
                 },
                 () => {},
             );
@@ -91,19 +98,13 @@ function SidebarLinksData({insets, isFBFirstSync = true, firebaseSyncStatus}: Si
         distance: radiusFromKm,
     };
     // Query geospatial data
-    // const objects = useQuery(
-    //     RealmCollections.Restaurants,
-    //     collection => collection.filtered('location geoWithin $0', smallCircle),
-    //     [smallCircle],
-    // );
+    const objects = useQuery(RealmCollections.Restaurants, (collection) => collection.filtered('location geoWithin $0', smallCircle), [smallCircle]);
 
-    const objects = useQuery(RealmCollections.Restaurants).slice(0, currentIndex);
     const nearbyRestaurants: IFBRestaurant[] = toRealmModelList<IFBRestaurant>(objects);
-    // const nearbyRestaurants = [];
 
     Log.info('');
     Log.info('================================');
-    Log.info(`djzhang....................${nearbyRestaurants.length}`);
+    Log.info(`nearby restaurants length: ${nearbyRestaurants.length}`);
     Log.info(`currentIndex: ${currentIndex}`);
     Log.info('================================');
     Log.info('');
@@ -135,20 +136,4 @@ function SidebarLinksData({insets, isFBFirstSync = true, firebaseSyncStatus}: Si
 
 SidebarLinksData.displayName = 'SidebarLinksData';
 
-export default withOnyx<SidebarLinksDataProps, SidebarLinksDataOnyxProps>({
-    isFBFirstSync: {
-        key: ONYXKEYS.IS_FB_FIRST_SYNC,
-    },
-    firebaseSyncStatus: {
-        key: ONYXKEYS.FIREBASE_SYNC_STATUS,
-        initialValue: {
-            isUsersSyncCompleted: false,
-            isRestaurantsSyncCompleted: false,
-            isEventsSyncCompleted: false,
-            isRecipesSyncCompleted: false,
-            isReviewsSyncCompleted: false,
-            isPhotosSyncCompleted: false,
-            isPeopleInEventsSyncCompleted: false,
-        },
-    },
-})(SidebarLinksData);
+export default SidebarLinksData;

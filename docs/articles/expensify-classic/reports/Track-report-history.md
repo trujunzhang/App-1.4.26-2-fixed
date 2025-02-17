@@ -2,7 +2,7 @@
 title: Track report history
 description: See the comments and history on a report
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 All changes and comments that have been made on a report are tracked at the bottom of the report. 
 

@@ -7,7 +7,7 @@ description: This is article shows you how to apply taxes to your expenses!
 
 # About
 
-There are two types of tax in Ieatta: Simple Tax (i.e. one tax rate) and Complex Tax (i.e. more than one tax rate). This article shows you how to apply both to your expenses!
+There are two types of tax in Expensify: Simple Tax (i.e. one tax rate) and Complex Tax (i.e. more than one tax rate). This article shows you how to apply both to your expenses!
 
 
 # How-to Apply Tax
@@ -31,7 +31,7 @@ From the Reports page, you can select Reports and then click **Export To > Tax R
 
 # Deep Dive
 
-If you have a receipt that has more than one tax rate (i.e. Complex Tax) on it, then there are two options for handling this in Ieatta!
+If you have a receipt that has more than one tax rate (i.e. Complex Tax) on it, then there are two options for handling this in Expensify!
 
 Many tax authorities do not require the reporting of tax amounts by rate and the easiest approach is to apply the highest rate on the receipt and then modify the tax amount to reflect the amount shown on the receipt if this is less. Please check with your local tax advisor if this approach will be allowed.
 

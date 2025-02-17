@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import type {OnyxEntry} from 'react-native-onyx';
@@ -5,6 +6,8 @@ import {withOnyx} from 'react-native-onyx';
 import FullPageOfflineBlockingView from '@components/BlockingViews/FullPageOfflineBlockingView';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
 import InteractiveStepSubHeader from '@components/InteractiveStepSubHeader';
+import Onfido from '@components/Onfido';
+import type {OnfidoData} from '@components/Onfido/types';
 import ScreenWrapper from '@components/ScreenWrapper';
 import ScrollView from '@components/ScrollView';
 import useLocalize from '@hooks/useLocalize';
@@ -37,14 +40,14 @@ function VerifyIdentity({reimbursementAccount, onBackButtonPress, onfidoApplican
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 
-    const policyID = reimbursementAccount?.achData?.policyID ?? '';
-    const handleOnfidoSuccess = useCallback(
-        (onfidoData: any) => {
-            BankAccounts.verifyIdentityForBankAccount(Number(reimbursementAccount?.achData?.bankAccountID ?? '0'), {...onfidoData, applicantID: onfidoApplicantID}, policyID);
-            BankAccounts.updateReimbursementAccountDraft({isOnfidoSetupComplete: true});
-        },
-        [reimbursementAccount, onfidoApplicantID, policyID],
-    );
+    const policyID = reimbursementAccount?.achData?.policyID ?? '-1';
+    // const handleOnfidoSuccess = useCallback(
+    //     (onfidoData: OnfidoData) => {
+    //         BankAccounts.verifyIdentityForBankAccount(Number(reimbursementAccount?.achData?.bankAccountID ?? '-1'), {...onfidoData, applicantID: onfidoApplicantID}, policyID);
+    //         BankAccounts.updateReimbursementAccountDraft({isOnfidoSetupComplete: true});
+    //     },
+    //     [reimbursementAccount, onfidoApplicantID, policyID],
+    // );
 
     const handleOnfidoError = () => {
         // In case of any unexpected error we log it to the server, show a growl, and return the user back to the requestor step so they can try again.
@@ -64,14 +67,21 @@ function VerifyIdentity({reimbursementAccount, onBackButtonPress, onfidoApplican
                 title={translate('onfidoStep.verifyIdentity')}
                 onBackButtonPress={onBackButtonPress}
             />
-            <View style={[styles.ph5, styles.mt3, {height: CONST.BANK_ACCOUNT.STEPS_HEADER_HEIGHT}]}>
+            <View style={[styles.ph5, styles.mb5, styles.mt3, {height: CONST.BANK_ACCOUNT.STEPS_HEADER_HEIGHT}]}>
                 <InteractiveStepSubHeader
                     startStepIndex={2}
                     stepNames={CONST.BANK_ACCOUNT.STEP_NAMES}
                 />
             </View>
             <FullPageOfflineBlockingView>
-                <ScrollView contentContainerStyle={styles.flex1}></ScrollView>
+                <ScrollView contentContainerStyle={styles.flex1}>
+                    {/* <Onfido
+                        sdkToken={onfidoToken ?? ''}
+                        onUserExit={handleOnfidoUserExit}
+                        onError={handleOnfidoError}
+                        onSuccess={handleOnfidoSuccess}
+                    /> */}
+                </ScrollView>
             </FullPageOfflineBlockingView>
         </ScreenWrapper>
     );

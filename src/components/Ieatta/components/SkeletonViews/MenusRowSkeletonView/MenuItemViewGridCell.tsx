@@ -1,12 +1,10 @@
-import {values} from 'lodash';
 import React from 'react';
-import {Circle, Rect} from 'react-native-svg';
+import {Rect} from 'react-native-svg';
 import SkeletonViewContentLoader from '@components/SkeletonViewContentLoader';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
 import variables from '@styles/variables';
-import CONST from '@src/CONST';
 
 type MenuItemViewGridCellProps = {
     /** Number of rows to show in Skeleton UI block */
@@ -15,7 +13,7 @@ type MenuItemViewGridCellProps = {
 };
 
 function MenuItemViewGridCell({numberOfRows, shouldAnimate = true}: MenuItemViewGridCellProps) {
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
     const theme = useTheme();
     const styles = useThemeStyles();
     const itemWidth = isSmallScreenWidth ? variables.menuInRestaurantMobileItemWidth : variables.menuInRestaurantWebItemWidth;

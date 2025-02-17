@@ -12,16 +12,16 @@ import type {MagicCodeInputHandle} from '@components/MagicCodeInput';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useNetwork from '@hooks/useNetwork';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
 import * as DeviceCapabilities from '@libs/DeviceCapabilities';
 import * as ErrorUtils from '@libs/ErrorUtils';
 import Navigation from '@libs/Navigation/Navigation';
 import type {SettingsNavigatorParamList} from '@libs/Navigation/types';
+import NotFoundPage from '@expPages/ErrorPage/NotFoundPage';
 import * as CardSettings from '@userActions/Card';
 import CONST from '@src/CONST';
-import NotFoundPage from '@src/expPages/ErrorPage/NotFoundPage';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
 import SCREENS from '@src/SCREENS';
@@ -46,7 +46,7 @@ function ActivatePhysicalCardPage({
 }: ActivatePhysicalCardPageProps) {
     const theme = useTheme();
     const styles = useThemeStyles();
-    const {isExtraSmallScreenHeight} = useWindowDimensions();
+    const {isExtraSmallScreenHeight} = useResponsiveLayout();
     const {translate} = useLocalize();
     const {isOffline} = useNetwork();
 
@@ -105,15 +105,15 @@ function ActivatePhysicalCardPage({
         activateCardCodeInputRef.current?.blur();
 
         if (lastFourDigits.replace(CONST.MAGIC_CODE_EMPTY_CHAR, '').length !== LAST_FOUR_DIGITS_LENGTH) {
-            setFormError('activateCardPage.error.thatDidntMatch');
+            setFormError(translate('activateCardPage.error.thatDidntMatch'));
             return;
         }
         if (inactiveCard?.cardID === undefined) {
             return;
         }
 
-        CardSettings.activatePhysicalIeattaCard(lastFourDigits, inactiveCard?.cardID);
-    }, [lastFourDigits, inactiveCard?.cardID]);
+        CardSettings.activatePhysicalExpensifyCard(lastFourDigits, inactiveCard?.cardID);
+    }, [lastFourDigits, inactiveCard?.cardID, translate]);
 
     if (isEmptyObject(inactiveCard)) {
         return <NotFoundPage />;

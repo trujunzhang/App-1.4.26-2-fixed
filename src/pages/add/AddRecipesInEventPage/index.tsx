@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type {StackScreenProps} from '@react-navigation/stack';
 import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import React from 'react';
 import {useCollectionOnce, useDocumentData} from 'react-firebase-hooks/firestore';
-import {FBCollections} from '@libs/Firebase/constant';
-import * as FirebaseQuery from '@libs/Firebase/services/firebase-query';
+import {FBCollections} from '@libs/FirebaseIeatta/constant';
+import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
 import {emptyPeopleInEventTag, emptyRestaurantTag} from '@libs/ieatta/editFormUtils';
 import {toRecipeDictInRestaurant} from '@libs/ieatta/eventUtils';
 import type {RightIeattaNavigatorParamList} from '@libs/Navigation/types';
@@ -49,6 +50,7 @@ function AddRecipesInEventPage({route}: AddRecipesInEventPageProps) {
 
     return (
         <BaseAddRecipesPage
+            restaurantId={restaurantId}
             peopleInEvent={peopleInEvent}
             recipeDictInRestaurant={recipeDictInRestaurant}
         />

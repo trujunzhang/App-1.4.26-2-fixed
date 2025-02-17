@@ -6,6 +6,7 @@ module.exports = {
     arrowParens: 'always',
     printWidth: 190,
     singleAttributePerLine: true,
+    plugins: [require.resolve('@trivago/prettier-plugin-sort-imports')],
     /** `importOrder` should be defined in an alphabetical order. */
     importOrder: [
         '@assets/(.*)$',
@@ -22,7 +23,6 @@ module.exports = {
         '@src/(.*)$',
         '^[./]',
     ],
-    importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
     importOrderSortSpecifiers: true,
     importOrderCaseInsensitive: true,
 };

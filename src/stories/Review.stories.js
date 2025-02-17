@@ -1,7 +1,7 @@
 /* eslint-disable rulesdir/prefer-underscore-method */
 import React, {useState} from 'react';
 import DetailedReviewItem from '@components/Ieatta/detailedPage/common/DetailedReviewItem';
-import {reviews} from '@libs/Firebase/data/Reviews';
+import {reviews} from '@libs/FirebaseIeatta/data/Reviews';
 
 /**
  * We use the Component Story Format for writing stories. Follow the docs here:

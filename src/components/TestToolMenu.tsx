@@ -1,38 +1,40 @@
 import React from 'react';
 import type {OnyxEntry} from 'react-native-onyx';
-import {withOnyx} from 'react-native-onyx';
+import {useOnyx} from 'react-native-onyx';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import * as ApiUtils from '@libs/ApiUtils';
-import compose from '@libs/compose';
-import Navigation from '@libs/Navigation/Navigation';
 import * as Network from '@userActions/Network';
 import * as Session from '@userActions/Session';
 import * as User from '@userActions/User';
 import CONFIG from '@src/CONFIG';
-import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
-import ROUTES from '@src/ROUTES';
 import type {Network as NetworkOnyx, User as UserOnyx} from '@src/types/onyx';
 import Button from './Button';
 import {withNetwork} from './OnyxProvider';
 import Switch from './Switch';
+import TestCrash from './TestCrash';
 import TestToolRow from './TestToolRow';
 import Text from './Text';
 
-type TestToolMenuOnyxProps = {
-    /** User object in Onyx */
-    user: OnyxEntry<UserOnyx>;
-};
-
-type TestToolMenuProps = TestToolMenuOnyxProps & {
+type TestToolMenuProps = {
     /** Network object in Onyx */
     network: OnyxEntry<NetworkOnyx>;
 };
-const USER_DEFAULT: UserOnyx = {shouldUseStagingServer: undefined, isSubscribedToNewsletter: false, validated: false, isFromPublicDomain: false, isUsingIeattaCard: false};
+const USER_DEFAULT: UserOnyx = {
+    shouldUseStagingServer: undefined,
+    isSubscribedToNewsletter: false,
+    validated: false,
+    isFromPublicDomain: false,
+    isUsingExpensifyCard: false,
+    isDebugModeEnabled: false,
+};
 
-function TestToolMenu({user = USER_DEFAULT, network}: TestToolMenuProps) {
+function TestToolMenu({network}: TestToolMenuProps) {
+    const [user = USER_DEFAULT] = useOnyx(ONYXKEYS.USER);
+    const [isUsingImportedState] = useOnyx(ONYXKEYS.IS_USING_IMPORTED_STATE);
     const shouldUseStagingServer = user?.shouldUseStagingServer ?? ApiUtils.isUsingStagingApi();
+    const isDebugModeEnabled = !!user?.isDebugModeEnabled;
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 
@@ -44,6 +46,15 @@ function TestToolMenu({user = USER_DEFAULT, network}: TestToolMenuProps) {
             >
                 {translate('initialSettingsPage.troubleshoot.testingPreferences')}
             </Text>
+            {/* When toggled the app will be put into debug mode. */}
+            <TestToolRow title={translate('initialSettingsPage.troubleshoot.debugMode')}>
+                <Switch
+                    accessibilityLabel={translate('initialSettingsPage.troubleshoot.debugMode')}
+                    isOn={isDebugModeEnabled}
+                    onToggle={() => User.setIsDebugModeEnabled(!isDebugModeEnabled)}
+                />
+            </TestToolRow>
+
             {/* Option to switch between staging and default api endpoints.
         This enables QA, internal testers and external devs to take advantage of sandbox environments for 3rd party services like Plaid and Onfido.
         This toggle is not rendered for internal devs as they make environment changes directly to the .env file. */}
@@ -63,6 +74,7 @@ function TestToolMenu({user = USER_DEFAULT, network}: TestToolMenuProps) {
                     accessibilityLabel="Force offline"
                     isOn={!!network?.shouldForceOffline}
                     onToggle={() => Network.setShouldForceOffline(!network?.shouldForceOffline)}
+                    disabled={isUsingImportedState}
                 />
             </TestToolRow>
 
@@ -93,27 +105,11 @@ function TestToolMenu({user = USER_DEFAULT, network}: TestToolMenuProps) {
                 />
             </TestToolRow>
 
-            {/* Navigate to the new Search Page. This button is temporary and should be removed after passing QA tests. */}
-            <TestToolRow title="New Search Page">
-                <Button
-                    small
-                    text="Navigate"
-                    onPress={() => {
-                        Navigation.navigate(ROUTES.SEARCH.getRoute(CONST.TAB_SEARCH.ALL));
-                    }}
-                />
-            </TestToolRow>
+            <TestCrash />
         </>
     );
 }
 
 TestToolMenu.displayName = 'TestToolMenu';
 
-export default compose(
-    withOnyx<TestToolMenuProps, TestToolMenuOnyxProps>({
-        user: {
-            key: ONYXKEYS.USER,
-        },
-    }),
-    withNetwork(),
-)(TestToolMenu);
+export default withNetwork()(TestToolMenu);

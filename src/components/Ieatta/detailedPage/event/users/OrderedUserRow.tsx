@@ -3,15 +3,16 @@ import React from 'react';
 import {View} from 'react-native';
 import Avatar from '@components/Avatar';
 import DisplayNames from '@components/DisplayNames';
-import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
 import IconWithTooltip from '@components/Ieatta/components/IconWithTooltip';
 import IeattaUserDetailsTooltip from '@components/Ieatta/detailedPage/common/IeattaUserDetailsTooltip';
-import {PressableWithFeedback} from '@components/Pressable';
+import * as DetailedPageActionContextMenu from '@components/Ieatta/detailedPage/ContextMenu/DetailedPageActionContextMenu';
 import Text from '@components/Text';
-import Tooltip from '@components/Tooltip';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
+import {FBCollections} from '@libs/FirebaseIeatta/constant';
+import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
+import FirebaseHelper from '@libs/FirebaseIeatta/services/firebase-helper';
 import Navigation from '@libs/Navigation/Navigation';
 import TailwindColors from '@styles/tailwindcss/colors';
 import CONST from '@src/CONST';
@@ -20,12 +21,13 @@ import type {IFBPeopleInEvent} from '@src/types/firebase';
 import type {PersonalDetails} from '@src/types/onyx';
 
 type OrderedUserRowProps = {
+    pageRow: IPageRow;
     peopleInEvent: IFBPeopleInEvent;
     user: PersonalDetails;
     recipesCount: number;
 };
 
-function OrderedUserRow({peopleInEvent, user, recipesCount}: OrderedUserRowProps) {
+function OrderedUserRow({peopleInEvent, user, recipesCount, pageRow: selection}: OrderedUserRowProps) {
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 
@@ -33,12 +35,35 @@ function OrderedUserRow({peopleInEvent, user, recipesCount}: OrderedUserRowProps
         <IconWithTooltip
             toolTip="add.recipe.button"
             onPress={() => {
-                Navigation.navigate(ROUTES.ADD_RECIPES_IN_EVENT.getRoute({restaurantId: peopleInEvent.restaurantId, peopleInEventId: peopleInEvent.uniqueId}));
+                Navigation.navigate(
+                    ROUTES.ADD_RECIPES_IN_EVENT.getRoute({
+                        restaurantId: peopleInEvent.restaurantId,
+                        peopleInEventId: peopleInEvent.uniqueId,
+                    }),
+                );
             }}
-            testID="Add Icon"
+            testID="Add User Icon"
             containerStyle={[styles.mr2]}
             iconFill={TailwindColors.red500}
             iconSrc={Expensicons.Plus}
+        />
+    );
+
+    const removeButton = (
+        <IconWithTooltip
+            toolTip="remove.orderedUser.button"
+            onPress={() => {
+                DetailedPageActionContextMenu.showDeleteModal(
+                    selection,
+                    true,
+                    () => {},
+                    () => {},
+                );
+            }}
+            testID="Delete User Icon"
+            containerStyle={[styles.mr2]}
+            iconFill={TailwindColors.gray600}
+            iconSrc={Expensicons.Trashcan}
         />
     );
 
@@ -79,7 +104,10 @@ function OrderedUserRow({peopleInEvent, user, recipesCount}: OrderedUserRowProps
                             <Text style={[styles.textLabel]}>{`${recipesCount} Recipes Ordered`}</Text>
                         </View>
                     </View>
-                    {addButton}
+                    <View style={[styles.flexRow, styles.alignItemsCenter, styles.gap2]}>
+                        {addButton}
+                        {removeButton}
+                    </View>
                 </View>
             </View>
         </View>

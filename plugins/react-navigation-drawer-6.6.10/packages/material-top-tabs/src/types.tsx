@@ -244,7 +244,7 @@ export type MaterialTopTabNavigationOptions = {
 
   /**
    * When `lazy` is enabled, you can specify how many adjacent screens should be preloaded in advance with this prop.
-   * This value defaults to `0` which means lazy pages are loaded as they come into the viewport.
+   * This value defaults to `0` which means lazy expPages are loaded as they come into the viewport.
    */
   lazyPreloadDistance?: number;
 

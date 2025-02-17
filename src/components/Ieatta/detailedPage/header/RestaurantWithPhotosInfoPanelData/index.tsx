@@ -3,8 +3,8 @@ import _ from 'lodash';
 import React from 'react';
 import {useCollectionOnce} from 'react-firebase-hooks/firestore';
 import RestaurantWithPhotosInfoPanel from '@components/Ieatta/detailedPage/header/RestaurantWithPhotosInfoPanel';
-import {PhotoType} from '@libs/Firebase/constant';
-import * as FirebaseQuery from '@libs/Firebase/services/firebase-query';
+import {PhotoType} from '@libs/FirebaseIeatta/constant';
+import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
 import type {IFBPhoto} from '@src/types/firebase';
 import type {RestaurantWithPhotosInfoPanelDataProps} from './types';
 

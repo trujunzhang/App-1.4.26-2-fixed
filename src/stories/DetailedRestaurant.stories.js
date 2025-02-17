@@ -5,9 +5,9 @@ import RestaurantInfoPanel from '@components/Ieatta/detailedPage/header/Restaura
 import RestaurantWithPhotosInfoPanel from '@components/Ieatta/detailedPage/header/RestaurantWithPhotosInfoPanel';
 import RestaurantMenuNativeView from '@components/Ieatta/detailedPage/restaurant/menu/RestaurantMenuNativeView';
 import RestaurantMenuWebView from '@components/Ieatta/detailedPage/restaurant/menu/RestaurantMenuWebView';
-import {photos} from '@libs/Firebase/data/Photos';
-import {recipes} from '@libs/Firebase/data/Recipes';
-import {restaurants} from '@libs/Firebase/data/Restaurants';
+import {photos} from '@libs/FirebaseIeatta/data/Photos';
+import {recipes} from '@libs/FirebaseIeatta/data/Recipes';
+import {restaurants} from '@libs/FirebaseIeatta/data/Restaurants';
 import variables from '@styles/variables';
 
 /**

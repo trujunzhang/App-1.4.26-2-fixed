@@ -13,7 +13,7 @@
 
 ## Motivation & Philosophy
 
-Understanding the offline behavior of our app is vital to becoming a productive contributor to the Ieatta codebase. Our mission is to support our users in every possible environment, and often our app is used in places where a stable internet connection is not guaranteed.
+Understanding the offline behavior of our app is vital to becoming a productive contributor to the Expensify codebase. Our mission is to support our users in every possible environment, and often our app is used in places where a stable internet connection is not guaranteed.
 
 The most important concept to keep in mind while reading this document is that we want to allow users to do as much as possible when offline. At first, this might seem impossible because almost everything the user can touch in our app is related to an API request. However, in many cases, we can save that API request and assume it will succeed when the user is back online. We then allow the user to proceed as if their request already succeeded. We call this an optimistic response. Here, we use the word **optimistic** to indicate that we're confident the request will succeed when the user is online, and we know what that successful response will look like.
 
@@ -48,7 +48,7 @@ There’s no specific UI for this case. The feature either looks totally normal 
 - there is no interaction with the server in any way
 - or data is READ from the server and does not need to show up-to-date data. The user will see stale data until the new data is put into Onyx and then the view updates to show the new data.
 
-**How to implement:** Use [`API.read()`](https://github.com/Ieatta/App/blob/3493f3ca3a1dc6cdbf9cb8bd342866fcaf45cf1d/src/libs/API.js#L53-L55).
+**How to implement:** Use [`API.read()`](https://github.com/Expensify/App/blob/3493f3ca3a1dc6cdbf9cb8bd342866fcaf45cf1d/src/libs/API.js#L53-L55).
 
 **Example:** The `About` page.
 
@@ -60,7 +60,7 @@ This is the pattern where we queue the request to be sent when the user is onlin
 - the user should be given instant feedback and
 - the user does not need to know when the change is done on the server in the background
 
-**How to implement:** Use [`API.write()`](https://github.com/Ieatta/App/blob/3493f3ca3a1dc6cdbf9cb8bd342866fcaf45cf1d/src/libs/API.js#L7-L28) to implement this pattern. For this pattern, we should only put `optimisticData` in the options. We don't need `successData` or `failureData` as we don't care what response comes back at all.
+**How to implement:** Use [`API.write()`](https://github.com/Expensify/App/blob/3493f3ca3a1dc6cdbf9cb8bd342866fcaf45cf1d/src/libs/API.js#L7-L28) to implement this pattern. For this pattern, we should only put `optimisticData` in the options. We don't need `successData` or `failureData` as we don't care what response comes back at all.
 
 **Example:** Pinning a chat.
 
@@ -76,7 +76,7 @@ When the user is offline:
 
 **How to implement:** 
 - Use API.write() to implement this pattern 
-- Optimistic data should include `pendingAction` ([with these possible values](https://github.com/Ieatta/App/blob/15f7fa622805ee2971808d6bc67181c4715f0c62/src/CONST.js#L775-L779))
+- Optimistic data should include `pendingAction` ([with these possible values](https://github.com/Expensify/App/blob/15f7fa622805ee2971808d6bc67181c4715f0c62/src/CONST.js#L775-L779))
 - To ensure the UI is shown as described above, you should enclose the components that contain the data that was added/updated/deleted with the `OfflineWithFeedback` component
 - Include this data in the action call:
     - `optimisticData` - always include this object when using the Pattern B
@@ -85,9 +85,13 @@ When the user is offline:
        - In the event that `successData` and `failureData` are the same, you can use a single object `finallyData` in place of both. 
 
 **Handling errors:**
-- The [OfflineWithFeedback component](https://github.com/Ieatta/App/blob/main/src/components/OfflineWithFeedback.js) already handles showing errors too, as long as you pass the error field in the [errors prop](https://github.com/Ieatta/App/blob/128ea378f2e1418140325c02f0b894ee60a8e53f/src/components/OfflineWithFeedback.js#L29-L31)
+- The [OfflineWithFeedback component](https://github.com/Expensify/App/blob/main/src/components/OfflineWithFeedback.js) already handles showing errors too, as long as you pass the error field in the [errors prop](https://github.com/Expensify/App/blob/128ea378f2e1418140325c02f0b894ee60a8e53f/src/components/OfflineWithFeedback.js#L29-L31)
+- The behavior for when something fails is:
+    - If you were adding new data, the failed to add data is displayed greyed out and with the button to dismiss the error
+    - If you were deleting data, the failed data is displayed regularly with the button to dismiss the error
+    - If you are updating data, the original data is displayed regulary with the button to dismiss the error
 - When dismissing the error, the `onClose` prop will be called, there we need to call an action that either:
-  - If the pendingAction was `delete`, it removes the data altogether
+  - If the pendingAction was `add`, it removes the data altogether
   - Otherwise, it would clear the errors and `pendingAction` properties from the data
 - We also need to show a Red Brick Road (RBR) guiding the user to the error. We need to manually do this for each piece of data using pattern B Optimistic WITH Feedback. Some common components like `MenuItem` already have a prop for it (`brickRoadIndicator`)
   - A Brick Road is the pattern of guiding members towards places that require their attention by following a series of UI elements that have the same color

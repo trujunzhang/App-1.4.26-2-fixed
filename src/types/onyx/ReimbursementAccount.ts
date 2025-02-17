@@ -4,10 +4,13 @@ import type {ACHContractStepProps, BeneficialOwnersStepProps, CompanyStepProps, 
 import type {BankName} from './Bank';
 import type * as OnyxCommon from './OnyxCommon';
 
+/** Steps to setup a reimbursement bank account */
 type BankAccountStep = ValueOf<typeof CONST.BANK_ACCOUNT.STEP>;
 
+/** Substeps to setup a reimbursement bank account */
 type BankAccountSubStep = ValueOf<typeof CONST.BANK_ACCOUNT.SUBSTEP>;
 
+/** Model of ACH data */
 type ACHData = Partial<BeneficialOwnersStepProps & CompanyStepProps & RequestorStepProps & ACHContractStepProps & ReimbursementAccountProps> & {
     /** Step of the setup flow that we are on. Determines which view is presented. */
     currentStep?: BankAccountStep;
@@ -44,8 +47,27 @@ type ACHData = Partial<BeneficialOwnersStepProps & CompanyStepProps & RequestorS
 
     /** Unique identifier for this account in Plaid */
     plaidAccountID?: string;
+
+    /** Bank Account setup type (plaid or manual) */
+    setupType?: string;
 };
 
+/** The step in an reimbursement account's ach data */
+type ReimbursementAccountStep = BankAccountStep | '';
+
+/** The sub step in an reimbursement account's ach data */
+type ReimbursementAccountSubStep = BankAccountSubStep | '';
+
+/** The ACHData for an reimbursement account */
+type ACHDataReimbursementAccount = Omit<ACHData, 'subStep' | 'currentStep'> & {
+    /** Step of the setup flow that we are on. Determines which view is presented. */
+    currentStep?: ReimbursementAccountStep;
+
+    /** Optional subStep we would like the user to start back on */
+    subStep?: ReimbursementAccountSubStep;
+};
+
+/** Model of reimbursement account data */
 type ReimbursementAccount = OnyxCommon.OnyxValueWithOfflineFeedback<{
     /** Whether we are loading the data via the API */
     isLoading?: boolean;
@@ -54,7 +76,7 @@ type ReimbursementAccount = OnyxCommon.OnyxValueWithOfflineFeedback<{
     throttledDate?: string;
 
     /** Additional data for the account in setup */
-    achData?: ACHData;
+    achData?: ACHDataReimbursementAccount;
 
     /** Disable validation button if max attempts exceeded */
     maxAttemptsReached?: boolean;
@@ -76,4 +98,4 @@ type ReimbursementAccount = OnyxCommon.OnyxValueWithOfflineFeedback<{
 }>;
 
 export default ReimbursementAccount;
-export type {BankAccountStep, BankAccountSubStep, ACHData};
+export type {BankAccountStep, BankAccountSubStep, ACHData, ReimbursementAccountStep, ReimbursementAccountSubStep, ACHDataReimbursementAccount};

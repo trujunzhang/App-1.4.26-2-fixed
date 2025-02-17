@@ -9,9 +9,9 @@ import withCurrentUserPersonalDetails from '@components/withCurrentUserPersonalD
 import type {WithCurrentUserPersonalDetailsProps} from '@components/withCurrentUserPersonalDetails';
 import useThemeStyles from '@hooks/useThemeStyles';
 import * as EmojiUtils from '@libs/EmojiUtils';
+import {ReactionListContext} from '@expPages/home/ReportScreenContext';
+import type {ReactionListAnchor, ReactionListEvent} from '@expPages/home/ReportScreenContext';
 import CONST from '@src/CONST';
-import {ReactionListContext} from '@src/expPages/home/ReportScreenContext';
-import type {ReactionListAnchor, ReactionListEvent} from '@src/expPages/home/ReportScreenContext';
 import type {Locale, ReportAction, ReportActionReactions} from '@src/types/onyx';
 import type {PendingAction} from '@src/types/onyx/OnyxCommon';
 import AddReactionBubble from './AddReactionBubble';
@@ -33,7 +33,7 @@ type ReportActionItemEmojiReactionsProps = WithCurrentUserPersonalDetailsProps &
      * This can also be an emoji the user already reacted with,
      * hence this function asks to toggle the reaction by emoji.
      */
-    toggleReaction: (emoji: Emoji) => void;
+    toggleReaction: (emoji: Emoji, ignoreSkinToneOnCompare?: boolean) => void;
 
     /** We disable reacting with emojis on report actions that have errors */
     shouldBlockReactions?: boolean;
@@ -107,7 +107,7 @@ function ReportActionItemEmojiReactions({
             totalReactionCount += reactionCount;
 
             const onPress = () => {
-                toggleReaction(emoji);
+                toggleReaction(emoji, true);
             };
 
             const onReactionListOpen = (event: ReactionListEvent) => {

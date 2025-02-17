@@ -1,17 +1,21 @@
+import {useFocusEffect} from '@react-navigation/native';
 import type {StackScreenProps} from '@react-navigation/stack';
-import React, {useEffect, useMemo, useState} from 'react';
-import {View} from 'react-native';
-import {withOnyx} from 'react-native-onyx';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {InteractionManager, View} from 'react-native';
 import type {OnyxCollection, OnyxEntry} from 'react-native-onyx';
+import {withOnyx} from 'react-native-onyx';
 import FullPageNotFoundView from '@components/BlockingViews/FullPageNotFoundView';
 import FormAlertWithSubmitButton from '@components/FormAlertWithSubmitButton';
+import FormHelpMessage from '@components/FormHelpMessage';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
 import MenuItem from '@components/MenuItem';
 import MenuItemWithTopDescription from '@components/MenuItemWithTopDescription';
 import ScreenWrapper from '@components/ScreenWrapper';
 import ScrollView from '@components/ScrollView';
 import useLocalize from '@hooks/useLocalize';
+import useStyledSafeAreaInsets from '@hooks/useStyledSafeAreaInsets';
 import useThemeStyles from '@hooks/useThemeStyles';
+import blurActiveElement from '@libs/Accessibility/blurActiveElement';
 import * as LocalePhoneNumber from '@libs/LocalePhoneNumber';
 import Navigation from '@libs/Navigation/Navigation';
 import type {NewTaskNavigatorParamList} from '@libs/Navigation/types';
@@ -19,6 +23,7 @@ import * as OptionsListUtils from '@libs/OptionsListUtils';
 import * as ReportUtils from '@libs/ReportUtils';
 import playSound, {SOUNDS} from '@libs/Sound';
 import * as TaskActions from '@userActions/Task';
+import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
 import type SCREENS from '@src/SCREENS';
@@ -38,7 +43,7 @@ type NewTaskPageOnyxProps = {
 
 type NewTaskPageProps = NewTaskPageOnyxProps & StackScreenProps<NewTaskNavigatorParamList, typeof SCREENS.NEW_TASK.ROOT>;
 
-function NewTaskPage({task, reports, personalDetails}: NewTaskPageProps) {
+function NewTaskPage({task, reports, personalDetails, route}: NewTaskPageProps) {
     const styles = useThemeStyles();
     const {translate} = useLocalize();
     const [assignee, setAssignee] = useState<TaskActions.Assignee>();
@@ -50,9 +55,26 @@ function NewTaskPage({task, reports, personalDetails}: NewTaskPageProps) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [parentReport, setParentReport] = useState<OnyxEntry<Report>>(null);
+    const [parentReport, setParentReport] = useState<OnyxEntry<Report>>();
 
+    const hasDestinationError = task?.skipConfirmation && !task?.parentReportID;
     const isAllowedToCreateTask = useMemo(() => isEmptyObject(parentReport) || ReportUtils.isAllowedToComment(parentReport), [parentReport]);
+
+    const {paddingBottom} = useStyledSafeAreaInsets();
+
+    const backTo = route.params?.backTo;
+    const confirmButtonRef = useRef<View>(null);
+    const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    useFocusEffect(
+        useCallback(() => {
+            focusTimeoutRef.current = setTimeout(() => {
+                InteractionManager.runAfterInteractions(() => {
+                    blurActiveElement();
+                });
+            }, CONST.ANIMATED_TRANSITION);
+            return () => focusTimeoutRef.current && clearTimeout(focusTimeoutRef.current);
+        }, []),
+    );
 
     useEffect(() => {
         setErrorMessage('');
@@ -74,7 +96,7 @@ function NewTaskPage({task, reports, personalDetails}: NewTaskPageProps) {
         // If we have a share destination, we want to set the parent report and
         // the share destination data
         if (task?.shareDestination) {
-            setParentReport(reports?.[`report_${task.shareDestination}`] ?? null);
+            setParentReport(reports?.[`report_${task.shareDestination}`]);
             const displayDetails = TaskActions.getShareDestination(task.shareDestination, reports, personalDetails);
             setShareDestination(displayDetails);
         }
@@ -94,23 +116,23 @@ function NewTaskPage({task, reports, personalDetails}: NewTaskPageProps) {
     // the response
     const onSubmit = () => {
         if (!task?.title && !task?.shareDestination) {
-            setErrorMessage('newTaskPage.confirmError');
+            setErrorMessage(translate('newTaskPage.confirmError'));
             return;
         }
 
         if (!task.title) {
-            setErrorMessage('newTaskPage.pleaseEnterTaskName');
+            setErrorMessage(translate('newTaskPage.pleaseEnterTaskName'));
             return;
         }
 
         if (!task.shareDestination) {
-            setErrorMessage('newTaskPage.pleaseEnterTaskDestination');
+            setErrorMessage(translate('newTaskPage.pleaseEnterTaskDestination'));
             return;
         }
 
         playSound(SOUNDS.DONE);
         TaskActions.createTaskAndNavigate(
-            parentReport?.reportID ?? '',
+            parentReport?.reportID ?? '-1',
             task.title,
             task?.description ?? '',
             task?.assignee ?? '',
@@ -132,18 +154,25 @@ function NewTaskPage({task, reports, personalDetails}: NewTaskPageProps) {
             >
                 <HeaderWithBackButton
                     title={translate('newTaskPage.confirmTask')}
-                    onCloseButtonPress={() => TaskActions.dismissModalAndClearOutTaskInfo()}
                     shouldShowBackButton
                     onBackButtonPress={() => {
-                        Navigation.goBack(ROUTES.NEW_TASK_DETAILS);
+                        Navigation.goBack(ROUTES.NEW_TASK_DETAILS.getRoute(backTo));
                     }}
                 />
+                {hasDestinationError && (
+                    <FormHelpMessage
+                        style={[styles.ph4, styles.mb4]}
+                        isError={false}
+                        shouldShowRedDotIndicator={false}
+                        message={translate('quickAction.noLongerHaveReportAccess')}
+                    />
+                )}
                 <ScrollView
                     contentContainerStyle={styles.flexGrow1}
                     // on iOS, navigation animation sometimes cause the scrollbar to appear
                     // on middle/left side of scrollview. scrollIndicatorInsets with right
                     // to closest value to 0 fixes this issue, 0 (default) doesn't work
-                    // See: https://github.com/Ieatta/App/issues/31441
+                    // See: https://github.com/Expensify/App/issues/31441
                     scrollIndicatorInsets={{right: Number.MIN_VALUE}}
                 >
                     <View style={styles.flex1}>
@@ -151,13 +180,14 @@ function NewTaskPage({task, reports, personalDetails}: NewTaskPageProps) {
                             <MenuItemWithTopDescription
                                 description={translate('task.title')}
                                 title={title}
-                                onPress={() => Navigation.navigate(ROUTES.NEW_TASK_TITLE)}
+                                onPress={() => Navigation.navigate(ROUTES.NEW_TASK_TITLE.getRoute(backTo))}
                                 shouldShowRightIcon
+                                rightLabel={translate('common.required')}
                             />
                             <MenuItemWithTopDescription
                                 description={translate('task.description')}
                                 title={description}
-                                onPress={() => Navigation.navigate(ROUTES.NEW_TASK_DESCRIPTION)}
+                                onPress={() => Navigation.navigate(ROUTES.NEW_TASK_DESCRIPTION.getRoute(backTo))}
                                 shouldShowRightIcon
                                 shouldParseTitle
                                 numberOfLinesTitle={2}
@@ -168,30 +198,32 @@ function NewTaskPage({task, reports, personalDetails}: NewTaskPageProps) {
                                 title={assignee?.displayName ?? ''}
                                 description={assignee?.displayName ? LocalePhoneNumber.formatPhoneNumber(assignee?.subtitle) : translate('task.assignee')}
                                 icon={assignee?.icons}
-                                onPress={() => Navigation.navigate(ROUTES.NEW_TASK_ASSIGNEE)}
+                                onPress={() => Navigation.navigate(ROUTES.NEW_TASK_ASSIGNEE.getRoute(backTo))}
                                 shouldShowRightIcon
                                 titleWithTooltips={assigneeTooltipDetails}
                             />
                             <MenuItem
-                                label={shareDestination?.displayName ? translate('newTaskPage.shareSomewhere') : ''}
+                                label={shareDestination?.displayName ? translate('common.share') : ''}
                                 title={shareDestination?.displayName ?? ''}
-                                description={shareDestination?.displayName ? shareDestination.subtitle : translate('newTaskPage.shareSomewhere')}
+                                description={shareDestination?.displayName ? shareDestination.subtitle : translate('common.share')}
                                 icon={shareDestination?.icons}
                                 onPress={() => Navigation.navigate(ROUTES.NEW_TASK_SHARE_DESTINATION)}
                                 interactive={!task?.parentReportID}
                                 shouldShowRightIcon={!task?.parentReportID}
                                 titleWithTooltips={shareDestination?.shouldUseFullTitleToDisplay ? undefined : shareDestination?.displayNamesWithTooltips}
+                                rightLabel={translate('common.required')}
                             />
                         </View>
                     </View>
                     <View style={styles.flexShrink0}>
                         <FormAlertWithSubmitButton
-                            isAlertVisible={Boolean(errorMessage)}
+                            isAlertVisible={!!errorMessage}
                             message={errorMessage}
                             onSubmit={onSubmit}
                             enabledWhenOffline
+                            buttonRef={confirmButtonRef}
                             buttonText={translate('newTaskPage.confirmTask')}
-                            containerStyles={[styles.mh0, styles.mt5, styles.flex1, styles.ph5]}
+                            containerStyles={[styles.mh0, styles.mt5, styles.flex1, styles.ph5, !paddingBottom ? styles.mb5 : null]}
                         />
                     </View>
                 </ScrollView>

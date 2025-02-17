@@ -1,4 +1,4 @@
-import Str from 'expensify-common/lib/str';
+import {Str} from 'expensify-common';
 import React from 'react';
 import {TNodeChildrenRenderer} from 'react-native-render-html';
 import type {CustomRendererProps, TBlock} from 'react-native-render-html';
@@ -21,14 +21,14 @@ function AnchorRenderer({tnode, style, key}: AnchorRendererProps) {
     const styles = useThemeStyles();
     const htmlAttribs = tnode.attributes;
     const {environmentURL} = useEnvironment();
-    // An auth token is needed to download Ieatta chat attachments
-    const isAttachment = Boolean(htmlAttribs[CONST.ATTACHMENT_SOURCE_ATTRIBUTE]);
-    const tNodeChild = tnode?.domNode?.children?.[0];
+    // An auth token is needed to download Expensify chat attachments
+    const isAttachment = !!htmlAttribs[CONST.ATTACHMENT_SOURCE_ATTRIBUTE];
+    const tNodeChild = tnode?.domNode?.children?.at(0);
     const displayName = tNodeChild && 'data' in tNodeChild && typeof tNodeChild.data === 'string' ? tNodeChild.data : '';
     const parentStyle = tnode.parent?.styles?.nativeTextRet ?? {};
     const attrHref = htmlAttribs.href || htmlAttribs[CONST.ATTACHMENT_SOURCE_ATTRIBUTE] || '';
     const internalNewIeattaPath = Link.getInternalNewIeattaPath(attrHref);
-    const internalIeattaPath = Link.getInternalIeattaPath(attrHref);
+    const internalExpensifyPath = Link.getInternalExpensifyPath(attrHref);
     const isVideo = attrHref && Str.isVideo(attrHref);
 
     if (!HTMLEngineUtils.isChildOfComment(tnode)) {
@@ -71,7 +71,7 @@ function AnchorRenderer({tnode, style, key}: AnchorRendererProps) {
             style={[style, parentStyle, textDecorationLineStyle, styles.textUnderlinePositionUnder, styles.textDecorationSkipInkNone]}
             key={key}
             // Only pass the press handler for internal links. For public links or whitelisted internal links fallback to default link handling
-            onPress={internalNewIeattaPath || internalIeattaPath ? () => Link.openLink(attrHref, environmentURL, isAttachment) : undefined}
+            onPress={internalNewIeattaPath || internalExpensifyPath ? () => Link.openLink(attrHref, environmentURL, isAttachment) : undefined}
         >
             <TNodeChildrenRenderer
                 tnode={tnode}

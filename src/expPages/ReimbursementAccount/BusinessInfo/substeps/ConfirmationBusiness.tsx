@@ -1,5 +1,5 @@
-import type {CONST as COMMON_CONST} from 'expensify-common/lib/CONST';
-import React, {useMemo} from 'react';
+import type {CONST as COMMON_CONST} from 'expensify-common';
+import React, {useCallback, useMemo} from 'react';
 import type {OnyxEntry} from 'react-native-onyx';
 import {withOnyx} from 'react-native-onyx';
 import CheckboxWithLabel from '@components/CheckboxWithLabel';
@@ -14,8 +14,8 @@ import useLocalize from '@hooks/useLocalize';
 import type {SubStepProps} from '@hooks/useSubStep/types';
 import useThemeStyles from '@hooks/useThemeStyles';
 import * as ValidationUtils from '@libs/ValidationUtils';
+import getSubstepValues from '@expPages/ReimbursementAccount/utils/getSubstepValues';
 import CONST from '@src/CONST';
-import getSubstepValues from '@src/expPages/ReimbursementAccount/utils/getSubstepValues';
 import type {TranslationPaths} from '@src/languages/types';
 import ONYXKEYS from '@src/ONYXKEYS';
 import type {ReimbursementAccountForm} from '@src/types/form';
@@ -37,16 +37,6 @@ type States = keyof typeof COMMON_CONST.STATES;
 const BUSINESS_INFO_STEP_KEYS = INPUT_IDS.BUSINESS_INFO_STEP;
 const BUSINESS_INFO_STEP_INDEXES = CONST.REIMBURSEMENT_ACCOUNT.SUBSTEP_INDEX.BUSINESS_INFO;
 
-const validate = (values: FormOnyxValues<typeof ONYXKEYS.FORMS.REIMBURSEMENT_ACCOUNT_FORM>): FormInputErrors<typeof ONYXKEYS.FORMS.REIMBURSEMENT_ACCOUNT_FORM> => {
-    const errors = ValidationUtils.getFieldRequiredErrors(values, [BUSINESS_INFO_STEP_KEYS.HAS_NO_CONNECTION_TO_CANNABIS]);
-
-    if (!values.hasNoConnectionToCannabis) {
-        errors.hasNoConnectionToCannabis = 'bankAccount.error.restrictedBusiness';
-    }
-
-    return errors;
-};
-
 function ConfirmCompanyLabel() {
     const {translate} = useLocalize();
 
@@ -61,6 +51,19 @@ function ConfirmCompanyLabel() {
 function ConfirmationBusiness({reimbursementAccount, reimbursementAccountDraft, onNext, onMove}: ConfirmationBusinessProps) {
     const {translate} = useLocalize();
     const styles = useThemeStyles();
+
+    const validate = useCallback(
+        (values: FormOnyxValues<typeof ONYXKEYS.FORMS.REIMBURSEMENT_ACCOUNT_FORM>): FormInputErrors<typeof ONYXKEYS.FORMS.REIMBURSEMENT_ACCOUNT_FORM> => {
+            const errors = ValidationUtils.getFieldRequiredErrors(values, [BUSINESS_INFO_STEP_KEYS.HAS_NO_CONNECTION_TO_CANNABIS]);
+
+            if (!values.hasNoConnectionToCannabis) {
+                errors.hasNoConnectionToCannabis = translate('bankAccount.error.restrictedBusiness');
+            }
+
+            return errors;
+        },
+        [translate],
+    );
 
     const values = useMemo(() => getSubstepValues(BUSINESS_INFO_STEP_KEYS, reimbursementAccountDraft, reimbursementAccount), [reimbursementAccount, reimbursementAccountDraft]);
 

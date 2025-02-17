@@ -79,7 +79,7 @@ export default function SceneView<T extends Route>({
       style={[
         styles.route,
         // If we don't have the layout yet, make the focused screen fill the container
-        // This avoids delay before we are able to render pages side by side
+        // This avoids delay before we are able to render expPages side by side
         layout.width
           ? { width: layout.width }
           : focused

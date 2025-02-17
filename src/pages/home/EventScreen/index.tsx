@@ -1,15 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import {useCollection, useCollectionOnce, useDocumentData} from 'react-firebase-hooks/firestore';
 import {usePagination} from 'react-firebase-pagination-hooks';
 import {DetailedPageSkeletonView} from '@components/Ieatta/components/SkeletonViews';
-import ReportActionsSkeletonView from '@components/ReportActionsSkeletonView';
-import {FBCollections, ReviewType} from '@libs/Firebase/constant';
-import type {EventScreenNavigationProps} from '@libs/Firebase/helper/EventUtils';
-import {getEventID} from '@libs/Firebase/helper/EventUtils';
-import {defaultSortObject} from '@libs/Firebase/review-sort';
-import * as FirebaseQuery from '@libs/Firebase/services/firebase-query';
-import {FirebaseReviewQuery} from '@libs/Firebase/services/review-query';
+import {FBCollections, ReviewType} from '@libs/FirebaseIeatta/constant';
+import type {EventScreenNavigationProps} from '@libs/FirebaseIeatta/helper/EventUtils';
+import {getEventID} from '@libs/FirebaseIeatta/helper/EventUtils';
+import {defaultSortObject} from '@libs/FirebaseIeatta/review-sort';
+import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
+import {FirebaseReviewQuery} from '@libs/FirebaseIeatta/services/review-query';
 import {toRecipeDictInRestaurant} from '@libs/ieatta/eventUtils';
 import Variables from '@styles/variables';
 import CONST from '@src/CONST';

@@ -8,9 +8,9 @@ import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import Navigation from '@navigation/Navigation';
 import type {SettingsNavigatorParamList} from '@navigation/types';
-import * as PolicyActions from '@userActions/Policy';
+import AccessOrNotFoundWrapper from '@expPages/workspace/AccessOrNotFoundWrapper';
+import * as MemberActions from '@userActions/Policy/Member';
 import CONST from '@src/CONST';
-import AccessOrNotFoundWrapper from '@src/expPages/workspace/AccessOrNotFoundWrapper';
 import ROUTES from '@src/ROUTES';
 import type SCREENS from '@src/SCREENS';
 
@@ -20,11 +20,11 @@ function WorkspaceOwnerChangeSuccessPage({route}: WorkspaceOwnerChangeSuccessPag
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 
-    const accountID = Number(route.params.accountID) ?? 0;
+    const accountID = Number(route.params.accountID) ?? -1;
     const policyID = route.params.policyID;
 
     const closePage = useCallback(() => {
-        PolicyActions.clearWorkspaceOwnerChangeFlow(policyID);
+        MemberActions.clearWorkspaceOwnerChangeFlow(policyID);
         Navigation.goBack();
         Navigation.navigate(ROUTES.WORKSPACE_MEMBER_DETAILS.getRoute(policyID, accountID));
     }, [accountID, policyID]);
@@ -40,7 +40,7 @@ function WorkspaceOwnerChangeSuccessPage({route}: WorkspaceOwnerChangeSuccessPag
                     onBackButtonPress={closePage}
                 />
                 <ConfirmationPage
-                    animation={LottieAnimations.Fireworks}
+                    illustration={LottieAnimations.Fireworks}
                     heading={translate('workspace.changeOwner.successTitle')}
                     description={translate('workspace.changeOwner.successDescription')}
                     descriptionStyle={styles.textSupporting}

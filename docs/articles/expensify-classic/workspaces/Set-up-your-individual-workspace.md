@@ -2,9 +2,9 @@
 title: Set up your individual workspace
 description: Capture your personal expenses
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
-All Ieatta accounts come with an individual workspace where you can track your personal expenses. If you want to connect your personal expenses to an accounting or travel integration, you can create a group workspace—even if you will be the only person in the group. 
+All Expensify accounts come with an individual workspace where you can track your personal expenses. If you want to connect your personal expenses to an accounting or travel integration, you can create a group workspace—even if you will be the only person in the group. 
 
 To set up your individual workspace, 
 

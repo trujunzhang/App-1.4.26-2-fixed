@@ -1,5 +1,13 @@
+/* eslint-disable react-compiler/react-compiler */
+
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
+/* eslint-disable @typescript-eslint/prefer-optional-chain */
 import {useFocusEffect} from '@react-navigation/core';
 import {useRealm} from '@realm/react';
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import React, {useCallback, useRef, useState} from 'react';
@@ -19,17 +27,18 @@ import * as Expensicons from '@components/Icon/Expensicons';
 import ImageSVG from '@components/ImageSVG';
 import PressableWithFeedback from '@components/Pressable/PressableWithFeedback';
 import Text from '@components/Text';
-import withCurrentUserPersonalDetails from '@components/withCurrentUserPersonalDetails';
+import useCurrentUserPersonalDetails from '@hooks/useCurrentUserPersonalDetails';
 import useLocalize from '@hooks/useLocalize';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
 import * as FileUtils from '@libs/fileDownload/FileUtils';
-import {ParseModelSqlPhotos} from '@libs/Firebase/appModel';
-import {PhotoType} from '@libs/Firebase/constant';
-import {getAuthUserFromPersonalDetails} from '@libs/Firebase/models/auth_user_model';
-import FirebasePhoto from '@libs/Firebase/services/firebase-photo';
-import {documentIdFromCurrentDate} from '@libs/Firebase/utils/md5_utils';
+import {ParseModelSqlPhotos} from '@libs/FirebaseIeatta/appModel';
+import {PhotoType} from '@libs/FirebaseIeatta/constant';
+import {getAuthUserFromPersonalDetails} from '@libs/FirebaseIeatta/models/auth_user_model';
+import FirebasePhoto from '@libs/FirebaseIeatta/services/firebase-photo';
+import {documentIdFromCurrentDate} from '@libs/FirebaseIeatta/utils/md5_utils';
+import {navigationToEditPhoto} from '@libs/ieatta/editFormUtils';
 import * as ShowNotify from '@libs/ieatta/Notify';
 import Log from '@libs/Log';
 import Navigation from '@libs/Navigation/Navigation';
@@ -41,9 +50,11 @@ import NavigationAwareCamera from './NavigationAwareCamera';
 import TakePhotoScreenWrapper from './TakePhotoScreenWrapper';
 import type {IEATTATakePhotoPageOnyxProps, IEATTATakePhotoPageProps} from './types';
 
-function IEATTATakePhotoPage({route, currentUserPersonalDetails}: IEATTATakePhotoPageProps) {
-    const {isSmallScreenWidth} = useWindowDimensions();
+function IEATTATakePhotoPage({route}: IEATTATakePhotoPageProps) {
+    const {isSmallScreenWidth} = useResponsiveLayout();
     const realm = useRealm();
+
+    const personalData = useCurrentUserPersonalDetails();
 
     const relatedId = lodashGet(route, 'params.relatedId', CONST.IEATTA_MODEL_ID_EMPTY);
     const photoType = lodashGet(route, 'params.photoType', PhotoType.Unknown);
@@ -171,7 +182,7 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: IEATTATakePhot
 
         toastId.current = ShowNotify.initialAndShowNotify({isSmallScreenWidth, message: translate('notify.takePhoto.start'), autoClose: false});
         let currentPhotoPath: string | null = null;
-        const photoTableId = documentIdFromCurrentDate();
+        const firebasePhotoId = documentIdFromCurrentDate();
         camera?.current
             ?.takePhoto({
                 flash: flash && hasFlash ? 'on' : 'off',
@@ -188,24 +199,26 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: IEATTATakePhot
                 Log.info('================================');
                 Log.info('');
 
-                const authUserModel = getAuthUserFromPersonalDetails(currentUserPersonalDetails);
+                const authUserModel = getAuthUserFromPersonalDetails(personalData);
                 if (_.isUndefined(authUserModel)) {
-                    // toast.show({
-                    // description: 'No User Data!'
-                    // })
+                    ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.auth.unAuthed')});
                     return;
                 }
 
                 return FirebasePhoto.saveTakenPhotoIfOffline({
                     imagePath: currentPhotoPath,
-                    emptyParams: {authUserModel, photoUniqueId: photoTableId, relatedId, photoType, filePath: currentPhotoPath},
+                    isOnWeb: false,
+                    emptyParams: {authUserModel, photoUniqueId: firebasePhotoId, relatedId, photoType, filePath: currentPhotoPath},
                 });
             })
-            .then(() => {})
+            .then(() => {
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.takePhoto.success')});
+                // navigationToEditPhoto({photoId: firebasePhotoId});
+            })
             .catch((error: string) => {
                 Log.warn('Error taking photo', error);
                 if (currentPhotoPath !== null) {
-                    const sqlPhotoModel = ParseModelSqlPhotos.emptySqlPhoto({filePath: currentPhotoPath, photoTableId, pageId, relatedId, photoType});
+                    const sqlPhotoModel = ParseModelSqlPhotos.emptySqlPhoto({filePath: currentPhotoPath, firebasePhotoId, pageId, relatedId, photoType});
                     new RealmHelper(realm).setDataIfNotExist({
                         collection: RealmCollections.SqlPhotos,
                         docId: sqlPhotoModel.uniqueId,
@@ -218,7 +231,7 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: IEATTATakePhot
             .finally(() => {
                 setDidCapturePhoto(false);
             });
-    }, [cameraPermissionStatus, didCapturePhoto, isSmallScreenWidth, translate, flash, hasFlash, currentUserPersonalDetails, relatedId, photoType, pageId, realm]);
+    }, [cameraPermissionStatus, didCapturePhoto, isSmallScreenWidth, translate, flash, hasFlash, personalData, relatedId, photoType, pageId, realm]);
 
     // Wait for camera permission status to render
     if (cameraPermissionStatus == null) {
@@ -288,7 +301,7 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: IEATTATakePhot
                 <AttachmentPicker>
                     {() => (
                         <PressableWithFeedback
-                            role={CONST.ACCESSIBILITY_ROLE.BUTTON}
+                            role={CONST.ROLE.BUTTON}
                             accessibilityLabel={translate('receipt.gallery')}
                             style={[styles.alignItemsStart]}
                             onPress={() => {
@@ -307,7 +320,7 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: IEATTATakePhot
                     )}
                 </AttachmentPicker>
                 <PressableWithFeedback
-                    role={CONST.ACCESSIBILITY_ROLE.BUTTON}
+                    role={CONST.ROLE.BUTTON}
                     accessibilityLabel={translate('receipt.shutter')}
                     style={[styles.alignItemsCenter]}
                     onPress={capturePhoto}
@@ -321,7 +334,7 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: IEATTATakePhot
                 </PressableWithFeedback>
                 {hasFlash && (
                     <PressableWithFeedback
-                        role={CONST.ACCESSIBILITY_ROLE.BUTTON}
+                        role={CONST.ROLE.BUTTON}
                         accessibilityLabel={translate('receipt.flash')}
                         style={[styles.alignItemsEnd]}
                         disabled={cameraPermissionStatus !== RESULTS.GRANTED}
@@ -344,6 +357,4 @@ IEATTATakePhotoPage.displayName = 'IEATTATakePhotoPage';
 
 const IEATTATakePhotoPageWithOnyx = withOnyx<IEATTATakePhotoPageProps, IEATTATakePhotoPageOnyxProps>({})(IEATTATakePhotoPage);
 
-const IEATTATakePhotoPageWithCurrentUserPersonalDetails = withCurrentUserPersonalDetails(IEATTATakePhotoPageWithOnyx);
-
-export default IEATTATakePhotoPageWithCurrentUserPersonalDetails;
+export default IEATTATakePhotoPageWithOnyx;

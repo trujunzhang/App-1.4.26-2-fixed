@@ -1,12 +1,7 @@
 module.exports = {
     project: {
-        ios: {
-            sourceDir: 'ios',
-            unstable_reactLegacyComponentNames: ['CameraView'],
-        },
-        android: {
-            unstable_reactLegacyComponentNames: ['CameraView'],
-        },
+        ios: {sourceDir: 'ios'},
+        android: {},
     },
     assets: ['./assets/fonts/native'],
 };

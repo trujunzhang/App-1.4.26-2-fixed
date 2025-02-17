@@ -3,9 +3,9 @@ const {version} = require('../package.json');
 const pullRequestNumber = process.env.PULL_REQUEST_NUMBER;
 
 const s3Bucket = {
-    production: 'ieatta-cash',
-    staging: 'staging-ieatta-cash',
-    adhoc: 'ad-hoc-ieatta-cash',
+    production: 'expensify-cash',
+    staging: 'staging-expensify-cash',
+    adhoc: 'ad-hoc-expensify-cash',
 };
 
 const s3Path = {
@@ -30,7 +30,7 @@ if (!isCorrectElectronEnv) {
  * The configuration for the debug, production and staging Electron builds.
  */
 module.exports = {
-    appId: 'com.ieattareactnative.chat',
+    appId: 'com.expensifyreactnative.chat',
     productName: 'New Ieatta',
     extraMetadata: {
         version,
@@ -45,6 +45,12 @@ module.exports = {
         notarize: {
             teamId: '368M544MTT',
         },
+        target: [
+            {
+                target: 'default',
+                arch: ['universal'],
+            },
+        ],
     },
     dmg: {
         title: 'New Ieatta',
@@ -66,6 +72,6 @@ module.exports = {
     },
     protocols: {
         name: 'New Ieatta',
-        schemes: ['new-ieatta'],
+        schemes: ['new-expensify'],
     },
 };

@@ -4,7 +4,7 @@ import {Image as RNImage, View} from 'react-native';
 import Avatar from '@components/Avatar';
 import {IeattaStars} from '@components/Icon/IeattaStars';
 import Text from '@components/Text';
-import withCurrentUserPersonalDetails, {WithCurrentUserPersonalDetailsProps} from '@components/withCurrentUserPersonalDetails';
+import useCurrentUserPersonalDetails from '@hooks/useCurrentUserPersonalDetails';
 import useThemeStyles from '@hooks/useThemeStyles';
 import TailwindColors from '@styles/tailwindcss/colors';
 import CONST from '@src/CONST';
@@ -16,13 +16,15 @@ type ReviewSubmitRow = {
     reviewType: string;
 };
 
-type ReviewSubmitPanelProps = WithCurrentUserPersonalDetailsProps & {
+type ReviewSubmitPanelProps = {
     reviewSubmitRow: ReviewSubmitRow;
 };
 
-function ReviewSubmitPanel({reviewSubmitRow, currentUserPersonalDetails}: ReviewSubmitPanelProps) {
+function ReviewSubmitPanel({reviewSubmitRow}: ReviewSubmitPanelProps) {
     const styles = useThemeStyles();
-    const loggedUser = currentUserPersonalDetails;
+
+    const personalData = useCurrentUserPersonalDetails();
+    const loggedUser = personalData;
     const loggedUserId = lodashGet(loggedUser, 'userID', '');
 
     const getAvatar = () => {
@@ -32,7 +34,7 @@ function ReviewSubmitPanel({reviewSubmitRow, currentUserPersonalDetails}: Review
                     <Avatar
                         containerStyles={[styles.actionAvatar]}
                         shouldShowAsAvatar
-                        avatarUrl={lodashGet(loggedUser, 'avatarThumbnail', CONST.IEATTA_URL_EMPTY)}
+                        avatarUrl={loggedUser.avatarThumbnail}
                         type={CONST.ICON_TYPE_AVATAR}
                         name={loggedUser.displayName}
                     />
@@ -76,4 +78,4 @@ function ReviewSubmitPanel({reviewSubmitRow, currentUserPersonalDetails}: Review
 
 ReviewSubmitPanel.displayName = 'ReviewSubmitPanel';
 
-export default withCurrentUserPersonalDetails(ReviewSubmitPanel);
+export default ReviewSubmitPanel;

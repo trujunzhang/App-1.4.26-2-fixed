@@ -5,7 +5,7 @@ import * as Expensicons from '@components/Icon/Expensicons';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
-import type {IEditModelButtonRow} from '@libs/Firebase/list/types/rows/common';
+import type {IEditModelButtonRow} from '@libs/FirebaseIeatta/list/types/rows/common';
 import TailwindColors from '@styles/tailwindcss/colors';
 import variables from '@styles/variables';
 

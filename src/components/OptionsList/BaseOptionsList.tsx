@@ -5,6 +5,7 @@ import type {SectionListRenderItem} from 'react-native';
 import {View} from 'react-native';
 import OptionRow from '@components/OptionRow';
 import OptionsListSkeletonView from '@components/OptionsListSkeletonView';
+import {PressableWithFeedback} from '@components/Pressable';
 import SectionList from '@components/SectionList';
 import Text from '@components/Text';
 import usePrevious from '@hooks/usePrevious';
@@ -137,13 +138,13 @@ function BaseOptionsList(
      */
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const getItemLayout = (_data: OptionsListDataWithIndexOffset[] | null, flatDataArrayIndex: number) => {
-        if (!flattenedData.current[flatDataArrayIndex]) {
+        if (!flattenedData.current.at(flatDataArrayIndex) || flatDataArrayIndex === -1) {
             flattenedData.current = buildFlatSectionArray();
         }
-        const targetItem = flattenedData.current[flatDataArrayIndex];
+        const targetItem = flattenedData.current.at(flatDataArrayIndex);
         return {
-            length: targetItem.length,
-            offset: targetItem.offset,
+            length: targetItem?.length ?? 0,
+            offset: targetItem?.offset ?? 0,
             index: flatDataArrayIndex,
         };
     };
@@ -205,7 +206,7 @@ function BaseOptionsList(
     /**
      * Function which renders a section header component
      */
-    const renderSectionHeader = ({section: {title, shouldShow}}: {section: OptionsListDataWithIndexOffset}) => {
+    const renderSectionHeader = ({section: {title, shouldShow, shouldShowActionButton, onActionButtonPress, actionButtonTitle}}: {section: OptionsListDataWithIndexOffset}) => {
         if (!title && shouldShow && !hideSectionHeaders && sectionHeaderStyle) {
             return <View style={sectionHeaderStyle} />;
         }
@@ -216,8 +217,18 @@ function BaseOptionsList(
                 // We do this so that we can reference the height in `getItemLayout` –
                 // we need to know the heights of all list items up-front in order to synchronously compute the layout of any given list item.
                 // So be aware that if you adjust the content of the section header (for example, change the font size), you may need to adjust this explicit height as well.
-                <View style={[styles.optionsListSectionHeader, styles.justifyContentCenter, sectionHeaderStyle]}>
+                <View style={[styles.optionsListSectionHeader, styles.flexRow, styles.justifyContentBetween, sectionHeaderStyle]}>
                     <Text style={[styles.ph5, styles.textLabelSupporting]}>{title}</Text>
+                    {shouldShowActionButton && (
+                        <PressableWithFeedback
+                            onPress={onActionButtonPress}
+                            accessibilityLabel={CONST.ROLE.BUTTON}
+                            role={CONST.ROLE.BUTTON}
+                            shouldUseAutoHitSlop
+                        >
+                            <Text style={[styles.pr5, styles.textLabelSupporting, styles.link]}>{actionButtonTitle}</Text>
+                        </PressableWithFeedback>
+                    )}
                 </View>
             );
         }

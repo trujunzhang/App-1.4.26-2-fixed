@@ -1,5 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line no-restricted-imports, lodash/import-scope
 import _ from 'lodash';
 import type {ForwardedRef} from 'react';
 import React, {forwardRef, useCallback, useImperativeHandle, useRef, useState} from 'react';
@@ -12,19 +18,20 @@ import PhotoCarouselWithUserInfoPanel from '@components/Ieatta/photos/PhotoCarou
 import Modal from '@components/Modal';
 import {PressableWithFeedback} from '@components/Pressable';
 import Text from '@components/Text';
-import Tooltip from '@components/Tooltip';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
-import * as FirebaseQuery from '@libs/Firebase/services/firebase-query';
+import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
 import {getPhotoIndexWithId} from '@libs/ieatta/photoUtils';
 import TailwindColors from '@styles/tailwindcss/colors';
 import variables from '@styles/variables';
 import CONST from '@src/CONST';
+import ROUTES from '@src/ROUTES';
 import type {IFBPhoto} from '@src/types/firebase';
 import type {PhotosPageContextMenu} from './PhotosPageContextMenu';
 
 function PopoverPhotosPageContextMenu(_props: unknown, ref: ForwardedRef<PhotosPageContextMenu>) {
     const {translate} = useLocalize();
+
     const styles = useThemeStyles();
     const selectionRef = useRef('');
     const reportActionDraftMessageRef = useRef<string>();
@@ -65,6 +72,8 @@ function PopoverPhotosPageContextMenu(_props: unknown, ref: ForwardedRef<PhotosP
     const showContextMenu: PhotosPageContextMenu['showContextMenu'] = ({initialPhotoId, relatedId, photoType, onShow = () => {}, onHide = () => {}}) => {
         onPopoverShow.current = onShow;
         onPopoverHide.current = onHide;
+
+        const url = ROUTES.PHOTOS_PAGE_VIEW.getRoute({relatedId, photoType, selected: initialPhotoId});
 
         setCurrentRelatedId(relatedId);
         setCurrentPhotoType(photoType);
@@ -177,7 +186,7 @@ function PopoverPhotosPageContextMenu(_props: unknown, ref: ForwardedRef<PhotosP
         >
             <GestureHandlerRootView
                 onLayout={initializeImageContainer}
-                style={[styles.alignSelfStretch, styles.flex1, styles.alignItemsCenter, styles.sectionComponentContainer]}
+                style={[styles.alignSelfStretch, styles.flex1, styles.alignItemsCenter, styles.backgroundComponentBG]}
             >
                 <View
                     style={{

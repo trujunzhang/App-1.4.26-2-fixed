@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import FirebaseRepositories from '@libs/Firebase/services/firebase-repositories';
+import FirebaseRepositories from '@libs/FirebaseIeatta/services/firebase-repositories';
 import type FirebaseProviderProps from './types';
 
 export default function FirebaseProvider({children, isAuthenticated}: FirebaseProviderProps) {

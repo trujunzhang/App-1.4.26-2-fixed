@@ -2,7 +2,7 @@
 title: Split an expense
 description: Divide expenses on a receipt into separate expenses
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 You can break down a receipt into multiple expenses by splitting it. Each split expense is treated as an individual expense which can be categorized and tagged separately. The same receipt image will be attached to all of the split expenses. 
 

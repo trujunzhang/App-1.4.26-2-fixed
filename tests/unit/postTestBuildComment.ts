@@ -16,28 +16,32 @@ jest.spyOn(GithubUtils, 'octokit', 'get').mockReturnValue({
     },
 } as RestEndpointMethods);
 
-// @ts-expect-error -- it's a static getter
-jest.spyOn(GithubUtils, 'paginate', 'get').mockReturnValue(<T, TData>(endpoint: (params: Record<string, T>) => Promise<{data: TData}>, params: Record<string, T>) =>
-    endpoint(params).then((response) => response.data),
-);
+function mockImplementation<T, TData>(endpoint: (params: Record<string, T>) => Promise<{data: TData}>, params: Record<string, T>) {
+    return endpoint(params).then((response) => response.data);
+}
 
-// @ts-expect-error -- it's a static getter
-jest.spyOn(GithubUtils, 'graphql', 'get').mockReturnValue(mockGraphql);
+Object.defineProperty(GithubUtils, 'paginate', {
+    get: () => mockImplementation,
+});
+
+Object.defineProperty(GithubUtils, 'graphql', {
+    get: () => mockGraphql,
+});
 
 jest.mock('@actions/github', () => ({
     context: {
         repo: {
-            owner: 'Ieatta',
+            owner: 'Expensify',
             repo: 'App',
         },
         runId: 1234,
     },
 }));
 
-const androidLink = 'https://ieatta.app/ANDROID_LINK';
-const iOSLink = 'https://ieatta.app/IOS_LINK';
-const webLink = 'https://ieatta.app/WEB_LINK';
-const desktopLink = 'https://ieatta.app/DESKTOP_LINK';
+const androidLink = 'https://expensify.app/ANDROID_LINK';
+const iOSLink = 'https://expensify.app/IOS_LINK';
+const webLink = 'https://expensify.app/WEB_LINK';
+const desktopLink = 'https://expensify.app/DESKTOP_LINK';
 
 const androidQRCode = `![Android](https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${androidLink})`;
 const desktopQRCode = `![Desktop](https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${desktopLink})`;
@@ -55,7 +59,7 @@ const message = `:test_tube::test_tube: Use the links below to test this adhoc b
 
 ---
 
-:eyes: [View the workflow run that generated this build](https://github.com/Ieatta/App/actions/runs/1234) :eyes:
+:eyes: [View the workflow run that generated this build](https://github.com/Expensify/App/actions/runs/1234) :eyes:
 `;
 
 describe('Post test build comments action tests', () => {
@@ -70,10 +74,10 @@ describe('Post test build comments action tests', () => {
         when(core.getInput).calledWith('IOS', {required: true}).mockReturnValue('success');
         when(core.getInput).calledWith('WEB', {required: true}).mockReturnValue('success');
         when(core.getInput).calledWith('DESKTOP', {required: true}).mockReturnValue('success');
-        when(core.getInput).calledWith('ANDROID_LINK').mockReturnValue('https://ieatta.app/ANDROID_LINK');
-        when(core.getInput).calledWith('IOS_LINK').mockReturnValue('https://ieatta.app/IOS_LINK');
-        when(core.getInput).calledWith('WEB_LINK').mockReturnValue('https://ieatta.app/WEB_LINK');
-        when(core.getInput).calledWith('DESKTOP_LINK').mockReturnValue('https://ieatta.app/DESKTOP_LINK');
+        when(core.getInput).calledWith('ANDROID_LINK').mockReturnValue('https://expensify.app/ANDROID_LINK');
+        when(core.getInput).calledWith('IOS_LINK').mockReturnValue('https://expensify.app/IOS_LINK');
+        when(core.getInput).calledWith('WEB_LINK').mockReturnValue('https://expensify.app/WEB_LINK');
+        when(core.getInput).calledWith('DESKTOP_LINK').mockReturnValue('https://expensify.app/DESKTOP_LINK');
         createCommentMock.mockResolvedValue({} as CreateCommentResponse);
         mockListComments.mockResolvedValue({
             data: [

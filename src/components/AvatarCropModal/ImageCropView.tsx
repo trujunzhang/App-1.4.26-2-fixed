@@ -57,6 +57,8 @@ function ImageCropView({imageUri = '', containerSize = 0, panGesture = Gesture.P
 
     // A reanimated memoized style, which updates when the image's size or scale changes.
     const imageStyle = useAnimatedStyle(() => {
+        'worklet';
+
         const height = originalImageHeight.value;
         const width = originalImageWidth.value;
         const aspectRatio = height > width ? height / width : width / height;
@@ -67,7 +69,7 @@ function ImageCropView({imageUri = '', containerSize = 0, panGesture = Gesture.P
     }, [originalImageHeight, originalImageWidth, rotation, translateX, translateY, scale]);
 
     // We're preventing text selection with ControlSelection.blockElement to prevent safari
-    // default behaviour of cursor - I-beam cursor on drag. See https://github.com/Ieatta/App/issues/13688
+    // default behaviour of cursor - I-beam cursor on drag. See https://github.com/Expensify/App/issues/13688
     return (
         <GestureDetector gesture={panGesture}>
             <Animated.View
@@ -86,6 +88,7 @@ function ImageCropView({imageUri = '', containerSize = 0, panGesture = Gesture.P
                         // fill={theme.iconReversed}
                         width={containerSize}
                         height={containerSize}
+                        key={containerSize}
                     />
                 </View>
             </Animated.View>

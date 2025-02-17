@@ -2,14 +2,14 @@
 title: Flag chat messages
 description: Report a message as offensive, spam, etc.
 ---
-<div id="new-ieatta" markdown="1">
+<div id="new-expensify" markdown="1">
 
-Flagging a message as offensive (including unwanted behavior or offensive messages or attachments) escalates it to Ieatta’s internal moderation team for review. The person who sent the message will be notified of the flag anonymously, and the moderation team will decide what further action is needed. 
+Flagging a message as offensive (including unwanted behavior or offensive messages or attachments) escalates it to Expensify’s internal moderation team for review. The person who sent the message will be notified of the flag anonymously, and the moderation team will decide what further action is needed. 
 
 Depending on the severity of the offense, messages can be hidden (with an option to reveal) or fully removed. In extreme cases, the sender of the message may be temporarily or permanently blocked from posting.
 
 {% include info.html %}
-Messages sent in public chat rooms are automatically reviewed for offensive content by an automated system. If offensive content is found, the message is sent to Ieatta’s internal moderation team for further review.
+Messages sent in public chat rooms are automatically reviewed for offensive content by an automated system. If offensive content is found, the message is sent to Expensify’s internal moderation team for further review.
 {% include end-info.html %}
 
 To flag a message,

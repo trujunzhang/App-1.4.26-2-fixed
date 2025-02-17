@@ -5,7 +5,7 @@ This document lists specific guidelines for using our Form component and general
 ## General Form UI/UX
 
 ### Inputs
-Any form input needs to be wrapped in [InputWrapper](https://github.com/Ieatta/App/blob/029d009731dcd3c44cd1321672b9672ef0d3d7d9/src/components/Form/InputWrapper.js) and passed as `InputComponent` property, additionally, it's necessary to pass an unique `inputID`. All other props of the input can be passed as `InputWrapper` props.
+Any form input needs to be wrapped in [InputWrapper](https://github.com/Expensify/App/blob/029d009731dcd3c44cd1321672b9672ef0d3d7d9/src/components/Form/InputWrapper.js) and passed as `InputComponent` property, additionally, it's necessary to pass an unique `inputID`. All other props of the input can be passed as `InputWrapper` props.
 
 ```jsx
 <InputWrapper
@@ -56,7 +56,7 @@ The phone number can be formatted in different ways.
 
 We should always set people up for success on native platforms by enabling the best keyboard for the type of input we’re asking them to provide. See [inputMode](https://reactnative.dev/docs/textinput#inputmode) in the React Native documentation.
 
-We have a list of input modes [defined](https://github.com/Ieatta/App/blob/9418b870515102631ea2156b5ea253ee05a98ff1/src/CONST.js#L765-L774) and should be used like so:
+We have a list of input modes [defined](https://github.com/Expensify/App/blob/9418b870515102631ea2156b5ea253ee05a98ff1/src/CONST.js#L765-L774) and should be used like so:
 
 ```jsx
 <InputWrapper
@@ -65,7 +65,7 @@ We have a list of input modes [defined](https://github.com/Ieatta/App/blob/9418b
 />
 ```
 
-We also have [keyboardType](https://github.com/Ieatta/App/blob/9418b870515102631ea2156b5ea253ee05a98ff1/src/CONST.js#L760-L763) and should be used for specific use cases when there is no `inputMode` equivalent of the value exist, and should be used like so:
+We also have [keyboardType](https://github.com/Expensify/App/blob/9418b870515102631ea2156b5ea253ee05a98ff1/src/CONST.js#L760-L763) and should be used for specific use cases when there is no `inputMode` equivalent of the value exist, and should be used like so:
 
 ```jsx
 <InputWrapper
@@ -117,7 +117,7 @@ To give a slightly more detailed example of how this would work with phone numbe
 
 ### Form Drafts
 
-Form inputs will NOT store draft values by default. This is to avoid accidentally storing any sensitive information like passwords, SSN or bank account information. We need to explicitly tell each form input to save draft values by passing the `shouldSaveDraft` prop to the input. Saving draft values is highly desirable and we should always try to save draft values. This way when a user continues a given flow they can easily pick up right where they left off if they accidentally exited a flow. Inputs with saved draft values [will be cleared when a user logs out](https://github.com/Ieatta/App/blob/aa1f0f34eeba5d761657168255a1ae9aebdbd95e/src/libs/actions/SignInRedirect.js#L52) (like most data). Additionally, we should clear draft data once the form is successfully submitted by calling `Onyx.set(ONYXKEY.FORM_ID, null)` in the onSubmit callback passed to Form.
+Form inputs will NOT store draft values by default. This is to avoid accidentally storing any sensitive information like passwords, SSN or bank account information. We need to explicitly tell each form input to save draft values by passing the `shouldSaveDraft` prop to the input. Saving draft values is highly desirable and we should always try to save draft values. This way when a user continues a given flow they can easily pick up right where they left off if they accidentally exited a flow. Inputs with saved draft values [will be cleared when a user logs out](https://github.com/Expensify/App/blob/aa1f0f34eeba5d761657168255a1ae9aebdbd95e/src/libs/actions/SignInRedirect.js#L52) (like most data). Additionally, we should clear draft data once the form is successfully submitted by calling `Onyx.set(ONYXKEY.FORM_ID, null)` in the onSubmit callback passed to Form.
 
 ```jsx
 <InputWrapper
@@ -174,7 +174,7 @@ function validate(values) {
     }
 ```
 
-For a working example, check [Form story](https://github.com/Ieatta/App/blob/aa1f0f34eeba5d761657168255a1ae9aebdbd95e/src/stories/Form.stories.js#L63-L72)
+For a working example, check [Form story](https://github.com/Expensify/App/blob/aa1f0f34eeba5d761657168255a1ae9aebdbd95e/src/stories/Form.stories.js#L63-L72)
 
 ### Highlight Fields and Inline Errors
 
@@ -209,7 +209,7 @@ The only time we won’t allow a user to press the submit button is when we have
 
 ## Using Form
 
-The example below shows how to use [FormProvider](https://github.com/Ieatta/App/blob/029d009731dcd3c44cd1321672b9672ef0d3d7d9/src/components/Form/FormProvider.js) and [InputWrapper](https://github.com/Ieatta/App/blob/029d009731dcd3c44cd1321672b9672ef0d3d7d9/src/components/Form/InputWrapper.js) in our app. You can also refer to [Form.stories.js](https://github.com/Ieatta/App/blob/c5a84e5b4c0b8536eed2214298a565e5237a27ca/src/stories/Form.stories.js) for more examples.
+The example below shows how to use [FormProvider](https://github.com/Expensify/App/blob/029d009731dcd3c44cd1321672b9672ef0d3d7d9/src/components/Form/FormProvider.js) and [InputWrapper](https://github.com/Expensify/App/blob/029d009731dcd3c44cd1321672b9672ef0d3d7d9/src/components/Form/InputWrapper.js) in our app. You can also refer to [Form.stories.js](https://github.com/Expensify/App/blob/c5a84e5b4c0b8536eed2214298a565e5237a27ca/src/stories/Form.stories.js) for more examples.
 
 ```jsx
 function validate(values) {
@@ -255,7 +255,7 @@ function onSubmit(values) {
 </FormProvider>
 ```
 
-`FormProvider` also works with inputs nested in a custom component, e.g. [AddressForm](https://github.com/Ieatta/App/blob/86579225ff30b21dea507347735259637a2df461/src/pages/ReimbursementAccount/AddressForm.js). The only exception is that the nested component shouldn't be wrapped around any HoC and all inputs in the component needs to be wrapped with `InputWrapper`.
+`FormProvider` also works with inputs nested in a custom component, e.g. [AddressForm](https://github.com/Expensify/App/blob/86579225ff30b21dea507347735259637a2df461/src/pages/ReimbursementAccount/AddressForm.js). The only exception is that the nested component shouldn't be wrapped around any HoC and all inputs in the component needs to be wrapped with `InputWrapper`.
 
 ```jsx
 const BankAccountForm = () => (
@@ -316,7 +316,7 @@ In order for Form to track the nested values properly, each field must have a un
 
 To generate these unique keys, use `Str.guid()`.
 
-An example of this can be seen in the [ACHContractStep](https://github.com/Ieatta/App/blob/f2973f88cfc0d36c0dbe285201d3ed5e12f29d87/src/pages/ReimbursementAccount/ACHContractStep.js), where each key is stored in an array in state, and IdentityForms are dynamically rendered based on which keys are present in the array.
+An example of this can be seen in the [ACHContractStep](https://github.com/Expensify/App/blob/f2973f88cfc0d36c0dbe285201d3ed5e12f29d87/src/pages/ReimbursementAccount/ACHContractStep.js), where each key is stored in an array in state, and IdentityForms are dynamically rendered based on which keys are present in the array.
 
 ### Safe Area Padding
 

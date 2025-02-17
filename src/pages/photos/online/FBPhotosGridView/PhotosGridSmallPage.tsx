@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React from 'react';
 import FBPhotosGridView from '@components/Ieatta/components/PhotosGrid/FBPhotosGridView';
 import type {PhotosGridPageProps} from '@pages/photos/online/types';

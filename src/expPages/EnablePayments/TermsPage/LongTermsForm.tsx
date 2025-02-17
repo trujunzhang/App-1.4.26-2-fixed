@@ -71,11 +71,11 @@ function LongTermsForm() {
                 <View style={[styles.longTermsRow]}>
                     <View style={[styles.flex4]}>
                         <Text>{section.title}</Text>
-                        {Boolean(section.subTitle) && <Text style={[styles.textMicroSupporting, styles.mt1]}>{section.subTitle}</Text>}
+                        {!!section.subTitle && <Text style={[styles.textMicroSupporting, styles.mt1]}>{section.subTitle}</Text>}
                     </View>
                     <View style={[styles.flex1, styles.termsCenterRight]}>
                         <Text style={[styles.textStrong, styles.textAlignRight]}>{section.rightText}</Text>
-                        {Boolean(section.subRightText) && <Text style={[styles.textMicroSupporting, styles.mt1, styles.textAlignRight]}>{section.subRightText}</Text>}
+                        {!!section.subRightText && <Text style={[styles.textMicroSupporting, styles.mt1, styles.textAlignRight]}>{section.subRightText}</Text>}
                     </View>
                 </View>
                 <Text style={[styles.textLabelSupporting, styles.mt2]}>{section.details}</Text>
@@ -97,7 +97,8 @@ function LongTermsForm() {
             </Text>
             <Text style={[styles.mb4, styles.textMicroSupporting]}>{translate('termsStep.noOverdraftOrCredit')}</Text>
             <Text style={[styles.mb4, styles.textMicroSupporting]}>
-                {translate('termsStep.longTermsForm.contactIeattaPayments')} {CONST.EMAIL.CONCIERGE} {translate('termsStep.longTermsForm.contactIeattaPayments2')} {CONST.NEW_EXPENSIFY_URL}.
+                {translate('termsStep.longTermsForm.contactExpensifyPayments')} {CONST.EMAIL.CONCIERGE} {translate('termsStep.longTermsForm.contactExpensifyPayments2')}{' '}
+                {CONST.NEW_EXPENSIFY_URL}.
             </Text>
             <Text style={[styles.mb6, styles.textMicroSupporting]}>
                 {translate('termsStep.longTermsForm.generalInformation')} {CONST.TERMS.CFPB_PREPAID}

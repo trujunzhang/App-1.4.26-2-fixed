@@ -1,18 +1,16 @@
-import ExpensiMark from 'expensify-common/lib/ExpensiMark';
+/* eslint-disable @typescript-eslint/consistent-type-imports */
 import type {MutableRefObject} from 'react';
-import type React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import type {GestureResponderEvent, Text, View} from 'react-native';
+import React from 'react';
+import {GestureResponderEvent, View} from 'react-native';
 import type {OnyxEntry} from 'react-native-onyx';
 import * as Expensicons from '@components/Icon/Expensicons';
-import Clipboard from '@libs/Clipboard';
-import type {IPageRow} from '@libs/Firebase/list/types/page-row';
+import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
 import {actionEditNavigateTo} from '@libs/ieatta/EditNavigationUtils';
 import type {TranslationPaths} from '@src/languages/types';
-import type {ReportAction, Transaction} from '@src/types/onyx';
+import type {Transaction} from '@src/types/onyx';
 import type IconAsset from '@src/types/utils/IconAsset';
-import * as DetailedPageActionContextMenu from './DetailedPageActionContextMenu';
 import type {ContextMenuAnchor} from './DetailedPageActionContextMenu';
+import * as DetailedPageActionContextMenu from './DetailedPageActionContextMenu';
 
 type ShouldShow = (type: string, selection: IPageRow, menuTarget: MutableRefObject<ContextMenuAnchor> | undefined) => boolean;
 

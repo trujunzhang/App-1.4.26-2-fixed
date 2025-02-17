@@ -3,7 +3,7 @@ title: Tax
 description: How to track expense taxes
 ---
 # Overview
-Ieatta’s tax tracking feature allows you to:
+Expensify’s tax tracking feature allows you to:
 - Add tax names, rates, and codes whether you’re connected to an accounting system or not.
 - Enable/disable taxes you’d like to make available to users.
 - Set a default tax for Workspace currency expenses and, optionally, another default tax (including exempt) for foreign currency expenses which - will automatically apply to all new expenses.

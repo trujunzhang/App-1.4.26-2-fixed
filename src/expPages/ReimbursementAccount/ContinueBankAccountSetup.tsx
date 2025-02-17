@@ -12,9 +12,9 @@ import Section from '@components/Section';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
+import WorkspaceResetBankAccountModal from '@expPages/workspace/WorkspaceResetBankAccountModal';
 import * as BankAccounts from '@userActions/BankAccounts';
 import CONST from '@src/CONST';
-import WorkspaceResetBankAccountModal from '@src/expPages/workspace/WorkspaceResetBankAccountModal';
 import type * as OnyxTypes from '@src/types/onyx';
 import {isEmptyObject} from '@src/types/utils/EmptyObject';
 
@@ -71,6 +71,7 @@ function ContinueBankAccountSetup({policyName = '', onBackButtonPress, reimburse
                             innerStyles={[styles.pr2, styles.pl4, styles.h13]}
                             success
                             isDisabled={!!pendingAction || !isEmptyObject(errors)}
+                            large
                         />
                         <MenuItem
                             title={translate('workspace.bankAccount.startOver')}

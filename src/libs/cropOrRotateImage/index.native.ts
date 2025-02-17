@@ -10,7 +10,7 @@ const cropOrRotateImage: CropOrRotateImage = (uri, actions, options) =>
     new Promise((resolve) => {
         const format = getSaveFormat(options.type);
         // We need to remove the base64 value from the result, as it is causing crashes on Release builds.
-        // More info: https://github.com/Ieatta/App/issues/37963#issuecomment-1989260033
+        // More info: https://github.com/Expensify/App/issues/37963#issuecomment-1989260033
         manipulateAsync(uri, actions, {compress: options.compress, format}).then(({base64, ...result}) => {
             RNFetchBlob.fs.stat(result.uri.replace('file://', '')).then(({size}) => {
                 resolve({

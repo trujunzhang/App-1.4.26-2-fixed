@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import Toast from 'react-native-toast-message';
-import type {InitialAndShowNotify, ToastType, UpdateNotify} from './types';
+import type {InitialAndShowNotify, UpdateNotify} from './types';
 
 const initialAndShowNotifyOnSmallScreen: InitialAndShowNotify = ({isSmallScreenWidth, message, type = 'info', autoClose = 5000}) => {
     return -1;

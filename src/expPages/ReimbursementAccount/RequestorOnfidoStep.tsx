@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import type {OnyxEntry} from 'react-native-onyx';
 import {withOnyx} from 'react-native-onyx';
 import FullPageOfflineBlockingView from '@components/BlockingViews/FullPageOfflineBlockingView';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
+import Onfido from '@components/Onfido';
+import type {OnfidoData} from '@components/Onfido/types';
 import ScreenWrapper from '@components/ScreenWrapper';
 import ScrollView from '@components/ScrollView';
 import useLocalize from '@hooks/useLocalize';
@@ -36,13 +39,13 @@ function RequestorOnfidoStep({onBackButtonPress, reimbursementAccount, onfidoTok
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 
-    const submitOnfidoData = (onfidoData: any) => {
-        BankAccounts.verifyIdentityForBankAccount(reimbursementAccount.achData?.bankAccountID ?? 0, {
-            ...onfidoData,
-            applicantID: onfidoApplicantID ?? '',
-        });
-        BankAccounts.updateReimbursementAccountDraft({isOnfidoSetupComplete: true});
-    };
+    // const submitOnfidoData = (onfidoData: OnfidoData) => {
+    //     BankAccounts.verifyIdentityForBankAccount(reimbursementAccount.achData?.bankAccountID ?? -1, {
+    //         ...onfidoData,
+    //         applicantID: onfidoApplicantID ?? '-1',
+    //     });
+    //     BankAccounts.updateReimbursementAccountDraft({isOnfidoSetupComplete: true});
+    // };
 
     const handleOnfidoError = () => {
         // In case of any unexpected error we log it to the server, show a growl, and return the user back to the requestor step so they can try again.
@@ -70,7 +73,14 @@ function RequestorOnfidoStep({onBackButtonPress, reimbursementAccount, onfidoTok
                 onBackButtonPress={onBackButtonPress}
             />
             <FullPageOfflineBlockingView>
-                <ScrollView contentContainerStyle={styles.flex1}></ScrollView>
+                <ScrollView contentContainerStyle={styles.flex1}>
+                    {/* <Onfido
+                        sdkToken={onfidoToken ?? ''}
+                        onUserExit={handleOnfidoUserExit}
+                        onError={handleOnfidoError}
+                        onSuccess={submitOnfidoData}
+                    /> */}
+                </ScrollView>
             </FullPageOfflineBlockingView>
         </ScreenWrapper>
     );

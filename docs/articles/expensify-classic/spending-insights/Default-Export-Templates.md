@@ -6,7 +6,7 @@ description: Default Export Templates
 Use default export templates for exporting report data to a CSV format, for data analysis, or  uploading to an accounting software.
 Below is a breakdown of the available default templates.
 # How to use default export templates
-- **All Data - Expense Level Export** - This export prints a line for each expense with all of the data associated with the expenses. This is useful if you want to see all of the data stored in Ieatta for each expense.
+- **All Data - Expense Level Export** - This export prints a line for each expense with all of the data associated with the expenses. This is useful if you want to see all of the data stored in Expensify for each expense.
 - **All Data - Report Level Export** - This export prints a line per report, giving a summary of the report data.
 - **Basic Export** - A simpler expense level export without as much detail. This exports the data visible on the PDF of the report. Basics such as date, amount, merchant, category, tag, reimbursable state, description, receipt URL, and original expense currency and amount.
 - **Canadian Multiple Tax Export** - Exports a line per expense with all available info on the taxes applied to the expenses on your report(s). This is useful if you need to see the tax spend.

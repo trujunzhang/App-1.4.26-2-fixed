@@ -6,8 +6,8 @@ import withCurrentUserPersonalDetails from '@components/withCurrentUserPersonalD
 import useBasePopoverReactionList from '@hooks/useBasePopoverReactionList';
 import type {BasePopoverReactionListOnyxProps, BasePopoverReactionListPropsWithLocalWithOnyx} from '@hooks/useBasePopoverReactionList/types';
 import useLocalize from '@hooks/useLocalize';
-import BaseReactionList from '@src/expPages/home/report/ReactionList/BaseReactionList';
-import type {ReactionListRef} from '@src/expPages/home/ReportScreenContext';
+import BaseReactionList from '@expPages/home/report/ReactionList/BaseReactionList';
+import type {ReactionListRef} from '@expPages/home/ReportScreenContext';
 import ONYXKEYS from '@src/ONYXKEYS';
 
 function BasePopoverReactionList(props: BasePopoverReactionListPropsWithLocalWithOnyx, ref: ForwardedRef<Partial<ReactionListRef>>) {
@@ -21,13 +21,12 @@ function BasePopoverReactionList(props: BasePopoverReactionListPropsWithLocalWit
         preferredLocale,
     });
     // Get the reaction information
-    const {emojiCodes, reactionCount, hasUserReacted, users} = getReactionInformation();
-
+    const {emojiCodes, reactionCount, hasUserReacted, users, isReady} = getReactionInformation();
     useImperativeHandle(ref, () => ({hideReactionList, showReactionList}));
 
     return (
         <PopoverWithMeasuredContent
-            isVisible={isPopoverVisible}
+            isVisible={isPopoverVisible && isReady}
             onClose={hideReactionList}
             anchorPosition={popoverAnchorPosition}
             animationIn="fadeIn"

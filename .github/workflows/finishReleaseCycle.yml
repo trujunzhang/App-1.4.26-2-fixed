@@ -29,7 +29,7 @@ jobs:
       - name: Validate actor is deployer
         id: isDeployer
         run: |
-          if gh api /orgs/Ieatta/teams/mobile-deployers/memberships/${{ github.actor }} --silent; then
+          if gh api /orgs/Expensify/teams/mobile-deployers/memberships/${{ github.actor }} --silent; then
             echo "IS_DEPLOYER=true" >> "$GITHUB_OUTPUT"
           else
             echo "IS_DEPLOYER=false" >> "$GITHUB_OUTPUT"
@@ -44,7 +44,7 @@ jobs:
           GITHUB_TOKEN: ${{ steps.setupGitForOSBotify.outputs.OS_BOTIFY_API_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           COMMENT: |
-            Sorry, only members of @Ieatta/Mobile-Deployers can close deploy checklists.
+            Sorry, only members of @Expensify/Mobile-Deployers can close deploy checklists.
             Reopening!
 
       - name: Check for any deploy blockers

@@ -5,7 +5,7 @@ import type StartupTimer from '@libs/StartupTimer/types';
 const {BootSplash} = ReactNative.NativeModules;
 
 jest.doMock('react-native', () => {
-    let url = 'https://new.ieatta.com/';
+    let url = 'https://new.expensify.com/';
     const getInitialURL = () => Promise.resolve(url);
 
     let appState: ReactNative.AppStateStatus = 'active';
@@ -26,7 +26,6 @@ jest.doMock('react-native', () => {
     type ReactNativeMock = typeof ReactNative & {
         NativeModules: typeof ReactNative.NativeModules & {
             BootSplash: {
-                getVisibilityStatus: typeof BootSplash.getVisibilityStatus;
                 hide: typeof BootSplash.hide;
                 logoSizeRatio: number;
                 navigationBarHeight: number;
@@ -41,12 +40,11 @@ jest.doMock('react-native', () => {
         };
     };
 
-    const reactNativeMock: ReactNativeMock = Object.setPrototypeOf(
+    const reactNativeMock = Object.setPrototypeOf(
         {
             NativeModules: {
                 ...ReactNative.NativeModules,
                 BootSplash: {
-                    getVisibilityStatus: jest.fn(),
                     hide: jest.fn(),
                     logoSizeRatio: 1,
                     navigationBarHeight: 0,
@@ -86,7 +84,7 @@ jest.doMock('react-native', () => {
             },
             Dimensions: {
                 ...ReactNative.Dimensions,
-                addEventListener: jest.fn(),
+                addEventListener: jest.fn(() => ({remove: jest.fn()})),
                 get: () => dimensions,
                 set: (newDimensions: Record<string, number>) => {
                     dimensions = newDimensions;
@@ -98,11 +96,14 @@ jest.doMock('react-native', () => {
             // so it seems easier to just run the callback immediately in tests.
             InteractionManager: {
                 ...ReactNative.InteractionManager,
-                runAfterInteractions: (callback: () => void) => callback(),
+                runAfterInteractions: (callback: () => void) => {
+                    callback();
+                    return {cancel: () => {}};
+                },
             },
         },
         ReactNative,
-    );
+    ) as ReactNativeMock;
 
     return reactNativeMock;
 });

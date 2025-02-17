@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {useQuery} from '@realm/react';
 import React from 'react';
 import {View} from 'react-native';
@@ -16,7 +17,7 @@ function DetailedPhotosRow({photoRow}: DetailedPhotoProps) {
     const {relatedId, photoType} = photoRow;
     const styles = useThemeStyles();
 
-    const photos = useQuery(RealmCollections.Photos, RealmQuery.queryForRealmPhotos({relatedId, photoType}));
+    const photos = useQuery<IFBPhoto>(RealmCollections.Photos, RealmQuery.queryForRealmPhotos({relatedId, photoType}), [relatedId, photoType]);
     const photosInPage: IFBPhoto[] = toRealmModelList<IFBPhoto>(photos);
 
     // Log.info("")

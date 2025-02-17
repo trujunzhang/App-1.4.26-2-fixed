@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomSearchEngine language="" safesearch="false" autocompletions="false" enable_promotions="false" top_refinements="-1">
-    <Title>Ieatta Help Search</Title>
+    <Title>Expensify Help Search</Title>
     <Description>Help Search configuration details</Description>
     <Context>
         <BackgroundLabels>

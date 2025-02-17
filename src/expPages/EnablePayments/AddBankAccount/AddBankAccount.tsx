@@ -1,7 +1,6 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 import {View} from 'react-native';
-import {withOnyx} from 'react-native-onyx';
-import type {OnyxEntry} from 'react-native-onyx';
+import {useOnyx} from 'react-native-onyx';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
 import InteractiveStepSubHeader from '@components/InteractiveStepSubHeader';
 import ScreenWrapper from '@components/ScreenWrapper';
@@ -12,29 +11,19 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import Navigation from '@navigation/Navigation';
 import * as BankAccounts from '@userActions/BankAccounts';
 import * as PaymentMethods from '@userActions/PaymentMethods';
+import * as Wallet from '@userActions/Wallet';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
-import type {PersonalBankAccountForm} from '@src/types/form';
-import type {PersonalBankAccount, PlaidData} from '@src/types/onyx';
 import SetupMethod from './SetupMethod';
 import Confirmation from './substeps/ConfirmationStep';
 import Plaid from './substeps/PlaidStep';
 
-type AddPersonalBankAccountPageWithOnyxProps = {
-    /** Contains plaid data */
-    plaidData: OnyxEntry<PlaidData>;
-
-    /** The details about the Personal bank account we are adding saved in Onyx */
-    personalBankAccount: OnyxEntry<PersonalBankAccount>;
-
-    /** The draft values of the bank account being setup */
-    personalBankAccountDraft: OnyxEntry<PersonalBankAccountForm>;
-};
-
 const plaidSubsteps: Array<React.ComponentType<SubStepProps>> = [Plaid, Confirmation];
-
-function AddBankAccount({personalBankAccount, plaidData, personalBankAccountDraft}: AddPersonalBankAccountPageWithOnyxProps) {
+function AddBankAccount() {
+    const [plaidData] = useOnyx(ONYXKEYS.PLAID_DATA);
+    const [personalBankAccount] = useOnyx(ONYXKEYS.PERSONAL_BANK_ACCOUNT);
+    const [personalBankAccountDraft] = useOnyx(ONYXKEYS.FORMS.PERSONAL_BANK_ACCOUNT_FORM_DRAFT);
     const {translate} = useLocalize();
     const styles = useThemeStyles();
 
@@ -44,7 +33,6 @@ function AddBankAccount({personalBankAccount, plaidData, personalBankAccountDraf
 
         if (selectedPlaidBankAccount) {
             BankAccounts.addPersonalBankAccount(selectedPlaidBankAccount);
-            Navigation.navigate(ROUTES.SETTINGS_ENABLE_PAYMENTS);
         }
     }, [personalBankAccountDraft?.plaidAccountID, plaidData?.bankAccounts]);
 
@@ -54,7 +42,6 @@ function AddBankAccount({personalBankAccount, plaidData, personalBankAccountDraf
 
     const exitFlow = (shouldContinue = false) => {
         const exitReportID = personalBankAccount?.exitReportID;
-        // TODO: https://github.com/Ieatta/App/issues/36648 This should be updated to the correct route once the refactor is complete
         const onSuccessFallbackRoute = personalBankAccount?.onSuccessFallbackRoute ?? '';
 
         if (exitReportID) {
@@ -65,7 +52,7 @@ function AddBankAccount({personalBankAccount, plaidData, personalBankAccountDraf
             PaymentMethods.continueSetup(onSuccessFallbackRoute);
             return;
         }
-        Navigation.goBack();
+        Navigation.goBack(ROUTES.SETTINGS_WALLET, true);
     };
 
     const handleBackButtonPress = () => {
@@ -75,18 +62,19 @@ function AddBankAccount({personalBankAccount, plaidData, personalBankAccountDraf
         }
         if (screenIndex === 0) {
             BankAccounts.clearPersonalBankAccount();
+            Wallet.updateCurrentStep(null);
+            Navigation.goBack(ROUTES.SETTINGS_WALLET, true);
             return;
         }
         prevScreen();
     };
-
-    useEffect(() => BankAccounts.clearPersonalBankAccount, []);
 
     return (
         <ScreenWrapper
             testID={AddBankAccount.displayName}
             includeSafeAreaPaddingBottom={false}
             shouldEnablePickerAvoiding={false}
+            shouldShowOfflineIndicator
         >
             <HeaderWithBackButton
                 shouldShowBackButton
@@ -118,15 +106,4 @@ function AddBankAccount({personalBankAccount, plaidData, personalBankAccountDraf
 
 AddBankAccount.displayName = 'AddBankAccountPage';
 
-export default withOnyx<AddPersonalBankAccountPageWithOnyxProps, AddPersonalBankAccountPageWithOnyxProps>({
-    plaidData: {
-        key: ONYXKEYS.PLAID_DATA,
-    },
-    // @ts-expect-error: ONYXKEYS.PERSONAL_BANK_ACCOUNT is conflicting with ONYXKEYS.FORMS.PERSONAL_BANK_ACCOUNT_FORM
-    personalBankAccount: {
-        key: ONYXKEYS.PERSONAL_BANK_ACCOUNT,
-    },
-    personalBankAccountDraft: {
-        key: ONYXKEYS.FORMS.PERSONAL_BANK_ACCOUNT_FORM_DRAFT,
-    },
-})(AddBankAccount);
+export default AddBankAccount;

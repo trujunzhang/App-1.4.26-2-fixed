@@ -1,11 +1,11 @@
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line no-restricted-imports, lodash/import-scope
 import _ from 'lodash';
 import React, {useMemo} from 'react';
 import DetailedPageLayout from '@components/Ieatta/detailedPage/DetailedPageLayout';
-import useWindowDimensions from '@hooks/useWindowDimensions';
-import type {RecipeScreenNavigationProps} from '@libs/Firebase/helper/RecipeUtils';
-import {buildRecipeRows} from '@libs/Firebase/list/builder/recipe';
-import type {IReviewOnSearchAndSortChanged} from '@libs/Firebase/list/types/rows/review';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
+import type {RecipeScreenNavigationProps} from '@libs/FirebaseIeatta/helper/RecipeUtils';
+import {buildRecipeRows} from '@libs/FirebaseIeatta/list/builder/recipe';
+import type {IReviewOnSearchAndSortChanged} from '@libs/FirebaseIeatta/list/types/rows/review';
 import type {IFBRecipe, IFBReview} from '@src/types/firebase';
 
 type BaseRecipeScreenProps = RecipeScreenNavigationProps &
@@ -30,7 +30,7 @@ function BaseRecipeScreen({
     onReviewSortChanged,
     onReviewSearchChanged,
 }: BaseRecipeScreenProps) {
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
 
     // eslint-disable-next-line rulesdir/no-negated-variables
     const shouldShowNotFoundPage = _.isUndefined(recipe) && !shouldShowLoading;
@@ -46,7 +46,7 @@ function BaseRecipeScreen({
                     onReviewSearchChanged,
                 },
             }),
-        [isSmallScreenWidth, recipe, reviews, onReviewSortChanged, onReviewSearchChanged],
+        [isSmallScreenWidth, recipeId, recipe, reviews, onReviewSortChanged, onReviewSearchChanged],
     );
 
     return (

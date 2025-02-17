@@ -2,13 +2,13 @@ import React from 'react';
 import {View} from 'react-native';
 import DisplayNames from '@components/DisplayNames';
 import Icon from '@components/Icon';
-import * as Expensicons from '@components/Icon/Expensicons';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
 import Divider from '@components/Ieatta/components/Divider';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
-import {formatDateString} from '@libs/Firebase/utils/timeago_helper';
+import {formatDateString} from '@libs/FirebaseIeatta/utils/timeago_helper';
 import variables from '@styles/variables';
 import type {EventRowProps} from './types';
 
@@ -39,7 +39,7 @@ function EventWebView({eventInRestaurantRow}: EventRowProps) {
                         <View style={[styles.flexRow, styles.alignItemsCenter, styles.mw100, styles.overflowHidden]}>
                             <View style={[styles.flexRow, styles.alignItemsCenter, styles.justifyContentCenter, styles.gap3]}>
                                 <Icon
-                                    src={Expensicons.EventInfo}
+                                    src={Ieattaicons.EventInfo}
                                     width={variables.iconSizeLarge}
                                     height={variables.iconSizeLarge}
                                     fill={theme.textSupporting}

@@ -37,7 +37,7 @@ We use Reassure for monitoring performance regression. It helps us check if our 
 ## Tips for Performance Testing with Reassure
 
 - Before you start using Reassure, take a bit of time to learn what it does [docs](https://callstack.github.io/reassure/).
-- Mocking could initially be challenging, but preparing utilities for handling collections of data simplified the process. We’ve already prepared base for utilities for mocking collections. More information and instructions can be found [here](https://github.com/Ieatta/App/tree/main/tests#mocking-collections--collection-items). *Feel free to adjust/ add more helper methods if you think it’s needed*.
+- Mocking could initially be challenging, but preparing utilities for handling collections of data simplified the process. We’ve already prepared base for utilities for mocking collections. More information and instructions can be found [here](https://github.com/Expensify/App/tree/main/tests#mocking-collections--collection-items). *Feel free to adjust/ add more helper methods if you think it’s needed*.
 - Mocking is a crucial part of performance testing. To achieve more accurate and meaningful results, mock and use as much data as possible.
 - Inside each test, there is a defined scenario function that represents the specific user interaction you want to measure (HINT: there is no need to add assertions in performance tests).
 - More runs generally lead to better and more reliable results by averaging out variations. Additionally, consider adjusting the number of runs per series for each specific test to achieve more granular insights.
@@ -60,7 +60,7 @@ We use Reassure for monitoring performance regression. It helps us check if our 
 
 		```Render count difference exceeded the allowed deviation of  0. Current difference: 1```
 
-    - Investigate the code changes that might be causing this and address them to maintain a stable render count. More info [here](https://github.com/Ieatta/App/blob/fe9e9e3e31bae27c2398678aa632e808af2690b5/tests/perf-test/README.md?plain=1#L32).
+    - Investigate the code changes that might be causing this and address them to maintain a stable render count. More info [here](https://github.com/Expensify/App/blob/fe9e9e3e31bae27c2398678aa632e808af2690b5/tests/perf-test/README.md?plain=1#L32).
     - It is important to run Reassure tests locally and see if our changes caused a regression.
     - One of the potential factors that may influence variation in the number of renders is adding unnecesary providers to the component we want to test using ```<ComposeProviders>``` . Ensure that all providers are necessary for running the test.
 

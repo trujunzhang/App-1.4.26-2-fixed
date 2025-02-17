@@ -11,7 +11,7 @@ function getMatchingBottomTabRouteForState(state: State<RootStackParamList>, pol
     const isFullScreenNavigatorOpened = state.routes.some((route) => route.name === NAVIGATORS.FULL_SCREEN_NAVIGATOR);
 
     if (isFullScreenNavigatorOpened) {
-        // return {name: SCREENS.SETTINGS.ROOT, params: paramsWithPolicyID};
+        return {name: SCREENS.SETTINGS.ROOT, params: paramsWithPolicyID};
     }
 
     const topmostCentralPaneRoute = getTopmostCentralPaneRoute(state);
@@ -21,6 +21,12 @@ function getMatchingBottomTabRouteForState(state: State<RootStackParamList>, pol
     }
 
     const tabName = CENTRAL_PANE_TO_TAB_MAPPING[topmostCentralPaneRoute.name];
+
+    if (tabName === SCREENS.SEARCH.BOTTOM_TAB) {
+        const topmostCentralPaneRouteParams = {...topmostCentralPaneRoute.params} as Record<string, string | undefined>;
+        return {name: tabName, params: topmostCentralPaneRouteParams};
+    }
+
     return {name: tabName, params: paramsWithPolicyID};
 }
 

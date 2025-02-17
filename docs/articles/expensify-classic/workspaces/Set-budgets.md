@@ -2,9 +2,9 @@
 title: Set budgets
 description: Track employee spending across categories and tags
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
-Ieatta allows workspace admins to create budgets to:
+Expensify allows workspace admins to create budgets to:
 - Set monthly and yearly budget caps
 - Track spending across categories and tags
 - Get notified when a budget reaches a certain limit 

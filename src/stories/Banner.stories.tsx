@@ -35,7 +35,7 @@ HTMLBanner.args = {
 
 const BannerWithLink: BannerStory = Template.bind({});
 BannerWithLink.args = {
-    text: 'This is a informational banner containing <a href="https://new.ieatta.com/settings">internal Link</a> and <a href=" https://google.com">public link</a>',
+    text: 'This is a informational banner containing <a href="https://new.expensify.com/settings">internal Link</a> and <a href=" https://google.com">public link</a>',
     shouldRenderHTML: true,
 };
 

@@ -1,9 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
+/* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
 import lodashGet from 'lodash/get';
 import React, {useCallback} from 'react';
 import {useDocumentData} from 'react-firebase-hooks/firestore';
 import {Image as RNImage, View} from 'react-native';
 import Button from '@components/Button';
-import * as Expensicons from '@components/Icon/Expensicons';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
 import {IeattaStars} from '@components/Icon/IeattaStars';
 import Divider from '@components/Ieatta/components/Divider';
 import PageFlashListItemWithEvent from '@components/Ieatta/detailedPage/PageFlashListItemWithEvent';
@@ -11,13 +18,12 @@ import ImagePlaceholder from '@components/ImagePlaceholder';
 import Text from '@components/Text';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
-import {ParseModelPhotos} from '@libs/Firebase/appModel';
-import {FBCollections, PhotoType} from '@libs/Firebase/constant';
-import {getEventID} from '@libs/Firebase/helper/EventUtils';
-import {PageSection, RowPressableType} from '@libs/Firebase/list/constant';
-import type {IDisplayNameTitleRow} from '@libs/Firebase/list/types/rows/common';
-import * as FirebaseQuery from '@libs/Firebase/services/firebase-query';
-import {calcRateForRestaurant} from '@libs/Firebase/utils/rate_utils';
+import {ParseModelPhotos} from '@libs/FirebaseIeatta/appModel';
+import {FBCollections, PhotoType} from '@libs/FirebaseIeatta/constant';
+import {PageSection, RowPressableType} from '@libs/FirebaseIeatta/list/constant';
+import type {IDisplayNameTitleRow} from '@libs/FirebaseIeatta/list/types/rows/common';
+import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
+import {calcRateForRestaurant} from '@libs/FirebaseIeatta/utils/rate_utils';
 import Variables from '@styles/variables';
 import CONST from '@src/CONST';
 import type {IFBEvent, IFBRecipe, IFBRestaurant} from '@src/types/firebase';
@@ -105,12 +111,12 @@ function TopModalInfoPanel({relatedId, photoType}: TopModalInfoPanelProps) {
                         sourceUri={imageUri}
                         style={[styles.w100, styles.h100]}
                         imageType="png"
-                        placeholder={Expensicons.PNGBusinessMediumSquare}
+                        placeholder={Ieattaicons.PNGBusinessMediumSquare}
                     />
                 </View>
                 <View style={[styles.flexColumn]}>
                     <PageFlashListItemWithEvent
-                        item={{
+                        pageRow={{
                             rowKey: 'PageSection.DISPLAY_NAME_TITLE_ROW<Related-Title>',
                             rowType: PageSection.DISPLAY_NAME_TITLE_ROW,
                             rowData,
@@ -137,8 +143,9 @@ function TopModalInfoPanel({relatedId, photoType}: TopModalInfoPanelProps) {
         return (
             <View>
                 <Button
+                    large
                     text="Add photos"
-                    icon={Expensicons.AddPhoto}
+                    icon={Ieattaicons.AddPhoto}
                     iconWidth={Variables.iconSizeNormal}
                     iconHeight={Variables.iconSizeNormal}
                     iconFill={theme.text}

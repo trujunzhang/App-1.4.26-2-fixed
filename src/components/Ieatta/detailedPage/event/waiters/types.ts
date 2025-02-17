@@ -1,4 +1,4 @@
-import type {IWaiterRow} from '@libs/Firebase/list/types/rows/photo';
+import type {IWaiterRow} from '@libs/FirebaseIeatta/list/types/rows/photo';
 import type {IFBPhoto} from '@src/types/firebase';
 
 type WaitersRowInEventProps = {

@@ -2,7 +2,7 @@
 title: Change member workspace roles
 description: Update a member's role for a workspace
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 To change the roles and permissions for members of your workspace,
 

@@ -3,9 +3,9 @@ title: Track mileage expenses
 description: Add mileage-related expenses
 ---
 
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
-You can track your mileage-related expenses by logging your trips in Ieatta. You have a couple of different options for logging distance:
+You can track your mileage-related expenses by logging your trips in Expensify. You have a couple of different options for logging distance:
 
 - Web app: 
    - **Manually create**: Manually enter the number of miles for the trip 

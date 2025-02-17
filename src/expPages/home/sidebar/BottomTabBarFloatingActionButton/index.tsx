@@ -1,5 +1,5 @@
 import React, {useCallback, useRef} from 'react';
-import FloatingActionButtonAndPopover from '@src/expPages/home/sidebar/SidebarScreen/FloatingActionButtonAndPopover';
+import FloatingActionButtonAndPopover from '@expPages/home/sidebar/SidebarScreen/FloatingActionButtonAndPopover';
 import type FloatingActionButtonPopoverMenuRef from './types';
 
 function BottomTabBarFloatingActionButton() {

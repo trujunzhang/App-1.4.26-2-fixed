@@ -1,7 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
 import Button from '@components/Button';
-import * as Expensicons from '@components/Icon/Expensicons';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
 import Divider from '@components/Ieatta/components/Divider';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
@@ -40,7 +40,7 @@ function ActionBarInInfoPanel({actionBarType, infoId, shouldShowAddPhotoButton =
             ]}
             hoverStyles={[{backgroundColor: TailwindColors.red700}]}
             textStyles={[styles.textStrong, styles.textLarge, {color: TailwindColors.white}]}
-            icon={Expensicons.WriteAReview}
+            icon={Ieattaicons.WriteAReview}
             iconFill={theme.text}
             iconStyles={[styles.mr2]}
             text="Write a Review"
@@ -72,7 +72,7 @@ function ActionBarInInfoPanel({actionBarType, infoId, shouldShowAddPhotoButton =
                 },
             ]}
             textStyles={[styles.textStrong, styles.textLarge, {color: TailwindColors.gray800}]}
-            icon={Expensicons.AddPhoto}
+            icon={Ieattaicons.AddPhoto}
             iconFill={theme.text}
             iconStyles={[styles.mr2]}
             text="Add photo"

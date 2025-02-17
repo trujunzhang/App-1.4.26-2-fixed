@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {useQuery} from '@realm/react';
-import React from 'react';
 import type {ReactNode} from 'react';
+import React from 'react';
 import {View} from 'react-native';
 import FullPageNotFoundView from '@components/BlockingViews/FullPageNotFoundView';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
@@ -18,7 +19,7 @@ import * as RealmQuery from '@libs/Realm/services/realm-query';
 import Navigation from '@navigation/Navigation';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';
-import type {IFBPhoto} from '@src/types/firebase';
+import type {IFBPhoto, IFBSqlPhoto} from '@src/types/firebase';
 import callOrReturn from '@src/types/utils/callOrReturn';
 
 type TakePhotoScreenWrapperProps = {
@@ -64,7 +65,7 @@ function TakePhotoScreenWrapper({
     const theme = useTheme();
     const {translate} = useLocalize();
 
-    const sqlPhotos = useQuery(RealmCollections.SqlPhotos, RealmQuery.queryForRealmSqlPhotos(photoPageId));
+    const sqlPhotos = useQuery<IFBSqlPhoto>(RealmCollections.SqlPhotos, RealmQuery.queryForRealmSqlPhotos(photoPageId));
     const sqlPhotosInPage: IFBPhoto[] = toRealmModelList<IFBPhoto>(sqlPhotos);
 
     if (!shouldShowWrapper) {

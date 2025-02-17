@@ -60,10 +60,10 @@ describe('LoginUtils', () => {
         });
     });
     describe('validateNumber', () => {
-        it("Should return valid phone number with '@ieatta.sms' suffix if provided phone number is valid", () => {
+        it("Should return valid phone number with '@expensify.sms' suffix if provided phone number is valid", () => {
             const givenPhone = '+12345678901';
             const parsedPhone = LoginUtils.validateNumber(givenPhone);
-            expect(parsedPhone).toBe('+12345678901@ieatta.sms');
+            expect(parsedPhone).toBe('+12345678901@expensify.sms');
         });
         it('Should return empty string if provided phone number is not valid', () => {
             const givenPhone = '786';

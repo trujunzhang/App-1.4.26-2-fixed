@@ -1,14 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 /* eslint-disable rulesdir/prefer-early-return */
 // import {useGoogleLogin, useGoogleOneTapLogin} from '@react-oauth/google';
 import type {OAuthCredential} from 'firebase/auth';
 import {getAuth, GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
-import {transform} from 'lodash';
+// import {transform} from 'lodash';
 import React, {useCallback} from 'react';
 import PressableWithoutFeedback from '@components/Pressable/PressableWithoutFeedback';
 import useLocalize from '@hooks/useLocalize';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
-import FirebaseLogin from '@libs/Firebase/services/firebase-login';
+import FirebaseLogin from '@libs/FirebaseIeatta/services/firebase-login';
 import * as ShowNotify from '@libs/ieatta/Notify';
 import Log from '@libs/Log';
 import {setIsLoading} from '@userActions/Firebase/UserFB';
@@ -22,7 +24,7 @@ import type {GoogleSignInButtonProps} from './types';
  * @returns
  */
 function GoogleSignInButton({isLoading = false}: GoogleSignInButtonProps) {
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 

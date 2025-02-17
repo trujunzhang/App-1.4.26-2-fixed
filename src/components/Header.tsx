@@ -7,6 +7,7 @@ import EnvironmentBadge from './EnvironmentBadge';
 import Text from './Text';
 
 type HeaderProps = {
+    /** Anchor of the title (left/middle) */
     titleAnchor?: 'left' | 'middle';
 
     /** Title of the Header */
@@ -32,7 +33,7 @@ function Header({titleAnchor = 'middle', title = '', subtitle = '', textStyles =
             <>
                 {/* If there's no subtitle then display a fragment to avoid an empty space which moves the main title */}
                 {typeof subtitle === 'string'
-                    ? Boolean(subtitle) && (
+                    ? !!subtitle && (
                           <Text
                               style={[styles.mutedTextLabel, styles.pre]}
                               numberOfLines={1}
@@ -43,7 +44,7 @@ function Header({titleAnchor = 'middle', title = '', subtitle = '', textStyles =
                     : subtitle}
             </>
         ),
-        [subtitle, styles.mutedTextLabel, styles.pre],
+        [subtitle, styles],
     );
 
     const innerStyles = useMemo(() => {
@@ -54,7 +55,7 @@ function Header({titleAnchor = 'middle', title = '', subtitle = '', textStyles =
         <View style={[styles.flex1, styles.flexRow, containerStyles]}>
             <View style={[styles.flex1, styles.mw100, innerStyles]}>
                 {typeof title === 'string'
-                    ? Boolean(title) && (
+                    ? !!title && (
                           <Text
                               numberOfLines={2}
                               style={[styles.headerText, styles.textLarge, textStyles]}

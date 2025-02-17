@@ -40,7 +40,8 @@ function post(command: string, data: Record<string, unknown> = {}, type = CONST.
         request.reject = reject;
 
         // Add the request to a queue of actions to perform
-        MainQueue.push(request);
+        // TODO: djzhang(Request)
+        // MainQueue.push(request);
 
         // This check is mainly used to prevent API commands from triggering calls to MainQueue.process() from inside the context of a previous
         // call to MainQueue.process() e.g. calling a Log command without this would cause the requests in mainQueue to double process

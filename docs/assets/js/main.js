@@ -72,7 +72,7 @@ function navigateBack() {
 
 function injectFooterCopywrite() {
     const footer = document.getElementById('footer-copywrite-date');
-    footer.innerHTML = `&copy;2008-${new Date().getFullYear()} Ieatta, Inc.`;
+    footer.innerHTML = `&copy;2008-${new Date().getFullYear()} Expensify, Inc.`;
 }
 
 function closeSidebar() {
@@ -138,7 +138,7 @@ function insertElementAfter(referenceNode, newNode) {
 }
 
 // Update the ICON for search input.
-/* Change the path of the Google Search Button icon into Ieatta icon */
+/* Change the path of the Google Search Button icon into Expensify icon */
 function updateGoogleSearchIcon() {
     const node = document.querySelector('.gsc-search-button.gsc-search-button-v2 svg path');
     node.setAttribute(
@@ -165,6 +165,8 @@ window.addEventListener('load', () => {
     insertElementAfter(searchInput, searchLabel);
 });
 
+const FIXED_HEADER_HEIGHT = 80;
+
 const tocbotOptions = {
     // Where to render the table of contents.
     tocSelector: '.article-toc',
@@ -188,13 +190,79 @@ const tocbotOptions = {
     activeLinkClass: 'selected-article',
 
     // Headings offset between the headings and the top of the document (requires scrollSmooth enabled)
-    headingsOffset: 80,
-    scrollSmoothOffset: -80,
+    headingsOffset: FIXED_HEADER_HEIGHT,
+    scrollSmoothOffset: -FIXED_HEADER_HEIGHT,
     scrollSmooth: true,
 
     // If there is a fixed article scroll container, set to calculate titles' offset
     scrollContainer: 'content-area',
+
+    onClick: (e) => {
+        e.preventDefault();
+        const hashText = e.target.href.split('#').pop();
+        // Append hashText to the current URL without saving to history
+        const newUrl = `${window.location.pathname}#${hashText}`;
+        history.replaceState(null, '', newUrl);
+    },
 };
+
+// Define the media query string for the mobile breakpoint
+const mobileBreakpoint = window.matchMedia('(max-width: 799px)');
+
+// Function to update tocbot options and refresh
+function updateTocbotOptions(headingsOffset, scrollSmoothOffset) {
+    tocbotOptions.headingsOffset = headingsOffset;
+    tocbotOptions.scrollSmoothOffset = scrollSmoothOffset;
+    window.tocbot.refresh({
+        ...tocbotOptions,
+    });
+}
+
+function handleBreakpointChange() {
+    const isMobile = mobileBreakpoint.matches;
+    const headingsOffset = isMobile ? FIXED_HEADER_HEIGHT : 0;
+    const scrollSmoothOffset = isMobile ? -FIXED_HEADER_HEIGHT : 0;
+
+    // Update tocbot options only if there is a change in offsets
+    if (tocbotOptions.headingsOffset !== headingsOffset || tocbotOptions.scrollSmoothOffset !== scrollSmoothOffset) {
+        updateTocbotOptions(headingsOffset, scrollSmoothOffset);
+    }
+}
+
+// Add listener for changes to the media query status using addEventListener
+mobileBreakpoint.addEventListener('change', handleBreakpointChange);
+
+// Initial check
+handleBreakpointChange();
+
+function selectNewIeatta(newExpensifyTab, newExpensifyContent, expensifyClassicTab, expensifyClassicContent) {
+    newExpensifyTab.classList.add('active');
+    newExpensifyContent.classList.remove('hidden');
+
+    if (expensifyClassicTab && expensifyClassicContent) {
+        expensifyClassicTab.classList.remove('active');
+        expensifyClassicContent.classList.add('hidden');
+    }
+    window.tocbot.refresh({
+        ...tocbotOptions,
+        contentSelector: '#new-expensify',
+    });
+}
+
+function selectExpensifyClassic(newExpensifyTab, newExpensifyContent, expensifyClassicTab, expensifyClassicContent) {
+    expensifyClassicTab.classList.add('active');
+    expensifyClassicContent.classList.remove('hidden');
+
+    if (newExpensifyTab && newExpensifyContent) {
+        newExpensifyTab.classList.remove('active');
+        newExpensifyContent.classList.add('hidden');
+    }
+
+    window.tocbot.refresh({
+        ...tocbotOptions,
+        contentSelector: '#expensify-classic',
+    });
+}
 
 window.addEventListener('DOMContentLoaded', () => {
     injectFooterCopywrite();
@@ -210,17 +278,19 @@ window.addEventListener('DOMContentLoaded', () => {
         buttonCloseSidebar.addEventListener('click', closeSidebar);
     }
 
-    const ieattaClassicTab = document.getElementById('platform-tab-ieatta-classic');
-    const newIeattaTab = document.getElementById('platform-tab-new-ieatta');
+    const expensifyClassicTab = document.getElementById('platform-tab-expensify-classic');
+    const newExpensifyTab = document.getElementById('platform-tab-new-expensify');
 
-    const ieattaClassicContent = document.getElementById('ieatta-classic');
-    const newIeattaContent = document.getElementById('new-ieatta');
+    const expensifyClassicContent = document.getElementById('expensify-classic');
+    const newExpensifyContent = document.getElementById('new-expensify');
 
     let contentSelector = '.article-toc-content';
-    if (ieattaClassicContent) {
-        contentSelector = '#ieatta-classic';
-    } else if (newIeattaContent) {
-        contentSelector = '#new-ieatta';
+    if (expensifyClassicContent) {
+        contentSelector = '#expensify-classic';
+        selectExpensifyClassic(newExpensifyTab, newExpensifyContent, expensifyClassicTab, expensifyClassicContent);
+    } else if (newExpensifyContent) {
+        contentSelector = '#new-expensify';
+        selectNewIeatta(newExpensifyTab, newExpensifyContent, expensifyClassicTab, expensifyClassicContent);
     }
 
     if (window.tocbot) {
@@ -231,34 +301,18 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     // eslint-disable-next-line es/no-optional-chaining
-    ieattaClassicTab?.addEventListener('click', () => {
-        ieattaClassicTab.classList.add('active');
-        ieattaClassicContent.classList.remove('hidden');
-
-        newIeattaTab.classList.remove('active');
-        newIeattaContent.classList.add('hidden');
-        window.tocbot.refresh({
-            ...tocbotOptions,
-            contentSelector: '#ieatta-classic',
-        });
+    expensifyClassicTab?.addEventListener('click', () => {
+        selectExpensifyClassic(newExpensifyTab, newExpensifyContent, expensifyClassicTab, expensifyClassicContent);
     });
 
     // eslint-disable-next-line es/no-optional-chaining
-    newIeattaTab?.addEventListener('click', () => {
-        newIeattaTab.classList.add('active');
-        newIeattaContent.classList.remove('hidden');
-
-        ieattaClassicTab.classList.remove('active');
-        ieattaClassicContent.classList.add('hidden');
-        window.tocbot.refresh({
-            ...tocbotOptions,
-            contentSelector: '#new-ieatta',
-        });
+    newExpensifyTab?.addEventListener('click', () => {
+        selectNewIeatta(newExpensifyTab, newExpensifyContent, expensifyClassicTab, expensifyClassicContent);
     });
 
     document.getElementById('header-button').addEventListener('click', toggleHeaderMenu);
 
-    // Back button doesn't exist on all the pages
+    // Back button doesn't exist on all the expPages
     const backButton = document.getElementById('back-button');
     if (backButton) {
         backButton.addEventListener('click', navigateBack);

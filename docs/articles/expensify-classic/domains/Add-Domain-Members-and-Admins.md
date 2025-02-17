@@ -2,7 +2,7 @@
 title: Add Domain Members and Admins
 description: Add members and admins to a domain
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 {% include info.html %}
 To add members to your domain, your domain must be verified. Once a domain is verified, only Domain Admins will have access to the domain’s settings and member information. 
@@ -15,13 +15,13 @@ Your domain can include members and admins.
 # Add Domain Member
 
 There are two ways to add a member to a domain: 
-- The member can be automatically added to the domain if they sign up or are added to Ieatta using an email address that contains their domain name (for example, an email address @yourcompany.com).
+- The member can be automatically added to the domain if they sign up or are added to Expensify using an email address that contains their domain name (for example, an email address @yourcompany.com).
 - A Domain Admin can manually add a new member to the domain.
 
 ## Automatic Domain Member signup
 
 - **New Ieatta members**: By creating their account using their domain email address (like yourname@yourcompany.com), they will be automatically added as a member of the domain.
-- **Existing Ieatta members**: Members that already have an Ieatta account can add their domain email address (like yourname@yourcompany.com) as their secondary or primary email address to be automatically added as a member of the domain once they verify their email address. 
+- **Existing Expensify members**: Members that already have an Expensify account can add their domain email address (like yourname@yourcompany.com) as their secondary or primary email address to be automatically added as a member of the domain once they verify their email address. 
 
 {% include info.html %}
 The member’s primary email address will be the one that is listed under the domain, even if their secondary email address is the one that matches the domain.
@@ -35,10 +35,6 @@ Once the member verifies their email address, all Domain Admins will be notified
 2. Click the name of the domain. 
 3. Click the **Domain Members** tab on the left. 
 4. Under the Domain Members section, enter the first part of the member’s email address and click **Invite**. 
-
-{% include info.html %}
-This can be any email address—it does not have to be an email address under the domain. If someone who is not a Domain Admin invites a new member to a workspace, that member must validate their account via email before they will have access to it. 
-{% include end-info.html %}
 
 # Add Domain Admin
 

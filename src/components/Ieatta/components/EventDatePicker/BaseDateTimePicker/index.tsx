@@ -1,3 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 /* eslint-disable @typescript-eslint/ban-types */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -50,7 +56,7 @@ function BaseDateTimePicker({initialDate, label, onDateTimeChange}: BaseDateTime
                         style={styles.searchPressable}
                     >
                         {({hovered}) => (
-                            <View style={[styles.searchContainer]}>
+                            <View style={[styles.searchContainer, styles.backgroundHoverComponentBG]}>
                                 <Text
                                     style={styles.textSupporting}
                                     numberOfLines={1}

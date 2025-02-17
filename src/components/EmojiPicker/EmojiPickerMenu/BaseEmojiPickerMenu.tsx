@@ -9,6 +9,7 @@ import CategoryShortcutBar from '@components/EmojiPicker/CategoryShortcutBar';
 import EmojiSkinToneList from '@components/EmojiPicker/EmojiSkinToneList';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
 import useWindowDimensions from '@hooks/useWindowDimensions';
 import type {EmojiPickerList, EmojiPickerListItem, HeaderIndice} from '@libs/EmojiUtils';
@@ -83,11 +84,12 @@ function BaseEmojiPickerMenu(
     ref: ForwardedRef<FlashList<EmojiPickerListItem>>,
 ) {
     const styles = useThemeStyles();
-    const {windowWidth, isSmallScreenWidth} = useWindowDimensions();
+    const {windowWidth} = useWindowDimensions();
+    const {shouldUseNarrowLayout} = useResponsiveLayout();
 
     // Estimated list size should be a whole integer to avoid floating point precision errors
-    // More info: https://github.com/Ieatta/App/issues/34522
-    const listWidth = isSmallScreenWidth ? Math.floor(windowWidth) : CONST.EMOJI_PICKER_SIZE.WIDTH;
+    // More info: https://github.com/Expensify/App/issues/34522
+    const listWidth = shouldUseNarrowLayout ? Math.floor(windowWidth) : CONST.EMOJI_PICKER_SIZE.WIDTH;
 
     const flattenListWrapperStyle = useMemo(() => StyleSheet.flatten(listWrapperStyle), [listWrapperStyle]);
 
@@ -117,7 +119,7 @@ function BaseEmojiPickerMenu(
                     extraData={extraData}
                     getItemType={getItemType}
                     overrideProps={{
-                        // scrollPaddingTop set to consider sticky header while scrolling, https://github.com/Ieatta/App/issues/36883
+                        // scrollPaddingTop set to consider sticky header while scrolling, https://github.com/Expensify/App/issues/36883
                         style: {
                             minHeight: 1,
                             minWidth: 1,

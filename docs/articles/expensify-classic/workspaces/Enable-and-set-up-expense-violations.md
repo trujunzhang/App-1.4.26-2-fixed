@@ -2,9 +2,9 @@
 title: Enable and set up expense violations
 description: Set up rules for expenses and enable violations
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
-Ieatta automatically detects expense errors or discrepancies as violations that must be corrected. You can also set rules for a workspace that will trigger a violation if the rule is not met. These rules can be set for categories, tags, and even for specific domain groups.
+Expensify automatically detects expense errors or discrepancies as violations that must be corrected. You can also set rules for a workspace that will trigger a violation if the rule is not met. These rules can be set for categories, tags, and even for specific domain groups.
 
 When reviewing submitted expense reports, approvers will see violations highlighted with an exclamation mark. There are two types of violations:
 - **Yellow**: Automated highlights that require attention but may not require corrective action. For example, if a receipt was SmartScanned and then the amount was modified, a yellow violation will be added to call out the change for review.
@@ -29,7 +29,7 @@ If your workspace has automations set to automatically submit reports for approv
    - **Receipt required amount**: How much a single expense can cost before a receipt is required
 
 {% include info.html %}
-Ieatta includes certain system mandatory violations that can't be disabled, even if your policy has violations turned off.
+Expensify includes certain system mandatory violations that can't be disabled, even if your policy has violations turned off.
 {% include end-info.html %}
 
 # Set category rules
@@ -43,7 +43,7 @@ To set up category rules,
 4. Click the **Categories** tab on the left.
 5. Click **Edit** to the right of the category.
 6. Enter your category rules, as desired:
-   - **GL Code and Payroll Code**: You can add general ledger (GL) or payroll codes to the category for accounting. GL codes populate automatically if you have an accounting integration connected with Ieatta.
+   - **GL Code and Payroll Code**: You can add general ledger (GL) or payroll codes to the category for accounting. GL codes populate automatically if you have an accounting integration connected with Expensify.
    - **Max Amount**: You can set specific expense caps for the expense category. Use the Limit Type dropdown to determine if the amount is set per individual expense or per day, then enter the maximum amount into this field.
    - **Receipts**: You can determine whether receipts are required for the category. For example, many companies disable receipt requirements for toll expenses.
    - **Description**: You can determine whether a description is required for expenses under this category.
@@ -106,6 +106,6 @@ The general ledger (GL) account numbers are visible only for Workspace Admins in
 **What causes a category violation?** 
 
 - An expense is categorized with a category that is not included in the workspace's categories. This may happen if the employee creates an expense under the wrong workspace, which will cause a "category out of workspace" violation.
-- If the workspace categories are being imported from an accounting integration and they’ve been updated in the accounting system but not in Ieatta, this can cause an old category to still be in use on an open report which would throw a violation on submission. Simply reselect a proper category to clear violation. 
+- If the workspace categories are being imported from an accounting integration and they’ve been updated in the accounting system but not in Expensify, this can cause an old category to still be in use on an open report which would throw a violation on submission. Simply reselect a proper category to clear violation. 
 
 </div>

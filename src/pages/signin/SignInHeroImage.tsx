@@ -1,14 +1,13 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import {Image} from 'react-native';
-import * as Illustrations from '@components/Icon/Illustrations';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
 import variables from '@styles/variables';
 
 function SignInHeroImage() {
     const styles = useThemeStyles();
-    const {isSmallScreenWidth, isMediumScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth, isMediumScreenWidth} = useResponsiveLayout();
     let imageSize;
     if (isSmallScreenWidth) {
         imageSize = {
@@ -29,7 +28,7 @@ function SignInHeroImage() {
 
     return (
         <Image
-            source={Illustrations.SignupIllustration}
+            source={Ieattaicons.SignupIllustration}
             style={[styles.alignSelfCenter, imageSize]}
         />
     );

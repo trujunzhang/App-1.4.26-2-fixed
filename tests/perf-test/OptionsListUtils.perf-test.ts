@@ -64,13 +64,13 @@ const mockedPersonalDetailsMap = getMockedPersonalDetails(PERSONAL_DETAILS_LIST_
 const mockedBetas = Object.values(CONST.BETAS);
 
 jest.mock('@react-navigation/native', () => {
-    const actualNav = jest.requireActual('@react-navigation/native');
+    const actualNav = jest.requireActual<typeof NativeNavigation>('@react-navigation/native');
     return {
         ...actualNav,
         createNavigationContainerRef: () => ({
             getState: () => jest.fn(),
         }),
-    } as typeof NativeNavigation;
+    };
 });
 
 const options = OptionsListUtils.createOptionList(personalDetails, reports);
@@ -107,7 +107,10 @@ describe('OptionsListUtils', () => {
     /* Testing getFilteredOptions */
     test('[OptionsListUtils] getFilteredOptions with search value', async () => {
         await waitForBatchedUpdates();
-        await measureFunction(() => OptionsListUtils.getFilteredOptions(options.reports, options.personalDetails, mockedBetas, SEARCH_VALUE));
+        // It's recommended not to use getFilteredOptions with both options and a search value
+        // For better performance, use filterOptions instead, especially when passing a search value with options that include reports and personal details.
+        // @ts-expect-error pass both options and search value together
+        await measureFunction(() => OptionsListUtils.getFilteredOptions({reports: options.reports, personalDetails: options.personalDetails, betas: mockedBetas, searchValue: SEARCH_VALUE}));
     });
 
     /* Testing getShareDestinationOptions */

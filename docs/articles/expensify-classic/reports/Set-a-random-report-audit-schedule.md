@@ -2,9 +2,9 @@
 title: Set a random report audit schedule
 description: Randomly audit a percentage of compliant reports
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
-Ieatta automatically flags reports that contain inaccurate or non-compliant expenses for review. However, you can also choose to randomly audit a percentage of compliant reports.
+Expensify automatically flags reports that contain inaccurate or non-compliant expenses for review. However, you can also choose to randomly audit a percentage of compliant reports.
 
 To set a random audit schedule, 
 1. Hover over Settings, then click **Workspaces**. 

@@ -1,33 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {MutableRefObject, RefObject} from 'react';
 import React, {memo, useRef, useState} from 'react';
-import {InteractionManager, View} from 'react-native';
 // eslint-disable-next-line no-restricted-imports
 import type {GestureResponderEvent, Text as RNText, View as ViewType} from 'react-native';
-import type {OnyxEntry} from 'react-native-onyx';
-import {withOnyx} from 'react-native-onyx';
+import {InteractionManager, View} from 'react-native';
 import type {ContextMenuItemHandle} from '@components/ContextMenuItem';
 import ContextMenuItem from '@components/ContextMenuItem';
 import useArrowKeyFocusManager from '@hooks/useArrowKeyFocusManager';
 import useKeyboardShortcut from '@hooks/useKeyboardShortcut';
 import useLocalize from '@hooks/useLocalize';
 import useNetwork from '@hooks/useNetwork';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useStyleUtils from '@hooks/useStyleUtils';
-import useWindowDimensions from '@hooks/useWindowDimensions';
-import type {IPageRow} from '@libs/Firebase/list/types/page-row';
+import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
 import * as Session from '@userActions/Session';
 import CONST from '@src/CONST';
-import ONYXKEYS from '@src/ONYXKEYS';
-import type {Beta} from '@src/types/onyx';
-import type {ContextMenuAction, ContextMenuActionPayload} from './ContextMenuActions';
+import type {ContextMenuActionPayload} from './ContextMenuActions';
 import ContextMenuActions from './ContextMenuActions';
 import type {ContextMenuAnchor, ContextMenuType} from './DetailedPageActionContextMenu';
 import {hideContextMenu, showContextMenu} from './DetailedPageActionContextMenu';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type BaseDetailedPageActionContextMenuOnyxProps = {};
-
-type BaseDetailedPageActionContextMenuProps = BaseDetailedPageActionContextMenuOnyxProps & {
+type BaseDetailedPageActionContextMenuProps = {
     /** Controls the visibility of this component. */
     isVisible?: boolean;
 
@@ -63,7 +56,7 @@ function BaseDetailedPageActionContextMenu({
 }: BaseDetailedPageActionContextMenuProps) {
     const StyleUtils = useStyleUtils();
     const {translate} = useLocalize();
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
     const menuItemRefs = useRef<MenuItemRefs>({});
     const [shouldKeepOpen, setShouldKeepOpen] = useState(false);
     const wrapperStyle = StyleUtils.getReportActionContextMenuStyles(false, isSmallScreenWidth);
@@ -190,6 +183,6 @@ function BaseDetailedPageActionContextMenu({
     );
 }
 
-export default withOnyx<BaseDetailedPageActionContextMenuProps, BaseDetailedPageActionContextMenuOnyxProps>({})(memo(BaseDetailedPageActionContextMenu));
+export default memo(BaseDetailedPageActionContextMenu);
 
 export type {BaseDetailedPageActionContextMenuProps};

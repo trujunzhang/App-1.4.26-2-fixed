@@ -94,5 +94,4 @@ const watchCurrentPosition: WatchCurrentPosition = (success, error, config) => {
 };
 
 export {watchCurrentPosition};
-
 export default getCurrentPosition;

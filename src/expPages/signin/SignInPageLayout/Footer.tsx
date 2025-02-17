@@ -13,11 +13,10 @@ import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useStyleUtils from '@hooks/useStyleUtils';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
+import Licenses from '@expPages/signin/Licenses';
+import Socials from '@expPages/signin/Socials';
 import variables from '@styles/variables';
 import CONST from '@src/CONST';
-import Licenses from '@src/expPages/signin/Licenses';
-import Socials from '@src/expPages/signin/Socials';
 import type {TranslationPaths} from '@src/languages/types';
 import type {SignInPageLayoutProps} from './types';
 
@@ -79,7 +78,7 @@ const columns = ({navigateFocus = () => {}}: Pick<FooterProps, 'navigateFocus'>)
         rows: [
             {
                 href: CONST.FOOTER.EXPENSIFY_APPROVED_URL,
-                translationPath: 'footer.ieattaApproved',
+                translationPath: 'footer.expensifyApproved',
             },
             {
                 href: CONST.FOOTER.PRESS_KIT_URL,
@@ -91,7 +90,7 @@ const columns = ({navigateFocus = () => {}}: Pick<FooterProps, 'navigateFocus'>)
             },
             {
                 href: CONST.NEWHELP_URL,
-                translationPath: 'footer.ieattaHelp',
+                translationPath: 'footer.expensifyHelp',
             },
             {
                 href: CONST.FOOTER.COMMUNITY_URL,
@@ -108,7 +107,7 @@ const columns = ({navigateFocus = () => {}}: Pick<FooterProps, 'navigateFocus'>)
         rows: [
             {
                 href: CONST.FOOTER.ABOUT_URL,
-                translationPath: 'footer.aboutIeatta',
+                translationPath: 'footer.aboutExpensify',
             },
             {
                 href: CONST.FOOTER.BLOG_URL,
@@ -120,7 +119,7 @@ const columns = ({navigateFocus = () => {}}: Pick<FooterProps, 'navigateFocus'>)
             },
             {
                 href: CONST.FOOTER.ORG_URL,
-                translationPath: 'footer.ieattaOrg',
+                translationPath: 'footer.expensifyOrg',
             },
             {
                 href: CONST.FOOTER.INVESTOR_RELATIONS_URL,
@@ -148,8 +147,7 @@ function Footer({navigateFocus}: FooterProps) {
     const styles = useThemeStyles();
     const StyleUtils = useStyleUtils();
     const {translate} = useLocalize();
-    const {shouldUseNarrowLayout} = useResponsiveLayout();
-    const {isMediumScreenWidth} = useWindowDimensions();
+    const {shouldUseNarrowLayout, isMediumScreenWidth} = useResponsiveLayout();
     const isVertical = shouldUseNarrowLayout;
     const imageDirection = isVertical ? styles.flexRow : styles.flexColumn;
     const imageStyle = isVertical ? styles.pr0 : styles.alignSelfCenter;
@@ -218,10 +216,10 @@ function Footer({navigateFocus}: FooterProps) {
                     </View>
                     <View style={[!isVertical && styles.footerBottomLogo]}>
                         {!isVertical ? (
-                            <ImageSVG src={Expensicons.IeattaFooterLogo} />
+                            <ImageSVG src={Expensicons.ExpensifyFooterLogo} />
                         ) : (
                             <ImageSVG
-                                src={Expensicons.IeattaFooterLogoVertical}
+                                src={Expensicons.ExpensifyFooterLogoVertical}
                                 height={variables.verticalLogoHeight}
                                 width={variables.verticalLogoWidth}
                             />

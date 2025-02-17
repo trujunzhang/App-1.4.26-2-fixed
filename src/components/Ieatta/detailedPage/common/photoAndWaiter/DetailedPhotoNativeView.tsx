@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import * as Expensicons from '@components/Icon/Expensicons';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
 import type {DetailedPhotoItemProps} from '@components/Ieatta/detailedPage/common/photos/types';
 import ImagePlaceholder from '@components/ImagePlaceholder';
 import useThemeStyles from '@hooks/useThemeStyles';
@@ -23,7 +23,7 @@ function DetailedPhotosNativeView({photoRow}: DetailedPhotoItemProps) {
                 sourceUri={photo.originalUrl}
                 style={[styles.w100, styles.h100]}
                 imageType="png"
-                placeholder={Expensicons.PNGBusinessMediumSquare}
+                placeholder={Ieattaicons.PNGBusinessMediumSquare}
             />
         </View>
     );

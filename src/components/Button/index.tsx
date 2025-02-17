@@ -1,7 +1,7 @@
 import {useIsFocused} from '@react-navigation/native';
 import type {ForwardedRef} from 'react';
-import React, {useCallback, useMemo} from 'react';
-import type {GestureResponderEvent, StyleProp, TextStyle, ViewStyle} from 'react-native';
+import React, {useCallback, useMemo, useState} from 'react';
+import type {GestureResponderEvent, LayoutChangeEvent, StyleProp, TextStyle, ViewStyle} from 'react-native';
 import {ActivityIndicator, View} from 'react-native';
 import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
@@ -30,6 +30,9 @@ type ButtonProps = Partial<ChildrenProps> & {
     /** The fill color to pass into the icon. */
     iconFill?: string;
 
+    /** The fill color to pass into the icon when the button is hovered. */
+    iconHoverFill?: string;
+
     /** Any additional styles to pass to the left icon container. */
     iconStyles?: StyleProp<ViewStyle>;
 
@@ -57,6 +60,9 @@ type ButtonProps = Partial<ChildrenProps> & {
     /** Indicates whether the button should be disabled */
     isDisabled?: boolean;
 
+    /** Invoked on mount and layout changes */
+    onLayout?: (event: LayoutChangeEvent) => void;
+
     /** A function that is called when the button is clicked on */
     onPress?: (event?: GestureResponderEvent | KeyboardEvent) => void;
 
@@ -81,23 +87,32 @@ type ButtonProps = Partial<ChildrenProps> & {
     /** Additional styles to add after local styles. Applied to Pressable portion of button */
     style?: StyleProp<ViewStyle>;
 
-    /** Additional button styles. Specific to the OpacityView of the button */
-    innerStyles?: StyleProp<ViewStyle>;
+    /** Additional styles to add to the component when it's disabled */
+    disabledStyle?: StyleProp<ViewStyle>;
 
     /** Additional button styles. Specific to the OpacityView of the button */
-    hoverStyles?: StyleProp<ViewStyle>;
+    innerStyles?: StyleProp<ViewStyle>;
 
     /** Additional text styles */
     textStyles?: StyleProp<TextStyle>;
 
+    /** Additional text styles when the button is hovered */
+    textHoverStyles?: StyleProp<TextStyle>;
+
     /** Whether we should use the default hover style */
     shouldUseDefaultHover?: boolean;
+
+    /** Additional hover styles */
+    hoverStyles?: StyleProp<ViewStyle>;
 
     /** Whether we should use the success theme color */
     success?: boolean;
 
     /** Whether we should use the danger theme color */
     danger?: boolean;
+
+    /** Whether we should display the button as a link */
+    link?: boolean;
 
     /** Should we remove the right border radius top + bottom? */
     shouldRemoveRightBorderRadius?: boolean;
@@ -128,17 +143,31 @@ type ButtonProps = Partial<ChildrenProps> & {
 
     /** Whether the button should use split style or not */
     isSplitButton?: boolean;
+
+    /** Whether button's content should be centered */
+    isContentCentered?: boolean;
+
+    /** Whether the Enter keyboard listening is active whether or not the screen that contains the button is focused */
+    isPressOnEnterActive?: boolean;
 };
 
-type KeyboardShortcutComponentProps = Pick<ButtonProps, 'isDisabled' | 'isLoading' | 'onPress' | 'pressOnEnter' | 'allowBubble' | 'enterKeyEventListenerPriority'>;
+type KeyboardShortcutComponentProps = Pick<ButtonProps, 'isDisabled' | 'isLoading' | 'onPress' | 'pressOnEnter' | 'allowBubble' | 'enterKeyEventListenerPriority' | 'isPressOnEnterActive'>;
 
-const accessibilityRoles: string[] = Object.values(CONST.ACCESSIBILITY_ROLE);
+const accessibilityRoles: string[] = Object.values(CONST.ROLE);
 
-function KeyboardShortcutComponent({isDisabled = false, isLoading = false, onPress = () => {}, pressOnEnter, allowBubble, enterKeyEventListenerPriority}: KeyboardShortcutComponentProps) {
+function KeyboardShortcutComponent({
+    isDisabled = false,
+    isLoading = false,
+    onPress = () => {},
+    pressOnEnter,
+    allowBubble,
+    enterKeyEventListenerPriority,
+    isPressOnEnterActive = false,
+}: KeyboardShortcutComponentProps) {
     const isFocused = useIsFocused();
     const activeElementRole = useActiveElementRole();
 
-    const shouldDisableEnterShortcut = useMemo(() => accessibilityRoles.includes(activeElementRole ?? '') && activeElementRole !== CONST.ACCESSIBILITY_ROLE.TEXT, [activeElementRole]);
+    const shouldDisableEnterShortcut = useMemo(() => accessibilityRoles.includes(activeElementRole ?? '') && activeElementRole !== CONST.ROLE.PRESENTATION, [activeElementRole]);
 
     const keyboardShortcutCallback = useCallback(
         (event?: GestureResponderEvent | KeyboardEvent) => {
@@ -152,12 +181,12 @@ function KeyboardShortcutComponent({isDisabled = false, isLoading = false, onPre
 
     const config = useMemo(
         () => ({
-            isActive: pressOnEnter && !shouldDisableEnterShortcut && isFocused,
+            isActive: pressOnEnter && !shouldDisableEnterShortcut && (isFocused || isPressOnEnterActive),
             shouldBubble: allowBubble,
             priority: enterKeyEventListenerPriority,
             shouldPreventDefault: false,
         }),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
         [shouldDisableEnterShortcut, isFocused],
     );
 
@@ -174,6 +203,7 @@ function Button(
 
         iconRight = Expensicons.ArrowRight,
         iconFill,
+        iconHoverFill,
         icon = null,
         iconStyles = [],
         iconRightStyles = [],
@@ -185,11 +215,12 @@ function Button(
 
         small = false,
         large = false,
-        medium = false,
+        medium = !small && !large,
 
         isLoading = false,
         isDisabled = false,
 
+        onLayout = () => {},
         onPress = () => {},
         onLongPress = () => {},
         onPressIn = () => {},
@@ -200,11 +231,13 @@ function Button(
         enterKeyEventListenerPriority = 0,
 
         style = [],
+        disabledStyle,
         innerStyles = [],
-        hoverStyles = [],
         textStyles = [],
+        textHoverStyles = [],
 
         shouldUseDefaultHover = true,
+        hoverStyles = undefined,
         success = false,
         danger = false,
 
@@ -217,13 +250,17 @@ function Button(
         id = '',
         accessibilityLabel = '',
         isSplitButton = false,
+        link = false,
+        isContentCentered = false,
+        isPressOnEnterActive,
         ...rest
     }: ButtonProps,
-    ref: ForwardedRef<View | HTMLDivElement>,
+    ref: ForwardedRef<View>,
 ) {
     const theme = useTheme();
     const styles = useThemeStyles();
     const StyleUtils = useStyleUtils();
+    const [isHovered, setIsHovered] = useState(false);
 
     const renderContent = () => {
         if ('children' in rest) {
@@ -242,8 +279,13 @@ function Button(
                     large && styles.buttonLargeText,
                     success && styles.buttonSuccessText,
                     danger && styles.buttonDangerText,
-                    Boolean(icon) && styles.textAlignLeft,
+                    !!icon && styles.textAlignLeft,
                     textStyles,
+                    isHovered && textHoverStyles,
+                    link && styles.link,
+                    link && isHovered && StyleUtils.getColorStyle(theme.linkHover),
+                    link && styles.fontWeightNormal,
+                    link && styles.fontSizeLabel,
                 ]}
                 dataSet={{[CONST.SELECTION_SCRAPER_HIDDEN_ELEMENT]: true}}
             >
@@ -251,17 +293,19 @@ function Button(
             </Text>
         );
 
+        const defaultFill = success || danger ? theme.textLight : theme.icon;
+
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         if (icon || shouldShowRightIcon) {
             return (
-                <View style={[styles.justifyContentBetween, styles.flexRow]}>
+                <View style={[isContentCentered ? styles.justifyContentCenter : styles.justifyContentBetween, styles.flexRow]}>
                     <View style={[styles.alignItemsCenter, styles.flexRow, styles.flexShrink1]}>
                         {icon && (
                             <View style={[large ? styles.mr2 : styles.mr1, !text && styles.mr0, iconStyles]}>
                                 <Icon
                                     src={icon}
                                     hasText={!!text}
-                                    fill={iconFill ?? (success || danger ? theme.textLight : theme.icon)}
+                                    fill={isHovered ? iconHoverFill ?? defaultFill : iconFill ?? defaultFill}
                                     small={small}
                                     medium={medium}
                                     large={large}
@@ -270,23 +314,24 @@ function Button(
                                 />
                             </View>
                         )}
-                        {textComponent}
+                        {!!text && textComponent}
                     </View>
                     {shouldShowRightIcon && (
                         <View style={[styles.justifyContentCenter, large ? styles.ml2 : styles.ml1, iconRightStyles]}>
                             {!isSplitButton ? (
                                 <Icon
                                     src={iconRight}
-                                    fill={iconFill ?? (success || danger ? theme.textLight : theme.icon)}
-                                    small={medium}
-                                    medium={large}
+                                    fill={isHovered ? iconHoverFill ?? defaultFill : iconFill ?? defaultFill}
+                                    small={small}
+                                    medium={medium}
+                                    large={large}
                                     width={iconWidth}
                                     height={iconHeight}
                                 />
                             ) : (
                                 <Icon
                                     src={iconRight}
-                                    fill={iconFill ?? (success || danger ? theme.textLight : theme.icon)}
+                                    fill={isHovered ? iconHoverFill ?? defaultFill : iconFill ?? defaultFill}
                                     small={small}
                                     medium={medium}
                                     large={large}
@@ -313,18 +358,19 @@ function Button(
                     onPress={onPress}
                     pressOnEnter={pressOnEnter}
                     enterKeyEventListenerPriority={enterKeyEventListenerPriority}
+                    isPressOnEnterActive={isPressOnEnterActive}
                 />
             )}
             <PressableWithFeedback
+                dataSet={{
+                    listener: pressOnEnter ? CONST.KEYBOARD_SHORTCUTS.ENTER.shortcutKey : undefined,
+                }}
                 ref={ref}
+                onLayout={onLayout}
                 onPress={(event) => {
                     if (event?.type === 'click') {
                         const currentTarget = event?.currentTarget as HTMLElement;
                         currentTarget?.blur();
-                    }
-
-                    if (event?.type === 'keyup') {
-                        return;
                     }
 
                     if (shouldEnableHapticFeedback) {
@@ -354,7 +400,7 @@ function Button(
                 ]}
                 style={[
                     styles.button,
-                    StyleUtils.getButtonStyleWithIcon(styles, small, medium, large, Boolean(icon), Boolean(text?.length > 0), shouldShowRightIcon),
+                    StyleUtils.getButtonStyleWithIcon(styles, small, medium, large, !!icon, !!(text?.length > 0), shouldShowRightIcon),
                     success ? styles.buttonSuccess : undefined,
                     danger ? styles.buttonDanger : undefined,
                     isDisabled ? styles.buttonOpacityDisabled : undefined,
@@ -364,6 +410,7 @@ function Button(
                     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                     text && shouldShowRightIcon ? styles.alignItemsStretch : undefined,
                     innerStyles,
+                    link && styles.bgTransparent,
                 ]}
                 hoverStyle={[
                     shouldUseDefaultHover && !isDisabled ? styles.buttonDefaultHovered : undefined,
@@ -371,10 +418,13 @@ function Button(
                     danger && !isDisabled ? styles.buttonDangerHovered : undefined,
                     hoverStyles,
                 ]}
+                disabledStyle={disabledStyle}
                 id={id}
                 accessibilityLabel={accessibilityLabel}
                 role={CONST.ROLE.BUTTON}
                 hoverDimmingValue={1}
+                onHoverIn={() => setIsHovered(true)}
+                onHoverOut={() => setIsHovered(false)}
             >
                 {renderContent()}
                 {isLoading && (

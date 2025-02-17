@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import type {ForwardedRef} from 'react';
-import React, {forwardRef, useMemo, useRef} from 'react';
+import React, {forwardRef, useMemo} from 'react';
 import {View} from 'react-native';
 import CommonFooter from '@components/Ieatta/components/CommonFooter';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useStyleUtils from '@hooks/useStyleUtils';
 import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
 import SignInPageHero from '@pages/signin/SignInPageHero';
 import variables from '@styles/variables';
 import SignInPageContent from './SignInPageContent';
@@ -16,7 +17,7 @@ function SignInPageLayout(
 ) {
     const styles = useThemeStyles();
     const StyleUtils = useStyleUtils();
-    const {isSmallScreenWidth, isMediumScreenWidth, isLargeScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth, isMediumScreenWidth, isLargeScreenWidth} = useResponsiveLayout();
 
     const signFormContainerStyle = useMemo(
         () => (isSmallScreenWidth ? [styles.flex1, styles.alignItemsCenter, styles.justifyContentCenter] : [styles.flex1, styles.alignItemsEnd, styles.justifyContentCenter, styles.pr25]),

@@ -12,7 +12,7 @@ function trimMailTo(mailLink: string) {
  * in the email address to provide explicit line break opportunities for consistent
  * breaking across platforms.
  *
- * Note: as explained [here](https://github.com/Ieatta/App/issues/30985#issuecomment-1815379835),
+ * Note: as explained [here](https://github.com/Expensify/App/issues/30985#issuecomment-1815379835),
  * this only provides opportunities for line breaking (rather than forcing line breaks) that shall
  * be used by the platform implementation when there are no other customary rules applicable
  * and the text would otherwise overflow.

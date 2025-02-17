@@ -10,10 +10,10 @@ import useLocalize from '@hooks/useLocalize';
 import useSubStep from '@hooks/useSubStep';
 import type {SubStepProps} from '@hooks/useSubStep/types';
 import useThemeStyles from '@hooks/useThemeStyles';
+import getInitialSubstepForPersonalInfo from '@expPages/ReimbursementAccount/utils/getInitialSubstepForPersonalInfo';
+import getSubstepValues from '@expPages/ReimbursementAccount/utils/getSubstepValues';
 import * as BankAccounts from '@userActions/BankAccounts';
 import CONST from '@src/CONST';
-import getInitialSubstepForPersonalInfo from '@src/expPages/ReimbursementAccount/utils/getInitialSubstepForPersonalInfo';
-import getSubstepValues from '@src/expPages/ReimbursementAccount/utils/getSubstepValues';
 import ONYXKEYS from '@src/ONYXKEYS';
 import type {ReimbursementAccountForm} from '@src/types/form';
 import INPUT_IDS from '@src/types/form/ReimbursementAccountForm';
@@ -44,9 +44,9 @@ function PersonalInfo({reimbursementAccount, reimbursementAccountDraft, onBackBu
     const {translate} = useLocalize();
     const styles = useThemeStyles();
 
-    const policyID = reimbursementAccount?.achData?.policyID ?? '';
+    const policyID = reimbursementAccount?.achData?.policyID ?? '-1';
     const values = useMemo(() => getSubstepValues(PERSONAL_INFO_STEP_KEYS, reimbursementAccountDraft, reimbursementAccount), [reimbursementAccount, reimbursementAccountDraft]);
-    const bankAccountID = Number(reimbursementAccount?.achData?.bankAccountID ?? '0');
+    const bankAccountID = Number(reimbursementAccount?.achData?.bankAccountID ?? '-1');
     const submit = useCallback(
         (isConfirmPage: boolean) => {
             BankAccounts.updatePersonalInformationForBankAccount(bankAccountID, {...values}, policyID, isConfirmPage);

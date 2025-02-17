@@ -1,10 +1,11 @@
-// eslint-disable-next-line no-restricted-imports
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+// eslint-disable-next-line no-restricted-imports, lodash/import-scope
 import _ from 'lodash';
 import React from 'react';
 import {useCollectionOnce} from 'react-firebase-hooks/firestore';
 import RecipeWithPhotosInfoPanel from '@components/Ieatta/detailedPage/header/RecipeWithPhotosInfoPanel';
-import {PhotoType} from '@libs/Firebase/constant';
-import * as FirebaseQuery from '@libs/Firebase/services/firebase-query';
+import {PhotoType} from '@libs/FirebaseIeatta/constant';
+import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
 import type {IFBPhoto} from '@src/types/firebase';
 import type {RecipeWithPhotosInfoPanelDataProps} from './types';
 

@@ -11,10 +11,10 @@ import useSubStep from '@hooks/useSubStep';
 import type {SubStepProps} from '@hooks/useSubStep/types';
 import useThemeStyles from '@hooks/useThemeStyles';
 import {parsePhoneNumber} from '@libs/PhoneNumber';
+import getInitialSubstepForBusinessInfo from '@expPages/ReimbursementAccount/utils/getInitialSubstepForBusinessInfo';
+import getSubstepValues from '@expPages/ReimbursementAccount/utils/getSubstepValues';
 import * as BankAccounts from '@userActions/BankAccounts';
 import CONST from '@src/CONST';
-import getInitialSubstepForBusinessInfo from '@src/expPages/ReimbursementAccount/utils/getInitialSubstepForBusinessInfo';
-import getSubstepValues from '@src/expPages/ReimbursementAccount/utils/getSubstepValues';
 import ONYXKEYS from '@src/ONYXKEYS';
 import type {ReimbursementAccountForm} from '@src/types/form';
 import INPUT_IDS from '@src/types/form/ReimbursementAccountForm';
@@ -68,13 +68,13 @@ function BusinessInfo({reimbursementAccount, reimbursementAccountDraft, onBackBu
         [reimbursementAccount, reimbursementAccountDraft],
     );
 
-    const policyID = reimbursementAccount?.achData?.policyID ?? '';
+    const policyID = reimbursementAccount?.achData?.policyID ?? '-1';
     const values = useMemo(() => getSubstepValues(BUSINESS_INFO_STEP_KEYS, reimbursementAccountDraft, reimbursementAccount), [reimbursementAccount, reimbursementAccountDraft]);
 
     const submit = useCallback(
         (isConfirmPage: boolean) => {
             BankAccounts.updateCompanyInformationForBankAccount(
-                Number(reimbursementAccount?.achData?.bankAccountID ?? '0'),
+                Number(reimbursementAccount?.achData?.bankAccountID ?? '-1'),
                 {
                     ...values,
                     ...getBankAccountFields(['routingNumber', 'accountNumber', 'bankName', 'plaidAccountID', 'plaidAccessToken', 'isSavings']),

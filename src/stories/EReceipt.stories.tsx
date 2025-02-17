@@ -155,8 +155,8 @@ const transactionData = {
 
 Onyx.mergeCollection(ONYXKEYS.COLLECTION.TRANSACTION, transactionData);
 Onyx.merge('cardList', {
-    4: {bank: 'Ieatta Card', lastFourPAN: '1000'},
-    5: {bank: 'Ieatta Card', lastFourPAN: '4444'},
+    4: {bank: 'Expensify Card', lastFourPAN: '1000'},
+    5: {bank: 'Expensify Card', lastFourPAN: '4444'},
 });
 
 /**

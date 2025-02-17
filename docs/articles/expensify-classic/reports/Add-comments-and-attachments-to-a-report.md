@@ -2,7 +2,7 @@
 title: Add comments & attachments to a report
 description: Add clarification for expenses by adding comments and attachments to a report
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
   
 You can add comments and attachments to a report to help clarify or provide justification for the expenses.
 
@@ -27,6 +27,6 @@ You can add comments and attachments to a report to help clarify or provide just
 
 {% include end-selector.html %}
 
-In this section at the bottom of the report, Ieatta also logs actions taken on the report.
+In this section at the bottom of the report, Expensify also logs actions taken on the report.
 
 </div>

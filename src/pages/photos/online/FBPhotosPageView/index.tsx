@@ -1,14 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
+
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type {StackScreenProps} from '@react-navigation/stack';
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import React, {useMemo} from 'react';
 import {useCollection, useDocumentData} from 'react-firebase-hooks/firestore';
 import {PhotosPageSkeletonView} from '@components/Ieatta/components/SkeletonViews';
 import PhotosPageLayout from '@components/Ieatta/photos/PhotosPageLayout';
-import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
-import {FBCollections, PhotoType} from '@libs/Firebase/constant';
-import * as FirebaseQuery from '@libs/Firebase/services/firebase-query';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
+import {FBCollections, PhotoType} from '@libs/FirebaseIeatta/constant';
+import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
 import {getPhotoIndexWithId, getPhotosForPage} from '@libs/ieatta/photoUtils';
 import type {AuthScreensParamList} from '@libs/Navigation/types';
 import CONST from '@src/CONST';
@@ -19,12 +22,12 @@ import PhotosPageWebPage from './PhotosPageWebPage';
 
 type FBPhotosPageViewProps = StackScreenProps<AuthScreensParamList, typeof SCREENS.CENTER_IEATTA.PHOTO_PAGE_VIEW>;
 
-function FBPhotosPageView({route}: FBPhotosPageViewProps) {
+function FBPhotosPageView({route, navigation}: FBPhotosPageViewProps) {
     const relatedId = lodashGet(route, 'params.relatedId', CONST.IEATTA_MODEL_ID_EMPTY);
-    const photoType = lodashGet(route, 'params.photoType', PhotoType.Unknown);
+    const photoType: string = lodashGet(route, 'params.photoType', PhotoType.Unknown);
     const initialPhotoId = lodashGet(route, 'params.selected', '');
 
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
 
     /**
      |--------------------------------------------------
@@ -66,7 +69,7 @@ function FBPhotosPageView({route}: FBPhotosPageViewProps) {
         <PhotosPageLayout
             containerStyle={[]}
             showFullscreen={isSmallScreenWidth}
-            shouldShowHeader={isSmallScreenWidth === false}
+            shouldShowHeader={!isSmallScreenWidth}
             shouldShowNotFoundPage={false}
             shouldShowLoading={shouldShowLoading}
             loadingContent={<PhotosPageSkeletonView />}
@@ -74,6 +77,8 @@ function FBPhotosPageView({route}: FBPhotosPageViewProps) {
             {isSmallScreenWidth ? (
                 <PhotosPageSmallPage
                     key={fixedRelatedId}
+                    route={route}
+                    navigation={navigation}
                     pageIndex={pageIndex}
                     relatedId={relatedId}
                     photoType={photoType}
@@ -82,6 +87,8 @@ function FBPhotosPageView({route}: FBPhotosPageViewProps) {
             ) : (
                 <PhotosPageWebPage
                     key={fixedRelatedId}
+                    route={route}
+                    navigation={navigation}
                     pageIndex={pageIndex}
                     relatedId={relatedId}
                     photoType={photoType}

@@ -14,7 +14,7 @@ function Licenses() {
     const {translate} = useLocalize();
     return (
         <>
-            <Text style={[styles.textExtraSmallSupporting, styles.mb4]}>{`© ${currentYear} Ieatta`}</Text>
+            <Text style={[styles.textExtraSmallSupporting, styles.mb4]}>{`© ${currentYear} Expensify`}</Text>
             <Text style={[styles.textExtraSmallSupporting]}>
                 {translate('termsOfUse.phrase5')}
                 <TextLink

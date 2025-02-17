@@ -90,7 +90,7 @@ There are many styles in the `styles.js` file. It is generally a bad practice to
 const SettingsScreen = props => (
     <View>
         <Text style={[styles.settingsScreenText]}>
-            Ieatta
+            Expensify
         </Text>
     </View>
 );
@@ -107,7 +107,7 @@ const SomeOtherScreen = props => (
 const SettingsScreen = props => (
     <View>
         <Text style={[styles.defaultScreenText]}>
-            Ieatta
+            Expensify
         </Text>
     </View>
 );

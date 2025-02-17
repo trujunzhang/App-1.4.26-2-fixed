@@ -1,4 +1,5 @@
 import {addDays, format, startOfDay, subYears} from 'date-fns';
+import * as Localize from '@libs/Localize';
 import CONST from '@src/CONST';
 import * as ValidationUtils from '@src/libs/ValidationUtils';
 
@@ -23,7 +24,7 @@ describe('ValidationUtils', () => {
         });
 
         test('Should return false for a date after the range', () => {
-            const futureDate = '3024-07-18';
+            const futureDate = '3042-07-18';
             const isValid = ValidationUtils.isValidDate(futureDate);
             expect(isValid).toBe(false);
         });
@@ -186,19 +187,23 @@ describe('ValidationUtils', () => {
         test('Should return an error message for a date before the minimum age requirement', () => {
             const invalidDate: string = format(subYears(new Date(), 17), CONST.DATE.FNS_FORMAT_STRING); // Date of birth 17 years ago
             const error = ValidationUtils.getAgeRequirementError(invalidDate, 18, 150);
-            expect(error).toEqual(['privatePersonalDetails.error.dateShouldBeBefore', {dateString: format(startOfDay(subYears(new Date(), 18)), CONST.DATE.FNS_FORMAT_STRING)}]);
+            expect(error).toEqual(
+                Localize.translateLocal('privatePersonalDetails.error.dateShouldBeBefore', {dateString: format(startOfDay(subYears(new Date(), 18)), CONST.DATE.FNS_FORMAT_STRING)}),
+            );
         });
 
         test('Should return an error message for a date after the maximum age requirement', () => {
             const invalidDate: string = format(subYears(new Date(), 160), CONST.DATE.FNS_FORMAT_STRING); // Date of birth 160 years ago
             const error = ValidationUtils.getAgeRequirementError(invalidDate, 18, 150);
-            expect(error).toEqual(['privatePersonalDetails.error.dateShouldBeAfter', {dateString: format(startOfDay(subYears(new Date(), 150)), CONST.DATE.FNS_FORMAT_STRING)}]);
+            expect(error).toEqual(
+                Localize.translateLocal('privatePersonalDetails.error.dateShouldBeAfter', {dateString: format(startOfDay(subYears(new Date(), 150)), CONST.DATE.FNS_FORMAT_STRING)}),
+            );
         });
 
         test('Should return an error message for an invalid date', () => {
             const invalidDate = '2023-07-32'; // Invalid date
             const error = ValidationUtils.getAgeRequirementError(invalidDate, 18, 150);
-            expect(error).toBe('common.error.dateInvalid');
+            expect(error).toBe(Localize.translateLocal('common.error.dateInvalid'));
         });
     });
 
@@ -241,8 +246,8 @@ describe('ValidationUtils', () => {
             expect(ValidationUtils.isValidRoomName('#')).toBe(false);
         });
 
-        test('room name with 81 characters', () => {
-            expect(ValidationUtils.isValidRoomName('#123456789012345678901234567890123456789012345678901234567890123456789012345678901')).toBe(false);
+        test('room name with 101 characters', () => {
+            expect(ValidationUtils.isValidRoomName('#12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901')).toBe(false);
         });
 
         test('room name with lowercase letters, numbers, and dashes', () => {
@@ -264,39 +269,39 @@ describe('ValidationUtils', () => {
 
     describe('isValidWebsite', () => {
         test('Valid URLs with https protocol', () => {
-            expect(ValidationUtils.isValidWebsite('https://www.ieatta.com')).toBe(true);
-            expect(ValidationUtils.isValidWebsite('https://ieatta.com/inbox/')).toBe(true);
-            expect(ValidationUtils.isValidWebsite('https://we.are.ieatta.com/how-we-got-here')).toBe(true);
+            expect(ValidationUtils.isValidWebsite('https://www.expensify.com')).toBe(true);
+            expect(ValidationUtils.isValidWebsite('https://expensify.com/inbox/')).toBe(true);
+            expect(ValidationUtils.isValidWebsite('https://we.are.expensify.com/how-we-got-here')).toBe(true);
             expect(ValidationUtils.isValidWebsite('https://blog.google')).toBe(true);
             expect(ValidationUtils.isValidWebsite('https://blog.google:65535')).toBe(true);
         });
 
         test('Valid URLs with http protocol', () => {
-            expect(ValidationUtils.isValidWebsite('http://www.ieatta.com')).toBe(true);
-            expect(ValidationUtils.isValidWebsite('http://use.ieatta.com')).toBe(true);
+            expect(ValidationUtils.isValidWebsite('http://www.expensify.com')).toBe(true);
+            expect(ValidationUtils.isValidWebsite('http://use.expensify.com')).toBe(true);
         });
 
         test('Valid URL with ftp protocol', () => {
-            expect(ValidationUtils.isValidWebsite('ftp://ieatta.com/files')).toBe(true);
+            expect(ValidationUtils.isValidWebsite('ftp://expensify.com/files')).toBe(true);
         });
 
         test('Invalid URLs', () => {
-            expect(ValidationUtils.isValidWebsite('ieatta')).toBe(false);
-            expect(ValidationUtils.isValidWebsite('ieatta.')).toBe(false);
+            expect(ValidationUtils.isValidWebsite('expensify')).toBe(false);
+            expect(ValidationUtils.isValidWebsite('expensify.')).toBe(false);
             expect(ValidationUtils.isValidWebsite('192.168.0.1')).toBe(false);
             expect(ValidationUtils.isValidWebsite('www.googlecom')).toBe(false);
             expect(ValidationUtils.isValidWebsite('www.google.com:65536')).toBe(false);
         });
 
         test('Invalid URLs without protocols', () => {
-            expect(ValidationUtils.isValidWebsite('www.ieatta.com')).toBe(false);
-            expect(ValidationUtils.isValidWebsite('ieatta.com')).toBe(false);
+            expect(ValidationUtils.isValidWebsite('www.expensify.com')).toBe(false);
+            expect(ValidationUtils.isValidWebsite('expensify.com')).toBe(false);
         });
 
         test('Invalid URLs with special characters and emojis', () => {
-            expect(ValidationUtils.isValidWebsite('www.~ieatta.com')).toBe(false);
+            expect(ValidationUtils.isValidWebsite('www.~expensify.com')).toBe(false);
             expect(ValidationUtils.isValidWebsite('https://www.expen$ify.com')).toBe(false);
-            expect(ValidationUtils.isValidWebsite('www.ieatta😄.com')).toBe(false);
+            expect(ValidationUtils.isValidWebsite('www.expensify😄.com')).toBe(false);
         });
     });
 
@@ -318,6 +323,18 @@ describe('ValidationUtils', () => {
             expect(ValidationUtils.isValidPersonName('123 test')).toBe(false);
             expect(ValidationUtils.isValidPersonName('test #$')).toBe(false);
             expect(ValidationUtils.isValidPersonName('test123$')).toBe(false);
+        });
+    });
+
+    describe('ValidateLegalName', () => {
+        test('Valid legal name', () => {
+            expect(ValidationUtils.isValidLegalName('test name')).toBe(true);
+            expect(ValidationUtils.isValidLegalName(`X Æ A test`)).toBe(true);
+        });
+
+        test('Invalid legal name', () => {
+            expect(ValidationUtils.isValidLegalName(`a hyphenated-name`)).toBe(false);
+            expect(ValidationUtils.isValidLegalName('άλφα')).toBe(false);
         });
     });
 });

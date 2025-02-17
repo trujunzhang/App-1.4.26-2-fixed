@@ -7,9 +7,9 @@ import FullPageNotFoundView from '@components/BlockingViews/FullPageNotFoundView
 import ScreenWrapper from '@components/ScreenWrapper';
 import type {ViewportOffsetTopProps} from '@components/withViewportOffsetTop';
 import withViewportOffsetTop from '@components/withViewportOffsetTop';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
-import type {CentralPaneNavigatorParamList, RootStackParamList} from '@libs/Navigation/types';
+import type {AuthScreensParamList, RootStackParamList} from '@libs/Navigation/types';
 import Navigation from '@navigation/Navigation';
 import Variables from '@styles/variables';
 
@@ -32,7 +32,7 @@ type PhotosPageLayoutProps = ViewportOffsetTopProps & {
      *
      * This is required because transitionEnd event doesn't trigger in the testing environment.
      */
-    navigation?: StackNavigationProp<RootStackParamList> | StackNavigationProp<CentralPaneNavigatorParamList>;
+    navigation?: StackNavigationProp<RootStackParamList> | StackNavigationProp<AuthScreensParamList>;
 
     headerPanel?: React.ReactNode;
 
@@ -53,7 +53,7 @@ function PhotosPageLayout({
     containerStyle,
     children,
 }: PhotosPageLayoutProps) {
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
 
     const styles = useThemeStyles();
 
@@ -76,7 +76,7 @@ function PhotosPageLayout({
                         title="headerPanel.photo.grid"
                         shouldShowSubtitle={false}
                         shouldShowAvatar={false}
-                        shouldShowAddIcon
+                        shouldShowAddIcon={false}
                         onAddIconPress={() => {}}
                     />
                 );
@@ -112,6 +112,7 @@ function PhotosPageLayout({
                                 styles.w100,
                                 styles.alignSelfCenter,
                                 {
+                                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                                     maxWidth: Variables.maxWidthInPhotosGridAndPage,
                                 },
                                 containerStyle,

@@ -2,7 +2,7 @@
 title: Print or download a report
 description: Share, print, or download a report
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 1. Click the **Reports** tab.
 2. Select the report. 

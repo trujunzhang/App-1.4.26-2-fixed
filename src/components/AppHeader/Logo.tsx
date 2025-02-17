@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from 'react';
 import type {OnyxEntry} from 'react-native-onyx';
 import {withOnyx} from 'react-native-onyx';
 import * as Expensicons from '@components/Icon/Expensicons';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
 import Image from '@components/Image';
 import {PressableWithFeedback} from '@components/Pressable';
 import useLocalize from '@hooks/useLocalize';
@@ -36,7 +38,7 @@ function Logo({restaurantIdInSidebar}: LogoProps) {
                         height: variables.iconSizeYelpLogoHeight,
                     },
                 ]}
-                source={Expensicons.YelpMenu}
+                source={Ieattaicons.YelpMenu}
             />
         </PressableWithFeedback>
     );

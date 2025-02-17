@@ -1,12 +1,13 @@
 import {useObject, useQuery} from '@realm/react';
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import React, {useCallback, useState} from 'react';
-import {ReviewType} from '@libs/Firebase/constant';
-import type {RecipeScreenNavigationProps} from '@libs/Firebase/helper/RecipeUtils';
-import {getRecipeID} from '@libs/Firebase/helper/RecipeUtils';
-import Log from '@libs/Log';
+import {ReviewType} from '@libs/FirebaseIeatta/constant';
+import type {RecipeScreenNavigationProps} from '@libs/FirebaseIeatta/helper/RecipeUtils';
+import {getRecipeID} from '@libs/FirebaseIeatta/helper/RecipeUtils';
 import {RealmCollections} from '@libs/Realm/constant';
 import {toRealmModelList} from '@libs/Realm/helpers/realmTypeHelper';
+import * as RealmQuery from '@libs/Realm/services/realm-query';
 import Variables from '@styles/variables';
 import type {IFBRecipe, IFBReview} from '@src/types/firebase';
 import BaseRecipeScreen from './BaseRecipeScreen';
@@ -22,9 +23,7 @@ function RecipeScreen({route, navigation}: RecipeScreenProps) {
     const recipeInRealm = useObject<IFBRecipe>(RealmCollections.Recipes, recipeId);
     const recipe: IFBRecipe | undefined = _.isNull(recipeInRealm) === false ? (recipeInRealm as IFBRecipe) : undefined;
 
-    const reviewsInRealm = useQuery(RealmCollections.Reviews, (array) => {
-        return array.filtered('recipeId  == $0 && reviewType == $1', recipeId, ReviewType.Recipe);
-    }).slice(0, currentIndex);
+    const reviewsInRealm = useQuery(RealmCollections.Reviews, RealmQuery.queryForRealmReviews({relatedId: recipeId, reviewType: ReviewType.Recipe})).slice(0, currentIndex);
 
     const reviews: IFBReview[] = toRealmModelList<IFBReview>(reviewsInRealm);
 

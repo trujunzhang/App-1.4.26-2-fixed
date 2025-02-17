@@ -27,7 +27,7 @@ function BaseDateTimePicker({initialDate, onDateTimeChange}: BaseDateTimePickerP
 
     return (
         <View style={[styles.flexRow]}>
-            <View style={[styles.flexRow]}>
+            <View style={[styles.flexRow, styles.alignItemsCenter, {gap: 5}]}>
                 <Text>{moment(currentDate).format('YYYY-MM-DD hh:mm')}</Text>
                 <Button
                     small

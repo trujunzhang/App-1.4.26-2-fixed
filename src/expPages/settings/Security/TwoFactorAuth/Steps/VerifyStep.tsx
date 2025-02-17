@@ -1,11 +1,10 @@
 import React, {useEffect, useRef} from 'react';
 import {View} from 'react-native';
-import {withOnyx} from 'react-native-onyx';
-import ieattaLogo from '@assets/images/expensify-logo-round-transparent.png';
+import {useOnyx} from 'react-native-onyx';
+import expensifyLogo from '@assets/images/expensify-logo-round-transparent.png';
 import Button from '@components/Button';
 import FixedFooter from '@components/FixedFooter';
 import * as Expensicons from '@components/Icon/Expensicons';
-import {useSession} from '@components/OnyxProvider';
 import PressableWithDelayToggle from '@components/Pressable/PressableWithDelayToggle';
 import QRCode from '@components/QRCode';
 import ScrollView from '@components/ScrollView';
@@ -14,23 +13,22 @@ import TextLink from '@components/TextLink';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import Clipboard from '@libs/Clipboard';
+import * as UserUtils from '@libs/UserUtils';
+import StepWrapper from '@expPages/settings/Security/TwoFactorAuth/StepWrapper/StepWrapper';
+import useTwoFactorAuthContext from '@expPages/settings/Security/TwoFactorAuth/TwoFactorAuthContext/useTwoFactorAuth';
+import TwoFactorAuthForm from '@expPages/settings/Security/TwoFactorAuth/TwoFactorAuthForm';
+import type {BaseTwoFactorAuthFormRef} from '@expPages/settings/Security/TwoFactorAuth/TwoFactorAuthForm/types';
 import * as Session from '@userActions/Session';
 import CONST from '@src/CONST';
-import StepWrapper from '@src/expPages/settings/Security/TwoFactorAuth/StepWrapper/StepWrapper';
-import useTwoFactorAuthContext from '@src/expPages/settings/Security/TwoFactorAuth/TwoFactorAuthContext/useTwoFactorAuth';
-import TwoFactorAuthForm from '@src/expPages/settings/Security/TwoFactorAuth/TwoFactorAuthForm';
-import type {BaseTwoFactorAuthFormOnyxProps, BaseTwoFactorAuthFormRef} from '@src/expPages/settings/Security/TwoFactorAuth/TwoFactorAuthForm/types';
 import ONYXKEYS from '@src/ONYXKEYS';
 
-const TROUBLESHOOTING_LINK = 'https://community.ieatta.com/discussion/7736/faq-troubleshooting-two-factor-authentication-issues/p1?new=1';
+const TROUBLESHOOTING_LINK = 'https://community.expensify.com/discussion/7736/faq-troubleshooting-two-factor-authentication-issues/p1?new=1';
 
-type VerifyStepProps = BaseTwoFactorAuthFormOnyxProps;
-
-function VerifyStep({account}: VerifyStepProps) {
+function VerifyStep() {
     const styles = useThemeStyles();
     const {translate} = useLocalize();
-    const session = useSession();
-
+    const contactMethod = UserUtils.getContactMethod();
+    const [account] = useOnyx(ONYXKEYS.ACCOUNT);
     const formRef = useRef<BaseTwoFactorAuthFormRef>(null);
 
     const {setStep} = useTwoFactorAuthContext();
@@ -65,7 +63,7 @@ function VerifyStep({account}: VerifyStepProps) {
      * so it can be detected by authenticator apps
      */
     function buildAuthenticatorUrl() {
-        return `otpauth://totp/Ieatta:${account?.primaryLogin ?? session?.email}?secret=${account?.twoFactorAuthSecretKey}&issuer=Ieatta`;
+        return `otpauth://totp/Expensify:${contactMethod}?secret=${account?.twoFactorAuthSecretKey}&issuer=Expensify`;
     }
 
     return (
@@ -91,14 +89,14 @@ function VerifyStep({account}: VerifyStepProps) {
                     <View style={[styles.alignItemsCenter, styles.mt5]}>
                         <QRCode
                             url={buildAuthenticatorUrl()}
-                            logo={ieattaLogo}
+                            logo={expensifyLogo}
                             logoRatio={CONST.QR.EXPENSIFY_LOGO_SIZE_RATIO}
                             logoMarginRatio={CONST.QR.EXPENSIFY_LOGO_MARGIN_RATIO}
                         />
                     </View>
                     <Text style={styles.mt5}>{translate('twoFactorAuth.addKey')}</Text>
                     <View style={[styles.mt11, styles.flexRow, styles.alignItemsCenter, styles.justifyContentBetween]}>
-                        {Boolean(account?.twoFactorAuthSecretKey) && <Text>{splitSecretInChunks(account?.twoFactorAuthSecretKey ?? '')}</Text>}
+                        {!!account?.twoFactorAuthSecretKey && <Text>{splitSecretInChunks(account?.twoFactorAuthSecretKey ?? '')}</Text>}
                         <PressableWithDelayToggle
                             text={translate('twoFactorAuth.copy')}
                             textChecked={translate('common.copied')}
@@ -138,6 +136,4 @@ function VerifyStep({account}: VerifyStepProps) {
 
 VerifyStep.displayName = 'VerifyStep';
 
-export default withOnyx<VerifyStepProps, BaseTwoFactorAuthFormOnyxProps>({
-    account: {key: ONYXKEYS.ACCOUNT},
-})(VerifyStep);
+export default VerifyStep;

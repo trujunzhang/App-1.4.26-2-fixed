@@ -1,7 +1,7 @@
 import {useRealm} from '@realm/react';
 import type {ReactElement, ReactNode} from 'react';
 import React, {useEffect, useMemo, useState} from 'react';
-import FirebaseRepositories from '@libs/Firebase/services/firebase-repositories';
+import FirebaseRepositories from '@libs/FirebaseIeatta/services/firebase-repositories';
 import Log from '@libs/Log';
 import CONST from '@src/CONST';
 import type FirebaseProviderProps from './types';

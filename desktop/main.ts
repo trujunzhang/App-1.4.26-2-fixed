@@ -3,7 +3,6 @@ import type {BrowserView, MenuItem, MenuItemConstructorOptions, WebContents, Web
 import contextMenu from 'electron-context-menu';
 import log from 'electron-log';
 import type {ElectronLog} from 'electron-log';
-import serve from 'electron-serve';
 import {autoUpdater} from 'electron-updater';
 import {machineId} from 'node-machine-id';
 import checkForUpdates from '@libs/checkForUpdates';
@@ -13,7 +12,11 @@ import CONST from '@src/CONST';
 import type {TranslationPaths} from '@src/languages/types';
 import type PlatformSpecificUpdater from '@src/setup/platformSetup/types';
 import type {Locale} from '@src/types/onyx';
+import type {CreateDownloadQueueModule, DownloadItem} from './createDownloadQueue';
+import serve from './electron-serve';
 import ELECTRON_EVENTS from './ELECTRON_EVENTS';
+
+const createDownloadQueue = require<CreateDownloadQueueModule>('./createDownloadQueue').default;
 
 const port = process.env.PORT ?? 8082;
 const {DESKTOP_SHORTCUT_ACCELERATOR, LOCALES} = CONST;
@@ -82,12 +85,12 @@ function createContextMenu(preferredLocale: Locale = LOCALES.DEFAULT): () => voi
 
 let disposeContextMenu = createContextMenu();
 
-// Send all autoUpdater logs to a log file: ~/Library/Logs/new.ieatta.desktop/main.log
+// Send all autoUpdater logs to a log file: ~/Library/Logs/new.expensify.desktop/main.log
 // See https://www.npmjs.com/package/electron-log
 autoUpdater.logger = log;
 (autoUpdater.logger as ElectronLog).transports.file.level = 'info';
 
-// Send all Console logs to a log file: ~/Library/Logs/new.ieatta.desktop/main.log
+// Send all Console logs to a log file: ~/Library/Logs/new.expensify.desktop/main.log
 // See https://www.npmjs.com/package/electron-log
 Object.assign(console, log.functions);
 
@@ -96,7 +99,7 @@ Object.assign(console, log.functions);
 // until it detects that it has been upgraded to the correct version.
 
 const EXPECTED_UPDATE_VERSION_FLAG = '--expected-update-version';
-const APP_DOMAIN = __DEV__ ? `https://dev.new.ieatta.com:${port}` : 'app://-';
+const APP_DOMAIN = __DEV__ ? `https://dev.new.expensify.com:${port}` : 'app://-';
 
 let expectedUpdateVersion: string;
 process.argv.forEach((arg) => {
@@ -111,6 +114,7 @@ process.argv.forEach((arg) => {
 // happens correctly.
 let hasUpdate = false;
 let downloadedVersion: string;
+let isSilentUpdating = false;
 
 // Note that we have to subscribe to this separately and cannot use Localize.translateLocal,
 // because the only way code can be shared between the main and renderer processes at runtime is via the context bridge
@@ -127,16 +131,20 @@ const quitAndInstallWithUpdate = () => {
     autoUpdater.quitAndInstall();
 };
 
-/** Menu Item callback to triggers an update check */
-const manuallyCheckForUpdates = (menuItem: MenuItem, browserWindow?: BrowserWindow) => {
-    // Disable item until the check (and download) is complete
-    // eslint: menu item flags like enabled or visible can be dynamically toggled by mutating the object
-    // eslint-disable-next-line no-param-reassign
-    menuItem.enabled = false;
+/** Menu Item callback to trigger an update check */
+const manuallyCheckForUpdates = (menuItem?: MenuItem, browserWindow?: BrowserWindow) => {
+    if (menuItem) {
+        // Disable item until the check (and download) is complete
+        // eslint-disable-next-line no-param-reassign -- menu item flags like enabled or visible can be dynamically toggled by mutating the object
+        menuItem.enabled = false;
+    }
 
     autoUpdater
         .checkForUpdates()
-        .catch((error) => ({error}))
+        .catch((error: unknown) => {
+            isSilentUpdating = false;
+            return {error};
+        })
         .then((result) => {
             const downloadPromise = result && 'downloadPromise' in result ? result.downloadPromise : undefined;
 
@@ -148,7 +156,7 @@ const manuallyCheckForUpdates = (menuItem: MenuItem, browserWindow?: BrowserWind
                 dialog.showMessageBox(browserWindow, {
                     type: 'info',
                     message: Localize.translate(preferredLocale, 'checkForUpdatesModal.available.title'),
-                    detail: Localize.translate(preferredLocale, 'checkForUpdatesModal.available.message'),
+                    detail: Localize.translate(preferredLocale, 'checkForUpdatesModal.available.message', {isSilentUpdating}),
                     buttons: [Localize.translate(preferredLocale, 'checkForUpdatesModal.available.soundsGood')],
                 });
             } else if (result && 'error' in result && result.error) {
@@ -172,6 +180,10 @@ const manuallyCheckForUpdates = (menuItem: MenuItem, browserWindow?: BrowserWind
             return downloadPromise;
         })
         .finally(() => {
+            isSilentUpdating = false;
+            if (!menuItem) {
+                return;
+            }
             // eslint-disable-next-line no-param-reassign
             menuItem.enabled = true;
         });
@@ -201,7 +213,7 @@ const electronUpdater = (browserWindow: BrowserWindow): PlatformSpecificUpdater 
             if (checkForUpdatesMenuItem) {
                 checkForUpdatesMenuItem.visible = false;
             }
-            if (browserWindow.isVisible()) {
+            if (browserWindow.isVisible() && !isSilentUpdating) {
                 browserWindow.webContents.send(ELECTRON_EVENTS.UPDATE_DOWNLOADED, info.version);
             } else {
                 quitAndInstallWithUpdate();
@@ -235,7 +247,7 @@ const mainWindow = (): Promise<void> => {
     let deeplinkUrl: string;
     let browserWindow: BrowserWindow;
 
-    const loadURL = __DEV__ ? (win: BrowserWindow): Promise<void> => win.loadURL(`https://dev.new.ieatta.com:${port}`) : serve({directory: `${__dirname}/www`});
+    const loadURL = __DEV__ ? (win: BrowserWindow): Promise<void> => win.loadURL(`https://dev.new.expensify.com:${port}`) : serve({directory: `${__dirname}/www`});
 
     // Prod and staging set the icon in the electron-builder config, so only update it here for dev
     if (__DEV__) {
@@ -290,7 +302,7 @@ const mainWindow = (): Promise<void> => {
                 ipcMain.handle(ELECTRON_EVENTS.REQUEST_DEVICE_ID, () => machineId());
 
                 /*
-                 * The default origin of our Electron app is app://- instead of https://new.ieatta.com or https://staging.new.ieatta.com
+                 * The default origin of our Electron app is app://- instead of https://new.expensify.com or https://staging.new.expensify.com
                  * This causes CORS errors because the referer and origin headers are wrong and the API responds with an Access-Control-Allow-Origin that doesn't match app://-
                  * The same issue happens when using the web proxy to communicate with the staging or production API on dev.
                  *
@@ -300,7 +312,7 @@ const mainWindow = (): Promise<void> => {
                  *   2. Modify the Access-Control-Allow-Origin header of the response to match the "real" origin of our Electron app.
                  */
                 const webRequest = browserWindow.webContents.session.webRequest;
-                const validDestinationFilters = {urls: ['https://*.ieatta.com/*']};
+                const validDestinationFilters = {urls: ['https://*.expensify.com/*']};
                 /* eslint-disable no-param-reassign */
                 if (!__DEV__) {
                     // Modify the origin and referer for requests sent to our API
@@ -552,7 +564,7 @@ const mainWindow = (): Promise<void> => {
 
                 app.on('before-quit', () => {
                     // Adding __DEV__ check because we want links to be handled by dev app only while it's running
-                    // https://github.com/Ieatta/App/issues/15965#issuecomment-1483182952
+                    // https://github.com/Expensify/App/issues/15965#issuecomment-1483182952
                     if (__DEV__) {
                         app.removeAsDefaultProtocolClient(appProtocol);
                     }
@@ -572,7 +584,7 @@ const mainWindow = (): Promise<void> => {
                     app.hide();
                 }
 
-                ipcMain.on(ELECTRON_EVENTS.LOCALE_UPDATED, (event, updatedLocale) => {
+                ipcMain.on(ELECTRON_EVENTS.LOCALE_UPDATED, (event, updatedLocale: Locale) => {
                     Menu.setApplicationMenu(Menu.buildFromTemplate(localizeMenuItems(initialMenuTemplate, updatedLocale)));
                     disposeContextMenu();
                     disposeContextMenu = createContextMenu(updatedLocale);
@@ -592,7 +604,7 @@ const mainWindow = (): Promise<void> => {
 
                 // Listen to badge updater event emitted by the render process
                 // and update the app badge count (MacOS only)
-                ipcMain.on(ELECTRON_EVENTS.REQUEST_UPDATE_BADGE_COUNT, (event, totalCount) => {
+                ipcMain.on(ELECTRON_EVENTS.REQUEST_UPDATE_BADGE_COUNT, (event, totalCount?: number) => {
                     if (totalCount === -1) {
                         // The electron docs say you should be able to update this and pass no parameters to set the badge
                         // to a single red dot, but in practice it resulted in an error "TypeError: Insufficient number of
@@ -602,6 +614,24 @@ const mainWindow = (): Promise<void> => {
                     } else {
                         app.setBadgeCount(totalCount);
                     }
+                });
+
+                const downloadQueue = createDownloadQueue();
+                ipcMain.on(ELECTRON_EVENTS.DOWNLOAD, (event, downloadData: DownloadItem) => {
+                    const downloadItem: DownloadItem = {
+                        ...downloadData,
+                        win: browserWindow,
+                    };
+                    downloadQueue.enqueueDownloadItem(downloadItem);
+                });
+
+                // Automatically check for and install the latest version in the background
+                ipcMain.on(ELECTRON_EVENTS.SILENT_UPDATE, () => {
+                    if (isSilentUpdating) {
+                        return;
+                    }
+                    isSilentUpdating = true;
+                    manuallyCheckForUpdates(undefined, browserWindow);
                 });
 
                 return browserWindow;

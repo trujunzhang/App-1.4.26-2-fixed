@@ -1,9 +1,9 @@
-import React from 'react';
 import type {RefObject} from 'react';
+import React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import type {GestureResponderEvent, Text as RNText, TextInput, View} from 'react-native';
 import type {ValueOf} from 'type-fest';
-import type {IPageRow} from '@libs/Firebase/list/types/page-row';
+import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
 import type CONST from '@src/CONST';
 
 type OnHideCallback = () => void;

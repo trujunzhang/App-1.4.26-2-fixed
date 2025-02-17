@@ -1,4 +1,4 @@
-import type {ForwardedRef} from 'react';
+import type {ForwardedRef, KeyboardEvent} from 'react';
 import React, {forwardRef, useEffect, useImperativeHandle, useRef, useState} from 'react';
 import type {NativeSyntheticEvent, TextInputFocusEventData, TextInputKeyPressEventData} from 'react-native';
 import {StyleSheet, View} from 'react-native';
@@ -7,7 +7,6 @@ import useNetwork from '@hooks/useNetwork';
 import useStyleUtils from '@hooks/useStyleUtils';
 import useThemeStyles from '@hooks/useThemeStyles';
 import * as Browser from '@libs/Browser';
-import type {MaybePhraseKey} from '@libs/Localize';
 import * as ValidationUtils from '@libs/ValidationUtils';
 import CONST from '@src/CONST';
 import FormHelpMessage from './FormHelpMessage';
@@ -33,7 +32,7 @@ type MagicCodeInputProps = {
     shouldDelayFocus?: boolean;
 
     /** Error text to display */
-    errorText?: MaybePhraseKey;
+    errorText?: string;
 
     /** Specifies autocomplete hints for the system, so it can provide autofill */
     autoComplete: AutoCompleteVariant;
@@ -193,7 +192,7 @@ function MagicCodeInput(
         // We have not added:
         // + the editIndex as the dependency because we don't want to run this logic after focusing on an input to edit it after the user has completed the code.
         // + the onFulfill as the dependency because onFulfill is changed when the preferred locale changed => avoid auto submit form when preferred locale changed.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
     }, [value, shouldSubmitOnComplete]);
 
     /**
@@ -277,9 +276,11 @@ function MagicCodeInput(
             if (isDisableKeyboard && focusedIndex === undefined) {
                 const indexBeforeLastEditIndex = editIndex === 0 ? editIndex : editIndex - 1;
 
-                const indexToFocus = numbers[editIndex] === CONST.MAGIC_CODE_EMPTY_CHAR ? indexBeforeLastEditIndex : editIndex;
-                const formElement = inputRefs.current as HTMLFormElement | null;
-                (formElement?.[indexToFocus] as HTMLInputElement)?.focus();
+                const indexToFocus = numbers.at(editIndex) === CONST.MAGIC_CODE_EMPTY_CHAR ? indexBeforeLastEditIndex : editIndex;
+                if (indexToFocus !== undefined) {
+                    lastFocusedIndex.current = indexToFocus;
+                    inputRefs.current?.focus();
+                }
                 onChangeTextProp(value.substring(0, indexToFocus));
 
                 return;
@@ -287,7 +288,7 @@ function MagicCodeInput(
 
             // If the currently focused index already has a value, it will delete
             // that value but maintain the focus on the same input.
-            if (focusedIndex !== undefined && numbers?.[focusedIndex] !== CONST.MAGIC_CODE_EMPTY_CHAR) {
+            if (focusedIndex !== undefined && numbers?.at(focusedIndex) !== CONST.MAGIC_CODE_EMPTY_CHAR) {
                 setInput(TEXT_INPUT_EMPTY_STATE);
                 numbers = [...numbers.slice(0, focusedIndex), CONST.MAGIC_CODE_EMPTY_CHAR, ...numbers.slice(focusedIndex + 1, maxLength)];
                 setEditIndex(focusedIndex);
@@ -299,7 +300,7 @@ function MagicCodeInput(
 
             // Fill the array with empty characters if there are no inputs.
             if (focusedIndex === 0 && !hasInputs) {
-                numbers = Array(maxLength).fill(CONST.MAGIC_CODE_EMPTY_CHAR);
+                numbers = Array<string>(maxLength).fill(CONST.MAGIC_CODE_EMPTY_CHAR);
 
                 // Deletes the value of the previous input and focuses on it.
             } else if (focusedIndex && focusedIndex !== 0) {
@@ -315,6 +316,7 @@ function MagicCodeInput(
             onChangeTextProp(composeToString(numbers));
 
             if (newFocusedIndex !== undefined) {
+                lastFocusedIndex.current = newFocusedIndex;
                 inputRefs.current?.focus();
             }
         }
@@ -333,6 +335,15 @@ function MagicCodeInput(
             }
             setInput(TEXT_INPUT_EMPTY_STATE);
             onFulfill(value);
+        } else if (keyValue === 'Tab' && focusedIndex !== undefined) {
+            const newFocusedIndex = (event as unknown as KeyboardEvent).shiftKey ? focusedIndex - 1 : focusedIndex + 1;
+            if (newFocusedIndex >= 0 && newFocusedIndex < maxLength) {
+                setInputAndIndex(newFocusedIndex);
+                inputRefs.current?.focus();
+                if (event?.preventDefault) {
+                    event.preventDefault();
+                }
+            }
         }
     };
 
@@ -354,7 +365,7 @@ function MagicCodeInput(
 
         // We have not added:
         // + the onChangeText and onKeyPress as the dependencies because we only want to run this when lastPressedDigit changes.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
     }, [lastPressedDigit, isDisableKeyboard]);
 
     return (
@@ -412,7 +423,7 @@ function MagicCodeInput(
                                 focusedIndex === index ? styles.borderColorFocus : {},
                             ]}
                         >
-                            <Text style={[styles.magicCodeInput, styles.textAlignCenter]}>{decomposeString(value, maxLength)[index] || ''}</Text>
+                            <Text style={[styles.magicCodeInput, styles.textAlignCenter]}>{decomposeString(value, maxLength).at(index) ?? ''}</Text>
                         </View>
                     </View>
                 ))}

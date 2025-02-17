@@ -1,5 +1,8 @@
+/* eslint-disable rulesdir/prefer-type-fest */
+
+/* eslint-disable rulesdir/prefer-at */
 import lodashGet from 'lodash/get';
-import React, {useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useReducer, useRef, useState} from 'react';
 import {ActivityIndicator, PanResponder, PixelRatio, View} from 'react-native';
 import {withOnyx} from 'react-native-onyx';
 import type Webcam from 'react-webcam';
@@ -16,30 +19,25 @@ import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
 import PressableWithFeedback from '@components/Pressable/PressableWithFeedback';
 import Text from '@components/Text';
-import withCurrentUserPersonalDetails from '@components/withCurrentUserPersonalDetails';
+import useCurrentUserPersonalDetails from '@hooks/useCurrentUserPersonalDetails';
 import useLocalize from '@hooks/useLocalize';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useTabNavigatorFocus from '@hooks/useTabNavigatorFocus';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
 import * as Browser from '@libs/Browser';
 import * as FileUtils from '@libs/fileDownload/FileUtils';
-import {PhotoType} from '@libs/Firebase/constant';
-import {CloudinaryUtils} from '@libs/Firebase/utils/cloudinaryUtils';
+import {PhotoType} from '@libs/FirebaseIeatta/constant';
 import Navigation from '@libs/Navigation/Navigation';
+import ReceiptDropUI from '@expPages/iou/ReceiptDropUI';
 import CONST from '@src/CONST';
-import ReceiptDropUI from '@src/expPages/iou/ReceiptDropUI';
-import withFullTransactionOrNotFound from '@src/expPages/iou/request/step/withFullTransactionOrNotFound';
-import withWritableReportOrNotFound from '@src/expPages/iou/request/step/withWritableReportOrNotFound';
 import type {TranslationPaths} from '@src/languages/types';
-import ONYXKEYS from '@src/ONYXKEYS';
-import ROUTES from '@src/ROUTES';
 import {isEmptyObject} from '@src/types/utils/EmptyObject';
 import NavigationAwareCamera from './NavigationAwareCamera';
 import TakePhotoScreenDragAndDropWrapper from './TakePhotoScreenDragAndDropWrapper';
 import type {IEATTATakePhotoPageOnyxProps, IEATTATakePhotoPageProps} from './types';
 
-function IEATTATakePhotoPage({route, currentUserPersonalDetails}: Omit<IEATTATakePhotoPageProps, 'user'>) {
+function IEATTATakePhotoPage({route}: Omit<IEATTATakePhotoPageProps, 'user'>) {
     const relatedId = lodashGet(route, 'params.relatedId', CONST.IEATTA_MODEL_ID_EMPTY);
     const photoType = lodashGet(route, 'params.photoType', PhotoType.Unknown);
 
@@ -52,7 +50,7 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: Omit<IEATTATak
     const [attachmentInvalidReason, setAttachmentValidReason] = useState<TranslationPaths>();
 
     const [receiptImageTopPosition, setReceiptImageTopPosition] = useState(0);
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
     const {translate} = useLocalize();
     const {isDraggingOver} = useContext(DragAndDropContext);
 
@@ -80,7 +78,6 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: Omit<IEATTATak
 
         const defaultConstraints = {facingMode: {exact: 'environment'}};
         navigator.mediaDevices
-            // @ts-expect-error there is a type mismatch in typescipt types for MediaStreamTrack microsoft/TypeScript#39010
             .getUserMedia({video: {facingMode: {exact: 'environment'}, zoom: {ideal: 1}}})
             .then((stream) => {
                 setCameraPermissionState('granted');
@@ -90,7 +87,6 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: Omit<IEATTATak
                     let deviceId;
                     for (const track of stream.getTracks()) {
                         const setting = track.getSettings();
-                        // @ts-expect-error there is a type mismatch in typescipt types for MediaStreamTrack microsoft/TypeScript#39010
                         if (setting.zoom === 1) {
                             deviceId = setting.deviceId;
                             break;
@@ -125,8 +121,7 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: Omit<IEATTATak
                 setVideoConstraints(defaultConstraints);
                 setCameraPermissionState('denied');
             });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [videoConstraints]);
 
     useEffect(() => {
         if (!Browser.isMobile() || !isTabActive) {
@@ -134,7 +129,6 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: Omit<IEATTATak
         }
         navigator.permissions
             .query({
-                // @ts-expect-error camera does exist in PermissionName
                 name: 'camera',
             })
             .then((permissionState) => {
@@ -150,8 +144,7 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: Omit<IEATTATak
                 setIsQueriedPermissionState(true);
             });
         // We only want to get the camera permission status when the component is mounted
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isTabActive]);
+    }, [isTabActive, requestCameraPermission]);
 
     const hideRecieptModal = () => {
         setIsAttachmentInvalid(false);
@@ -192,7 +185,8 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: Omit<IEATTATak
                 return true;
             })
             .catch(() => {
-                setUploadReceiptError(true, 'attachmentPicker.attachmentError', 'attachmentPicker.errorWhileSelectingCorruptedImage');
+                // setUploadReceiptError(true, 'attachmentPicker.attachmentError', 'attachmentPicker.errorWhileSelectingCorruptedImage');
+                setUploadReceiptError(true, 'attachmentPicker.attachmentError', 'attachmentPicker.errorWhileSelectingCorruptedAttachment');
                 return false;
             });
     }
@@ -201,7 +195,7 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: Omit<IEATTATak
         Navigation.goBack();
     };
 
-    const navigateToConfirmationStep = useCallback((file: FileObject, source: string) => {}, [currentUserPersonalDetails]);
+    const navigateToConfirmationStep = useCallback((file: FileObject, source: string) => {}, []);
 
     const updateScanAndNavigate = useCallback((file: FileObject, source: string) => {
         Navigation.dismissModal();
@@ -260,7 +254,6 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: Omit<IEATTATak
             return;
         }
         trackRef.current.applyConstraints({
-            // @ts-expect-error there is a type mismatch in typescipt types for MediaStreamTrack microsoft/TypeScript#39010
             advanced: [{torch: false}],
         });
     }, []);
@@ -269,7 +262,6 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: Omit<IEATTATak
         if (trackRef.current && isFlashLightOn) {
             trackRef.current
                 .applyConstraints({
-                    // @ts-expect-error there is a type mismatch in typescipt types for MediaStreamTrack microsoft/TypeScript#39010
                     advanced: [{torch: true}],
                 })
                 .then(() => {
@@ -353,8 +345,8 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: Omit<IEATTATak
                 <AttachmentPicker>
                     {({openPicker}) => (
                         <PressableWithFeedback
-                            accessibilityLabel={translate('receipt.chooseFile')}
-                            role={CONST.ACCESSIBILITY_ROLE.BUTTON}
+                            accessibilityLabel={translate('common.chooseFile')}
+                            // role={CONST.ACCESSIBILITY_ROLE.BUTTON}
                             onPress={() => {
                                 openPicker({
                                     onPicked: setReceiptAndNavigate,
@@ -371,7 +363,7 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: Omit<IEATTATak
                     )}
                 </AttachmentPicker>
                 <PressableWithFeedback
-                    role={CONST.ACCESSIBILITY_ROLE.BUTTON}
+                    // role={CONST.ACCESSIBILITY_ROLE.BUTTON}
                     accessibilityLabel={translate('receipt.shutter')}
                     style={[styles.alignItemsCenter]}
                     onPress={capturePhoto}
@@ -382,7 +374,7 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: Omit<IEATTATak
                     />
                 </PressableWithFeedback>
                 <PressableWithFeedback
-                    role={CONST.ACCESSIBILITY_ROLE.BUTTON}
+                    // role={CONST.ACCESSIBILITY_ROLE.BUTTON}
                     accessibilityLabel={translate('receipt.flash')}
                     style={[styles.alignItemsEnd, !isTorchAvailable && styles.opacity0]}
                     onPress={toggleFlashlight}
@@ -429,8 +421,8 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: Omit<IEATTATak
                     <Button
                         medium
                         success
-                        text={translate('receipt.chooseFile')}
-                        accessibilityLabel={translate('receipt.chooseFile')}
+                        text={translate('common.chooseFile')}
+                        accessibilityLabel={translate('common.chooseFile')}
                         style={[styles.p9]}
                         onPress={() => {
                             openPicker({
@@ -450,7 +442,14 @@ function IEATTATakePhotoPage({route, currentUserPersonalDetails}: Omit<IEATTATak
             shouldShowWrapper
             testID={IEATTATakePhotoPage.displayName}
         >
-            <View style={[styles.flex1, !Browser.isMobile() && styles.uploadReceiptView(isSmallScreenWidth)]}>
+            <View
+                style={[
+                    styles.flex1,
+                    // TODO: djzhang(2024/11/05)
+                    // !Browser.isMobile()
+                    // && styles.uploadReceiptView(isSmallScreenWidth)
+                ]}
+            >
                 {!isDraggingOver && (Browser.isMobile() ? mobileCameraView() : desktopUploadView())}
                 <ReceiptDropUI
                     onDrop={(e) => {
@@ -480,6 +479,4 @@ IEATTATakePhotoPage.displayName = 'IEATTATakePhotoPage';
 
 const IEATTATakePhotoPageWithOnyx = withOnyx<Omit<IEATTATakePhotoPageProps, 'user'>, Omit<IEATTATakePhotoPageOnyxProps, 'user'>>({})(IEATTATakePhotoPage);
 
-const IEATTATakePhotoPageWithCurrentUserPersonalDetails = withCurrentUserPersonalDetails(IEATTATakePhotoPageWithOnyx);
-
-export default IEATTATakePhotoPageWithCurrentUserPersonalDetails;
+export default IEATTATakePhotoPageWithOnyx;

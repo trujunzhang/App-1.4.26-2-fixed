@@ -2,7 +2,7 @@
 title: Assign tag and category approvers
 description: Require an approver for expenses coded with a specific tag or category
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 Once your workplace has created tags and categories, approvers can be assigned to them. Tag and category approvers are automatically added to the report approval workflow when a submitted expense contains a specific tag or category.
 

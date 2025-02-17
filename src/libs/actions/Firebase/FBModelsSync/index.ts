@@ -1,5 +1,5 @@
 import {isBefore} from 'date-fns';
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line no-restricted-imports, lodash/import-scope
 import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import Onyx from 'react-native-onyx';

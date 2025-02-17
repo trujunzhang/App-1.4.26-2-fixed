@@ -1,12 +1,11 @@
 import React from 'react';
 import {Image as RNImage, View} from 'react-native';
-import * as Expensicons from '@components/Icon/Expensicons';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
 import {IeattaStars} from '@components/Icon/IeattaStars';
 import ImagePlaceholder from '@components/ImagePlaceholder';
 import Text from '@components/Text';
 import useThemeStyles from '@hooks/useThemeStyles';
-import {calcRateForRestaurant} from '@libs/Firebase/utils/rate_utils';
-import variables from '@styles/variables';
+import {calcRateForRestaurant} from '@libs/FirebaseIeatta/utils/rate_utils';
 import type {MenuViewProps} from './RestaurantMenuRow/types';
 
 function RestaurantMenuWebView({recipe}: MenuViewProps) {
@@ -18,7 +17,7 @@ function RestaurantMenuWebView({recipe}: MenuViewProps) {
                 sourceUri={recipe.originalUrl}
                 style={[styles.w100, styles.h100]}
                 imageType="png"
-                placeholder={Expensicons.PNGBusinessMediumSquare}
+                placeholder={Ieattaicons.PNGBusinessMediumSquare}
             />
             {/*  Info panel   */}
             <View

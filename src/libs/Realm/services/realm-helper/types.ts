@@ -1,5 +1,5 @@
 import type {RealmCollections, RealmWriteMode} from '@libs/Realm/constant';
-import type {IeattaModelsWithUser, IFBEvent, IFBPeopleInEvent, IFBPhoto, IFBRecipe, IFBRestaurant, IFBReview, IFBUser} from '@src/types/firebase';
+import type {IeattaModelsWithUser, SQLPhotoCoverType} from '@src/types/firebase';
 
 type GetData = {collection: RealmCollections; id: string};
 type SetData = {
@@ -9,6 +9,7 @@ type SetData = {
     mode: RealmWriteMode;
 };
 type DeleteData = {collection: RealmCollections; uniqueId: string};
+type UpdateSqlPhotoCover = {firebasePhotoId: string; coverId: string; coverType: SQLPhotoCoverType};
 
 type IRealmHelper = {
     /**
@@ -27,6 +28,13 @@ type IRealmHelper = {
 
     /**
      |--------------------------------------------------
+     | Update sqlPhoto's cover 
+     |--------------------------------------------------
+     */
+    updateSqlPhotoCover({firebasePhotoId, coverId, coverType}: UpdateSqlPhotoCover): Promise<void>;
+
+    /**
+     |--------------------------------------------------
      | Set Data
      |--------------------------------------------------
      */
@@ -40,6 +48,6 @@ type IRealmHelper = {
     deleteData({collection, uniqueId}: DeleteData): Promise<void>;
 };
 
-export type {GetData, SetData, DeleteData};
+export type {GetData, SetData, DeleteData, UpdateSqlPhotoCover};
 
 export default IRealmHelper;

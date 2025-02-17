@@ -19,7 +19,7 @@ function WorkspacesSectionHeader() {
     const {translate} = useLocalize();
 
     return (
-        <View style={[styles.mh4, styles.mt6, styles.flexRow, styles.justifyContentBetween, styles.alignItemsCenter, styles.mb1]}>
+        <View style={[styles.ph5, styles.flexRow, styles.justifyContentBetween, styles.alignItemsCenter, styles.mv2]}>
             <View>
                 <Text
                     style={styles.label}
@@ -30,11 +30,11 @@ function WorkspacesSectionHeader() {
             </View>
             <Tooltip text={translate('workspace.new.newWorkspace')}>
                 <PressableWithFeedback
-                    accessible={false}
+                    accessibilityLabel={translate('workspace.new.newWorkspace')}
                     role={CONST.ROLE.BUTTON}
                     onPress={() => {
-                        Navigation.goBack();
-                        interceptAnonymousUser(() => App.createWorkspaceWithPolicyDraftAndNavigateToIt());
+                        const activeRoute = Navigation.getActiveRouteWithoutParams();
+                        interceptAnonymousUser(() => App.createWorkspaceWithPolicyDraftAndNavigateToIt('', '', false, false, activeRoute));
                     }}
                 >
                     {({hovered}) => (

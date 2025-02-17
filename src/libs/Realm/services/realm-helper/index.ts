@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {RealmCollections} from '@libs/Realm/constant';
-import type {IeattaModelsWithoutUser, IFBEvent, IFBPeopleInEvent, IFBPhoto, IFBRecipe, IFBRestaurant, IFBReview, IFBUser} from '@src/types/firebase';
-import type {DeleteData, GetData, SetData} from './types';
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type IRealmHelper from './types';
+import type {DeleteData, SetData, UpdateSqlPhotoCover} from './types';
 
 class RealmHelper implements IRealmHelper {
     private readonly realm;
 
     constructor(realm: any) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         this.realm = realm;
     }
 
@@ -26,6 +27,15 @@ class RealmHelper implements IRealmHelper {
      |--------------------------------------------------
      */
     setDataIfNotExist({collection, docId, model, mode}: SetData): Promise<void> {
+        return Promise.resolve();
+    }
+
+    /**
+     |--------------------------------------------------
+     | Update sqlPhoto's cover 
+     |--------------------------------------------------
+     */
+    updateSqlPhotoCover({firebasePhotoId, coverId, coverType}: UpdateSqlPhotoCover): Promise<void> {
         return Promise.resolve();
     }
 

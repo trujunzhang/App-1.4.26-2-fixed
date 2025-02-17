@@ -1,17 +1,18 @@
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import React, {useCallback, useEffect, useRef} from 'react';
 import {InteractionManager, StyleSheet, View} from 'react-native';
 import type {EdgeInsets} from 'react-native-safe-area-context';
 import {NativeHeader, WebHeader} from '@components/AppHeader';
-import LHNRestaurantsList from '@components/LHNRestaurantsList/LHNRestaurantsList';
+import LHNRestaurantsList from '@components/Ieatta/LHNRestaurantsList/LHNRestaurantsList';
 import Lottie from '@components/Lottie';
 import LottieAnimations from '@components/LottieAnimations';
 import OptionsListSkeletonView from '@components/OptionsListSkeletonView';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useStyleUtils from '@hooks/useStyleUtils';
 import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
 import KeyboardShortcut from '@libs/KeyboardShortcut';
 import Navigation from '@libs/Navigation/Navigation';
 import onyxSubscribe from '@libs/onyxSubscribe';
@@ -34,7 +35,7 @@ function SidebarLinks({insets, restaurantListItems, fetchMoreRestaurants, isLoad
     const StyleUtils = useStyleUtils();
     const modal = useRef({});
     const {translate, updateLocale} = useLocalize();
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
 
     useEffect(() => {
         if (!isSmallScreenWidth) {
@@ -88,8 +89,7 @@ function SidebarLinks({insets, restaurantListItems, fetchMoreRestaurants, isLoad
                 unsubscribeOnyxModal();
             }
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [updateLocale]);
 
     const showSearchPage = useCallback(() => {
         // Navigation.navigate(ROUTES.SEARCH);

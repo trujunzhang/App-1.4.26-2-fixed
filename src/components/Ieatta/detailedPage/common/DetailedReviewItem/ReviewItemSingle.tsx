@@ -1,4 +1,6 @@
-import lodashGet from 'lodash/get';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import moment from 'moment';
 import React, {useCallback} from 'react';
 import {Image as RNImage, View} from 'react-native';
@@ -14,6 +16,7 @@ import Navigation from '@libs/Navigation/Navigation';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';
 import type {IFBReview} from '@src/types/firebase';
+import type {PersonalDetails} from '@src/types/onyx';
 import type ChildrenProps from '@src/types/utils/ChildrenProps';
 import ReviewItemDate from './ReviewItemDate';
 import ReviewItemFragment from './ReviewItemFragment';
@@ -35,8 +38,8 @@ const showWorkspaceDetails = (reportID: string) => {
 
 function ReviewItemSingle({review, children, isHovered = false}: ReportActionItemSingleProps) {
     const styles = useThemeStyles();
-    const personalDetails = usePersonalDetails() ?? CONST.EMPTY_OBJECT;
-    const reviewCreatedUser = personalDetails[review.creatorId];
+    const personalDetails: Record<string, any> = usePersonalDetails() ?? CONST.EMPTY_OBJECT;
+    const reviewCreatedUser: PersonalDetails | null = personalDetails[review.creatorId];
     const displayName = review.username;
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const actorHint = displayName.replace(CONST.REGEX.MERGED_ACCOUNT_PREFIX, '');
@@ -63,7 +66,7 @@ function ReviewItemSingle({review, children, isHovered = false}: ReportActionIte
                     <Avatar
                         containerStyles={[styles.actionAvatar]}
                         shouldShowAsAvatar
-                        avatarUrl={lodashGet(reviewCreatedUser, 'avatarThumbnail', CONST.IEATTA_URL_EMPTY)}
+                        avatarUrl={reviewCreatedUser?.avatarThumbnail}
                         type={CONST.ICON_TYPE_AVATAR}
                         name={reviewCreatedUser?.displayName}
                     />

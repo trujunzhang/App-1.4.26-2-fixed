@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React from 'react';
 import CommonFooter from '@components/Ieatta/components/CommonFooter';
 import FBPhotosGridView from '@components/Ieatta/components/PhotosGrid/FBPhotosGridView';

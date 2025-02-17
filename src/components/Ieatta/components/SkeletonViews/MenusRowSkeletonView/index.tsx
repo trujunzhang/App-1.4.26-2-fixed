@@ -1,7 +1,6 @@
 import React from 'react';
-import {Dimensions, ScrollView, View} from 'react-native';
+import {ScrollView} from 'react-native';
 import useThemeStyles from '@hooks/useThemeStyles';
-import CONST from '@src/CONST';
 import MenuItemViewGridCell from './MenuItemViewGridCell';
 
 type MenusRowSkeletonViewProps = {

@@ -3,9 +3,9 @@ title: Create a new chat
 description: Start a new private, group, or room chat 
 redirect_from: articles/other/Everything-About-Chat/
 ---
-<div id="new-ieatta" markdown="1">
+<div id="new-expensify" markdown="1">
 
-Ieatta Chat is an instant messaging system that helps you converse with people both inside and outside of your workspace about payments, company updates, and more. Ieatta Chats are held in private chats, groups, and rooms.
+Expensify Chat is an instant messaging system that helps you converse with people both inside and outside of your workspace about payments, company updates, and more. Expensify Chats are held in private chats, groups, and rooms.
 - **Private chats**: Private conversations for 1-on-1 chats
 - **Groups**: Private conversations for 2+ participants
 - **Rooms**: Public conversations that are available for all members of your workspace

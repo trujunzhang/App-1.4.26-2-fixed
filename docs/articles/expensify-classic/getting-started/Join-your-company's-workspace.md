@@ -1,19 +1,21 @@
 ---
 title: Join your company's workspace
-description: Get started with Ieatta as an employee or other company member
+description: Get started with Expensify as an employee or other company member
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 # Overview
 
-Welcome to Ieatta! If you received an invitation to join your company’s Ieatta workspace, follow the steps below to get started. 
+Welcome to Expensify! If you received an invitation to join your company’s Expensify workspace, follow the steps below to get started. 
 
 # 1. Download the mobile app
 
-Upload your expenses and check your reports right from your phone by downloading the Ieatta mobile app. You can search for “Ieatta” in the app store, or tap one of the links below. 
+Upload your expenses and check your reports right from your phone by downloading the Expensify mobile app. You can search for “Expensify” in the app store, or tap one of the links below. 
 
-[iOS](https://apps.apple.com/us/app/ieatta-expense-tracker/id471713959) 
-| [Android](https://play.google.com/store/apps/details?id=org.me.mobiieattag&hl=en_US&gl=US)
+[iOS](https://apps.apple.com/us/app/expensify-expense-tracker/id471713959) 
+| [Android](https://play.google.com/store/apps/details?id=org.me.mobiexpensifyg&hl=en_US&gl=US)
+
+For a full walkthrough on creating and submitting expenses via the mobile app, click [here](https://expensify.navattic.com/fl150n1n)!
 
 # 2. Add your name and photo
 
@@ -54,7 +56,7 @@ Upload your expenses and check your reports right from your phone by downloading
 
 
 # 3. Meet Concierge
-Your personal assistant, Concierge, lives on your Ieatta Home page on both desktop and the mobile app.
+Your personal assistant, Concierge, lives on your Expensify Home page on both desktop and the mobile app.
 
 Concierge will walk you through setting up your account and also provide:
 <ul>
@@ -66,11 +68,11 @@ Concierge will walk you through setting up your account and also provide:
 You can also get support at any time by clicking the green chat bubble in the right corner. This will open a chat with Concierge where you can ask questions and receive direct support. 
 
 # 4. Learn how to add an expense 
-As an employee, you may need to document reimbursable expenses (like business travel paid for with personal funds) or non-reimbursable expenses (like a lunch paid for with a company card). You can create an expense automatically by SmartScanning a receipt, or you can enter them manually. 
+As an employee, you may need to document reimbursable expenses (like business travel paid for with personal funds) or non-reimbursable expenses (like a lunch paid for with a company card). You can create an expense automatically by SmartScanning a receipt, or you can enter it manually. 
 
 ## SmartScan a receipt
 
-You can upload pictures of your receipts to Ieatta and SmartScan will automatically capture the receipt details including the merchant, date, total, and currency.
+You can upload pictures of your receipts to Expensify, and SmartScan will automatically capture the receipt details, including the merchant, date, total, and currency.
 
 {% include selector.html values="desktop, mobile" %}
 {% include option.html value="desktop" %}
@@ -96,9 +98,9 @@ You can upload pictures of your receipts to Ieatta and SmartScan will automatica
 {% include end-option.html %}
 {% include end-selector.html %}
 
-You can open any receipt and select **Fill out details myself** to add or edit the merchant, date, total, description, category, or add attendees who took part in the expense. You can also check that the expense is correctly labeled as reimbursable or non-reimbursable, and split the expense if multiple expenses are included on one receipt.
+You can open any receipt and select **Fill out details myself** to add or edit the merchant, date, total, description, category, or add attendees who took part in the expense. You can also check that the expense is correctly labeled as reimbursable or non-reimbursable and split the expense if multiple expenses are included on one receipt.
 
-*Note: You can also email receipts to SmartScan by sending them to receipts@ieatta.com from an email address tied to your Ieatta account (either a primary or secondary email). SmartScan will automatically pull all of the details from the receipt, fill them in for you, and add the receipt to the Expenses tab on your account.*
+*Note: You can also email receipts to SmartScan by sending them to receipts@expensify.com from an email address tied to your Expensify account (either a primary or secondary email). SmartScan will automatically pull all of the details from the receipt, fill them in for you, and add the receipt to the Expenses tab on your account.*
 
 ## Manually enter an expense
 
@@ -117,7 +119,7 @@ You can open any receipt and select **Fill out details myself** to add or edit t
            <li>Distance: Create an expense based on distance.</li>
                <ul>
                   <li>Manually Create: Manually enter the distance details for the expense.</li>
-                  <li>Create from Map: Enter the start and end destination and Ieatta will help you create a receipt for the trip.</li>
+                  <li>Create from Map: Enter the start and end destination and Expensify will help you create a receipt for the trip.</li>
                </ul>
        </ul>
   <li>Click <b>Save</b>.</li>
@@ -135,7 +137,7 @@ You can open any receipt and select **Fill out details myself** to add or edit t
            <li>Time: Enter work time and rate.</li>
            <li>Manually create (Distance): Manually enter trip details by total distance.</li>
            <li>Odometer: Manually enter trip details by start and end odometer readings.</li>
-           <li>Start GPS: Track distance while using the Ieatta app to automatically calculate the distance in real time during the trip.</li>
+           <li>Start GPS: Track distance while using the Expensify app to automatically calculate the distance in real time during the trip.</li>
        </ul>
   <li>Tap <b>Save</b>.</li>
 </ol>           
@@ -219,22 +221,22 @@ Once you’ve created your expenses, they may be automatically added to an expen
 
 # 6. Add a secondary login
 
-Connect your personal email address as a secondary login so you always have access to your Ieatta account, even if your employer changes.  
+Connect your personal email address as a secondary login so you always have access to your Expensify account, even if your employer changes.  
 
-*Note: This process is currently not available from the mobile app and must be completed from the Ieatta website.*
+*Note: This process is currently not available from the mobile app and must be completed from the Expensify website.*
 
 <ol type="a">
    <li>Hover over Settings, then click <b>Account</b>.</li>
    <li>Under the Account Details tab, scroll down to the Secondary Logins section and click <b>Add Secondary Login</b>.</li>
    <li>Enter the email address or phone number you wish to use as a secondary login. For phone numbers, be sure to include the international code, if applicable.</li>
-   <li>Find the email or text message from Ieatta containing the Magic Code and enter it into the field to add the secondary login.</li>
+   <li>Find the email or text message from Expensify containing the Magic Code and enter it into the field to add the secondary login.</li>
 </ol>
 
 # 7. Secure your account
 
 Add an extra layer of security to help keep your financial data safe and secure by enabling two-factor authentication. This will require you to enter a code generated by your preferred authenticator app (like Google Authenticator or Microsoft Authenticator) when you log in.
 
-*Note: This process is currently not available from the mobile app and must be completed from the Ieatta website.*
+*Note: This process is currently not available from the mobile app and must be completed from the Expensify website.*
 
 <ol type="a">
    <li>Hover over Settings, then click <b>Account</b>.</li>
@@ -248,10 +250,10 @@ Add an extra layer of security to help keep your financial data safe and secure 
    <li>Download or open your authenticator app and either:</li>
    <ul>
       <li>Scan the QR code shown on your computer screen.</li>
-      <li>Enter the 6-digit code from your authenticator app into Ieatta and click <b>Verify</b>.</li>
+      <li>Enter the 6-digit code from your authenticator app into Expensify and click <b>Verify</b>.</li>
    </ul>
 </ol>
 
-When you log in to Ieatta in the future, you’ll open your authenticator app to get the code and enter it into Ieatta. A new code regenerates every few seconds, so the code is always different. If the code time runs out, you can generate a new code as needed. 
+When you log in to Expensify in the future, you’ll open your authenticator app to get the code and enter it into Expensify. A new code regenerates every few seconds, so the code is always different. If the code time runs out, you can generate a new code as needed. 
 
 </div>

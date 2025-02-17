@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import React from 'react';
@@ -12,16 +13,18 @@ import ReviewRatingPanel from '@components/Ieatta/components/ReviewRatingPanel';
 import EditPageWithSections from '@components/Ieatta/edit/EditPageWithSections';
 import OfflineWithFeedback from '@components/OfflineWithFeedback';
 import TextInput from '@components/TextInput';
-import type {WithCurrentUserPersonalDetailsProps} from '@components/withCurrentUserPersonalDetails';
-import withCurrentUserPersonalDetails from '@components/withCurrentUserPersonalDetails';
+import useCurrentUserPersonalDetails from '@hooks/useCurrentUserPersonalDetails';
 import useLocalize from '@hooks/useLocalize';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
-import {clearDraftValuesByDraftId, setIsLoading} from '@libs/actions/FormActions';
-import {ParseModelReviews} from '@libs/Firebase/appModel';
-import {FBCollections} from '@libs/Firebase/constant';
-import {getAuthUserFromPersonalDetails} from '@libs/Firebase/models/auth_user_model';
-import FirebaseHelper from '@libs/Firebase/services/firebase-helper';
-import ReviewHelper, {ReviewHookType} from '@libs/Firebase/services/help/review-helper';
+import {setIsLoading} from '@libs/actions/FormActions';
+import {ParseModelReviews} from '@libs/FirebaseIeatta/appModel';
+import {FBCollections} from '@libs/FirebaseIeatta/constant';
+import {getAuthUserFromPersonalDetails} from '@libs/FirebaseIeatta/models/auth_user_model';
+import FirebaseHelper from '@libs/FirebaseIeatta/services/firebase-helper';
+import ReviewHelper, {ReviewHookType} from '@libs/FirebaseIeatta/services/help/review-helper';
+import {clearDraftValuesByDraftId} from '@libs/ieatta/editFormUtils';
+import * as ShowNotify from '@libs/ieatta/Notify';
 import Navigation from '@libs/Navigation/Navigation';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
@@ -31,29 +34,38 @@ import INPUT_IDS from '@src/types/form/ieatta/EditReviewForm';
 const editFormID = ONYXKEYS.FORMS.IEATTA_REVIEW;
 const editFormDraftID = ONYXKEYS.FORMS.IEATTA_REVIEW_DRAFT;
 
-type BaseEditReviewPageProps = WithCurrentUserPersonalDetailsProps & {
+type BaseEditReviewPageProps = {
     review: IFBReview | undefined;
     relatedId: string;
     reviewType: string;
     isNewModel: boolean;
 };
 
-function BaseEditReviewPage({review, relatedId, reviewType, isNewModel, currentUserPersonalDetails}: BaseEditReviewPageProps) {
+function BaseEditReviewPage({review, relatedId, reviewType, isNewModel}: BaseEditReviewPageProps) {
     const styles = useThemeStyles();
     const {translate} = useLocalize();
+
+    const personalData = useCurrentUserPersonalDetails();
+
+    const {isSmallScreenWidth} = useResponsiveLayout();
+    const toastId = React.useRef<number | string | null>(null);
 
     const lastReviewRate = lodashGet(review, 'rate', 0);
 
     const saveModel = (values: FormOnyxValues<typeof editFormID>) => {
         setIsLoading(editFormID, true);
+        toastId.current = ShowNotify.initialAndShowNotify({
+            isSmallScreenWidth,
+            message: translate('notify.save.start', {modalName: 'Restaurant'}),
+            autoClose: false,
+        });
+
         const {reviewRating: rate, reviewNote: note} = values;
         let lastModel = review;
         if (isNewModel) {
-            const authUserModel = getAuthUserFromPersonalDetails(currentUserPersonalDetails);
+            const authUserModel = getAuthUserFromPersonalDetails(personalData);
             if (_.isUndefined(authUserModel)) {
-                // toast.show({
-                // description: 'No User Data!'
-                // })
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.auth.unAuthed')});
                 return;
             }
             lastModel = ParseModelReviews.emptyReview({
@@ -89,12 +101,16 @@ function BaseEditReviewPage({review, relatedId, reviewType, isNewModel, currentU
             .then(() => {
                 clearDraftValuesByDraftId(editFormID);
             })
+            .then(() => {
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: 'Restaurant'})});
+                Navigation.goBack();
+            })
             .catch((error) => {
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: 'Restaurant'})});
                 console.log(error);
             })
             .finally(() => {
                 setIsLoading(editFormID, false);
-                Navigation.goBack();
             });
     };
 
@@ -170,6 +186,4 @@ function BaseEditReviewPage({review, relatedId, reviewType, isNewModel, currentU
 
 BaseEditReviewPage.displayName = 'BaseEditReviewPage';
 
-export default withCurrentUserPersonalDetails(BaseEditReviewPage);
-
-// export default BaseEditReviewPage;
+export default BaseEditReviewPage;

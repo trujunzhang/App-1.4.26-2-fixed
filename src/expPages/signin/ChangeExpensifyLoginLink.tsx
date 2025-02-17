@@ -24,7 +24,7 @@ function ChangeExpensifyLoginLink({credentials, onPress}: ChangeExpensifyLoginLi
     const {translate, formatPhoneNumber} = useLocalize();
 
     return (
-        <View style={[styles.ChangeExpensifyLoginLinkContainer, styles.mt3]}>
+        <View style={[styles.changeExpensifyLoginLinkContainer, styles.mt3]}>
             {!!credentials?.login && <Text style={styles.mr1}>{translate('loginForm.notYou', {user: formatPhoneNumber(credentials.login)})}</Text>}
             <PressableWithFeedback
                 style={[styles.link]}

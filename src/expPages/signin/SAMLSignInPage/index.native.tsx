@@ -20,7 +20,7 @@ function SAMLSignInPage({credentials, account}: SAMLSignInPageProps) {
     const [showNavigation, shouldShowNavigation] = useState(true);
 
     /**
-     * Handles in-app navigation once we get a response back from Ieatta
+     * Handles in-app navigation once we get a response back from Expensify
      */
     const handleNavigationStateChange = useCallback(
         ({url}: WebViewNativeEvent) => {

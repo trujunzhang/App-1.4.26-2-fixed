@@ -1,7 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type {IFirebaseQuerySnapshot} from '@libs/Firebase/types';
 import type {RealmCollections} from '@libs/Realm/constant';
 
 type IRealmRepositories = {

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import lodashGet from 'lodash/get';
 import React, {useCallback, useState} from 'react';
 import {View} from 'react-native';
@@ -12,9 +12,8 @@ import PressableWithoutFeedback from '@components/Pressable/PressableWithoutFeed
 import Text from '@components/Text';
 import useThemeStyles from '@hooks/useThemeStyles';
 import ControlSelection from '@libs/ControlSelection';
-import type {PhotoType} from '@libs/Firebase/constant';
-import {formatDateForPhoto} from '@libs/Firebase/utils/timeago_helper';
-import {getPhotoWithId} from '@libs/ieatta/photoUtils';
+import type {PhotoType} from '@libs/FirebaseIeatta/constant';
+import {formatDateForPhoto} from '@libs/FirebaseIeatta/utils/timeago_helper';
 import variables from '@styles/variables';
 import CONST from '@src/CONST';
 import type {IFBPhoto} from '@src/types/firebase';
@@ -29,12 +28,14 @@ type PhotoCarouselWithUserInfoPanelProps = {
     photosInPage: IFBPhoto[];
 
     photoHeight?: number;
+
+    onCarouselPhotoChanged?: (photoIndex: number, selectedPhoto: IFBPhoto) => void;
 };
 
-function PhotoCarouselWithUserInfoPanel({relatedId, photoType, pageIndex, pageViewId, photosInPage, photoHeight}: PhotoCarouselWithUserInfoPanelProps) {
+function PhotoCarouselWithUserInfoPanel({relatedId, photoType, pageIndex, pageViewId, photosInPage, photoHeight, onCarouselPhotoChanged}: PhotoCarouselWithUserInfoPanelProps) {
     const styles = useThemeStyles();
-    const personalDetails = usePersonalDetails() ?? CONST.EMPTY_OBJECT;
-    const initialPhoto = photosInPage[pageIndex];
+    const personalDetails: Record<string, any> = usePersonalDetails() ?? CONST.EMPTY_OBJECT;
+    const initialPhoto = photosInPage.at(pageIndex);
     const initialUser: PersonalDetails | null = personalDetails[lodashGet(initialPhoto, 'creatorId', '')] ?? null;
     const [person, setPerson] = useState({
         key: lodashGet(initialUser, 'userID', ''),
@@ -44,7 +45,10 @@ function PhotoCarouselWithUserInfoPanel({relatedId, photoType, pageIndex, pageVi
         photoCreatedDate: lodashGet(initialPhoto, 'createdAt', ''),
     });
 
-    const onPhotoChanged = (selectedPhoto: IFBPhoto) => {
+    const onPhotoChanged = (photoIndex: number, selectedPhoto?: IFBPhoto) => {
+        if (onCarouselPhotoChanged !== undefined && selectedPhoto !== undefined) {
+            onCarouselPhotoChanged(photoIndex, selectedPhoto);
+        }
         const nextUser: PersonalDetails | null = personalDetails[lodashGet(selectedPhoto, 'creatorId', '')] ?? null;
         setPerson({
             key: lodashGet(nextUser, 'userID', ''),
@@ -148,7 +152,7 @@ function PhotoCarouselWithUserInfoPanel({relatedId, photoType, pageIndex, pageVi
     );
 
     return (
-        <View style={[styles.flexRow, styles.sectionComponentContainer]}>
+        <View style={[styles.flexRow, styles.backgroundComponentBG]}>
             <View style={[styles.flex1]}>{leftPanel}</View>
             <View style={[styles.flex1]}>{rightPanel}</View>
         </View>

@@ -1,14 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React from 'react';
 import {Image as RNImage, View} from 'react-native';
-import * as Expensicons from '@components/Icon/Expensicons';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
 import {IeattaStars} from '@components/Icon/IeattaStars';
 import ImagePlaceholder from '@components/ImagePlaceholder';
-import LinearGradient from '@components/LinearGradient';
+// import LinearGradient from '@components/LinearGradient';
 import Text from '@components/Text';
 import useThemeStyles from '@hooks/useThemeStyles';
-import {calcRateForRestaurant} from '@libs/Firebase/utils/rate_utils';
+import {calcRateForRestaurant} from '@libs/FirebaseIeatta/utils/rate_utils';
 import TailwindColors from '@styles/tailwindcss/colors';
-import variables from '@styles/variables';
 import type {MenuViewProps} from './RestaurantMenuRow/types';
 
 function RestaurantMenuNativeView({recipe}: MenuViewProps) {
@@ -62,7 +64,7 @@ function RestaurantMenuNativeView({recipe}: MenuViewProps) {
                 sourceUri={recipe.originalUrl}
                 style={[styles.w100, styles.h100]}
                 imageType="png"
-                placeholder={Expensicons.PNGBusinessMediumSquare}
+                placeholder={Ieattaicons.PNGBusinessMediumSquare}
             />
             {/*  Info panel   */}
             <View style={[styles.pAbsolute, styles.l0, styles.r0, styles.b0, {backgroundColor: 'rgba(0,0,0,0.5)'}]}>

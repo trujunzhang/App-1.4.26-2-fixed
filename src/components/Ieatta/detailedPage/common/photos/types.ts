@@ -1,5 +1,4 @@
-import type {IPhotoItemRow, IPhotoRow} from '@libs/Firebase/list/types/rows/photo';
-import type {IFBPhoto} from '@src/types/firebase';
+import type {IPhotoItemRow, IPhotoRow} from '@libs/FirebaseIeatta/list/types/rows/photo';
 
 type DetailedPhotoProps = {
     photoRow: IPhotoRow;

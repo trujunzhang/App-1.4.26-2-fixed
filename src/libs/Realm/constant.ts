@@ -8,6 +8,7 @@ export enum RealmCollections {
     Photos = 'Photo',
     SqlPhotos = 'SqlPhoto',
     Reviews = 'Review',
+    Unknown = 'unknown',
 }
 
 // eslint-disable-next-line rulesdir/no-inline-named-export,no-restricted-syntax

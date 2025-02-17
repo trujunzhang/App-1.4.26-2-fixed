@@ -2,7 +2,7 @@
 title: Send and format chat messages
 description: Send chat messages and stylize them with markdown
 ---
-<div id="new-ieatta" markdown="1">
+<div id="new-expensify" markdown="1">
 
 Once you are added to a chat or create a new chat, you can send messages to other members in the chat and even format the text to include bold, italics, and more. 
 

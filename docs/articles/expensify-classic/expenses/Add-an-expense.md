@@ -1,8 +1,8 @@
 ---
 title: Add an expense
-description: Create a new expense in Ieatta
+description: Create a new expense in Expensify
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 You can add an expense automatically with SmartScan or enter the expense details manually.
 
@@ -12,7 +12,7 @@ You can add an expense automatically with SmartScan or enter the expense details
 
 {% include option.html value="desktop" %}
 
-You can upload pictures of your receipts to Ieatta and SmartScan will automatically capture the receipt details including the merchant, date, total, and currency.
+You can upload pictures of your receipts to Expensify and SmartScan will automatically capture the receipt details including the merchant, date, total, and currency.
 
 1. Click the **Expenses** tab. 
 2. Click the + icon in the top right and select **Scan receipt**. 
@@ -22,7 +22,7 @@ You can upload pictures of your receipts to Ieatta and SmartScan will automatica
 
 {% include option.html value="mobile" %}
 
-You can use the Ieatta mobile app to take a picture of your receipts and SmartScan will automatically capture the receipt details including the merchant, date, total, and currency.
+You can use the Expensify mobile app to take a picture of your receipts and SmartScan will automatically capture the receipt details including the merchant, date, total, and currency.
 
 1. Open the mobile app and tap the camera icon in the bottom right corner.
 2. Upload or take a photo of your receipt. 
@@ -34,7 +34,7 @@ You can use the Ieatta mobile app to take a picture of your receipts and SmartSc
 You can open any receipt and click **Fill out details myself** to add or edit the merchant, date, current, total, description, category, or add attendees for group expenses. You can also add the expense to a report, determine if it is a reimbursable expense, or split the expense if multiple expense categories are included on one receipt. 
 
 {% include info.html %}
-**For iPhones**: You can also hard press the Ieatta app icon on your phone to open a shortcut that automatically opens the camera to SmartScan a receipt. 
+**For iPhones**: You can also hard press the Expensify app icon on your phone to open a shortcut that automatically opens the camera to SmartScan a receipt. 
 {% include end-info.html %}
 
 {% include end-option.html %}
@@ -43,10 +43,10 @@ You can open any receipt and click **Fill out details myself** to add or edit th
 
 # Email a receipt
 
-You can also email receipts to SmartScan by sending them to receipts@ieatta.com from an email address tied to your Ieatta account (either a primary or secondary email). SmartScan will automatically pull all of the details from the receipt, fill them in for you, and add the receipt to the Expenses tab on your account. 
+You can also email receipts to SmartScan by sending them to receipts@expensify.com from an email address tied to your Expensify account (either a primary or secondary email). SmartScan will automatically pull all of the details from the receipt, fill them in for you, and add the receipt to the Expenses tab on your account. 
 
 {% include info.html %}
-**For copilots**: To ensure a receipt is routed to the Ieatta account you are copiloting instead of your own account, email the receipt to receipts@ieatta.com with the email address of the account you are copiloting as the subject line of the email. 
+**For copilots**: To ensure a receipt is routed to the Expensify account you are copiloting instead of your own account, email the receipt to receipts@expensify.com with the email address of the account you are copiloting as the subject line of the email. 
 {% include end-info.html %}
 
 # Add an expense manually
@@ -64,7 +64,7 @@ You can also email receipts to SmartScan by sending them to receipts@ieatta.com 
    - **Time**: Create an expense based on hours.
    - **Distance**: Create an expense based on distance.
       - Manually Create: Manually enter the distance details for the expense.
-      - Create from Map: Enter the start and end destination and Ieatta will help you create a receipt for the trip.
+      - Create from Map: Enter the start and end destination and Expensify will help you create a receipt for the trip.
 4. Click **Save**. 
 {% include end-option.html %}
 
@@ -78,7 +78,7 @@ You can also email receipts to SmartScan by sending them to receipts@ieatta.com 
    - **Time**: Enter work time and rate.
    - **Manually create (Distance)**: Manually enter trip details by total distance.
    - **Odometer**: Manually enter trip details by start and end odometer readings.
-   - **Start GPS**: Track distance while using the Ieatta app to automatically calculate the distance in real time during the trip. 
+   - **Start GPS**: Track distance while using the Expensify app to automatically calculate the distance in real time during the trip. 
 5. Tap **Save**.  
 {% include end-option.html %}
 

@@ -1,14 +1,12 @@
 import React from 'react';
 import {View} from 'react-native';
-import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
 import IconWithTooltip from '@components/Ieatta/components/IconWithTooltip';
-import {PressableWithFeedback} from '@components/Pressable';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
-import type {ISectionTitleRow} from '@libs/Firebase/list/types/rows/common';
+import type {ISectionTitleRow} from '@libs/FirebaseIeatta/list/types/rows/common';
 import TailwindColors from '@styles/tailwindcss/colors';
 import variables from '@styles/variables';
 import type {TranslationPaths} from '@src/languages/types';
@@ -32,6 +30,10 @@ type SectionCommonTitleProps = {
     shouldShowPlusIcon?: boolean;
     plusIconToolTip?: TranslationPaths;
     onPlusIconPressed?: () => void;
+
+    shouldShowCameraIcon?: boolean;
+    cameraIconToolTip?: TranslationPaths;
+    onCameraIconPressed?: () => void;
 };
 
 function SectionCommonTitle({
@@ -43,25 +45,39 @@ function SectionCommonTitle({
     shouldShowPlusIcon = false,
     plusIconToolTip = 'add.recipe.title',
     onPlusIconPressed = () => {},
+    shouldShowCameraIcon = false,
+    cameraIconToolTip = 'photos.takePhoto.button.recipe',
+    onCameraIconPressed = () => {},
 }: SectionCommonTitleProps) {
     const styles = useThemeStyles();
     const theme = useTheme();
     const {translate} = useLocalize();
 
     const renderRightContent = () => {
-        if (shouldShowPlusIcon) {
-            return (
-                <IconWithTooltip
-                    toolTip={plusIconToolTip}
-                    onPress={onPlusIconPressed}
-                    testID="Add Icon"
-                    containerStyle={[styles.mr2]}
-                    iconFill={iconFill}
-                    iconSrc={Expensicons.Plus}
-                />
-            );
-        }
-        return rightContent;
+        return (
+            <View style={[styles.gap2, styles.flexRow, styles.alignItemsCenter]}>
+                {shouldShowCameraIcon && (
+                    <IconWithTooltip
+                        toolTip={cameraIconToolTip}
+                        onPress={onCameraIconPressed}
+                        testID="Take photo"
+                        containerStyle={[styles.mr2]}
+                        iconFill={iconFill}
+                        iconSrc={Expensicons.Camera}
+                    />
+                )}
+                {shouldShowPlusIcon && (
+                    <IconWithTooltip
+                        toolTip={plusIconToolTip}
+                        onPress={onPlusIconPressed}
+                        testID="Add Icon"
+                        containerStyle={[styles.mr2]}
+                        iconFill={iconFill}
+                        iconSrc={Expensicons.Plus}
+                    />
+                )}
+            </View>
+        );
     };
 
     return (

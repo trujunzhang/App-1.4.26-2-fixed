@@ -1,9 +1,5 @@
-import Str from 'expensify-common/lib/str';
-import _ from 'lodash';
-import lodashGet from 'lodash/get';
-import PropTypes from 'prop-types';
+// eslint-disable-next-line lodash/import-scope
 import React, {useEffect, useRef, useState} from 'react';
-import {View} from 'react-native';
 import type {OnyxEntry} from 'react-native-onyx';
 import {withOnyx} from 'react-native-onyx';
 import ColorSchemeWrapper from '@components/ColorSchemeWrapper';
@@ -18,14 +14,12 @@ import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useSafeAreaInsets from '@hooks/useSafeAreaInsets';
 import useStyleUtils from '@hooks/useStyleUtils';
 import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
 import * as ActiveClientManager from '@libs/ActiveClientManager';
 import * as Localize from '@libs/Localize';
-import Log from '@libs/Log';
 import Navigation from '@libs/Navigation/Navigation';
 import Performance from '@libs/Performance';
 import Visibility from '@libs/Visibility';
-import {SignInPageLayoutRef} from '@expPages/signin/SignInPageLayout/types';
+import type {SignInPageLayoutRef} from '@expPages/signin/SignInPageLayout/types';
 import * as App from '@userActions/App';
 import * as Session from '@userActions/Session';
 import CONST from '@src/CONST';
@@ -131,10 +125,12 @@ function getRenderOptions({
 function SignInPageInner({credentials, account, activeClients = [], preferredLocale, shouldEnableMaxHeight = true}: SignInPageInnerProps) {
     const styles = useThemeStyles();
     const StyleUtils = useStyleUtils();
-    const {shouldUseNarrowLayout, isInModal} = useResponsiveLayout();
+    // const {shouldUseNarrowLayout, isInModal} = useResponsiveLayout();
+    const {shouldUseNarrowLayout} = useResponsiveLayout();
     const {translate, formatPhoneNumber} = useLocalize();
-    const {isSmallScreenWidth} = useWindowDimensions();
-    const shouldShowSmallScreen = isSmallScreenWidth || isInModal;
+    const {isSmallScreenWidth} = useResponsiveLayout();
+    // const shouldShowSmallScreen = isSmallScreenWidth || isInModal;
+    const shouldShowSmallScreen = isSmallScreenWidth;
     const safeAreaInsets = useSafeAreaInsets();
     const signInPageLayoutRef = useRef<SignInPageLayoutRef>(null);
     /** This state is needed to keep track of if user is using recovery code instead of 2fa code,
@@ -203,16 +199,27 @@ function SignInPageInner({credentials, account, activeClients = [], preferredLoc
         // Bottom SafeAreaView is removed so that login screen svg displays correctly on mobile.
         // The SVG should flow under the Home Indicator on iOS.
         <ScreenWrapper
-            shouldShowOfflineIndicator={false}
+            shouldShowOfflineIndicator
             shouldEnableMaxHeight={shouldEnableMaxHeight}
-            style={[styles.signInPage, StyleUtils.getSafeAreaPadding({...safeAreaInsets, bottom: 0, top: isInModal ? 0 : safeAreaInsets.top}, 1)]}
+            style={[
+                styles.signInPage,
+                StyleUtils.getSafeAreaPadding(
+                    {
+                        ...safeAreaInsets,
+                        bottom: 0,
+                        // top: isInModal ? 0 : safeAreaInsets.top,
+                    },
+                    1,
+                ),
+            ]}
             testID={SignInPageInner.displayName}
         >
             <GoogleProvider>
                 <SignInPageLayout
-                    welcomeHeader={translate('welcomeText.welcomeBack')}
-                    welcomeText={translate('welcomeText.welcome')}
-                    shouldShowWelcomeHeader={shouldShowWelcomeHeader || !isSmallScreenWidth || !isInModal}
+                    welcomeHeader={translate('welcomeApp.welcomeBack')}
+                    welcomeText={translate('welcomeApp.welcome')}
+                    // shouldShowWelcomeHeader={shouldShowWelcomeHeader || !isSmallScreenWidth || !isInModal}
+                    shouldShowWelcomeHeader={shouldShowWelcomeHeader || !isSmallScreenWidth}
                     shouldShowWelcomeText={shouldShowWelcomeText}
                     ref={signInPageLayoutRef}
                 >

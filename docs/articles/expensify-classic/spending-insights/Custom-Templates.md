@@ -25,9 +25,9 @@ You can use your custom templates from the **Reports** page.
 | {report:title} | would output "Expense Expenses to 2019-11-05" assuming that is the report's title.| 
 | **Report ID** |  **number is a unique number per report and can be used to identify specific reports**|
 | {report:id} | would output R00I7J3xs5fn assuming that is the report's ID.| 
-| **Old Report ID** | **a unique number per report and can be used to identify specific reports as well. Every report has both an ID and an old ID - they're simply different ways of showing the same information in either [base10](https://community.ieatta.com/home/leaving?allowTrusted=1&target=https%3A%2F%2Fwww.twinkl.co.uk%2Fteaching-wiki%2Fbase-10) or base62.** | 
+| **Old Report ID** | **a unique number per report and can be used to identify specific reports as well. Every report has both an ID and an old ID - they're simply different ways of showing the same information in either [base10](https://community.expensify.com/home/leaving?allowTrusted=1&target=https%3A%2F%2Fwww.twinkl.co.uk%2Fteaching-wiki%2Fbase-10) or base62.** | 
 | {report:oldID} | would output R3513250790654885 assuming that is the report's old ID.| 
-| **Reimbursement ID** | **the unique number for a report that's been reimbursed via ACH in Ieatta. The reimbursement ID is searchable on the Reports page and is found on your bank statement in the line-item detail for the reimbursed amount.**| 
+| **Reimbursement ID** | **the unique number for a report that's been reimbursed via ACH in Expensify. The reimbursement ID is searchable on the Reports page and is found on your bank statement in the line-item detail for the reimbursed amount.**| 
 | {report:reimbursementid} | would output 123456789109876 assuming that is the ID on the line-item detail for the reimbursed amount in your business bank account.| 
 | **Report Total** | **the total amount of the expense report.**| 
 | {report:total} | would output $325.34 assuming that is the report's total.| 
@@ -43,7 +43,7 @@ You can use your custom templates from the **Reports** page.
 | **Created date** | **the expense report was originally created by the user.**| 
 | {report:created} | would output 2010-09-15 12:00:00 assuming the expense report was created on September 15th, 2010 at noon.| 
 | {report:created:yyyy-MM-dd} | would output 2010-09-15 assuming the expense report was created on September 15, 2010.| 
-| | Note -  All Date Formulas accept an optional format string. The default if one is not provided is yyyy-MM-dd hh:mm:ss.  For a full breakdown, check out the Date Formatting [here](https://community.ieatta.com/discussion/5799/deep-dive-date-formating-for-formulas/p1?new=1).| 
+| | Note -  All Date Formulas accept an optional format string. The default if one is not provided is yyyy-MM-dd hh:mm:ss.  For a full breakdown, check out the Date Formatting [here](https://community.expensify.com/discussion/5799/deep-dive-date-formating-for-formulas/p1?new=1).| 
 | **StartDate** | **is the date of the earliest expense on the report.**| 
 | {report:startdate} | would output 2010-09-15 assuming that is the date of the earliest expense on the report.| 
 | **EndDate**|  **is the date of the last expense on the report.**| 
@@ -76,8 +76,8 @@ You can use your custom templates from the **Reports** page.
 | **To** | **is the email address of the last person who the report was submitted to.**| 
 | {report:submit:to} | would output alice@email.com if they are the current approver| 
 | {report:submit:to:email\|frontPart} | would output alice.| 
-| **Current user** | **To export the email of the currently logged in Ieatta user**| 
-| {user:email} | would output bob@example.com assuming that is the currently logged in Ieatta user's email.| 
+| **Current user** | **To export the email of the currently logged in Expensify user**| 
+| {user:email} | would output bob@example.com assuming that is the currently logged in Expensify user's email.| 
 | **Submitter** | **"Sally Ride" with email "sride@email.com" is the submitter for the following examples**|
 | {report:submit:from:email}| sride@email.com| 
 | {report:submit:from}| Sally Ride| 
@@ -90,7 +90,7 @@ You can use your custom templates from the **Reports** page.
 
 `{report:submit:from:email|domain}` email.com  
 
-`{user:email|frontPart}` would output bob assuming that is the currently logged in Ieatta user's email.
+`{user:email|frontPart}` would output bob assuming that is the currently logged in Expensify user's email.
 
 ## Expense level
 
@@ -144,8 +144,8 @@ You can use your custom templates from the **Reports** page.
 | **Description** | The description on the expense | 
 | {expense:comment} |would output "office lunch" assuming that is the expenses' description.|
 | **Receipt** | | 
-| {expense:receipt:type} | would output eReceipt if the receipt is an Ieatta Guaranteed eReceipt.| 
-| {expense:receipt:url} | would output a link to the receipt image page that anyone with access to the receipt in Ieatta could view.| 
+| {expense:receipt:type} | would output eReceipt if the receipt is an Expensify Guaranteed eReceipt.| 
+| {expense:receipt:url} | would output a link to the receipt image page that anyone with access to the receipt in Expensify could view.| 
 | {expense:receipt:url:direct} | would show the direct receipt image url for download. | 
 | {expense:mcc} | would output 3351 assuming that is the expenses' MCC (Merchant Category Code of the expense).| 
 | | Note, we only have the MCC for expenses that are automatically imported or imported from an OFX/QFX file. For those we don't have an MCC for the output would be (an empty string).| 
@@ -199,3 +199,9 @@ This formula will output a subset of the string in question. It is important to 
 `{expense:merchant|substr:0:4}` would output "Star" for a merchant named Starbucks. This is because we are telling it to start at position 0 and be of 4 character length. 
 
 `{expense:merchant|substr:4:5}` would output "bucks" for a merchant named Starbucks. This is because we are telling it to start at position 4 and be of 5 character length. 
+
+# FAQs
+
+**Can I export one line per report?**
+
+No, the custom template always exports one line per expense. At the moment it is not possible to create a template that will export one line per report.

@@ -9,9 +9,9 @@ import ScrollView from '@components/ScrollView';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import Navigation from '@libs/Navigation/Navigation';
+import * as ReportActionContextMenu from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
 import * as Link from '@userActions/Link';
 import CONST from '@src/CONST';
-import * as ReportActionContextMenu from '@src/expPages/home/report/ContextMenu/ReportActionContextMenu';
 import type {TranslationPaths} from '@src/languages/types';
 
 type DownloadMenuItem = MenuItemProps & {

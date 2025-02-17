@@ -3,7 +3,7 @@ import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import React from 'react';
 import {useCollection, useCollectionOnce} from 'react-firebase-hooks/firestore';
-import * as FirebaseQuery from '@libs/Firebase/services/firebase-query';
+import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
 import {emptyEventTag, emptyRestaurantTag} from '@libs/ieatta/editFormUtils';
 import {getUserIdsInPeopleInEvents} from '@libs/ieatta/peopleInEventUtils';
 import {toUserDict} from '@libs/ieatta/userUtils';

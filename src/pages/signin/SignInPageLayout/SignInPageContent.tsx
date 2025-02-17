@@ -1,11 +1,10 @@
-import PropTypes from 'prop-types';
-import React, {useMemo} from 'react';
+import React from 'react';
 import {View} from 'react-native';
 import OfflineIndicator from '@components/OfflineIndicator';
 import Text from '@components/Text';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useStyleUtils from '@hooks/useStyleUtils';
 import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
 import SignInHeroImage from '@pages/signin/SignInHeroImage';
 import variables from '@styles/variables';
 import type {SignInPageLayoutProps} from './types';
@@ -16,7 +15,7 @@ type SignInPageContentProps = Pick<SignInPageLayoutProps, 'welcomeText' | 'welco
 };
 
 function SignInPageContent({shouldShowWelcomeHeader, welcomeHeader, welcomeText, shouldShowWelcomeText, children}: SignInPageContentProps) {
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
     const styles = useThemeStyles();
     const StyleUtils = useStyleUtils();
 

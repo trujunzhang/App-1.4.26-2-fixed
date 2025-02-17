@@ -4,10 +4,10 @@ import {FlatList, StyleSheet, View} from 'react-native';
 import SectionPhotoEmptyView from '@components/Ieatta/detailedPage/common/SectionPhotoEmptyView';
 import PageFlashListItemWithEvent from '@components/Ieatta/detailedPage/PageFlashListItemWithEvent';
 import useThemeStyles from '@hooks/useThemeStyles';
-import {PhotoType} from '@libs/Firebase/constant';
-import {PageSection, RowPressableType} from '@libs/Firebase/list/constant';
-import {ModalNames} from '@libs/Firebase/list/types/page-row';
-import {IPhotoItemRow} from '@libs/Firebase/list/types/rows/photo';
+import {PhotoType} from '@libs/FirebaseIeatta/constant';
+import {PageSection, RowPressableType} from '@libs/FirebaseIeatta/list/constant';
+import {ModalNames} from '@libs/FirebaseIeatta/list/types/page-row';
+import {IPhotoItemRow} from '@libs/FirebaseIeatta/list/types/rows/photo';
 import variables from '@styles/variables';
 import type {IFBPhoto} from '@src/types/firebase';
 
@@ -50,7 +50,7 @@ function DetailedPhotosList({relatedId, photoType, photos, isSmallScreen, isLoad
 
             return (
                 <PageFlashListItemWithEvent
-                    item={{
+                    pageRow={{
                         rowType: PageSection.SECTION_PHOTO_ITEM,
                         rowData: photoRow,
                         rowKey: 'PageSection.SECTION_PHOTO_ITEM<Photo>',

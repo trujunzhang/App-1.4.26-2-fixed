@@ -1,22 +1,39 @@
-import React, {memo, useEffect, useMemo, useRef} from 'react';
+import React, {memo, useEffect, useMemo, useRef, useState} from 'react';
 import {View} from 'react-native';
 import type {OnyxEntry} from 'react-native-onyx';
 import Onyx, {withOnyx} from 'react-native-onyx';
+import type {ValueOf} from 'type-fest';
+import ActiveGuidesEventListener from '@components/ActiveGuidesEventListener';
+import ComposeProviders from '@components/ComposeProviders';
 import OptionsListContextProvider from '@components/OptionListContextProvider';
-import useOnboardingLayout from '@hooks/useOnboardingLayout';
+import {SearchContextProvider} from '@components/Search/SearchContext';
+import {useSearchRouterContext} from '@components/Search/SearchRouter/SearchRouterContext';
+import SearchRouterModal from '@components/Search/SearchRouter/SearchRouterModal';
+import useActiveWorkspace from '@hooks/useActiveWorkspace';
+import useOnboardingFlowRouter from '@hooks/useOnboardingFlow';
+import usePermissions from '@hooks/usePermissions';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useStyleUtils from '@hooks/useStyleUtils';
 import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
+import {READ_COMMANDS} from '@libs/API/types';
+import HttpUtils from '@libs/HttpUtils';
 import KeyboardShortcut from '@libs/KeyboardShortcut';
 import Log from '@libs/Log';
 import getCurrentUrl from '@libs/Navigation/currentUrl';
 import getOnboardingModalScreenOptions from '@libs/Navigation/getOnboardingModalScreenOptions';
 import Navigation from '@libs/Navigation/Navigation';
-import type {AuthScreensParamList} from '@libs/Navigation/types';
+import shouldOpenOnAdminRoom from '@libs/Navigation/shouldOpenOnAdminRoom';
+import type {AuthScreensParamList, CentralPaneName, CentralPaneScreensParamList} from '@libs/Navigation/types';
 import NetworkConnection from '@libs/NetworkConnection';
+import onyxSubscribe from '@libs/onyxSubscribe';
 import * as Pusher from '@libs/Pusher/pusher';
 import PusherConnectionManager from '@libs/PusherConnectionManager';
+import * as ReportUtils from '@libs/ReportUtils';
+import {buildSearchQueryString} from '@libs/SearchUtils';
 import * as SessionUtils from '@libs/SessionUtils';
+import ConnectionCompletePage from '@expPages/ConnectionCompletePage';
+import NotFoundPage from '@expPages/ErrorPage/NotFoundPage';
+import DesktopSignInRedirectPage from '@expPages/signin/DesktopSignInRedirectPage';
 import * as App from '@userActions/App';
 import * as Download from '@userActions/Download';
 import * as Modal from '@userActions/Modal';
@@ -24,25 +41,26 @@ import * as PersonalDetails from '@userActions/PersonalDetails';
 import * as PriorityMode from '@userActions/PriorityMode';
 import * as Report from '@userActions/Report';
 import * as Session from '@userActions/Session';
+import toggleTestToolsModal from '@userActions/TestTool';
 import Timing from '@userActions/Timing';
 import * as User from '@userActions/User';
 import CONFIG from '@src/CONFIG';
 import CONST from '@src/CONST';
-import ConnectionCompletePage from '@src/expPages/ConnectionCompletePage';
-import NotFoundPage from '@src/expPages/ErrorPage/NotFoundPage';
-import DesktopSignInRedirectPage from '@src/expPages/signin/DesktopSignInRedirectPage';
-import SearchInputManager from '@src/expPages/workspace/SearchInputManager';
 import NAVIGATORS from '@src/NAVIGATORS';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
 import SCREENS from '@src/SCREENS';
 import type * as OnyxTypes from '@src/types/onyx';
 import type {SelectedTimezone, Timezone} from '@src/types/onyx/PersonalDetails';
+import {isEmptyObject} from '@src/types/utils/EmptyObject';
+import type ReactComponentModule from '@src/types/utils/ReactComponentModule';
+import beforeRemoveReportOpenedFromSearchRHP from './beforeRemoveReportOpenedFromSearchRHP';
+import CENTRAL_PANE_SCREENS from './CENTRAL_PANE_SCREENS';
 import createCustomStackNavigator from './createCustomStackNavigator';
 import defaultScreenOptions from './defaultScreenOptions';
 import getRootNavigatorScreenOptions from './getRootNavigatorScreenOptions';
 import BottomTabNavigator from './Navigators/BottomTabNavigator';
-import CentralPaneNavigator from './Navigators/CentralPaneNavigator';
+import ExplanationModalNavigator from './Navigators/ExplanationModalNavigator';
 import FeatureTrainingModalNavigator from './Navigators/FeatureTrainingModalNavigator';
 import FullScreenNavigator from './Navigators/FullScreenNavigator';
 import LeftModalNavigator from './Navigators/LeftModalNavigator';
@@ -61,15 +79,51 @@ type AuthScreensProps = {
     initialLastUpdateIDAppliedToClient: OnyxEntry<number>;
 };
 
-const loadReportAttachments = () => require('@src/expPages/home/report/ReportAttachments').default as React.ComponentType;
-const loadValidateLoginPage = () => require('@src/expPages/ValidateLoginPage').default as React.ComponentType;
-const loadLogOutPreviousUserPage = () => require('@src/expPages/LogOutPreviousUserPage').default as React.ComponentType;
-const loadConciergePage = () => require('@src/expPages/ConciergePage').default as React.ComponentType;
-const loadProfileAvatar = () => require('@src/expPages/settings/Profile/ProfileAvatar').default as React.ComponentType;
-const loadWorkspaceAvatar = () => require('@src/expPages/workspace/WorkspaceAvatar').default as React.ComponentType;
-const loadReportAvatar = () => require('@src/expPages/ReportAvatar').default as React.ComponentType;
-const loadReceiptView = () => require('@src/expPages/TransactionReceiptPage').default as React.ComponentType;
-const loadWorkspaceJoinUser = () => require('@src/expPages/workspace/WorkspaceJoinUserPage').default as React.ComponentType;
+const loadReportAttachments = () => require<ReactComponentModule>('@expPages/home/report/ReportAttachments').default;
+const loadValidateLoginPage = () => require<ReactComponentModule>('@expPages/ValidateLoginPage').default;
+const loadLogOutPreviousUserPage = () => require<ReactComponentModule>('@expPages/LogOutPreviousUserPage').default;
+const loadConciergePage = () => require<ReactComponentModule>('@expPages/ConciergePage').default;
+const loadTrackExpensePage = () => require<ReactComponentModule>('@expPages/TrackExpensePage').default;
+const loadSubmitExpensePage = () => require<ReactComponentModule>('@expPages/SubmitExpensePage').default;
+const loadProfileAvatar = () => require<ReactComponentModule>('@expPages/settings/Profile/ProfileAvatar').default;
+const loadWorkspaceAvatar = () => require<ReactComponentModule>('@expPages/workspace/WorkspaceAvatar').default;
+const loadReportAvatar = () => require<ReactComponentModule>('@expPages/ReportAvatar').default;
+const loadReceiptView = () => require<ReactComponentModule>('@expPages/TransactionReceiptPage').default;
+const loadWorkspaceJoinUser = () => require<ReactComponentModule>('@expPages/workspace/WorkspaceJoinUserPage').default;
+
+function getCentralPaneScreenInitialParams(screenName: CentralPaneName, initialReportID?: string): Partial<ValueOf<CentralPaneScreensParamList>> {
+    if (screenName === SCREENS.SEARCH.CENTRAL_PANE) {
+        // Generate default query string with buildSearchQueryString without argument.
+        return {q: buildSearchQueryString()};
+    }
+
+    if (screenName === SCREENS.REPORT) {
+        return {
+            openOnAdminRoom: shouldOpenOnAdminRoom() ? true : undefined,
+            reportID: initialReportID,
+        };
+    }
+
+    return undefined;
+}
+
+function getCentralPaneScreenListeners(screenName: CentralPaneName) {
+    if (screenName === SCREENS.REPORT) {
+        return {beforeRemove: beforeRemoveReportOpenedFromSearchRHP};
+    }
+
+    return {};
+}
+
+function initializePusher() {
+    return Pusher.init({
+        appKey: CONFIG.PUSHER.APP_KEY,
+        cluster: CONFIG.PUSHER.CLUSTER,
+        authEndpoint: `${CONFIG.EXPENSIFY.DEFAULT_API_ROOT}api/AuthenticatePusher?`,
+    }).then(() => {
+        User.subscribeToUserEvents();
+    });
+}
 
 let timezone: Timezone | null;
 let currentAccountID = -1;
@@ -81,6 +135,7 @@ Onyx.connect({
     callback: (value) => {
         // When signed out, val hasn't accountID
         if (!(value && 'accountID' in value)) {
+            currentAccountID = -1;
             timezone = null;
             return;
         }
@@ -89,7 +144,7 @@ Onyx.connect({
 
         if (Navigation.isActiveRoute(ROUTES.SIGN_IN_MODAL)) {
             // This means sign in in RHP was successful, so we can subscribe to user events
-            User.subscribeToUserEvents();
+            initializePusher();
         }
     },
 });
@@ -97,7 +152,7 @@ Onyx.connect({
 Onyx.connect({
     key: ONYXKEYS.PERSONAL_DETAILS_LIST,
     callback: (value) => {
-        if (!value || timezone) {
+        if (!value || !isEmptyObject(timezone)) {
             return;
         }
 
@@ -106,7 +161,7 @@ Onyx.connect({
 
         // If the current timezone is different than the user's timezone, and their timezone is set to automatic
         // then update their timezone.
-        if (timezone?.automatic && timezone?.selected !== currentTimezone) {
+        if (!isEmptyObject(currentTimezone) && timezone?.automatic && timezone?.selected !== currentTimezone) {
             timezone.selected = currentTimezone;
             PersonalDetails.updateAutomaticTimezone({
                 automatic: true,
@@ -125,7 +180,7 @@ Onyx.connect({
 
 Onyx.connect({
     key: ONYXKEYS.ONYX_UPDATES_LAST_UPDATE_ID_APPLIED_TO_CLIENT,
-    callback: (value: OnyxEntry<number>) => {
+    callback: (value) => {
         lastUpdateIDAppliedToClient = value;
     },
 });
@@ -149,29 +204,57 @@ const modalScreenListeners = {
     focus: () => {
         Modal.setModalVisibility(true);
     },
+    blur: () => {
+        Modal.setModalVisibility(false);
+    },
     beforeRemove: () => {
-        // Clear search input (WorkspaceInvitePage) when modal is closed
-        SearchInputManager.searchInput = '';
         Modal.setModalVisibility(false);
         Modal.willAlertModalBecomeVisible(false);
+    },
+};
+
+// Extended modal screen listeners with additional cancellation of pending requests
+const modalScreenListenersWithCancelSearch = {
+    ...modalScreenListeners,
+    beforeRemove: () => {
+        modalScreenListeners.beforeRemove();
+        HttpUtils.cancelPendingRequests(READ_COMMANDS.SEARCH_FOR_REPORTS);
     },
 };
 
 function AuthScreens({session, lastOpenedPublicRoomID, initialLastUpdateIDAppliedToClient}: AuthScreensProps) {
     const styles = useThemeStyles();
     const StyleUtils = useStyleUtils();
-    const {isSmallScreenWidth} = useWindowDimensions();
-    const {shouldUseNarrowLayout} = useOnboardingLayout();
-    const screenOptions = getRootNavigatorScreenOptions(isSmallScreenWidth, styles, StyleUtils);
-    const onboardingModalScreenOptions = useMemo(() => screenOptions.onboardingModalNavigator(shouldUseNarrowLayout), [screenOptions, shouldUseNarrowLayout]);
-    const onboardingScreenOptions = useMemo(
-        () => getOnboardingModalScreenOptions(isSmallScreenWidth, styles, StyleUtils, shouldUseNarrowLayout),
-        [StyleUtils, isSmallScreenWidth, shouldUseNarrowLayout, styles],
-    );
-    const isInitialRender = useRef(true);
+    const {shouldUseNarrowLayout, onboardingIsMediumOrLargerScreenWidth, isSmallScreenWidth} = useResponsiveLayout();
+    const screenOptions = getRootNavigatorScreenOptions(shouldUseNarrowLayout, styles, StyleUtils);
+    const {canUseDefaultRooms} = usePermissions();
+    const {activeWorkspaceID} = useActiveWorkspace();
+    const {toggleSearchRouter} = useSearchRouterContext();
 
+    const onboardingModalScreenOptions = useMemo(() => screenOptions.onboardingModalNavigator(onboardingIsMediumOrLargerScreenWidth), [screenOptions, onboardingIsMediumOrLargerScreenWidth]);
+    const onboardingScreenOptions = useMemo(
+        () => getOnboardingModalScreenOptions(shouldUseNarrowLayout, styles, StyleUtils, onboardingIsMediumOrLargerScreenWidth),
+        [StyleUtils, shouldUseNarrowLayout, onboardingIsMediumOrLargerScreenWidth, styles],
+    );
+    const modal = useRef<OnyxTypes.Modal>({});
+    const [didPusherInit, setDidPusherInit] = useState(false);
+    const {isOnboardingCompleted} = useOnboardingFlowRouter();
+
+    let initialReportID: string | undefined;
+    const isInitialRender = useRef(true);
     if (isInitialRender.current) {
         Timing.start(CONST.TIMING.HOMEPAGE_INITIAL_RENDER);
+
+        const currentURL = getCurrentUrl();
+        if (currentURL) {
+            initialReportID = new URL(currentURL).pathname.match(CONST.REGEX.REPORT_ID_FROM_PATH)?.at(1);
+        }
+
+        if (!initialReportID) {
+            const initialReport = ReportUtils.findLastAccessedReport(!canUseDefaultRooms, shouldOpenOnAdminRoom(), activeWorkspaceID);
+            initialReportID = initialReport?.reportID ?? '';
+        }
+
         isInitialRender.current = false;
     }
 
@@ -179,6 +262,7 @@ function AuthScreens({session, lastOpenedPublicRoomID, initialLastUpdateIDApplie
         const shortcutsOverviewShortcutConfig = CONST.KEYBOARD_SHORTCUTS.SHORTCUTS;
         const searchShortcutConfig = CONST.KEYBOARD_SHORTCUTS.SEARCH;
         const chatShortcutConfig = CONST.KEYBOARD_SHORTCUTS.NEW_CHAT;
+        const debugShortcutConfig = CONST.KEYBOARD_SHORTCUTS.DEBUG;
         const currentUrl = getCurrentUrl();
         const isLoggingInAsNewUser = !!session?.email && SessionUtils.isLoggingInAsNewUser(currentUrl, session.email);
         // Sign out the current user if we're transitioning with a different user
@@ -192,12 +276,8 @@ function AuthScreens({session, lastOpenedPublicRoomID, initialLastUpdateIDApplie
         NetworkConnection.listenForReconnect();
         NetworkConnection.onReconnect(handleNetworkReconnect);
         PusherConnectionManager.init();
-        Pusher.init({
-            appKey: CONFIG.PUSHER.APP_KEY,
-            cluster: CONFIG.PUSHER.CLUSTER,
-            authEndpoint: `${CONFIG.EXPENSIFY.DEFAULT_API_ROOT}api/AuthenticatePusher?`,
-        }).then(() => {
-            User.subscribeToUserEvents();
+        initializePusher().then(() => {
+            setDidPusherInit(true);
         });
 
         // If we are on this screen then we are "logged in", but the user might not have "just logged in". They could be reopening the app
@@ -223,7 +303,37 @@ function AuthScreens({session, lastOpenedPublicRoomID, initialLastUpdateIDApplie
 
         Timing.end(CONST.TIMING.HOMEPAGE_INITIAL_RENDER);
 
-        // Listen to keyboard shortcuts for opening certain pages
+        const unsubscribeOnyxModal = onyxSubscribe({
+            key: ONYXKEYS.MODAL,
+            callback: (modalArg) => {
+                if (modalArg === null || typeof modalArg !== 'object') {
+                    return;
+                }
+                modal.current = modalArg;
+            },
+        });
+
+        const shortcutConfig = CONST.KEYBOARD_SHORTCUTS.ESCAPE;
+        const unsubscribeEscapeKey = KeyboardShortcut.subscribe(
+            shortcutConfig.shortcutKey,
+            () => {
+                if (modal.current.willAlertModalBecomeVisible) {
+                    return;
+                }
+
+                if (modal.current.disableDismissOnEscape) {
+                    return;
+                }
+
+                Navigation.dismissModal();
+            },
+            shortcutConfig.descriptionKey,
+            shortcutConfig.modifiers,
+            true,
+            true,
+        );
+
+        // Listen to keyboard shortcuts for opening certain expPages
         const unsubscribeShortcutsOverviewShortcut = KeyboardShortcut.subscribe(
             shortcutsOverviewShortcutConfig.shortcutKey,
             () => {
@@ -240,12 +350,14 @@ function AuthScreens({session, lastOpenedPublicRoomID, initialLastUpdateIDApplie
         );
 
         // Listen for the key K being pressed so that focus can be given to
-        // the chat switcher, or new group chat
+        // Search Router, or new group chat
         // based on the key modifiers pressed and the operating system
         const unsubscribeSearchShortcut = KeyboardShortcut.subscribe(
             searchShortcutConfig.shortcutKey,
             () => {
-                Modal.close(Session.checkIfActionIsAllowed(() => Navigation.navigate(ROUTES.CHAT_FINDER)));
+                Session.checkIfActionIsAllowed(() => {
+                    toggleSearchRouter();
+                })();
             },
             shortcutsOverviewShortcutConfig.descriptionKey,
             shortcutsOverviewShortcutConfig.modifiers,
@@ -262,30 +374,49 @@ function AuthScreens({session, lastOpenedPublicRoomID, initialLastUpdateIDApplie
             true,
         );
 
+        const unsubscribeDebugShortcut = KeyboardShortcut.subscribe(
+            debugShortcutConfig.shortcutKey,
+            () => {
+                toggleTestToolsModal();
+            },
+            debugShortcutConfig.descriptionKey,
+            debugShortcutConfig.modifiers,
+            true,
+        );
+
         return () => {
+            unsubscribeEscapeKey();
+            unsubscribeOnyxModal();
             unsubscribeShortcutsOverviewShortcut();
             unsubscribeSearchShortcut();
             unsubscribeChatShortcut();
+            unsubscribeDebugShortcut();
             Session.cleanupSession();
         };
 
         // Rule disabled because this effect is only for component did mount & will component unmount lifecycle event
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
     }, []);
 
+    const CentralPaneScreenOptions = {
+        headerShown: false,
+        title: 'New Ieatta',
+
+        // Prevent unnecessary scrolling
+        cardStyle: styles.cardStyleNavigator,
+    };
+
     return (
-        <OptionsListContextProvider>
-            <View style={styles.rootNavigatorContainerStyles(isSmallScreenWidth)}>
-                <RootStack.Navigator isSmallScreenWidth={isSmallScreenWidth}>
+        <ComposeProviders components={[OptionsListContextProvider, SearchContextProvider]}>
+            <View style={styles.rootNavigatorContainerStyles(shouldUseNarrowLayout)}>
+                <RootStack.Navigator
+                    screenOptions={screenOptions.centralPaneNavigator}
+                    isSmallScreenWidth={isSmallScreenWidth}
+                >
                     <RootStack.Screen
                         name={NAVIGATORS.BOTTOM_TAB_NAVIGATOR}
                         options={screenOptions.bottomTab}
                         component={BottomTabNavigator}
-                    />
-                    <RootStack.Screen
-                        name={NAVIGATORS.CENTRAL_PANE_NAVIGATOR}
-                        options={screenOptions.centralPaneNavigator}
-                        component={CentralPaneNavigator}
                     />
                     <RootStack.Screen
                         name={SCREENS.VALIDATE_LOGIN}
@@ -307,7 +438,17 @@ function AuthScreens({session, lastOpenedPublicRoomID, initialLastUpdateIDApplie
                         getComponent={loadConciergePage}
                     />
                     <RootStack.Screen
-                        name={SCREENS.REPORT_ATTACHMENTS}
+                        name={SCREENS.TRACK_EXPENSE}
+                        options={defaultScreenOptions}
+                        getComponent={loadTrackExpensePage}
+                    />
+                    <RootStack.Screen
+                        name={SCREENS.SUBMIT_EXPENSE}
+                        options={defaultScreenOptions}
+                        getComponent={loadSubmitExpensePage}
+                    />
+                    <RootStack.Screen
+                        name={SCREENS.ATTACHMENTS}
                         options={{
                             headerShown: false,
                             presentation: 'transparentModal',
@@ -351,7 +492,7 @@ function AuthScreens({session, lastOpenedPublicRoomID, initialLastUpdateIDApplie
                         name={NAVIGATORS.RIGHT_MODAL_NAVIGATOR}
                         options={screenOptions.rightModalNavigator}
                         component={RightModalNavigator}
-                        listeners={modalScreenListeners}
+                        listeners={modalScreenListenersWithCancelSearch}
                     />
                     <RootStack.Screen
                         name={NAVIGATORS.FULL_SCREEN_NAVIGATOR}
@@ -370,20 +511,34 @@ function AuthScreens({session, lastOpenedPublicRoomID, initialLastUpdateIDApplie
                         component={DesktopSignInRedirectPage}
                     />
                     <RootStack.Screen
+                        name={NAVIGATORS.EXPLANATION_MODAL_NAVIGATOR}
+                        options={onboardingModalScreenOptions}
+                        component={ExplanationModalNavigator}
+                    />
+                    <RootStack.Screen
                         name={NAVIGATORS.FEATURE_TRANING_MODAL_NAVIGATOR}
                         options={onboardingModalScreenOptions}
                         component={FeatureTrainingModalNavigator}
+                        listeners={modalScreenListeners}
                     />
                     <RootStack.Screen
                         name={NAVIGATORS.WELCOME_VIDEO_MODAL_NAVIGATOR}
                         options={onboardingModalScreenOptions}
                         component={WelcomeVideoModalNavigator}
                     />
-                    <RootStack.Screen
-                        name={NAVIGATORS.ONBOARDING_MODAL_NAVIGATOR}
-                        options={onboardingScreenOptions}
-                        component={OnboardingModalNavigator}
-                    />
+                    {isOnboardingCompleted === false && (
+                        <RootStack.Screen
+                            name={NAVIGATORS.ONBOARDING_MODAL_NAVIGATOR}
+                            options={onboardingScreenOptions}
+                            component={OnboardingModalNavigator}
+                            listeners={{
+                                focus: () => {
+                                    Modal.setDisableDismissOnEscape(true);
+                                },
+                                beforeRemove: () => Modal.setDisableDismissOnEscape(false),
+                            }}
+                        />
+                    )}
                     <RootStack.Screen
                         name={SCREENS.WORKSPACE_JOIN_USER}
                         options={{
@@ -404,12 +559,27 @@ function AuthScreens({session, lastOpenedPublicRoomID, initialLastUpdateIDApplie
                     />
                     <RootStack.Screen
                         name={SCREENS.CONNECTION_COMPLETE}
-                        options={defaultScreenOptions}
+                        options={screenOptions.fullScreen}
                         component={ConnectionCompletePage}
                     />
+                    {Object.entries(CENTRAL_PANE_SCREENS).map(([screenName, componentGetter]) => {
+                        const centralPaneName = screenName as CentralPaneName;
+                        return (
+                            <RootStack.Screen
+                                key={centralPaneName}
+                                name={centralPaneName}
+                                initialParams={getCentralPaneScreenInitialParams(centralPaneName, initialReportID)}
+                                getComponent={componentGetter}
+                                options={CentralPaneScreenOptions}
+                                listeners={getCentralPaneScreenListeners(centralPaneName)}
+                            />
+                        );
+                    })}
                 </RootStack.Navigator>
+                <SearchRouterModal />
             </View>
-        </OptionsListContextProvider>
+            {didPusherInit && <ActiveGuidesEventListener />}
+        </ComposeProviders>
     );
 }
 
@@ -417,6 +587,10 @@ AuthScreens.displayName = 'AuthScreens';
 
 const AuthScreensMemoized = memo(AuthScreens, () => true);
 
+// Migration to useOnyx cause re-login if logout from deeplinked report in desktop app
+// Further analysis required and more details can be seen here:
+// https://github.com/Expensify/App/issues/50560
+// eslint-disable-next-line
 export default withOnyx<AuthScreensProps, AuthScreensProps>({
     session: {
         key: ONYXKEYS.SESSION,

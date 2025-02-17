@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {useObject, useQuery} from '@realm/react';
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import React, {useCallback, useState} from 'react';
-import {ReviewType} from '@libs/Firebase/constant';
-import type {RestartScreenNavigationProps} from '@libs/Firebase/helper/RestaurantUtils';
-import {getRestaurantID} from '@libs/Firebase/helper/RestaurantUtils';
-import Log from '@libs/Log';
+import {ReviewType} from '@libs/FirebaseIeatta/constant';
+import type {RestartScreenNavigationProps} from '@libs/FirebaseIeatta/helper/RestaurantUtils';
+import {getRestaurantID} from '@libs/FirebaseIeatta/helper/RestaurantUtils';
 import {RealmCollections} from '@libs/Realm/constant';
 import {toRealmModelList} from '@libs/Realm/helpers/realmTypeHelper';
+import * as RealmQuery from '@libs/Realm/services/realm-query';
 import Variables from '@styles/variables';
 import type {IFBEvent, IFBRestaurant, IFBReview} from '@src/types/firebase';
 import BaseRestaurantScreen from './BaseRestaurantScreen';
@@ -22,14 +24,16 @@ function RestaurantScreen({route, navigation}: RestaurantScreenProps) {
     const restaurantInRealm = useObject<IFBRestaurant>(RealmCollections.Restaurants, restaurantId);
     const restaurant: IFBRestaurant | undefined = _.isNull(restaurantInRealm) === false ? (restaurantInRealm as IFBRestaurant) : undefined;
 
-    const events = useQuery<IFBEvent[]>(RealmCollections.Events, (array) => {
-        return array.filtered('restaurantId == $0', restaurantId);
-    });
+    const events = useQuery<IFBEvent>(
+        RealmCollections.Events,
+        (array) => {
+            return array.filtered('restaurantId == $0', restaurantId);
+        },
+        [restaurantId],
+    );
     const eventsInRestaurant: IFBEvent[] = toRealmModelList<IFBEvent>(events);
 
-    const reviewsInRealm = useQuery(RealmCollections.Reviews, (array) => {
-        return array.filtered('restaurantId == $0 && reviewType == $1', restaurantId, ReviewType.Restaurant);
-    }).slice(0, currentIndex);
+    const reviewsInRealm = useQuery(RealmCollections.Reviews, RealmQuery.queryForRealmReviews({relatedId: restaurantId, reviewType: ReviewType.Restaurant})).slice(0, currentIndex);
 
     const reviews: IFBReview[] = toRealmModelList<IFBReview>(reviewsInRealm);
 

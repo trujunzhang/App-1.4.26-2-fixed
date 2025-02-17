@@ -1,5 +1,5 @@
+import type {ContextMenuAnchor} from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
 import CONST from '@src/CONST';
-import type {ContextMenuAnchor} from '@src/expPages/home/report/ContextMenu/ReportActionContextMenu';
 import type {AnchorDimensions, AnchorPosition} from '@src/styles';
 import type {AnchorOrigin} from './actions/EmojiPickerAction';
 

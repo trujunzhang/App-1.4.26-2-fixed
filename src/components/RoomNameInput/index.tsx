@@ -33,7 +33,7 @@ function RoomNameInput(
         // Check if newRoomNameWithHash is the same as modifiedRoomName
         // If it is, then the room name is valid (does not contain forbidden characters) – no action required
         // If not, then the room name contains invalid characters, and we must adjust the cursor position manually
-        // Read more: https://github.com/Ieatta/App/issues/12741
+        // Read more: https://github.com/Expensify/App/issues/12741
         const oldRoomNameWithHash = value ?? '';
         const newRoomNameWithHash = `${CONST.POLICY.ROOM_PREFIX}${roomName}`;
         if (modifiedRoomName !== newRoomNameWithHash) {

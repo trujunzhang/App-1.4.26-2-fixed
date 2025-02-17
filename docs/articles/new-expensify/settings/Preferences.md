@@ -1,9 +1,9 @@
 ---
 title: Preferences
-description: How to manage your Ieatta Preferences
+description: How to manage your Expensify Preferences
 ---
 # Overview
-Your Preferences in Ieatta allow you to customize how you use New Ieatta.
+Your Preferences in Expensify allow you to customize how you use New Ieatta.
 
 - Set your theme preference
 

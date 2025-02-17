@@ -16,6 +16,7 @@ const Divider: React.FC<DividerProps> = ({width = 1, orientation = 'horizontal',
     const dividerStyles: StyleProp<ViewStyle> = [
         {width: orientation === 'horizontal' ? '100%' : width},
         {height: orientation === 'vertical' ? '100%' : width},
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         {backgroundColor: theme.divideBG},
     ];
 

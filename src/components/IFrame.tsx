@@ -17,7 +17,7 @@ function getNewDotURL(url: string): string {
 
     let params: Record<string, string>;
     try {
-        params = JSON.parse(paramString);
+        params = JSON.parse(paramString) as Record<string, string>;
     } catch {
         params = {};
     }
@@ -93,10 +93,10 @@ function getOldDotURL(url: string): string {
 }
 
 function OldDotIFrame({session}: OldDotIFrameProps) {
-    const [oldDotURL, setOldDotURL] = useState('https://staging.ieatta.com');
+    const [oldDotURL, setOldDotURL] = useState('https://staging.expensify.com');
 
     useEffect(() => {
-        setOldDotURL(`https://ieatta.com.dev/${getOldDotURL(window.location.href)}`);
+        setOldDotURL(`https://expensify.com.dev/${getOldDotURL(window.location.href)}`);
 
         window.addEventListener('message', (event: MessageEvent<string>) => {
             const url = event.data;
@@ -110,8 +110,8 @@ function OldDotIFrame({session}: OldDotIFrameProps) {
         if (!session) {
             return;
         }
-        document.cookie = `authToken=${session.authToken}; domain=ieatta.com.dev; path=/;`;
-        document.cookie = `email=${session.email}; domain=ieatta.com.dev; path=/;`;
+        document.cookie = `authToken=${session.authToken}; domain=expensify.com.dev; path=/;`;
+        document.cookie = `email=${session.email}; domain=expensify.com.dev; path=/;`;
     }, [session]);
 
     return (

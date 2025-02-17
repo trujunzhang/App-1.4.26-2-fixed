@@ -3,7 +3,7 @@ import type {StyleProp, ViewStyle} from 'react-native';
 import type {OnyxEntry} from 'react-native-onyx';
 import type {PopoverMenuItem} from '@components/PopoverMenu';
 import type {Action} from '@hooks/useSingleExecution';
-import type {StepCounterParams} from '@src/languages/types';
+import type {StepCounterParams} from '@src/languages/params';
 import type {AnchorPosition} from '@src/styles';
 import type {Policy, Report} from '@src/types/onyx';
 import type {Icon} from '@src/types/onyx/OnyxCommon';
@@ -22,18 +22,20 @@ type ThreeDotsMenuItem = {
 };
 
 type HeaderWithBackButtonProps = Partial<ChildrenProps> & {
+    /** Custom styles for the header */
     headerStyles?: StyleProp<ViewStyle>;
 
     /** Title of the Header */
     title?: string;
-
-    titleAnchor?: 'left' | 'middle';
 
     /** Subtitle of the header */
     subtitle?: ReactNode;
 
     /** Title color */
     titleColor?: string;
+
+    /** Title anchor position */
+    titleAnchor?: 'left' | 'middle';
 
     /**
      * Icon displayed on the left of the title.
@@ -84,6 +86,12 @@ type HeaderWithBackButtonProps = Partial<ChildrenProps> & {
     /** The anchor position of the menu */
     threeDotsAnchorPosition?: AnchorPosition;
 
+    /** Icon displayed on the right of the title */
+    threeDotsMenuIcon?: IconAsset;
+
+    /** The fill color to pass into the icon. */
+    threeDotsMenuIconFill?: string;
+
     /** Whether we should show a close button */
     shouldShowCloseButton?: boolean;
 
@@ -125,6 +133,9 @@ type HeaderWithBackButtonProps = Partial<ChildrenProps> & {
 
     /** Whether we should overlay the 3 dots menu */
     shouldOverlayDots?: boolean;
+
+    /** Whether we should display the button that opens new SearchRouter */
+    shouldDisplaySearchRouter?: boolean;
 
     /** 0 - 100 number indicating current progress of the progress bar */
     progressBarPercentage?: number;

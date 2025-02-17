@@ -15,23 +15,23 @@ describe('Url', () => {
             expect(Url.getPathFromURL('http://1337.net')).toEqual('');
             expect(Url.getPathFromURL('http://a.b-c.de/')).toEqual('');
             expect(Url.getPathFromURL('https://sd1.sd2.docs.google.com/')).toEqual('');
-            expect(Url.getPathFromURL('https://ieatta.cash/#/r/1234')).toEqual('#/r/1234');
-            expect(Url.getPathFromURL('https://github.com/Ieatta/ReactNativeChat/pull/6.45')).toEqual('Ieatta/ReactNativeChat/pull/6.45');
-            expect(Url.getPathFromURL('https://github.com/Ieatta/Ieatta/issues/143,231')).toEqual('Ieatta/Ieatta/issues/143,231');
+            expect(Url.getPathFromURL('https://expensify.cash/#/r/1234')).toEqual('#/r/1234');
+            expect(Url.getPathFromURL('https://github.com/Expensify/ReactNativeChat/pull/6.45')).toEqual('Expensify/ReactNativeChat/pull/6.45');
+            expect(Url.getPathFromURL('https://github.com/Expensify/Expensify/issues/143,231')).toEqual('Expensify/Expensify/issues/143,231');
             expect(Url.getPathFromURL('testRareTLDs.beer')).toEqual('');
-            expect(Url.getPathFromURL('test@ieatta.com')).toEqual('');
+            expect(Url.getPathFromURL('test@expensify.com')).toEqual('');
             expect(Url.getPathFromURL('test.completelyFakeTLD')).toEqual('');
             expect(
                 Url.getPathFromURL(
                     // eslint-disable-next-line max-len
-                    'https://www.ieatta.com/_devportal/tools/logSearch/#query=request_id:(%22Ufjjim%22)+AND+timestamp:[2021-01-08T03:48:10.389Z+TO+2021-01-08T05:48:10.389Z]&index=logs_ieatta-008878)',
+                    'https://www.expensify.com/_devportal/tools/logSearch/#query=request_id:(%22Ufjjim%22)+AND+timestamp:[2021-01-08T03:48:10.389Z+TO+2021-01-08T05:48:10.389Z]&index=logs_expensify-008878)',
                 ),
-            ).toEqual('_devportal/tools/logSearch/#query=request_id:(%22Ufjjim%22)+AND+timestamp:[2021-01-08T03:48:10.389Z+TO+2021-01-08T05:48:10.389Z]&index=logs_ieatta-008878)');
+            ).toEqual('_devportal/tools/logSearch/#query=request_id:(%22Ufjjim%22)+AND+timestamp:[2021-01-08T03:48:10.389Z+TO+2021-01-08T05:48:10.389Z]&index=logs_expensify-008878)');
             expect(Url.getPathFromURL('http://necolas.github.io/react-native-web/docs/?path=/docs/components-pressable--disabled ')).toEqual(
                 'react-native-web/docs/?path=/docs/components-pressable--disabled',
             );
-            expect(Url.getPathFromURL('https://github.com/Ieatta/Ieatta.cash/issues/123#:~:text=Please%20work/Ieatta.cash ')).toEqual(
-                'Ieatta/Ieatta.cash/issues/123#:~:text=Please%20work/Ieatta.cash',
+            expect(Url.getPathFromURL('https://github.com/Expensify/Expensify.cash/issues/123#:~:text=Please%20work/Expensify.cash ')).toEqual(
+                'Expensify/Expensify.cash/issues/123#:~:text=Please%20work/Expensify.cash',
             );
             expect(Url.getPathFromURL('mm..food ')).toEqual('');
             expect(Url.getPathFromURL('https://upwork.com/jobs/~016781e062ce860b84 ')).toEqual('jobs/~016781e062ce860b84');
@@ -64,38 +64,38 @@ describe('Url', () => {
             );
             expect(
                 Url.getPathFromURL(
-                    'https://new.ieatta.com/r/443044983936732/attachment?source=https://www.ieatta.com/chat-attachments/3915228701265930556/w_a758d3c8444a64f98d37205b17141388064d458e.jpg',
+                    'https://new.expensify.com/r/443044983936732/attachment?source=https://www.expensify.com/chat-attachments/3915228701265930556/w_a758d3c8444a64f98d37205b17141388064d458e.jpg',
                 ),
-            ).toEqual('r/443044983936732/attachment?source=https://www.ieatta.com/chat-attachments/3915228701265930556/w_a758d3c8444a64f98d37205b17141388064d458e.jpg');
+            ).toEqual('r/443044983936732/attachment?source=https://www.expensify.com/chat-attachments/3915228701265930556/w_a758d3c8444a64f98d37205b17141388064d458e.jpg');
         });
     });
-    describe('hasSameIeattaOrigin()', () => {
+    describe('hasSameExpensifyOrigin()', () => {
         describe('happy path', () => {
             it('It should work correctly', () => {
-                expect(Url.hasSameIeattaOrigin('https://new.ieatta.com/inbox/124', 'https://new.ieatta.com/inbox/123')).toBe(true);
+                expect(Url.hasSameExpensifyOrigin('https://new.expensify.com/inbox/124', 'https://new.expensify.com/inbox/123')).toBe(true);
             });
             it('It should work correctly with www in both urls', () => {
-                expect(Url.hasSameIeattaOrigin('https://www.new.ieatta.com/inbox/124', 'https://www.new.ieatta.com/action/123')).toBe(true);
+                expect(Url.hasSameExpensifyOrigin('https://www.new.expensify.com/inbox/124', 'https://www.new.expensify.com/action/123')).toBe(true);
             });
             it('It should work correctly with www in one of two urls', () => {
-                expect(Url.hasSameIeattaOrigin('https://new.ieatta.com/action/1234', 'https://www.new.ieatta.com/action/123')).toBe(true);
+                expect(Url.hasSameExpensifyOrigin('https://new.expensify.com/action/1234', 'https://www.new.expensify.com/action/123')).toBe(true);
             });
             it('It should work correctly with old dot', () => {
-                expect(Url.hasSameIeattaOrigin('https://ieatta.com/action/123', 'https://www.ieatta.com/action/123')).toBe(true);
+                expect(Url.hasSameExpensifyOrigin('https://expensify.com/action/123', 'https://www.expensify.com/action/123')).toBe(true);
             });
             it('It should work correctly with local urls', () => {
-                expect(Url.hasSameIeattaOrigin('https://www.ieatta.com.dev/inbox/123', 'https://ieatta.com.dev/inbox/123')).toBe(true);
+                expect(Url.hasSameExpensifyOrigin('https://www.expensify.com.dev/inbox/123', 'https://expensify.com.dev/inbox/123')).toBe(true);
             });
         });
         describe('failure path', () => {
             it('It should work correctly with two origin urls', () => {
-                expect(Url.hasSameIeattaOrigin('https://new.ieatta.com/inbox/124', 'https://ieatta.com/inbox/123')).toBe(false);
+                expect(Url.hasSameExpensifyOrigin('https://new.expensify.com/inbox/124', 'https://expensify.com/inbox/123')).toBe(false);
             });
             it('It should work correctly with www', () => {
-                expect(Url.hasSameIeattaOrigin('https://www.ieatta.com/inbox/124', 'https://www.new.ieatta.com/action/123')).toBe(false);
+                expect(Url.hasSameExpensifyOrigin('https://www.expensify.com/inbox/124', 'https://www.new.expensify.com/action/123')).toBe(false);
             });
             it('It should work correctly with  www', () => {
-                expect(Url.hasSameIeattaOrigin('https://ieatta.com/action/1234', 'https://www.new.ieatta.com/action/123')).toBe(false);
+                expect(Url.hasSameExpensifyOrigin('https://expensify.com/action/1234', 'https://www.new.expensify.com/action/123')).toBe(false);
             });
         });
     });

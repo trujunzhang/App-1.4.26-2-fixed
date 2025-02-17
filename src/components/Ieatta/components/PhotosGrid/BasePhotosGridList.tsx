@@ -1,9 +1,12 @@
 /* eslint-disable react/no-unused-prop-types */
-import _ from 'lodash';
+// eslint-disable-next-line lodash/import-scope
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {FlatList, View} from 'react-native';
+import PageFlashListItemWithEvent from '@components/Ieatta/detailedPage/PageFlashListItemWithEvent';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
 import useWindowDimensions from '@hooks/useWindowDimensions';
+import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
 import Variables from '@styles/variables';
 import type {IFBPhoto, IFBSqlPhoto} from '@src/types/firebase';
 import type {BasePhotosGridListProps} from './types';
@@ -48,23 +51,45 @@ const lastOddChildStyle = (index: number, photosLength: number, gap: number, pad
     return null;
 };
 
-function BasePhotosGridList({photos, headerContent = null, footerContent = null, renderPhoto, gap = 12, paddingHorizontal = 2, paddingTop = 2}: BasePhotosGridListProps) {
-    const {isSmallScreenWidth} = useWindowDimensions();
+function BasePhotosGridList({
+    photos,
+    headerContent = null,
+    footerContent = null,
+    generatePageRow,
+    isCoverPage = false,
+    gap = 12,
+    paddingHorizontal = 2,
+    paddingTop = 2,
+    initialPanelWidth = Variables.maxWidthInPhotosGridAndPage,
+}: BasePhotosGridListProps) {
+    const {isSmallScreenWidth} = useResponsiveLayout();
     const styles = useThemeStyles();
     const {windowWidth} = useWindowDimensions();
 
-    const itemWidth: number = useMemo(() => {
-        return isSmallScreenWidth ? Variables.photoGridItemMobileWidth : Variables.photoGridItemWebWidth;
-    }, [isSmallScreenWidth]);
-    const itemHeight: number = useMemo(() => {
-        return isSmallScreenWidth ? Variables.photoGridItemMobileHeight : Variables.photoGridItemWebHeight;
-    }, [isSmallScreenWidth]);
-
     const contentWidth: number = useMemo(() => {
-        return isSmallScreenWidth ? windowWidth : Math.min(windowWidth, Variables.maxWidthInPhotosGridAndPage);
-    }, [isSmallScreenWidth, windowWidth]);
+        // return isSmallScreenWidth ? windowWidth : Math.min(windowWidth, Variables.maxWidthInPhotosGridAndPage);
+        return isSmallScreenWidth ? windowWidth : Math.min(windowWidth, initialPanelWidth);
+    }, [isSmallScreenWidth, windowWidth, initialPanelWidth]);
+
+    const itemWidth: number = useMemo(() => {
+        if (isCoverPage) {
+            return Variables.photoGridItemCoverWidth;
+        }
+        return isSmallScreenWidth ? Variables.photoGridItemMobileWidth : Variables.photoGridItemWebWidth;
+    }, [isSmallScreenWidth, isCoverPage]);
+    const itemHeight: number = useMemo(() => {
+        if (isCoverPage) {
+            return Variables.photoGridItemCoverHeight;
+        }
+        return isSmallScreenWidth ? Variables.photoGridItemMobileHeight : Variables.photoGridItemWebHeight;
+    }, [isSmallScreenWidth, isCoverPage]);
 
     const [numColumns, setNumColumns] = useState(calcNumColumns(contentWidth, itemWidth));
+
+    const fixedItemWidth: number = useMemo(() => {
+        // return (windowWidth - 30) / numColumns;
+        return (contentWidth - 30) / numColumns;
+    }, [contentWidth, numColumns]);
 
     useEffect(() => {
         setNumColumns(calcNumColumns(contentWidth, itemWidth));
@@ -80,6 +105,7 @@ function BasePhotosGridList({photos, headerContent = null, footerContent = null,
      */
     const renderItem = useCallback(
         ({item: photo, index}: {item: IFBPhoto | IFBSqlPhoto; index: number}) => {
+            const pageRow: IPageRow = generatePageRow(photo, fixedItemWidth, itemHeight);
             return (
                 <View
                     key={photo.uniqueId}
@@ -95,11 +121,11 @@ function BasePhotosGridList({photos, headerContent = null, footerContent = null,
                         lastOddChildStyle(index, photos.length, gap, paddingHorizontal),
                     ]}
                 >
-                    {renderPhoto(photo, itemHeight)}
+                    <PageFlashListItemWithEvent pageRow={pageRow} />
                 </View>
             );
         },
-        [gap, itemHeight, numColumns, paddingHorizontal, paddingTop, photos.length, renderPhoto],
+        [gap, generatePageRow, fixedItemWidth, itemHeight, numColumns, paddingHorizontal, paddingTop, photos.length],
     );
 
     return (

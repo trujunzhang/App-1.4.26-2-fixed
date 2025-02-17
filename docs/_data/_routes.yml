@@ -1,14 +1,14 @@
 home:
   href: home
-  title: Welcome to IeattaHelp!
-  description: Find answers using the search bar or click on the version of Ieatta you're using to access the relevant resources.
+  title: Welcome to ExpensifyHelp!
+  description: Find answers using the search bar or click on the version of Expensify you're using to access the relevant resources.
 
 platforms:
-  - href: ieatta-classic
-    title: Ieatta Classic
-    hub-title: Ieatta Classic - Help & Resources
+  - href: expensify-classic
+    title: Expensify Classic
+    hub-title: Expensify Classic - Help & Resources
     hub-description: Questions? Find the answers by clicking a Category or using the search bar located in the left-hand menu.
-    url: www.ieatta.com
+    url: www.expensify.com
     description: "Your account settings look like this:"
     image: /assets/images/settings-old-dot.svg
   
@@ -17,7 +17,7 @@ platforms:
       - href: getting-started
         title: Getting Started
         icon: /assets/images/accounting.svg
-        description: Set up your account to optimize Ieatta's features.
+        description: Set up your account to optimize Expensify's features.
 
       - href: workspaces
         title: Workspaces
@@ -32,7 +32,7 @@ platforms:
       - href: reports
         title: Reports
         icon: /assets/images/money-receipt.svg
-        description: Set approval workflows and use Ieatta’s automated report features.
+        description: Set approval workflows and use Expensify’s automated report features.
 
       - href: domains
         title: Domains
@@ -50,23 +50,28 @@ platforms:
         description: Track credit card transactions and reconcile company cards.
 
       - href: expensify-card
-        title: Ieatta Card
+        title: Expensify Card
         icon: /assets/images/hand-card.svg
-        description: Explore the perks and benefits of the Ieatta Card.
+        description: Explore the perks and benefits of the Expensify Card.
+
+      - href: travel
+        title: Travel
+        icon: /assets/images/plane.svg
+        description: Manage all your corporate travel needs with Expensify Travel.
 
       - href: copilots-and-delegates
         title: Copilots & Delegates
         icon: /assets/images/envelope-receipt.svg
         description: Assign Copilots and delegate report approvals.
 
-      - href: ieatta-partner-program
-        title: Ieatta Partner Program
+      - href: expensify-partner-program
+        title: Expensify Partner Program
         icon: /assets/images/handshake.svg
-        description: Discover the benefits of becoming an Ieatta Partner.
+        description: Discover the benefits of becoming an Expensify Partner.
 
-      - href: integrations
-        title: Integrations
-        icon: /assets/images/workflow.svg
+      - href: connections
+        title: Connections
+        icon: /assets/images/simple-illustration__monitor-remotesync.svg
         description: Integrate with accounting or HR software to streamline expense approvals.
 
       - href: spending-insights
@@ -79,17 +84,17 @@ platforms:
         icon: /assets/images/gears.svg
         description: Manage profile settings and notifications.
 
-      - href: ieatta-billing
-        title: Ieatta Billing
+      - href: expensify-billing
+        title: Expensify Billing
         icon: /assets/images/subscription-annual.svg
-        description: Review Ieatta's subscription options, plan types, and payment methods.
+        description: Review Expensify's subscription options, plan types, and payment methods.
      
         
-  - href: new-ieatta
+  - href: new-expensify
     title: New Ieatta
     hub-title: New Ieatta - Help & Resources
     hub-description: Questions? Find the answers by clicking a Category or using the search bar.
-    url: new.ieatta.com
+    url: new.expensify.com
     description: "Your account settings look like this:"
     image: /assets/images/settings-new-dot.svg
   
@@ -97,34 +102,45 @@ platforms:
       - href: getting-started
         title: Getting Started
         icon: /assets/images/accounting.svg
-        description: Set up your account to optimize Ieatta's features.
+        description: Set up your account to optimize Expensify's features.
 
       - href: chat
         title: Chat
         icon: /assets/images/chat-bubble.svg
-        description: Use Ieatta's chat feature to split bills, chat with employees, and manage payments.
+        description: Use Expensify's chat feature to split bills, chat with employees, and manage payments.
 
       - href: workspaces
         title: Workspaces
         icon: /assets/images/shield.svg
         description: Configure rules, settings, and limits for your company’s spending.
       
-      - href: expenses
-        title: Expenses
+      - href: expenses-&-payments
+        title: Expenses & Payments
         icon: /assets/images/money-into-wallet.svg
         description: Learn more about expense tracking and submission.
 
-      - href: bank-accounts-and-payments
-        title: Bank Accounts & Payments
-        icon: /assets/images/bank-card.svg
-        description: Send direct reimbursements, pay invoices, and receive payment.
-      
       - href: expensify-card
-        title: Ieatta Card
+        title: Expensify Card
         icon: /assets/images/hand-card.svg
-        description: Explore the perks and benefits of the Ieatta Card.
+        description: Explore the perks and benefits of the Expensify Card.
+      
+      - href: travel
+        title: Travel
+        icon: /assets/images/plane.svg
+        description: Manage all your corporate travel needs with Expensify Travel.
+
+      - href: connections
+        title: Connections
+        icon: /assets/images/simple-illustration__monitor-remotesync.svg
+        description: Connect to accounting software to streamline expense approvals.
 
       - href: settings
         title: Settings
         icon: /assets/images/gears.svg
         description: Manage profile settings and notifications.
+        
+      - href: billing-and-subscriptions
+        title: Expensify Billing & Subscriptions
+        icon: /assets/images/subscription-annual.svg
+        description: Review Expensify's subscription options, plan types, and payment methods.
+        

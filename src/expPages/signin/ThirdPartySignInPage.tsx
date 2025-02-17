@@ -29,7 +29,7 @@ type ThirdPartySignInPageProps = ThirdPartySignInPageOnyxProps & {
 
 /* Dedicated screen that the desktop app links to on the web app, as Apple/Google
  * sign-in cannot work fully within Electron, so we escape to web and redirect
- * to desktop once we have an Ieatta auth token.
+ * to desktop once we have an Expensify auth token.
  */
 function ThirdPartySignInPage({account, signInProvider}: ThirdPartySignInPageProps) {
     const styles = useThemeStyles();

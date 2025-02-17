@@ -4,6 +4,7 @@ import Header from '@components/Header';
 import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
 import IconMenuSvg from '@components/Icon/IconMenuSvg';
+import * as Ieattaicons from '@components/Icon/Ieattaicons';
 import {PressableWithoutFeedback} from '@components/Pressable';
 import Tooltip from '@components/Tooltip';
 import useLocalize from '@hooks/useLocalize';
@@ -11,6 +12,7 @@ import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import Navigation from '@navigation/Navigation';
 import SignInOrAvatarWithOptionalStatus from '@pages/home/sidebar/SignInOrAvatarWithOptionalStatus';
+import SearchRestaurantsButton from '@pages/searchPages/restaurants/SearchRouter/SearchRestaurantsButton';
 import variables from '@styles/variables';
 import * as Session from '@userActions/Session';
 import CONST from '@src/CONST';
@@ -102,21 +104,7 @@ function NativeHeader({
                 textStyles={[styles.textAlignCenter]}
                 shouldShowEnvironmentBadge={false}
             />
-            {shouldShowSearchIcon && (
-                <Tooltip text={translate('common.search')}>
-                    <PressableWithoutFeedback
-                        accessibilityLabel={translate('headerPanel.search.buttonSearch')}
-                        role={CONST.ROLE.BUTTON}
-                        style={[styles.flexRow, styles.pr4]}
-                        onPress={Session.checkIfActionIsAllowed(showSearchPage)}
-                    >
-                        <Icon
-                            fill={theme.icon}
-                            src={Expensicons.MagnifyingGlass}
-                        />
-                    </PressableWithoutFeedback>
-                </Tooltip>
-            )}
+            {shouldShowSearchIcon && <SearchRestaurantsButton />}
             {shouldShowLocalPhotosIcon && (
                 <Tooltip text={translate('headerPanel.photo.local')}>
                     <PressableWithoutFeedback
@@ -127,7 +115,7 @@ function NativeHeader({
                     >
                         <Icon
                             fill={theme.icon}
-                            src={Expensicons.PhotoLibrary}
+                            src={Ieattaicons.PhotoLibrary}
                         />
                     </PressableWithoutFeedback>
                 </Tooltip>

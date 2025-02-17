@@ -1,11 +1,7 @@
 import React from 'react';
-import * as Expensicons from '@components/Icon/Expensicons';
-import IconWithTooltip from '@components/Ieatta/components/IconWithTooltip';
-import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
-import type {IPeopleOrderedTitleRow} from '@libs/Firebase/list/types/rows/event';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
+import type {IPeopleOrderedTitleRow} from '@libs/FirebaseIeatta/list/types/rows/event';
 import Navigation from '@libs/Navigation/Navigation';
-import TailwindColors from '@styles/tailwindcss/colors';
 import ROUTES from '@src/ROUTES';
 import SectionCommonTitle from './SectionCommonTitle';
 
@@ -16,7 +12,7 @@ type SectionPeopleOrderedTitleProps = {
 function SectionPeopleOrderedTitle({peopleOrderedTitleItem}: SectionPeopleOrderedTitleProps) {
     const {restaurantId, eventId} = peopleOrderedTitleItem;
 
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
 
     return (
         <SectionCommonTitle

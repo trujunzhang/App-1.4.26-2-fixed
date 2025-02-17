@@ -1,4 +1,7 @@
-import type {PhotoType} from '@libs/Firebase/constant';
+import type {StackScreenProps} from '@react-navigation/stack';
+import type {PhotoType} from '@libs/FirebaseIeatta/constant';
+import type {AuthScreensParamList} from '@libs/Navigation/types';
+import type SCREENS from '@src/SCREENS';
 import type {IFBPhoto} from '@src/types/firebase';
 
 type TopModalInfoPanelProps = {
@@ -10,9 +13,13 @@ type PhotosGridPageProps = {
     photoType: PhotoType | string;
     photosInPage: IFBPhoto[];
 };
-type PhotosPagePageProps = PhotosGridPageProps & {
-    pageIndex: number;
-    // initialPhotoId: string;
-};
+
+type FBPhotosPageViewProps = StackScreenProps<AuthScreensParamList, typeof SCREENS.CENTER_IEATTA.PHOTO_PAGE_VIEW>;
+
+type PhotosPagePageProps = PhotosGridPageProps &
+    FBPhotosPageViewProps & {
+        pageIndex: number;
+        // initialPhotoId: string;
+    };
 
 export type {TopModalInfoPanelProps, PhotosGridPageProps, PhotosPagePageProps};

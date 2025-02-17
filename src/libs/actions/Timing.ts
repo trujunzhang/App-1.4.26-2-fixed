@@ -2,7 +2,7 @@ import * as API from '@libs/API';
 import type {SendPerformanceTimingParams} from '@libs/API/parameters';
 import {READ_COMMANDS} from '@libs/API/types';
 import * as Environment from '@libs/Environment/Environment';
-import Firebase from '@libs/Firebase/trace';
+import Firebase from '@libs/Firebase';
 import getPlatform from '@libs/getPlatform';
 import Log from '@libs/Log';
 
@@ -19,14 +19,12 @@ let timestampData: Record<string, TimestampData> = {};
  * @param eventName
  * @param shouldUseFirebase - adds an additional trace in Firebase
  */
-function start(eventName: string, shouldUseFirebase = false) {
-    timestampData[eventName] = {startTime: Date.now(), shouldUseFirebase};
-
-    if (!shouldUseFirebase) {
-        return;
+function start(eventName: string, shouldUseFirebase = true) {
+    if (shouldUseFirebase) {
+        Firebase.startTrace(eventName);
     }
 
-    Firebase.startTrace(eventName);
+    timestampData[eventName] = {startTime: performance.now(), shouldUseFirebase};
 }
 
 /**
@@ -42,14 +40,15 @@ function end(eventName: string, secondaryName = '', maxExecutionTime = 0) {
     }
 
     const {startTime, shouldUseFirebase} = timestampData[eventName];
+
+    const eventTime = performance.now() - startTime;
+
+    if (shouldUseFirebase) {
+        Firebase.stopTrace(eventName);
+    }
+
     Environment.getEnvironment().then((envName) => {
-        const eventTime = Date.now() - startTime;
-
-        if (shouldUseFirebase) {
-            Firebase.stopTrace(eventName);
-        }
-
-        const baseEventName = `${envName}.new.ieatta.${eventName}`;
+        const baseEventName = `${envName}.new.expensify.${eventName}`;
         const grafanaEventName = secondaryName ? `${baseEventName}.${secondaryName}` : baseEventName;
 
         console.debug(`Timing:${grafanaEventName}`, eventTime);

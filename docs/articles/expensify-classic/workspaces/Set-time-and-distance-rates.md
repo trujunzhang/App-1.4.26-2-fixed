@@ -2,7 +2,7 @@
 title: Set time and distance rates
 description: Set rates for hourly and mileage expenses
 ---
-<div id="ieatta-classic" markdown="1">
+<div id="expensify-classic" markdown="1">
 
 You can set rates for your workspace’s hourly billable and mileage expenses. 
 

@@ -14,7 +14,7 @@ From the **Expenses** page, you can export individual expenses into a CSV. From 
 3. Click **Export to** at the top right of the page
 4. Choose the desired export option
 
-You can use one of the [default templates](https://help.ieatta.com/articles/ieatta-classic/insights-and-custom-reporting/Default-Export-Templates) or [create your own template](https://help.ieatta.com/articles/ieatta-classic/insights-and-custom-reporting/Custom-Templates). The default templates and the option to export to a connected accounting package are only available on the **Reports** page. Visit the specific help page for your accounting package to learn more about how to get this set up.
+You can use one of the [default templates](https://help.expensify.com/articles/expensify-classic/insights-and-custom-reporting/Default-Export-Templates) or [create your own template](https://help.expensify.com/articles/expensify-classic/insights-and-custom-reporting/Custom-Templates). The default templates and the option to export to a connected accounting package are only available on the **Reports** page. Visit the specific help page for your accounting package to learn more about how to get this set up.
 
 # How to export a report as a PDF
 1. Go to the **Reports** page
@@ -36,6 +36,6 @@ Big reports with lots of expenses may cause the PDF download to fail due to imag
 ## Can I download multiple PDFs at once? 
 No, you can’t download multiple reports as PDFs at the same time. If you’d like to export multiple reports, an alternative to consider is the CSV export option.
 ## The data exported to Excel is showing incorrectly. How can I fix this?
-When opening a CSV file export from Ieatta in Excel, it’ll automatically register report IDs and transaction IDs as numbers and assign the number format to the report ID column. If a number is greater than a certain length, Excel will contract the number and display it in exponential form. To prevent this, the number needs to be imported as text, which can be done by opening Excel and clicking File > Import > select your CSV file > follow the prompts and on step 3 set the report ID/transactionID column to import as Text.
+When opening a CSV file export from Expensify in Excel, it’ll automatically register report IDs and transaction IDs as numbers and assign the number format to the report ID column. If a number is greater than a certain length, Excel will contract the number and display it in exponential form. To prevent this, the number needs to be imported as text, which can be done by opening Excel and clicking File > Import > select your CSV file > follow the prompts and on step 3 set the report ID/transactionID column to import as Text.
 
 {% include faq-end.md %}

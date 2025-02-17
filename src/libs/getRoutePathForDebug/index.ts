@@ -1,8 +1,9 @@
-import {PhotoType, ReviewType} from '@libs/Firebase/constant';
+import {PhotoType, ReviewType} from '@libs/FirebaseIeatta/constant';
 import Log from '@libs/Log';
 import Navigation from '@navigation/Navigation';
 import {showPhotosPage} from '@pages/photos/online/Popover/ContextMenu/PhotosPageContextMenu';
 import Config from '@src/CONFIG';
+import type {Route} from '@src/ROUTES';
 import ROUTES from '@src/ROUTES';
 import type {IFBEvent, IFBPeopleInEvent, IFBPhoto, IFBRecipe, IFBRestaurant, IFBReview, IFBUser} from '@src/types/firebase';
 import type {Report} from './types';
@@ -81,7 +82,7 @@ function getReportId(props: DebugAndSwitchRouterProps) {
     return reports[Math.max(length - 1, 0)].reportID;
 }
 
-export default function getRoutePathForDebug(developingRouteName: string, props: DebugAndSwitchRouterProps) {
+export default function getRoutePathForDebug(developingRouteName: Route, props: DebugAndSwitchRouterProps) {
     const routeName = developingRouteName;
 
     switch (routeName) {
@@ -117,17 +118,26 @@ export default function getRoutePathForDebug(developingRouteName: string, props:
         case ROUTES.EDIT_RECIPE.route: {
             return ROUTES.EDIT_RECIPE.getRoute({recipeId, restaurantId});
         }
+        case ROUTES.EDIT_PHOTO.route: {
+            return ROUTES.EDIT_PHOTO.getRoute(photoId);
+        }
         case ROUTES.EDIT_REVIEW.route: {
             return ROUTES.EDIT_REVIEW.getRoute({reviewId, relatedId: restaurantId, reviewType: ReviewType.Restaurant});
         }
+        case ROUTES.REVIEWS_LIST.route: {
+            return ROUTES.REVIEWS_LIST.getRoute({relatedId: restaurantId, reviewType: ReviewType.Restaurant});
+        }
         /**
-         * Add (recipes/users) pages
+         * Add (recipes/users/waiters) pages
          */
         case ROUTES.ADD_RECIPES_IN_EVENT.route: {
             return ROUTES.ADD_RECIPES_IN_EVENT.getRoute({restaurantId, peopleInEventId});
         }
         case ROUTES.ADD_USERS_IN_EVENT.route: {
             return ROUTES.ADD_USERS_IN_EVENT.getRoute({restaurantId, eventId});
+        }
+        case ROUTES.ADD_WAITERS_IN_EVENT.route: {
+            return ROUTES.ADD_WAITERS_IN_EVENT.getRoute({restaurantId, eventId});
         }
         /**
 |--------------------------------------------------

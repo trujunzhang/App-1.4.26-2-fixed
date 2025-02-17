@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.4.70</string>
+	<string>9.0.51</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -27,7 +27,7 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>new-ieatta</string>
+				<string>new-expensify</string>
 			</array>
 		</dict>
 		<dict>
@@ -35,16 +35,18 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.229321919225-bvhcakm216dta1p0tb1fb5m4cp8pqse5</string>
+			   <string>com.googleusercontent.apps.229321919225-bvhcakm216dta1p0tb1fb5m4cp8pqse5</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.4.70.5</string>
+	<string>9.0.51.1</string>
 	<key>FullStory</key>
 	<dict>
 		<key>OrgId</key>
 		<string>o-1WN56P-na1</string>
+		<key>RecordOnStart</key>
+		<false/>
 	</dict>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>

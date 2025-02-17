@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin, statusCodes} from '@react-native-google-signin/google-signin';
 import React from 'react';
 // eslint-disable-next-line import/extensions
 import PressableWithoutFeedback from '@components/Pressable/PressableWithoutFeedback';
 import useLocalize from '@hooks/useLocalize';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
-import useWindowDimensions from '@hooks/useWindowDimensions';
-import FirebaseLogin from '@libs/Firebase/services/firebase-login';
+import FirebaseLogin from '@libs/FirebaseIeatta/services/firebase-login';
 import * as ShowNotify from '@libs/ieatta/Notify';
 import Log from '@libs/Log';
 import {setIsLoading} from '@userActions/Firebase/UserFB';
@@ -21,7 +22,7 @@ import type {GoogleSignInButtonProps} from './types';
  * @returns
  */
 function GoogleSignInButton({isLoading = false}: GoogleSignInButtonProps) {
-    const {isSmallScreenWidth} = useWindowDimensions();
+    const {isSmallScreenWidth} = useResponsiveLayout();
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 
@@ -32,8 +33,8 @@ function GoogleSignInButton({isLoading = false}: GoogleSignInButtonProps) {
      */
     const googleSignInRequest = () => {
         GoogleSignin.configure({
-            webClientId: CONFIG.GOOGLE_SIGN_IN.WEB_CLIENT_ID,
-            iosClientId: CONFIG.GOOGLE_SIGN_IN.IOS_CLIENT_ID,
+            webClientId: CONFIG.APP_GOOGLE_SIGN_IN.WEB_CLIENT_ID,
+            iosClientId: CONFIG.APP_GOOGLE_SIGN_IN.IOS_CLIENT_ID,
             offlineAccess: false,
         });
 

@@ -12,15 +12,19 @@ import CONST from '@src/CONST';
  * Function called when a pinned chat is selected.
  */
 const startTimer = () => {
-    Timing.start(CONST.TIMING.SWITCH_REPORT);
-    Performance.markStart(CONST.TIMING.SWITCH_REPORT);
+    // Timing.start(CONST.TIMING.SWITCH_REPORT);
+    // Performance.markStart(CONST.TIMING.SWITCH_REPORT);
 };
 
-function BaseSidebarScreen(props: any) {
+type BaseSidebarScreenProps = {
+    children?: React.ReactNode;
+};
+
+function BaseSidebarScreen({children}: BaseSidebarScreenProps) {
     const styles = useThemeStyles();
     useEffect(() => {
-        Performance.markStart(CONST.TIMING.SIDEBAR_LOADED);
-        Timing.start(CONST.TIMING.SIDEBAR_LOADED, true);
+        // Performance.markStart(CONST.TIMING.SIDEBAR_LOADED);
+        // Timing.start(CONST.TIMING.SIDEBAR_LOADED, true);
     }, []);
 
     return (
@@ -35,7 +39,7 @@ function BaseSidebarScreen(props: any) {
                     <View style={[styles.flex1]}>
                         <SidebarLinksData insets={insets} />
                     </View>
-                    {props.children}
+                    {children}
                 </>
             )}
         </ScreenWrapper>
