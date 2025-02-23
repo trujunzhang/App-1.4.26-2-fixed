@@ -1,3 +1,7 @@
+import type {MenuItem, ToggleItem} from '@expPages/workspace/accounting/intacct/types';
+import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
+import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
+import ToggleSettingOptionRow from '@expPages/workspace/workflows/ToggleSettingsOptionRow';
 import React from 'react';
 import ConnectionLayout from '@components/ConnectionLayout';
 import MenuItemWithTopDescription from '@components/MenuItemWithTopDescription';
@@ -7,10 +11,6 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import * as ErrorUtils from '@libs/ErrorUtils';
 import Navigation from '@libs/Navigation/Navigation';
 import {areSettingsInErrorFields, getSageIntacctNonReimbursableActiveDefaultVendor, settingsPendingAction} from '@libs/PolicyUtils';
-import type {MenuItem, ToggleItem} from '@expPages/workspace/accounting/intacct/types';
-import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
-import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
-import ToggleSettingOptionRow from '@expPages/workspace/workflows/ToggleSettingsOptionRow';
 import {updateSageIntacctDefaultVendor} from '@userActions/connections/SageIntacct';
 import * as Policy from '@userActions/Policy/Policy';
 import CONST from '@src/CONST';

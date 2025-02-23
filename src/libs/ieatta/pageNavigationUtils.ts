@@ -72,6 +72,7 @@ function pageItemNavigateTo(item: IPageRow) {
      |--------------------------------------------------
      */
         case PageSection.DETAILED_EDIT_MODEL_BUTTON: {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             pageItemNavigateForEditButtonOnDetailedPage(rowData);
             break;
         }
@@ -148,14 +149,11 @@ function pageItemNavigateTo(item: IPageRow) {
         case PageSection.RESTAURANT_EVENT_EMPTY: {
             break;
         }
-        case PageSection.SIDEBAR_RESTAURANT_ROW: {
-            const {restaurant} = rowData as IRestaurantSidebarRow;
-            setRestaurantIdInSidebar(restaurant.uniqueId);
-            Navigation.navigate(ROUTES.RESTAURANT_WITH_ID.getRoute(restaurant.uniqueId));
-            break;
-        }
+        case PageSection.RESTAURANT_SEARCH_ROW:
+        case PageSection.SIDEBAR_RESTAURANT_ROW:
         case PageSection.SIDEBAR_RESTAURANT_CARD: {
             const {restaurant} = rowData as IRestaurantSidebarRow;
+            setRestaurantIdInSidebar(restaurant.uniqueId);
             Navigation.navigate(ROUTES.RESTAURANT_WITH_ID.getRoute(restaurant.uniqueId));
             break;
         }

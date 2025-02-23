@@ -1,4 +1,4 @@
-import type {StackScreenProps} from '@react-navigation/stack';
+import AccessOrNotFoundWrapper from '@expPages/workspace/AccessOrNotFoundWrapper';
 import React from 'react';
 import {View} from 'react-native';
 import AmountForm from '@components/AmountForm';
@@ -13,16 +13,16 @@ import usePolicy from '@hooks/usePolicy';
 import useThemeStyles from '@hooks/useThemeStyles';
 import * as CurrencyUtils from '@libs/CurrencyUtils';
 import Navigation from '@libs/Navigation/Navigation';
+import type {PlatformStackScreenProps} from '@libs/Navigation/PlatformStackNavigation/types';
 import type {SettingsNavigatorParamList} from '@libs/Navigation/types';
 import * as PolicyUtils from '@libs/PolicyUtils';
-import AccessOrNotFoundWrapper from '@expPages/workspace/AccessOrNotFoundWrapper';
 import * as PolicyActions from '@userActions/Policy/Policy';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import type SCREENS from '@src/SCREENS';
 import INPUT_IDS from '@src/types/form/RulesAutoApproveReportsUnderModalForm';
 
-type RulesAutoApproveReportsUnderPageProps = StackScreenProps<SettingsNavigatorParamList, typeof SCREENS.WORKSPACE.RULES_AUTO_APPROVE_REPORTS_UNDER>;
+type RulesAutoApproveReportsUnderPageProps = PlatformStackScreenProps<SettingsNavigatorParamList, typeof SCREENS.WORKSPACE.RULES_AUTO_APPROVE_REPORTS_UNDER>;
 
 function RulesAutoApproveReportsUnderPage({route}: RulesAutoApproveReportsUnderPageProps) {
     const {policyID} = route.params;
@@ -43,7 +43,7 @@ function RulesAutoApproveReportsUnderPage({route}: RulesAutoApproveReportsUnderP
             shouldBeBlocked={!policy?.shouldShowAutoApprovalOptions || workflowApprovalsUnavailable}
         >
             <ScreenWrapper
-                includeSafeAreaPaddingBottom={false}
+                includeSafeAreaPaddingBottom
                 shouldEnableMaxHeight
                 testID={RulesAutoApproveReportsUnderPage.displayName}
             >

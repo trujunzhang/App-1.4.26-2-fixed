@@ -1,3 +1,6 @@
+import type {ExpenseRouteParams} from '@expPages/workspace/accounting/netsuite/types';
+import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
+import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
 import {useRoute} from '@react-navigation/native';
 import React, {useCallback} from 'react';
 import type {ValueOf} from 'type-fest';
@@ -11,9 +14,6 @@ import * as Connections from '@libs/actions/connections/NetSuiteCommands';
 import * as ErrorUtils from '@libs/ErrorUtils';
 import {settingsPendingAction} from '@libs/PolicyUtils';
 import Navigation from '@navigation/Navigation';
-import type {ExpenseRouteParams} from '@expPages/workspace/accounting/netsuite/types';
-import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
-import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
 import * as Policy from '@userActions/Policy/Policy';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';

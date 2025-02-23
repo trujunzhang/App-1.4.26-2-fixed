@@ -1,3 +1,5 @@
+import getSubstepValues from '@expPages/ReimbursementAccount/utils/getSubstepValues';
+import getValuesForBeneficialOwner from '@expPages/ReimbursementAccount/utils/getValuesForBeneficialOwner';
 import React from 'react';
 import {View} from 'react-native';
 import type {OnyxEntry} from 'react-native-onyx';
@@ -14,8 +16,6 @@ import useNetwork from '@hooks/useNetwork';
 import useThemeStyles from '@hooks/useThemeStyles';
 import * as ErrorUtils from '@libs/ErrorUtils';
 import BankAccount from '@libs/models/BankAccount';
-import getSubstepValues from '@expPages/ReimbursementAccount/utils/getSubstepValues';
-import getValuesForBeneficialOwner from '@expPages/ReimbursementAccount/utils/getValuesForBeneficialOwner';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import type {ReimbursementAccountForm} from '@src/types/form';
@@ -132,7 +132,7 @@ function CompanyOwnersListUBO({
                     </View>
 
                     <View style={[styles.ph5, styles.mtAuto]}>
-                        {error && error.length > 0 && (
+                        {!!error && error.length > 0 && (
                             <DotIndicatorMessage
                                 textStyles={[styles.formError]}
                                 type="error"

@@ -1,3 +1,6 @@
+import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
+import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
+import ToggleSettingOptionRow from '@expPages/workspace/workflows/ToggleSettingsOptionRow';
 import React, {useMemo} from 'react';
 import {View} from 'react-native';
 import ConnectionLayout from '@components/ConnectionLayout';
@@ -6,14 +9,11 @@ import OfflineWithFeedback from '@components/OfflineWithFeedback';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import useWaitForNavigation from '@hooks/useWaitForNavigation';
-import * as QuickbooksOnline from '@libs/actions/connections/QuickBooksOnline';
+import * as QuickbooksOnline from '@libs/actions/connections/QuickbooksOnline';
 import * as ErrorUtils from '@libs/ErrorUtils';
 import Navigation from '@libs/Navigation/Navigation';
 import * as PolicyUtils from '@libs/PolicyUtils';
 import {settingsPendingAction} from '@libs/PolicyUtils';
-import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
-import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
-import ToggleSettingOptionRow from '@expPages/workspace/workflows/ToggleSettingsOptionRow';
 import {clearQBOErrorField} from '@userActions/Policy/Policy';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';
@@ -44,6 +44,8 @@ function QuickbooksAdvancedPage({policy}: WithPolicyConnectionsProps) {
         () => invoiceAccountCollectionOptions?.find(({id}) => id === collectionAccountID)?.name,
         [invoiceAccountCollectionOptions, collectionAccountID],
     );
+    const autoCreateVendorConst = CONST.QUICKBOOKS_CONFIG.AUTO_CREATE_VENDOR;
+    const defaultVendorConst = CONST.QUICKBOOKS_CONFIG.NON_REIMBURSABLE_BILL_DEFAULT_VENDOR;
 
     const sectionMenuItems = [
         {
@@ -116,12 +118,12 @@ function QuickbooksAdvancedPage({policy}: WithPolicyConnectionsProps) {
                 QuickbooksOnline.updateQuickbooksOnlineAutoCreateVendor(
                     policyID,
                     {
-                        [CONST.QUICKBOOKS_CONFIG.AUTO_CREATE_VENDOR]: isOn,
-                        [CONST.QUICKBOOKS_CONFIG.NON_REIMBURSABLE_BILL_DEFAULT_VENDOR]: nonReimbursableVendorUpdateValue,
+                        [autoCreateVendorConst]: isOn,
+                        [defaultVendorConst]: nonReimbursableVendorUpdateValue,
                     },
                     {
-                        [CONST.QUICKBOOKS_CONFIG.AUTO_CREATE_VENDOR]: !!qboConfig?.autoCreateVendor,
-                        [CONST.QUICKBOOKS_CONFIG.NON_REIMBURSABLE_BILL_DEFAULT_VENDOR]: nonReimbursableVendorCurrentValue,
+                        [autoCreateVendorConst]: !!qboConfig?.autoCreateVendor,
+                        [defaultVendorConst]: nonReimbursableVendorCurrentValue,
                     },
                 );
             },
@@ -155,7 +157,6 @@ function QuickbooksAdvancedPage({policy}: WithPolicyConnectionsProps) {
             featureName={CONST.POLICY.MORE_FEATURES.ARE_CONNECTIONS_ENABLED}
             contentContainerStyle={[styles.pb2, styles.ph5]}
             connectionName={CONST.POLICY.CONNECTIONS.NAME.QBO}
-            onBackButtonPress={() => Navigation.goBack(ROUTES.POLICY_ACCOUNTING.getRoute(policyID))}
         >
             {qboToggleSettingItems.map((item) => (
                 <ToggleSettingOptionRow

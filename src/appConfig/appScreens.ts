@@ -4,6 +4,7 @@ const appSCREENS = {
     RECIPE: 'Recipe',
 
     RIGHT_IEATTA: {
+        SETTINGS_ROOT_RIGHT: 'Settings_Root_Right',
         RESTAURANT: 'EditIeatta_Restaurant',
         EVENT: 'EditIeatta_Event',
         RECIPE: 'EditIeatta_Recipe',

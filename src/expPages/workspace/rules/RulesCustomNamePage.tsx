@@ -1,4 +1,4 @@
-import type {StackScreenProps} from '@react-navigation/stack';
+import AccessOrNotFoundWrapper from '@expPages/workspace/AccessOrNotFoundWrapper';
 import React from 'react';
 import {View} from 'react-native';
 import BulletList from '@components/BulletList';
@@ -15,15 +15,15 @@ import useLocalize from '@hooks/useLocalize';
 import usePolicy from '@hooks/usePolicy';
 import useThemeStyles from '@hooks/useThemeStyles';
 import Navigation from '@libs/Navigation/Navigation';
+import type {PlatformStackScreenProps} from '@libs/Navigation/PlatformStackNavigation/types';
 import type {SettingsNavigatorParamList} from '@libs/Navigation/types';
-import AccessOrNotFoundWrapper from '@expPages/workspace/AccessOrNotFoundWrapper';
 import * as PolicyActions from '@userActions/Policy/Policy';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import type SCREENS from '@src/SCREENS';
 import INPUT_IDS from '@src/types/form/RulesCustomNameModalForm';
 
-type RulesCustomNamePageProps = StackScreenProps<SettingsNavigatorParamList, typeof SCREENS.WORKSPACE.RULES_CUSTOM_NAME>;
+type RulesCustomNamePageProps = PlatformStackScreenProps<SettingsNavigatorParamList, typeof SCREENS.WORKSPACE.RULES_CUSTOM_NAME>;
 
 function RulesCustomNamePage({route}: RulesCustomNamePageProps) {
     const policyID = route?.params?.policyID ?? '-1';
@@ -58,7 +58,7 @@ function RulesCustomNamePage({route}: RulesCustomNamePageProps) {
             shouldBeBlocked={!policy?.shouldShowCustomReportTitleOption}
         >
             <ScreenWrapper
-                includeSafeAreaPaddingBottom={false}
+                includeSafeAreaPaddingBottom
                 shouldEnableMaxHeight
                 testID={RulesCustomNamePage.displayName}
             >

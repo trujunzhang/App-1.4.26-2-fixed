@@ -1,3 +1,6 @@
+import type {WithPolicyProps} from '@expPages/workspace/withPolicy';
+import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
+import ToggleSettingOptionRow from '@expPages/workspace/workflows/ToggleSettingsOptionRow';
 import React from 'react';
 import ConnectionLayout from '@components/ConnectionLayout';
 import useLocalize from '@hooks/useLocalize';
@@ -5,9 +8,6 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import * as Xero from '@libs/actions/connections/Xero';
 import * as ErrorUtils from '@libs/ErrorUtils';
 import * as PolicyUtils from '@libs/PolicyUtils';
-import type {WithPolicyProps} from '@expPages/workspace/withPolicy';
-import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
-import ToggleSettingOptionRow from '@expPages/workspace/workflows/ToggleSettingsOptionRow';
 import * as Policy from '@userActions/Policy/Policy';
 import CONST from '@src/CONST';
 

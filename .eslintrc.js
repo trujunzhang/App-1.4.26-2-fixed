@@ -109,7 +109,6 @@ module.exports = {
         'plugin:prettier/recommended',
     ],
     plugins: ['@typescript-eslint', 'jsdoc', 'you-dont-need-lodash-underscore', 'react-native-a11y', 'react', 'testing-library', 'eslint-plugin-react-compiler', 'lodash', 'deprecation'],
-    ignorePatterns: ['lib/**'],
     parser: '@typescript-eslint/parser',
     parserOptions: {
         project: path.resolve(__dirname, './tsconfig.json'),
@@ -245,6 +244,7 @@ module.exports = {
         'you-dont-need-lodash-underscore/map': 'off',
         'you-dont-need-lodash-underscore/find': 'off',
         'you-dont-need-lodash-underscore/find-index': 'off',
+        'you-dont-need-lodash-underscore/throttle': 'off',
         // The suggested alternative (structuredClone) is not supported in Hermes:https://github.com/facebook/hermes/issues/684
         'you-dont-need-lodash-underscore/clone-deep': 'off',
         'lodash/import-scope': ['error', 'method'],
@@ -311,6 +311,7 @@ module.exports = {
             files: ['*.ts', '*.tsx'],
             rules: {
                 'rulesdir/prefer-at': 'error',
+                'rulesdir/boolean-conditional-rendering': 'error',
             },
         },
     ],

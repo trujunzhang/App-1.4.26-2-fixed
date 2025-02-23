@@ -1,3 +1,5 @@
+import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
+import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
 import React, {useMemo} from 'react';
 import type {ValueOf} from 'type-fest';
 import ConnectionLayout from '@components/ConnectionLayout';
@@ -7,8 +9,6 @@ import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import * as PolicyUtils from '@libs/PolicyUtils';
 import Navigation from '@navigation/Navigation';
-import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
-import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';
 import type {PendingAction} from '@src/types/onyx/OnyxCommon';

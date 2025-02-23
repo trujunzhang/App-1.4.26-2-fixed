@@ -1,20 +1,20 @@
 ---
-title: New Ieatta Referral Program
-description: Share your invite link with a friend, start a chat with a coworker, request money from your boss -- we'll pay you $250 if your referral adopts New Ieatta.
+title: New Expensify Referral Program
+description: Share your invite link with a friend, start a chat with a coworker, request money from your boss -- we'll pay you $250 if your referral adopts New Expensify.
 ---
 <!-- The lines above are required by Jekyll to process the .md file -->
 
 # About
 
-[New Ieatta](https://new.expensify.com/) is growing thanks to members like you who love it so much that they tell their friends, family, colleagues, managers, and fellow business founders to use it, too. 
+[New Expensify](https://new.expensify.com/) is growing thanks to members like you who love it so much that they tell their friends, family, colleagues, managers, and fellow business founders to use it, too. 
 
-As a thank you, every time you bring a new customer into New Ieatta, you'll get $250. Here's how it works. 
+As a thank you, every time you bring a new customer into New Expensify, you'll get $250. Here's how it works. 
 
-# How to get paid to refer anyone to New Ieatta
+# How to get paid to refer anyone to New Expensify
 
 The sky's the limit for this referral program! Your referral can be anyone - a friend, family member, boss, coworker, neighbor, or even social media follower. We're making it as easy as possible to get that cold hard $$$.
 
-1. There are a bunch of different ways to refer someone to New Ieatta:
+1. There are a bunch of different ways to refer someone to New Expensify:
    - Start a chat
    - Submit an expense to them
    - Split an expense with them
@@ -53,5 +53,5 @@ Expensify reserves the right to modify the terms of the referral program at any 
 
 - **Where can I find my referral link?** 
 
-In New Ieatta, go to **Settings** > **Share code** > **Get $250** to retrieve your invite link.
+In New Expensify, go to **Settings** > **Share code** > **Get $250** to retrieve your invite link.
 {% include faq-end.md %}

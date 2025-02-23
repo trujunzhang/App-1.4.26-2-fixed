@@ -18,7 +18,7 @@ import getTopmostBottomTabRoute from '@navigation/getTopmostBottomTabRoute';
 import getTopmostCentralPaneRoute from '@navigation/getTopmostCentralPaneRoute';
 import getTopmostReportId from '@navigation/getTopmostReportId';
 import isSideModalNavigator from '@navigation/isSideModalNavigator';
-import linkingConfig from '@navigation/linkingConfig';
+import {linkingConfig} from '@navigation/linkingConfig';
 import getAdaptedStateFromPath from '@navigation/linkingConfig/getAdaptedStateFromPath';
 import getMatchingBottomTabRouteForState from '@navigation/linkingConfig/getMatchingBottomTabRouteForState';
 import getMatchingCentralPaneRouteForState from '@navigation/linkingConfig/getMatchingCentralPaneRouteForState';
@@ -59,7 +59,7 @@ export default function linkTo(navigation: NavigationContainerRef<RootStackParam
 
     const isFullScreenOnTop = lastRoute?.name === NAVIGATORS.FULL_SCREEN_NAVIGATOR;
 
-    // policyID on SCREENS.SEARCH.CENTRAL_PANE can be present only as part of SearchQuery, while on other expPages it's stored in the url in the format: /w/:policyID/
+    // policyID on SCREENS.SEARCH.CENTRAL_PANE can be present only as part of SearchQuery, while on other pages it's stored in the url in the format: /w/:policyID/
     if (policyID && !isFullScreenOnTop && !policyIDFromState) {
         // The stateFromPath doesn't include proper path if there is a policy passed with /w/id.
         // We need to replace the path in the state with the proper one.
@@ -101,8 +101,7 @@ export default function linkTo(navigation: NavigationContainerRef<RootStackParam
             const matchingBottomTabRoute = getMatchingBottomTabRouteForState(stateFromPath, policyID ?? policyIDFromQuery);
             const isOpeningSearch = matchingBottomTabRoute.name === SCREENS.SEARCH.BOTTOM_TAB;
             const isNewPolicyID =
-                ((topmostBottomTabRoute?.params as Record<string, string | undefined>)?.policyID ?? '') !==
-                ((matchingBottomTabRoute?.params as Record<string, string | undefined>)?.policyID ?? '');
+                (topmostBottomTabRoute?.params as Record<string, string | undefined>)?.policyID !== (matchingBottomTabRoute?.params as Record<string, string | undefined>)?.policyID;
 
             if (topmostBottomTabRoute && (topmostBottomTabRoute.name !== matchingBottomTabRoute.name || isNewPolicyID || isOpeningSearch)) {
                 root.dispatch({

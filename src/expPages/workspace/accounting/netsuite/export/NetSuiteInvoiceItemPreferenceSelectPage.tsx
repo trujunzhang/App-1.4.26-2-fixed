@@ -1,3 +1,5 @@
+import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
+import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
 import React, {useCallback, useMemo} from 'react';
 import {View} from 'react-native';
 import type {ValueOf} from 'type-fest';
@@ -14,8 +16,6 @@ import * as Connections from '@libs/actions/connections/NetSuiteCommands';
 import * as ErrorUtils from '@libs/ErrorUtils';
 import {areSettingsInErrorFields, findSelectedInvoiceItemWithDefaultSelect, settingsPendingAction} from '@libs/PolicyUtils';
 import Navigation from '@navigation/Navigation';
-import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
-import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
 import * as Policy from '@userActions/Policy/Policy';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';

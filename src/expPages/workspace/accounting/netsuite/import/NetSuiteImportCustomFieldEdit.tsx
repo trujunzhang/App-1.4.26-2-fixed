@@ -1,3 +1,5 @@
+import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
+import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
 import React, {useCallback, useMemo} from 'react';
 import type {ValueOf} from 'type-fest';
 import ConnectionLayout from '@components/ConnectionLayout';
@@ -13,8 +15,6 @@ import * as ErrorUtils from '@libs/ErrorUtils';
 import Navigation from '@libs/Navigation/Navigation';
 import * as PolicyUtils from '@libs/PolicyUtils';
 import {settingsPendingAction} from '@libs/PolicyUtils';
-import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
-import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
 import CONST from '@src/CONST';
 import type {TranslationPaths} from '@src/languages/types';
 import ONYXKEYS from '@src/ONYXKEYS';
@@ -119,7 +119,7 @@ function NetSuiteImportCustomFieldEdit({
 
     const renderForm = useMemo(
         () =>
-            customField && (
+            !!customField && (
                 <FormProvider
                     formID={ONYXKEYS.FORMS.NETSUITE_CUSTOM_FIELD_FORM}
                     style={[styles.flexGrow1, styles.ph5]}
@@ -147,7 +147,7 @@ function NetSuiteImportCustomFieldEdit({
 
     const renderSelection = useMemo(
         () =>
-            customField && (
+            !!customField && (
                 <NetSuiteCustomFieldMappingPicker
                     onInputChange={(value) => {
                         updateRecord({

@@ -1,3 +1,4 @@
+import StepWrapper from '@expPages/settings/Security/TwoFactorAuth/StepWrapper/StepWrapper';
 import React from 'react';
 import BlockingView from '@components/BlockingViews/BlockingView';
 import Button from '@components/Button';
@@ -5,7 +6,6 @@ import FixedFooter from '@components/FixedFooter';
 import * as Illustrations from '@components/Icon/Illustrations';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
-import StepWrapper from '@expPages/settings/Security/TwoFactorAuth/StepWrapper/StepWrapper';
 import variables from '@styles/variables';
 import * as TwoFactorAuthActions from '@userActions/TwoFactorAuthActions';
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Adds new routes to the Cloudflare Bulk Redirects list for communityDot to helpDot
-# expPages. Sanity checking is done upstream in the PRs themselves in verifyRedirect.sh.
+# pages. Sanity checking is done upstream in the PRs themselves in verifyRedirect.sh.
 
 set -e
 

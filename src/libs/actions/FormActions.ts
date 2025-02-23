@@ -31,31 +31,4 @@ function clearDraftValues(formID: OnyxFormKey) {
     Onyx.set(`${formID}Draft`, null);
 }
 
-// function setDraftValues(formID: OnyxFormKeyWithoutDraft, draftValues: NullishDeep<KeyValueMapping[`${OnyxFormKeyWithoutDraft}Draft`]>) {
-//     Onyx.merge(FormUtils.getDraftKey(formID), draftValues);
-// }
-
-/**
- * @param formID
- */
-// function clearDraftValues(formID: OnyxFormKeyWithoutDraft) {
-//     Onyx.merge(FormUtils.getDraftKey(formID), undefined);
-// }
-
-// type UpdateDraftValuesForEditModelIdParams = {formID: OnyxFormKey; editFormUniqueId: string; lastEditFormUniqueId: string};
-
-// /**
-//  * @param draftID
-//  * @param editFormUniqueId
-//  * @param lastEditFormUniqueId
-//  */
-// function updateDraftValuesForEditModelId({formID, editFormUniqueId, lastEditFormUniqueId}: UpdateDraftValuesForEditModelIdParams) {
-//     if (editFormUniqueId === lastEditFormUniqueId) {
-//         return;
-//     }
-//     Onyx.set(`${formID}Draft`, {editFormUniqueId});
-// }
-
 export {clearDraftValues, clearErrorFields, clearErrors, setDraftValues, setErrorFields, setErrors, setIsLoading};
-
-// export {setDraftValues, setErrorFields, setErrors, setIsLoading, clearDraftValues, clearDraftValuesByDraftId, updateDraftValuesForEditModelId};

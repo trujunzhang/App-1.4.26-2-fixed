@@ -1,3 +1,4 @@
+import type {ReactionListEvent} from '@expPages/home/ReportScreenContext';
 import React from 'react';
 import type {PressableRef} from '@components/Pressable/GenericPressable/types';
 import PressableWithSecondaryInteraction from '@components/PressableWithSecondaryInteraction';
@@ -5,7 +6,6 @@ import Text from '@components/Text';
 import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useStyleUtils from '@hooks/useStyleUtils';
 import useThemeStyles from '@hooks/useThemeStyles';
-import type {ReactionListEvent} from '@expPages/home/ReportScreenContext';
 import CONST from '@src/CONST';
 
 type EmojiReactionBubbleProps = {

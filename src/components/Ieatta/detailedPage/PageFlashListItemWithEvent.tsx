@@ -34,7 +34,6 @@ function PageFlashListItemWithEvent({pageRow}: PageFlashListItemEventProps) {
         (event: MouseEvent | GestureResponderEvent) => {
             setIsContextMenuActive(true);
             DetailedPageActionContextMenu.showContextMenu(
-                CONST.CONTEXT_MENU_TYPES.PAGE_ACTION,
                 event,
                 pageRow,
                 popoverAnchor.current,

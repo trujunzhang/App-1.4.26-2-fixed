@@ -18,12 +18,12 @@ import Image from './Image';
 import ImagePlaceholder from './ImagePlaceholder';
 
 type AvatarProps = {
-    /** Source for the avatar. Can be a URL or an icon. */
-    source?: AvatarSource;
-
     /** fields for Ieatta */
     avatarUrl?: string;
     shouldShowAsAvatar?: boolean;
+
+    /** Source for the avatar. Can be a URL or an icon. */
+    source?: AvatarSource;
 
     /** Extra styles to pass to Image */
     imageStyles?: StyleProp<ViewStyle & ImageStyle>;
@@ -62,10 +62,10 @@ type AvatarProps = {
 };
 
 function Avatar({
-    source: originalSource,
     /** fields for Ieatta */
     avatarUrl,
     shouldShowAsAvatar = false,
+    source: originalSource,
     imageStyles,
     iconAdditionalStyles,
     containerStyles,
@@ -165,6 +165,16 @@ function Avatar({
                 </View>
             ) : (
                 renderAvatar()
+                //                 <View style={iconStyle}>
+                //                     <Icon
+                //                         testID={fallbackAvatarTestID}
+                //                         src={avatarSource}
+                //                         height={iconSize}
+                //                         width={iconSize}
+                //                         fill={imageError ? iconColors?.fill ?? theme.offline : iconColors?.fill ?? fill}
+                //                         additionalStyles={[StyleUtils.getAvatarBorderStyle(size, type), iconColors, iconAdditionalStyles]}
+                //                     />
+                //                 </View>
             )}
         </View>
     );

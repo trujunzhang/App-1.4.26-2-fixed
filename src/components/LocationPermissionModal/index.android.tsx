@@ -1,3 +1,4 @@
+import {getLocationPermission, requestLocationPermission} from '@expPages/iou/request/step/IOURequestStepScan/LocationPermission';
 import React, {useEffect, useState} from 'react';
 import {Linking} from 'react-native';
 import {RESULTS} from 'react-native-permissions';
@@ -5,7 +6,6 @@ import ConfirmModal from '@components/ConfirmModal';
 import * as Illustrations from '@components/Icon/Illustrations';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
-import {getLocationPermission, requestLocationPermission} from '@expPages/iou/request/step/IOURequestStepScan/LocationPermission';
 import type {LocationPermissionModalProps} from './types';
 
 function LocationPermissionModal({startPermissionFlow, resetPermissionFlow, onDeny, onGrant}: LocationPermissionModalProps) {
@@ -50,7 +50,7 @@ function LocationPermissionModal({startPermissionFlow, resetPermissionFlow, onDe
                 setHasError(true);
                 return;
             } else {
-                onDeny(status);
+                onDeny();
             }
             setShowModal(false);
             setHasError(false);
@@ -58,7 +58,7 @@ function LocationPermissionModal({startPermissionFlow, resetPermissionFlow, onDe
     });
 
     const skipLocationPermission = () => {
-        onDeny(RESULTS.DENIED);
+        onDeny();
         setShowModal(false);
         setHasError(false);
     };

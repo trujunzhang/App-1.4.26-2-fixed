@@ -14,7 +14,6 @@ const DotLottieAnimations = {
         w: 375,
         h: 240,
     },
-
     Abracadabra: {
         file: require<LottieViewProps['source']>('@assets/animations/Abracadabra.lottie'),
         w: 375,

@@ -1,18 +1,15 @@
-/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
-// import type {OnfidoResult} from '@onfido/react-native-sdk';
-// import type {Handle} from 'onfido-sdk-ui/types/Onfido';
-// import type {CompleteData} from 'onfido-sdk-ui/types/Types';
+import type {OnfidoResult} from '@onfido/react-native-sdk';
+import type {Handle} from 'onfido-sdk-ui/types/Onfido';
+import type {CompleteData} from 'onfido-sdk-ui/types/Types';
 import type {OnyxEntry} from 'react-native-onyx';
 
-// type OnfidoData = CompleteData | OnfidoResult;
-type OnfidoData = unknown;
+type OnfidoData = CompleteData | OnfidoResult;
 
 type OnfidoDataWithApplicantID = OnfidoData & {
     applicantID: OnyxEntry<string>;
 };
 
-// type OnfidoElement = HTMLDivElement & {onfidoOut?: Handle};
-type OnfidoElement = HTMLDivElement;
+type OnfidoElement = HTMLDivElement & {onfidoOut?: Handle};
 
 type OnfidoProps = {
     /** Token used to initialize the Onfido SDK */

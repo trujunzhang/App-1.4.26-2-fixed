@@ -1,3 +1,6 @@
+import type {WithPolicyProps} from '@expPages/workspace/withPolicy';
+import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
+import ToggleSettingOptionRow from '@expPages/workspace/workflows/ToggleSettingsOptionRow';
 import React, {useMemo} from 'react';
 import {View} from 'react-native';
 import ConnectionLayout from '@components/ConnectionLayout';
@@ -10,9 +13,6 @@ import * as ErrorUtils from '@libs/ErrorUtils';
 import Navigation from '@libs/Navigation/Navigation';
 import {areSettingsInErrorFields, settingsPendingAction} from '@libs/PolicyUtils';
 import StringUtils from '@libs/StringUtils';
-import type {WithPolicyProps} from '@expPages/workspace/withPolicy';
-import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
-import ToggleSettingOptionRow from '@expPages/workspace/workflows/ToggleSettingsOptionRow';
 import * as Policy from '@userActions/Policy/Policy';
 import CONST from '@src/CONST';
 import type {TranslationPaths} from '@src/languages/types';
@@ -32,7 +32,11 @@ function XeroTrackingCategoryConfigurationPage({policy}: WithPolicyProps) {
             id: category.id,
             description: translate('workspace.xero.mapTrackingCategoryTo', {categoryName: category.name}) as TranslationPaths,
             onPress: () => Navigation.navigate(ROUTES.POLICY_ACCOUNTING_XERO_TRACKING_CATEGORIES_MAP.getRoute(policyID, category.id, category.name)),
-            title: translate(`workspace.xero.trackingCategoriesOptions.${!StringUtils.isEmptyString(category.value) ? category.value.toLowerCase() : 'default'}` as TranslationPaths),
+            title: translate(
+                `workspace.xero.trackingCategoriesOptions.${
+                    !StringUtils.isEmptyString(category.value) ? category.value.toUpperCase() : CONST.XERO_CONFIG.TRACKING_CATEGORY_OPTIONS.DEFAULT
+                }` as TranslationPaths,
+            ),
         }));
     }, [translate, policy, policyID]);
 
@@ -57,7 +61,7 @@ function XeroTrackingCategoryConfigurationPage({policy}: WithPolicyProps) {
                 errors={ErrorUtils.getLatestErrorField(xeroConfig ?? {}, CONST.XERO_CONFIG.IMPORT_TRACKING_CATEGORIES)}
                 onCloseError={() => Policy.clearXeroErrorField(policyID, CONST.XERO_CONFIG.IMPORT_TRACKING_CATEGORIES)}
             />
-            {xeroConfig?.importTrackingCategories && (
+            {!!xeroConfig?.importTrackingCategories && (
                 <View>
                     {menuItems.map((menuItem) => (
                         <OfflineWithFeedback

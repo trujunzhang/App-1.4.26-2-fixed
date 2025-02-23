@@ -1,4 +1,4 @@
-// import type {MarkdownStyle} from '@expensify/react-native-live-markdown';
+import type {MarkdownStyle} from '@expensify/react-native-live-markdown';
 import type {GestureResponderEvent, StyleProp, TextInputProps, TextStyle, ViewStyle} from 'react-native';
 import type {AnimatedTextInputRef} from '@components/RNTextInput';
 import type IconAsset from '@src/types/utils/IconAsset';
@@ -53,6 +53,9 @@ type CustomBaseTextInputProps = {
      * Autogrow input container length based on the entered text.
      */
     autoGrow?: boolean;
+
+    /** If autoGrow is enabled, this reserves extra space for incoming characters to prevent flickering on native platforms. */
+    autoGrowExtraSpace?: number;
 
     /**
      * Autogrow input container height based on the entered text
@@ -117,8 +120,7 @@ type CustomBaseTextInputProps = {
     isMarkdownEnabled?: boolean;
 
     /** List of markdowns that won't be styled as a markdown */
-    // excludedMarkdownStyles?: Array<keyof MarkdownStyle>;
-    excludedMarkdownStyles?: unknown;
+    excludedMarkdownStyles?: Array<keyof MarkdownStyle>;
 
     /** Whether the clear button should be displayed */
     shouldShowClearButton?: boolean;

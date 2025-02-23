@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import {FBCollections, ReviewType} from '../../constant';
-import {SortObject, SortTag} from '../../review-sort';
 import type {IFirebaseReviewQuery, IReviewQueryParas} from './types';
 
 class FirebaseReviewQuery implements IFirebaseReviewQuery {

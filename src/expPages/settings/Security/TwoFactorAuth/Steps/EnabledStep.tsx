@@ -1,3 +1,5 @@
+import StepWrapper from '@expPages/settings/Security/TwoFactorAuth/StepWrapper/StepWrapper';
+import useTwoFactorAuthContext from '@expPages/settings/Security/TwoFactorAuth/TwoFactorAuthContext/useTwoFactorAuth';
 import React from 'react';
 import {View} from 'react-native';
 import * as Expensicons from '@components/Icon/Expensicons';
@@ -8,8 +10,6 @@ import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
-import StepWrapper from '@expPages/settings/Security/TwoFactorAuth/StepWrapper/StepWrapper';
-import useTwoFactorAuthContext from '@expPages/settings/Security/TwoFactorAuth/TwoFactorAuthContext/useTwoFactorAuth';
 import CONST from '@src/CONST';
 
 function EnabledStep() {

@@ -1,9 +1,9 @@
 import {collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where} from 'firebase/firestore';
 import {db} from '@libs/FirebaseIeatta/config/firebase';
 import {FBCollections} from '@libs/FirebaseIeatta/constant';
-import type {IeattaModelsWithoutUser, IFBEvent, IFBPeopleInEvent, IFBPhoto, IFBRecipe, IFBRestaurant, IFBReview, IFBUser} from '@src/types/firebase';
-import type {CoverData, DeleteData, GetData, SetData, UpdateCover} from './types';
+import type {IeattaModelsWithoutUser, IFBUser} from '@src/types/firebase';
 import type IFirebaseHelper from './types';
+import type {DeleteData, GetData, SetData, UpdateCover} from './types';
 
 class FirebaseHelper implements IFirebaseHelper {
     /**

@@ -1,4 +1,4 @@
-import type {ListItem, ListItemProps, UserListItemProps} from '@components/SelectionList/types';
+import type {ListItem, ListItemProps, UserListItemProps} from '@components/Ieatta/components/SelectionList/types';
 import type {IFBPhoto, IFBRestaurant} from '@src/types/firebase';
 
 type ChoiceRecipeItem = ListItem & {
@@ -15,8 +15,9 @@ type ChoiceOrderedUserItem = ListItem & {
 
 type SearchRestaurantsItem = ListItem & IFBRestaurant;
 
-type AddRecipeListItemProps<TItem extends ChoiceRecipeItem> = UserListItemProps<TItem>;
-type AddUserListItemProps<TItem extends ChoiceOrderedUserItem> = UserListItemProps<TItem>;
+type AddRecipeListItemProps<TItem extends ListItem> = UserListItemProps<TItem>;
+
+type AddUserListItemProps<TItem extends ListItem> = UserListItemProps<TItem>;
 type SearchRestaurantsItemProps<TItem extends SearchRestaurantsItem> = ListItemProps<TItem>;
 
 export type {AddRecipeListItemProps, AddUserListItemProps, ChoiceRecipeItem, ChoiceOrderedUserItem, SearchRestaurantsItem, SearchRestaurantsItemProps, ChoiceWaiterItem};

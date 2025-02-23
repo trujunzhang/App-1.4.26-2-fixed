@@ -1,4 +1,7 @@
-import type {StackScreenProps} from '@react-navigation/stack';
+import NotFoundPage from '@expPages/ErrorPage/NotFoundPage';
+import AccessOrNotFoundWrapper from '@expPages/workspace/AccessOrNotFoundWrapper';
+import type {WithPolicyAndFullscreenLoadingProps} from '@expPages/workspace/withPolicyAndFullscreenLoading';
+import withPolicyAndFullscreenLoading from '@expPages/workspace/withPolicyAndFullscreenLoading';
 import React, {useMemo, useState} from 'react';
 import {View} from 'react-native';
 import {useOnyx} from 'react-native-onyx';
@@ -15,19 +18,16 @@ import usePrevious from '@hooks/usePrevious';
 import useThemeStyles from '@hooks/useThemeStyles';
 import * as ReportField from '@libs/actions/Policy/ReportField';
 import Navigation from '@libs/Navigation/Navigation';
+import type {PlatformStackScreenProps} from '@libs/Navigation/PlatformStackNavigation/types';
 import * as PolicyUtils from '@libs/PolicyUtils';
 import * as ReportUtils from '@libs/ReportUtils';
 import type {SettingsNavigatorParamList} from '@navigation/types';
-import NotFoundPage from '@expPages/ErrorPage/NotFoundPage';
-import AccessOrNotFoundWrapper from '@expPages/workspace/AccessOrNotFoundWrapper';
-import type {WithPolicyAndFullscreenLoadingProps} from '@expPages/workspace/withPolicyAndFullscreenLoading';
-import withPolicyAndFullscreenLoading from '@expPages/workspace/withPolicyAndFullscreenLoading';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
 import type SCREENS from '@src/SCREENS';
 
-type ReportFieldsValueSettingsPageProps = WithPolicyAndFullscreenLoadingProps & StackScreenProps<SettingsNavigatorParamList, typeof SCREENS.WORKSPACE.REPORT_FIELDS_VALUE_SETTINGS>;
+type ReportFieldsValueSettingsPageProps = WithPolicyAndFullscreenLoadingProps & PlatformStackScreenProps<SettingsNavigatorParamList, typeof SCREENS.WORKSPACE.REPORT_FIELDS_VALUE_SETTINGS>;
 
 function ReportFieldsValueSettingsPage({
     policy,

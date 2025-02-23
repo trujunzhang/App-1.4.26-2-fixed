@@ -1,6 +1,5 @@
 // import { deleteLocalImage, SqlPhoto } from '@shared-sql/model/sql-photo'
 // import { SqlRepository } from '@shared-sql/repository/sql-repository'
-import FirebasePhoto from './firebase-photo';
 
 class FirebaseSync {
     // eslint-disable-next-line @lwc/lwc/no-async-await

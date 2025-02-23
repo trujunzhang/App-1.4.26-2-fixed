@@ -17,6 +17,9 @@ const LinkingCommonScreens = {
 const LinkingRightModal = {
     [SCREENS.RIGHT_MODAL.EDIT_IEATTA]: {
         screens: {
+            [SCREENS.RIGHT_IEATTA.SETTINGS_ROOT_RIGHT]: {
+                path: ROUTES.SETTINGS_ROOT_RIGHT,
+            },
             [SCREENS.RIGHT_IEATTA.RESTAURANT]: ROUTES.EDIT_RESTAURANT.route,
             [SCREENS.RIGHT_IEATTA.EVENT]: ROUTES.EDIT_EVENT.route,
             [SCREENS.RIGHT_IEATTA.RECIPE]: ROUTES.EDIT_RECIPE.route,

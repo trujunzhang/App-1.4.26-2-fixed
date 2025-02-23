@@ -1,5 +1,5 @@
-import type {GestureResponderEvent, StyleProp, ViewStyle} from 'react-native';
 import type {ContextMenuAnchor} from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
+import type {GestureResponderEvent, StyleProp, ViewStyle} from 'react-native';
 import type * as OnyxTypes from '@src/types/onyx';
 import type IconAsset from '@src/types/utils/IconAsset';
 

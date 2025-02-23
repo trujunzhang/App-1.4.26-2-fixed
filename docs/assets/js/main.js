@@ -235,7 +235,7 @@ mobileBreakpoint.addEventListener('change', handleBreakpointChange);
 // Initial check
 handleBreakpointChange();
 
-function selectNewIeatta(newExpensifyTab, newExpensifyContent, expensifyClassicTab, expensifyClassicContent) {
+function selectNewExpensify(newExpensifyTab, newExpensifyContent, expensifyClassicTab, expensifyClassicContent) {
     newExpensifyTab.classList.add('active');
     newExpensifyContent.classList.remove('hidden');
 
@@ -290,7 +290,7 @@ window.addEventListener('DOMContentLoaded', () => {
         selectExpensifyClassic(newExpensifyTab, newExpensifyContent, expensifyClassicTab, expensifyClassicContent);
     } else if (newExpensifyContent) {
         contentSelector = '#new-expensify';
-        selectNewIeatta(newExpensifyTab, newExpensifyContent, expensifyClassicTab, expensifyClassicContent);
+        selectNewExpensify(newExpensifyTab, newExpensifyContent, expensifyClassicTab, expensifyClassicContent);
     }
 
     if (window.tocbot) {
@@ -307,12 +307,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // eslint-disable-next-line es/no-optional-chaining
     newExpensifyTab?.addEventListener('click', () => {
-        selectNewIeatta(newExpensifyTab, newExpensifyContent, expensifyClassicTab, expensifyClassicContent);
+        selectNewExpensify(newExpensifyTab, newExpensifyContent, expensifyClassicTab, expensifyClassicContent);
     });
 
     document.getElementById('header-button').addEventListener('click', toggleHeaderMenu);
 
-    // Back button doesn't exist on all the expPages
+    // Back button doesn't exist on all the pages
     const backButton = document.getElementById('back-button');
     if (backButton) {
         backButton.addEventListener('click', navigateBack);

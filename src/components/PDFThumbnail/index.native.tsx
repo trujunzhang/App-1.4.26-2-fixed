@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useState} from 'react';
 import {View} from 'react-native';
 // import Pdf from 'react-native-pdf';
@@ -16,7 +15,7 @@ function PDFThumbnail({previewSourceURL, style, isAuthTokenRequired = false, ena
     return (
         <View style={[style, styles.overflowHidden]}>
             <View style={[sizeStyles, !failedToLoad && styles.alignItemsCenter, styles.justifyContentCenter]}>
-                {/* {enabled && !failedToLoad && (
+                {/*                 {enabled && !failedToLoad && (
                     <Pdf
                         fitPolicy={0}
                         trustAllCerts={false}

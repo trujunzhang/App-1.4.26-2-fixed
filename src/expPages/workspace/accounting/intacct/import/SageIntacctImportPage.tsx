@@ -1,3 +1,6 @@
+import withPolicy from '@expPages/workspace/withPolicy';
+import type {WithPolicyProps} from '@expPages/workspace/withPolicy';
+import ToggleSettingOptionRow from '@expPages/workspace/workflows/ToggleSettingsOptionRow';
 import {Str} from 'expensify-common';
 import React, {useMemo} from 'react';
 import ConnectionLayout from '@components/ConnectionLayout';
@@ -9,9 +12,6 @@ import {clearSageIntacctErrorField, updateSageIntacctBillable, updateSageIntacct
 import * as ErrorUtils from '@libs/ErrorUtils';
 import Navigation from '@libs/Navigation/Navigation';
 import {areSettingsInErrorFields, getCurrentSageIntacctEntityName, settingsPendingAction} from '@libs/PolicyUtils';
-import withPolicy from '@expPages/workspace/withPolicy';
-import type {WithPolicyProps} from '@expPages/workspace/withPolicy';
-import ToggleSettingOptionRow from '@expPages/workspace/workflows/ToggleSettingsOptionRow';
 import CONST from '@src/CONST';
 import type {TranslationPaths} from '@src/languages/types';
 import ROUTES from '@src/ROUTES';

@@ -1,5 +1,5 @@
-import React from 'react';
 import ThirdPartySignInPage from '@expPages/signin/ThirdPartySignInPage';
+import React from 'react';
 import CONST from '@src/CONST';
 
 function AppleSignInDesktopPage() {

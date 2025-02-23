@@ -1,3 +1,4 @@
+/* eslint-disable rulesdir/boolean-conditional-rendering */
 import type {ReactNode, RefObject} from 'react';
 import React, {useState} from 'react';
 import type {StyleProp, ViewStyle} from 'react-native';

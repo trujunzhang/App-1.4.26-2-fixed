@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// import type {MarkdownStyle} from '@expensify/react-native-live-markdown';
+import type {MarkdownStyle} from '@expensify/react-native-live-markdown';
+import {useIsFocused} from '@react-navigation/native';
 import lodashDebounce from 'lodash/debounce';
 import type {BaseSyntheticEvent, ForwardedRef} from 'react';
 import React, {useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 // eslint-disable-next-line no-restricted-imports
 import type {NativeSyntheticEvent, TextInput, TextInputKeyPressEventData, TextInputSelectionChangeEventData} from 'react-native';
-import {DeviceEventEmitter, StyleSheet} from 'react-native';
+import {DeviceEventEmitter, InteractionManager, StyleSheet} from 'react-native';
 import type {ComposerProps} from '@components/Composer/types';
 import type {AnimatedMarkdownTextInputRef} from '@components/RNMarkdownTextInput';
 import RNMarkdownTextInput from '@components/RNMarkdownTextInput';
@@ -17,14 +17,14 @@ import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import addEncryptedAuthTokenToURL from '@libs/addEncryptedAuthTokenToURL';
 import * as Browser from '@libs/Browser';
-import updateIsFullComposerAvailable from '@libs/ComposerUtils/updateIsFullComposerAvailable';
 import * as EmojiUtils from '@libs/EmojiUtils';
 import * as FileUtils from '@libs/fileDownload/FileUtils';
 import isEnterWhileComposition from '@libs/KeyboardShortcut/isEnterWhileComposition';
+import variables from '@styles/variables';
 import CONST from '@src/CONST';
 
-// const excludeNoStyles: Array<keyof MarkdownStyle> = [];
-// const excludeReportMentionStyle: Array<keyof MarkdownStyle> = ['mentionReport'];
+const excludeNoStyles: Array<keyof MarkdownStyle> = [];
+const excludeReportMentionStyle: Array<keyof MarkdownStyle> = ['mentionReport'];
 const imagePreviewAuthRequiredURLs = [CONST.EXPENSIFY_URL, CONST.STAGING_EXPENSIFY_URL];
 
 // Enable Markdown parsing.
@@ -42,7 +42,6 @@ function Composer(
         onClear = () => {},
         onPasteFile = () => {},
         onSelectionChange = () => {},
-        setIsFullComposerAvailable = () => {},
         checkComposerVisibility = () => false,
         selection: selectionProp = {
             start: 0,
@@ -51,6 +50,7 @@ function Composer(
         isComposerFullSize = false,
         shouldContainScroll = true,
         isGroupPolicyReport = false,
+        showSoftInputOnFocus = true,
         ...props
     }: ComposerProps,
     ref: ForwardedRef<TextInput | HTMLInputElement>,
@@ -58,7 +58,7 @@ function Composer(
     const textContainsOnlyEmojis = useMemo(() => EmojiUtils.containsOnlyEmojis(value ?? ''), [value]);
     const theme = useTheme();
     const styles = useThemeStyles();
-    // const markdownStyle = useMarkdownStyle(value, !isGroupPolicyReport ? excludeReportMentionStyle : excludeNoStyles);
+    const markdownStyle = useMarkdownStyle(value, !isGroupPolicyReport ? excludeReportMentionStyle : excludeNoStyles);
     const StyleUtils = useStyleUtils();
     const textInput = useRef<AnimatedMarkdownTextInputRef | null>(null);
     const [selection, setSelection] = useState<
@@ -73,9 +73,16 @@ function Composer(
         start: selectionProp.start,
         end: selectionProp.end,
     });
+    const [hasMultipleLines, setHasMultipleLines] = useState(false);
     const [isRendered, setIsRendered] = useState(false);
+
+    // On mobile safari, the cursor will move from right to left with inputMode set to none during report transition
+    // To avoid that we should hide the cursor util the transition is finished
+    const [shouldTransparentCursor, setShouldTransparentCursor] = useState(!showSoftInputOnFocus && Browser.isMobileSafari());
+
     const isScrollBarVisible = useIsScrollBarVisible(textInput, value ?? '');
     const [prevScroll, setPrevScroll] = useState<number | undefined>();
+    const [prevHeight, setPrevHeight] = useState<number | undefined>();
     const isReportFlatListScrolling = useRef(false);
 
     useEffect(() => {
@@ -133,24 +140,24 @@ function Composer(
     const handlePaste = useCallback(
         (event: ClipboardEvent) => {
             const isVisible = checkComposerVisibility();
-            // const isFocused = textInput.current?.isFocused();
+            const isFocused = textInput.current?.isFocused();
             const isContenteditableDivFocused = document.activeElement?.nodeName === 'DIV' && document.activeElement?.hasAttribute('contenteditable');
 
-            // if (!(isVisible || isFocused)) {
-            //     return true;
-            // }
+            if (!(isVisible || isFocused)) {
+                return true;
+            }
 
-            // if (textInput.current !== event.target && !(isContenteditableDivFocused && !event.clipboardData?.files.length)) {
-            //     const eventTarget = event.target as HTMLInputElement | HTMLTextAreaElement | null;
-            //     // To make sure the composer does not capture paste events from other inputs, we check where the event originated
-            //     // If it did originate in another input, we return early to prevent the composer from handling the paste
-            //     const isTargetInput = eventTarget?.nodeName === 'INPUT' || eventTarget?.nodeName === 'TEXTAREA' || eventTarget?.contentEditable === 'true';
-            //     if (isTargetInput || (!isFocused && isContenteditableDivFocused && event.clipboardData?.files.length)) {
-            //         return true;
-            //     }
+            if (textInput.current !== event.target && !(isContenteditableDivFocused && !event.clipboardData?.files.length)) {
+                const eventTarget = event.target as HTMLInputElement | HTMLTextAreaElement | null;
+                // To make sure the composer does not capture paste events from other inputs, we check where the event originated
+                // If it did originate in another input, we return early to prevent the composer from handling the paste
+                const isTargetInput = eventTarget?.nodeName === 'INPUT' || eventTarget?.nodeName === 'TEXTAREA' || eventTarget?.contentEditable === 'true';
+                if (isTargetInput || (!isFocused && isContenteditableDivFocused && event.clipboardData?.files.length)) {
+                    return true;
+                }
 
-            //     textInput.current?.focus();
-            // }
+                textInput.current?.focus();
+            }
 
             event.preventDefault();
 
@@ -244,19 +251,29 @@ function Composer(
     }, []);
 
     useEffect(() => {
-        if (!textInput.current || prevScroll === undefined) {
+        if (!textInput.current || prevScroll === undefined || prevHeight === undefined) {
             return;
         }
         // eslint-disable-next-line react-compiler/react-compiler
-        textInput.current.scrollTop = prevScroll;
+        textInput.current.scrollTop = prevScroll + prevHeight - textInput.current.clientHeight;
         // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
     }, [isComposerFullSize]);
 
-    // useHtmlPaste(textInput, handlePaste, true);
+    const isActive = useIsFocused();
+    useHtmlPaste(textInput, handlePaste, isActive);
 
     useEffect(() => {
         setIsRendered(true);
     }, []);
+
+    useEffect(() => {
+        if (!shouldTransparentCursor) {
+            return;
+        }
+        InteractionManager.runAfterInteractions(() => {
+            setShouldTransparentCursor(false);
+        });
+    }, [shouldTransparentCursor]);
 
     const clear = useCallback(() => {
         if (!textInput.current) {
@@ -264,7 +281,7 @@ function Composer(
         }
 
         const currentText = textInput.current.value;
-        // textInput.current.clear();
+        textInput.current.clear();
 
         // We need to reset the selection to 0,0 manually after clearing the text input on web
         const selectionEvent = {
@@ -331,38 +348,39 @@ function Composer(
             scrollStyleMemo,
             StyleUtils.getComposerMaxHeightStyle(maxLines, isComposerFullSize),
             isComposerFullSize ? {height: '100%', maxHeight: 'none'} : undefined,
-            textContainsOnlyEmojis ? styles.onlyEmojisTextLineHeight : {},
+            textContainsOnlyEmojis && hasMultipleLines ? styles.onlyEmojisTextLineHeight : {},
         ],
 
-        [style, styles.rtlTextRenderForSafari, styles.onlyEmojisTextLineHeight, scrollStyleMemo, StyleUtils, maxLines, isComposerFullSize, textContainsOnlyEmojis],
+        [style, styles.rtlTextRenderForSafari, styles.onlyEmojisTextLineHeight, scrollStyleMemo, hasMultipleLines, StyleUtils, maxLines, isComposerFullSize, textContainsOnlyEmojis],
     );
 
-    // return (
-    //     <RNMarkdownTextInput
-    //         id={CONST.COMPOSER.NATIVE_ID}
-    //         autoComplete="off"
-    //         autoCorrect={!Browser.isMobileSafari()}
-    //         placeholderTextColor={theme.placeholderText}
-    //         ref={(el) => (textInput.current = el)}
-    //         selection={selection}
-    //         style={[inputStyleMemo]}
-    //         markdownStyle={markdownStyle}
-    //         value={value}
-    //         defaultValue={defaultValue}
-    //         autoFocus={autoFocus}
-    //         /* eslint-disable-next-line react/jsx-props-no-spreading */
-    //         {...props}
-    //         onSelectionChange={addCursorPositionToSelectionChange}
-    //         onContentSizeChange={(e) => {
-    //             updateIsFullComposerAvailable({maxLines, isComposerFullSize, isDisabled, setIsFullComposerAvailable}, e, styles);
-    //         }}
-    //         disabled={isDisabled}
-    //         onKeyPress={handleKeyPress}
-    //         addAuthTokenToImageURLCallback={addEncryptedAuthTokenToURL}
-    //         imagePreviewAuthRequiredURLs={imagePreviewAuthRequiredURLs}
-    //     />
-    // );
-    return null;
+    return (
+        <RNMarkdownTextInput
+            id={CONST.COMPOSER.NATIVE_ID}
+            autoComplete="off"
+            autoCorrect={!Browser.isMobileSafari()}
+            placeholderTextColor={theme.placeholderText}
+            ref={(el) => (textInput.current = el)}
+            selection={selection}
+            style={[inputStyleMemo, shouldTransparentCursor ? {caretColor: 'transparent'} : undefined]}
+            markdownStyle={markdownStyle}
+            value={value}
+            defaultValue={defaultValue}
+            autoFocus={autoFocus}
+            inputMode={showSoftInputOnFocus ? 'text' : 'none'}
+            /* eslint-disable-next-line react/jsx-props-no-spreading */
+            {...props}
+            onSelectionChange={addCursorPositionToSelectionChange}
+            onContentSizeChange={(e) => {
+                setPrevHeight(e.nativeEvent.contentSize.height);
+                setHasMultipleLines(e.nativeEvent.contentSize.height > variables.componentSizeLarge);
+            }}
+            disabled={isDisabled}
+            onKeyPress={handleKeyPress}
+            addAuthTokenToImageURLCallback={addEncryptedAuthTokenToURL}
+            imagePreviewAuthRequiredURLs={imagePreviewAuthRequiredURLs}
+        />
+    );
 }
 
 Composer.displayName = 'Composer';

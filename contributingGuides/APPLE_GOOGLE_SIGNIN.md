@@ -126,7 +126,7 @@ index 4286a26033..850f8944ca 100644
     - For Google, use http://localhost:8082 (make sure the port matches whatever you see in the browser when you run `npm run web`)
     - For Apple, see [Configure the SSH tunneling](#configure-the-ssh-tunneling)
 2. Download and install the latest version of [SwiftDefaultApps](https://github.com/Lord-Kamina/SwiftDefaultApps?tab=readme-ov-file#installing--uninstalling).
-3. Open `System Settings` => `Swift Default Apps` => `URI Schemes` => `new-expensify` and select `New Ieatta.app`
+3. Open `System Settings` => `Swift Default Apps` => `URI Schemes` => `new-expensify` and select `New Expensify.app`
 4. Note that a dev build of the desktop app will not work. You'll create and install a local staging build:
    1. Update `build-desktop.sh` replacing `--publish always` with `--publish never`. 
    2. Run `npm run desktop-build-staging` and install the locally-generated desktop app to test.

@@ -1,3 +1,4 @@
+import AddressFormFields from '@expPages/ReimbursementAccount/AddressFormFields';
 import {subYears} from 'date-fns';
 import React from 'react';
 import {View} from 'react-native';
@@ -19,7 +20,6 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import * as PersonalDetailsUtils from '@libs/PersonalDetailsUtils';
 import {parsePhoneNumber} from '@libs/PhoneNumber';
 import * as ValidationUtils from '@libs/ValidationUtils';
-import AddressFormFields from '@expPages/ReimbursementAccount/AddressFormFields';
 import * as Wallet from '@userActions/Wallet';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';

@@ -1,6 +1,6 @@
 import type {StackScreenProps} from '@react-navigation/stack';
 import lodashGet from 'lodash/get';
-import type {AuthScreensParamList, CentralPaneScreensParamList} from '@libs/Navigation/types';
+import type {AuthScreensParamList} from '@libs/Navigation/types';
 import CONST from '@src/CONST';
 import type SCREENS from '@src/SCREENS';
 

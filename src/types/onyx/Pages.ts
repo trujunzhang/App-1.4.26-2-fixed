@@ -1,5 +1,5 @@
 /**
- * An array of arrays of IDs, representing expPages of a resource fetched via pagination.
+ * An array of arrays of IDs, representing pages of a resource fetched via pagination.
  *
  * Here's an example (assuming a page size of 5 and sequential IDs):
  *
@@ -25,7 +25,7 @@
  *        8,
  *        9,
  *      ],
- *      // This space between these non-continuous expPages represents a gap that must be filled
+ *      // This space between these non-continuous pages represents a gap that must be filled
  *      [
  *        11,
  *        12,
@@ -44,7 +44,7 @@
  *        7,
  *        8,
  *        9,
- *        // Note: the gap is filled and the expPages are now continuous/merged together
+ *        // Note: the gap is filled and the pages are now continuous/merged together
  *        10,
  *        11,
  *        12,

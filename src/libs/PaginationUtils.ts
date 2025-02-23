@@ -99,7 +99,7 @@ function getPagesWithIndexes<TResource>(sortedItems: TResource[], pages: Pages, 
 }
 
 /**
- * Given a sorted array of items and an array of Pages of item IDs, find any overlapping expPages and merge them together.
+ * Given a sorted array of items and an array of Pages of item IDs, find any overlapping pages and merge them together.
  */
 function mergeAndSortContinuousPages<TResource>(sortedItems: TResource[], pages: Pages, getItemID: (item: TResource) => string): Pages {
     const pagesWithIndexes = getPagesWithIndexes(sortedItems, pages, getItemID);
@@ -161,7 +161,7 @@ function mergeAndSortContinuousPages<TResource>(sortedItems: TResource[], pages:
 
 /**
  * Returns the page of items that contains the item with the given ID, or the first page if null.
- * Also returns whether next / previous expPages can be fetched.
+ * Also returns whether next / previous pages can be fetched.
  * See unit tests for example of inputs and expected outputs.
  *
  * Note: sortedItems should be sorted in descending order.

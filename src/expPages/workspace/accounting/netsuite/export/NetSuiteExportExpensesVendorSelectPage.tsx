@@ -1,3 +1,6 @@
+import type {ExpenseRouteParams} from '@expPages/workspace/accounting/netsuite/types';
+import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
+import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
 import {useRoute} from '@react-navigation/native';
 import React, {useCallback, useMemo} from 'react';
 import BlockingView from '@components/BlockingViews/BlockingView';
@@ -11,9 +14,6 @@ import * as Connections from '@libs/actions/connections/NetSuiteCommands';
 import * as ErrorUtils from '@libs/ErrorUtils';
 import Navigation from '@libs/Navigation/Navigation';
 import {getNetSuiteVendorOptions, settingsPendingAction} from '@libs/PolicyUtils';
-import type {ExpenseRouteParams} from '@expPages/workspace/accounting/netsuite/types';
-import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
-import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
 import variables from '@styles/variables';
 import * as Policy from '@userActions/Policy/Policy';
 import CONST from '@src/CONST';

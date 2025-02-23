@@ -6,12 +6,12 @@
 # Purpose:
 # --------
 # This script configures Configure iOS simulators and Android emulators to connect to
-# new.expensify.com.dev over https for local development.
+# new.ieatta.com.dev over https for local development.
 #
 # Background:
 # -----------
 # We plan to change the URL to serve the App on the development environment from
-# localhost:8082 to new.expensify.com.dev. This can be accomplished by adding a new entry
+# localhost:8082 to new.ieatta.com.dev. This can be accomplished by adding a new entry
 # to the laptop's hosts file along with changes made in the PR.
 # However, we're not sure how we can access the App on Safari or Chrome on iOS or Android
 # simulators.

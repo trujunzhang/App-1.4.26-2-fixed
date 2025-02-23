@@ -1,3 +1,4 @@
+import {formatSubscriptionEndDate, getNewSubscriptionRenewalDate} from '@expPages/settings/Subscription/utils';
 import React from 'react';
 import {View} from 'react-native';
 import {useOnyx} from 'react-native-onyx';
@@ -9,7 +10,6 @@ import useLocalize from '@hooks/useLocalize';
 import type {SubStepProps} from '@hooks/useSubStep/types';
 import useThemeStyles from '@hooks/useThemeStyles';
 import Navigation from '@navigation/Navigation';
-import {formatSubscriptionEndDate, getNewSubscriptionRenewalDate} from '@expPages/settings/Subscription/utils';
 import ONYXKEYS from '@src/ONYXKEYS';
 import INPUT_IDS from '@src/types/form/SubscriptionSizeForm';
 

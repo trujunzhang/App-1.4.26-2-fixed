@@ -82,8 +82,7 @@ function FormAlertWrapper({
                     {content}
                 </FormHelpMessage>
             )}
-            {/* {children(!!network.isOffline)} */}
-            {children(false)}
+            {children(!!network.isOffline)}
         </View>
     );
 }

@@ -38,3 +38,9 @@ SettingsModalStackNavigator
 
 
     plugins/react-navigation-drawer-6.6.10/packages/native/src/useLinking.native.tsx
+
+import {getQuickbooksOnlineSetupLink} from '@libs/actions/connections/QuickbooksOnline';
+
+import {getQuickbooksOnlineSetupLink} from '@libs/actions/connections/QuickbooksOnline';
+
+

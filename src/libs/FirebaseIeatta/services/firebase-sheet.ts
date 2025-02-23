@@ -1,9 +1,11 @@
-import type {IFBEvent, IFBPeopleInEvent, IFBReview} from '@src/types/firebase';
-import {ParseModelEvents, ParseModelPeopleInEvent, ParseModelReviews} from '../appModel';
-import {FBCollections, FBRemoveType} from '../constant';
-import FirebaseHelper from './firebase-helper';
+/* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
+
+/* eslint-disable default-case-last */
+
+/* eslint-disable @typescript-eslint/require-await */
+import {FBRemoveType} from '../constant';
+
 // import { ISheetModelState } from '@shared-store/slice/popupSlice'
-import ReviewHelper, {ReviewHookType} from './help/review-helper';
 
 class FirebaseSheet {
     // private rootState: RootState

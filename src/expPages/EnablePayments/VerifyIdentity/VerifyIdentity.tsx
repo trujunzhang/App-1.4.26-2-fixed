@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import {useOnyx} from 'react-native-onyx';
@@ -36,12 +35,12 @@ function VerifyIdentity() {
 
     const handleOnfidoSuccess = useCallback(
         (onfidoData: OnfidoData) => {
-            // BankAccounts.verifyIdentity({
-            //     onfidoData: JSON.stringify({
-            //         ...onfidoData,
-            //         applicantID: walletOnfidoData?.applicantID,
-            //     }),
-            // });
+            BankAccounts.verifyIdentity({
+                onfidoData: JSON.stringify({
+                    ...onfidoData,
+                    applicantID: walletOnfidoData?.applicantID,
+                }),
+            });
             BankAccounts.updateAddPersonalBankAccountDraft({isOnfidoSetupComplete: true});
         },
         [walletOnfidoData?.applicantID],

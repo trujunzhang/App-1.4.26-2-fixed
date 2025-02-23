@@ -4,7 +4,6 @@
 
 /* eslint-disable @typescript-eslint/naming-convention */
 // eslint-disable-next-line lodash/import-scope
-import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import type {IAuthUser} from '@libs/FirebaseIeatta/models/auth_user_model';
 import {convertToGeoHash} from '@libs/FirebaseIeatta/utils/geohash_utils';

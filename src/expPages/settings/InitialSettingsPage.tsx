@@ -1,3 +1,4 @@
+import * as ReportActionContextMenu from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
 import {useRoute} from '@react-navigation/native';
 import React, {useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 // eslint-disable-next-line no-restricted-imports
@@ -8,6 +9,7 @@ import type {ValueOf} from 'type-fest';
 import AccountSwitcher from '@components/AccountSwitcher';
 import AccountSwitcherSkeletonView from '@components/AccountSwitcherSkeletonView';
 import ConfirmModal from '@components/ConfirmModal';
+import DelegateNoAccessModal from '@components/DelegateNoAccessModal';
 import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
 import {InitialURLContext} from '@components/InitialURLContextProvider';
@@ -34,8 +36,8 @@ import Navigation from '@libs/Navigation/Navigation';
 import * as SubscriptionUtils from '@libs/SubscriptionUtils';
 import * as UserUtils from '@libs/UserUtils';
 import {hasGlobalWorkspaceSettingsRBR} from '@libs/WorkspacesSettingsUtils';
-import * as ReportActionContextMenu from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
 import variables from '@styles/variables';
+import * as App from '@userActions/App';
 import * as Link from '@userActions/Link';
 import * as PaymentMethods from '@userActions/PaymentMethods';
 import * as Session from '@userActions/Session';
@@ -49,9 +51,7 @@ import type {Icon as TIcon} from '@src/types/onyx/OnyxCommon';
 import {isEmptyObject} from '@src/types/utils/EmptyObject';
 import type IconAsset from '@src/types/utils/IconAsset';
 
-type InitialSettingsPageProps = WithCurrentUserPersonalDetailsProps & {
-    shouldShowLeftBackArrow?: boolean;
-};
+type InitialSettingsPageProps = WithCurrentUserPersonalDetailsProps;
 
 type MenuData = {
     translationKey: TranslationPaths;
@@ -75,13 +75,19 @@ type MenuData = {
 
 type Menu = {sectionStyle: StyleProp<ViewStyle>; sectionTranslationKey: TranslationPaths; items: MenuData[]};
 
-function InitialSettingsPage({currentUserPersonalDetails, shouldShowLeftBackArrow = true}: InitialSettingsPageProps) {
+function InitialSettingsPage({currentUserPersonalDetails}: InitialSettingsPageProps) {
     const [userWallet] = useOnyx(ONYXKEYS.USER_WALLET);
     const [bankAccountList] = useOnyx(ONYXKEYS.BANK_ACCOUNT_LIST);
     const [fundList] = useOnyx(ONYXKEYS.FUND_LIST);
     const [walletTerms] = useOnyx(ONYXKEYS.WALLET_TERMS);
     const [loginList] = useOnyx(ONYXKEYS.LOGIN_LIST);
     const [policies] = useOnyx(ONYXKEYS.COLLECTION.POLICY);
+    const [privatePersonalDetails] = useOnyx(ONYXKEYS.PRIVATE_PERSONAL_DETAILS);
+    const [tryNewDot] = useOnyx(ONYXKEYS.NVP_TRYNEWDOT);
+
+    const [isActingAsDelegate] = useOnyx(ONYXKEYS.ACCOUNT, {selector: (account) => !!account?.delegatedAccess?.delegate});
+
+    const [isNoDelegateAccessMenuVisible, setIsNoDelegateAccessMenuVisible] = useState(false);
 
     const network = useNetwork();
     const theme = useTheme();
@@ -101,9 +107,11 @@ function InitialSettingsPage({currentUserPersonalDetails, shouldShowLeftBackArro
     const [shouldShowSignoutConfirmModal, setShouldShowSignoutConfirmModal] = useState(false);
 
     const freeTrialText = SubscriptionUtils.getFreeTrialText(policies);
+    const shouldOpenBookACall = tryNewDot?.classicRedirect?.dismissed === false;
 
     useEffect(() => {
         Wallet.openInitialSettingsPage();
+        App.confirmReadyToOpenApp();
     }, []);
 
     const toggleSignoutConfirmModal = (value: boolean) => {
@@ -128,7 +136,7 @@ function InitialSettingsPage({currentUserPersonalDetails, shouldShowLeftBackArro
      * @returns object with translationKey, style and items for the account section
      */
     const accountMenuItemsData: Menu = useMemo(() => {
-        const profileBrickRoadIndicator = UserUtils.getLoginListBrickRoadIndicator(loginList);
+        const profileBrickRoadIndicator = UserUtils.getProfilePageBrickRoadIndicator(loginList, privatePersonalDetails);
         const paymentCardList = fundList;
         const defaultMenu: Menu = {
             sectionStyle: styles.accountSettingsSectionContainer,
@@ -163,7 +171,7 @@ function InitialSettingsPage({currentUserPersonalDetails, shouldShowLeftBackArro
         };
 
         return defaultMenu;
-    }, [loginList, fundList, styles.accountSettingsSectionContainer, bankAccountList, userWallet?.errors, walletTerms?.errors]);
+    }, [loginList, fundList, styles.accountSettingsSectionContainer, bankAccountList, userWallet?.errors, walletTerms?.errors, privatePersonalDetails]);
 
     /**
      * Retuns a list of menu items data for workspace section
@@ -173,7 +181,7 @@ function InitialSettingsPage({currentUserPersonalDetails, shouldShowLeftBackArro
         const items: MenuData[] = [
             {
                 translationKey: 'common.workspaces',
-                icon: Expensicons.Building,
+                icon: Expensicons.Buildings,
                 routeName: ROUTES.SETTINGS_WORKSPACES,
                 brickRoadIndicator: hasGlobalWorkspaceSettingsRBR(policies, allConnectionSyncProgresses) ? CONST.BRICK_ROAD_INDICATOR_STATUS.ERROR : undefined,
             },
@@ -241,7 +249,17 @@ function InitialSettingsPage({currentUserPersonalDetails, shouldShowLeftBackArro
                           }
                         : {
                               action() {
-                                  resetExitSurveyForm(() => Navigation.navigate(ROUTES.SETTINGS_EXIT_SURVEY_REASON));
+                                  if (isActingAsDelegate) {
+                                      setIsNoDelegateAccessMenuVisible(true);
+                                      return;
+                                  }
+                                  resetExitSurveyForm(() => {
+                                      if (shouldOpenBookACall) {
+                                          Navigation.navigate(ROUTES.SETTINGS_EXIT_SURVERY_BOOK_CALL.route);
+                                          return;
+                                      }
+                                      Navigation.navigate(ROUTES.SETTINGS_EXIT_SURVEY_CONFIRM.route);
+                                  });
                               },
                           }),
                 },
@@ -269,7 +287,7 @@ function InitialSettingsPage({currentUserPersonalDetails, shouldShowLeftBackArro
                 },
             ],
         };
-    }, [styles.pt4, signOut, setInitialURL]);
+    }, [styles.pt4, signOut, setInitialURL, shouldOpenBookACall, isActingAsDelegate]);
 
     /**
      * Retuns JSX.Element with menu items
@@ -334,6 +352,7 @@ function InitialSettingsPage({currentUserPersonalDetails, shouldShowLeftBackArro
                                 }
                                 iconRight={item.iconRight}
                                 shouldShowRightIcon={item.shouldShowRightIcon}
+                                shouldIconUseAutoWidthStyle
                             />
                         );
                     })}
@@ -353,27 +372,28 @@ function InitialSettingsPage({currentUserPersonalDetails, shouldShowLeftBackArro
                 <AccountSwitcherSkeletonView avatarSize={CONST.AVATAR_SIZE.DEFAULT} />
             ) : (
                 <View style={[styles.flexRow, styles.justifyContentBetween, styles.alignItemsCenter, styles.gap3]}>
-                    {shouldShowLeftBackArrow && (
-                        <Tooltip text={translate('statusPage.status')}>
-                            <PressableWithFeedback
-                                accessibilityLabel={translate('statusPage.status')}
-                                accessibilityRole="button"
-                                accessible
-                                // onPress={() => Navigation.navigate(ROUTES.SETTINGS_STATUS)}
-                                onPress={() => Navigation.goBack()}
-                            >
-                                <View style={[styles.primaryMediumIcon, shouldShowLeftBackArrow && {backgroundColor: 'transparent'}]}>
+                    <AccountSwitcher />
+                    <Tooltip text={translate('statusPage.status')}>
+                        <PressableWithFeedback
+                            accessibilityLabel={translate('statusPage.status')}
+                            accessibilityRole="button"
+                            accessible
+                            onPress={() => Navigation.navigate(ROUTES.SETTINGS_STATUS)}
+                        >
+                            <View style={styles.primaryMediumIcon}>
+                                {emojiCode ? (
+                                    <Text style={styles.primaryMediumText}>{emojiCode}</Text>
+                                ) : (
                                     <Icon
-                                        src={Expensicons.BackArrow}
+                                        src={Expensicons.Emoji}
                                         width={variables.iconSizeNormal}
                                         height={variables.iconSizeNormal}
                                         fill={theme.icon}
                                     />
-                                </View>
-                            </PressableWithFeedback>
-                        </Tooltip>
-                    )}
-                    <AccountSwitcher />
+                                )}
+                            </View>
+                        </PressableWithFeedback>
+                    </Tooltip>
                 </View>
             )}
         </View>
@@ -406,9 +426,10 @@ function InitialSettingsPage({currentUserPersonalDetails, shouldShowLeftBackArro
     return (
         <ScreenWrapper
             style={[styles.w100, styles.pb0]}
-            includePaddingTop
-            includeSafeAreaPaddingBottom
+            includePaddingTop={false}
+            includeSafeAreaPaddingBottom={false}
             testID={InitialSettingsPage.displayName}
+            shouldEnableKeyboardAvoidingView={false}
         >
             {headerContent}
             <ScrollView
@@ -432,6 +453,10 @@ function InitialSettingsPage({currentUserPersonalDetails, shouldShowLeftBackArro
                     onCancel={() => toggleSignoutConfirmModal(false)}
                 />
             </ScrollView>
+            <DelegateNoAccessModal
+                isNoDelegateAccessMenuVisible={isNoDelegateAccessMenuVisible}
+                onClose={() => setIsNoDelegateAccessMenuVisible(false)}
+            />
         </ScreenWrapper>
     );
 }

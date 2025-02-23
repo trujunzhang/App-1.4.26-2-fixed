@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+import type {WithWritableReportOrNotFoundProps} from '@expPages/iou/request/step/withWritableReportOrNotFound';
 import type {StackScreenProps} from '@react-navigation/stack';
 import type {OnyxEntry} from 'react-native-onyx';
 import type {RightIeattaNavigatorParamList} from '@libs/Navigation/types';
-import type {WithWritableReportOrNotFoundProps} from '@expPages/iou/request/step/withWritableReportOrNotFound';
 import type SCREENS from '@src/SCREENS';
 import type * as OnyxTypes from '@src/types/onyx';
 

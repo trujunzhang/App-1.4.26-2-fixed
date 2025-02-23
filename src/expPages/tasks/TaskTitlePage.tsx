@@ -1,4 +1,5 @@
-import type {RouteProp} from '@react-navigation/native';
+import withReportOrNotFound from '@expPages/home/report/withReportOrNotFound';
+import type {WithReportOrNotFoundProps} from '@expPages/home/report/withReportOrNotFound';
 import {useRoute} from '@react-navigation/native';
 import React, {useCallback, useRef} from 'react';
 import {View} from 'react-native';
@@ -16,10 +17,9 @@ import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import * as ErrorUtils from '@libs/ErrorUtils';
 import Navigation from '@libs/Navigation/Navigation';
+import type {PlatformStackRouteProp} from '@libs/Navigation/PlatformStackNavigation/types';
 import type {TaskDetailsNavigatorParamList} from '@libs/Navigation/types';
 import * as ReportUtils from '@libs/ReportUtils';
-import withReportOrNotFound from '@expPages/home/report/withReportOrNotFound';
-import type {WithReportOrNotFoundProps} from '@expPages/home/report/withReportOrNotFound';
 import * as Task from '@userActions/Task';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
@@ -30,7 +30,7 @@ import {isEmptyObject} from '@src/types/utils/EmptyObject';
 type TaskTitlePageProps = WithReportOrNotFoundProps & WithCurrentUserPersonalDetailsProps;
 
 function TaskTitlePage({report, currentUserPersonalDetails}: TaskTitlePageProps) {
-    const route = useRoute<RouteProp<TaskDetailsNavigatorParamList, typeof SCREENS.TASK.TITLE>>();
+    const route = useRoute<PlatformStackRouteProp<TaskDetailsNavigatorParamList, typeof SCREENS.TASK.TITLE>>();
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 
@@ -75,7 +75,7 @@ function TaskTitlePage({report, currentUserPersonalDetails}: TaskTitlePageProps)
 
     return (
         <ScreenWrapper
-            includeSafeAreaPaddingBottom={false}
+            includeSafeAreaPaddingBottom
             onEntryTransitionEnd={() => {
                 inputRef?.current?.focus();
             }}

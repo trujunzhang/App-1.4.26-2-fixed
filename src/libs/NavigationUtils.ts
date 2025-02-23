@@ -4,6 +4,9 @@ import getTopmostBottomTabRoute from './Navigation/getTopmostBottomTabRoute';
 import type {CentralPaneName, OnboardingFlowName, RootStackParamList, State} from './Navigation/types';
 
 const CENTRAL_PANE_SCREEN_NAMES = new Set([
+    SCREENS.RESTAURANT,
+    SCREENS.EVENT,
+    SCREENS.RECIPE,
     SCREENS.SETTINGS.WORKSPACES,
     SCREENS.SETTINGS.PREFERENCES.ROOT,
     SCREENS.SETTINGS.SECURITY,
@@ -15,9 +18,6 @@ const CENTRAL_PANE_SCREEN_NAMES = new Set([
     SCREENS.SETTINGS.SUBSCRIPTION.ROOT,
     SCREENS.SEARCH.CENTRAL_PANE,
     SCREENS.REPORT,
-    SCREENS.RESTAURANT,
-    SCREENS.EVENT,
-    SCREENS.RECIPE,
 ]);
 
 const ONBOARDING_SCREEN_NAMES = new Set([
@@ -26,6 +26,8 @@ const ONBOARDING_SCREEN_NAMES = new Set([
     SCREENS.ONBOARDING_MODAL.ONBOARDING,
     SCREENS.ONBOARDING.EMPLOYEES,
     SCREENS.ONBOARDING.ACCOUNTING,
+    SCREENS.ONBOARDING.PRIVATE_DOMAIN,
+    SCREENS.ONBOARDING.WORKSPACES,
 ]);
 
 const removePolicyIDParamFromState = (state: State<RootStackParamList>) => {

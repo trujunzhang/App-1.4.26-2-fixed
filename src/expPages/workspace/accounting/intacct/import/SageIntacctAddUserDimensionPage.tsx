@@ -1,3 +1,5 @@
+import withPolicy from '@expPages/workspace/withPolicy';
+import type {WithPolicyProps} from '@expPages/workspace/withPolicy';
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import ConnectionLayout from '@components/ConnectionLayout';
@@ -11,8 +13,6 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import {addSageIntacctUserDimensions} from '@libs/actions/connections/SageIntacct';
 import * as ErrorUtils from '@libs/ErrorUtils';
 import Navigation from '@libs/Navigation/Navigation';
-import withPolicy from '@expPages/workspace/withPolicy';
-import type {WithPolicyProps} from '@expPages/workspace/withPolicy';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';

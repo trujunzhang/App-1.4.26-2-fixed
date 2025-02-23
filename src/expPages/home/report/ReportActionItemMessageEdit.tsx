@@ -109,6 +109,7 @@ function ReportActionItemMessageEdit(
     const [selection, setSelection] = useState<TextSelection>({start: draft.length, end: draft.length, positionX: 0, positionY: 0});
     const [isFocused, setIsFocused] = useState<boolean>(false);
     const {hasExceededMaxCommentLength, validateCommentMaxLength} = useHandleExceedMaxCommentLength();
+    const debouncedValidateCommentMaxLength = useMemo(() => lodashDebounce(validateCommentMaxLength, CONST.TIMING.COMMENT_LENGTH_DEBOUNCE_TIME), [validateCommentMaxLength]);
     const [modal, setModal] = useState<OnyxTypes.Modal>({
         willAlertModalBecomeVisible: false,
         isVisible: false,
@@ -243,6 +244,7 @@ function ReportActionItemMessageEdit(
      */
     const debouncedSaveDraft = useMemo(
         () =>
+            // eslint-disable-next-line react-compiler/react-compiler
             lodashDebounce((newDraft: string) => {
                 Report.saveReportActionDraft(reportID, action, newDraft);
                 isCommentPendingSaved.current = false;
@@ -416,7 +418,7 @@ function ReportActionItemMessageEdit(
     const measureParentContainerAndReportCursor = useCallback(
         (callback: MeasureParentContainerAndCursorCallback) => {
             const {scrollValue} = getScrollPosition({mobileInputScrollPosition, textInputRef});
-            const {x: xPosition, y: yPosition} = getCursorPosition({positionOnMobile: cursorPositionValue.value, positionOnWeb: selection});
+            const {x: xPosition, y: yPosition} = getCursorPosition({positionOnMobile: cursorPositionValue.get(), positionOnWeb: selection});
             measureContainer((x, y, width, height) => {
                 callback({
                     x,
@@ -428,25 +430,23 @@ function ReportActionItemMessageEdit(
                 });
             });
         },
-        [cursorPositionValue.value, measureContainer, selection],
+        [cursorPositionValue, measureContainer, selection],
     );
 
     useEffect(() => {
         // We use the tag to store the native ID of the text input. Later, we use it in onSelectionChange to pick up the proper text input data.
-
-        // eslint-disable-next-line react-compiler/react-compiler
-        tag.value = findNodeHandle(textInputRef.current) ?? -1;
+        tag.set(findNodeHandle(textInputRef.current) ?? -1);
     }, [tag]);
     useFocusedInputHandler(
         {
             onSelectionChange: (event) => {
                 'worklet';
 
-                if (event.target === tag.value) {
-                    cursorPositionValue.value = {
+                if (event.target === tag.get()) {
+                    cursorPositionValue.set({
                         x: event.selection.end.x,
                         y: event.selection.end.y,
-                    };
+                    });
                 }
             },
         },
@@ -454,8 +454,8 @@ function ReportActionItemMessageEdit(
     );
 
     useEffect(() => {
-        validateCommentMaxLength(draft, {reportID});
-    }, [draft, reportID, validateCommentMaxLength]);
+        debouncedValidateCommentMaxLength(draft, {reportID});
+    }, [draft, reportID, debouncedValidateCommentMaxLength]);
 
     useEffect(() => {
         // required for keeping last state of isFocused variable
@@ -465,6 +465,8 @@ function ReportActionItemMessageEdit(
             hideSuggestionMenu();
         }
     }, [isFocused, hideSuggestionMenu]);
+
+    const closeButtonStyles = [styles.composerSizeButton, {marginVertical: styles.composerSizeButton.marginHorizontal}];
 
     return (
         <>
@@ -485,7 +487,7 @@ function ReportActionItemMessageEdit(
                         <Tooltip text={translate('common.cancel')}>
                             <PressableWithFeedback
                                 onPress={deleteDraft}
-                                style={styles.composerSizeButton}
+                                style={closeButtonStyles}
                                 role={CONST.ROLE.BUTTON}
                                 accessibilityLabel={translate('common.close')}
                                 // disable dimming
@@ -559,6 +561,7 @@ function ReportActionItemMessageEdit(
 
                     <Suggestions
                         ref={suggestionsRef}
+                        // eslint-disable-next-line react-compiler/react-compiler
                         isComposerFocused={textInputRef.current?.isFocused()}
                         updateComment={updateDraft}
                         measureParentContainerAndReportCursor={measureParentContainerAndReportCursor}

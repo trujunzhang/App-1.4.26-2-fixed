@@ -57,7 +57,7 @@ const webpackConfig = ({config}: {config: Configuration}) => {
         'react-native-config': 'react-web-config',
         'react-native$': 'react-native-web',
         '@react-native-community/netinfo': path.resolve(__dirname, '../__mocks__/@react-native-community/netinfo.ts'),
-        // '@react-navigation/native': path.resolve(__dirname, '../__mocks__/@react-navigation/native'),
+        '@react-navigation/native': path.resolve(__dirname, '../__mocks__/@react-navigation/native'),
         ...custom.resolve.alias,
     };
 
@@ -95,7 +95,7 @@ const webpackConfig = ({config}: {config: Configuration}) => {
     });
 
     config.module.rules?.push({
-        test: /pdf\.worker\.mjs$/,
+        test: /pdf\.worker\.min\.mjs$/,
         type: 'asset/source',
     });
 

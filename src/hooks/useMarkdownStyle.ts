@@ -1,18 +1,16 @@
-// import type {MarkdownStyle} from '@expensify/react-native-live-markdown';
+import type {MarkdownStyle} from '@expensify/react-native-live-markdown';
 import {useMemo} from 'react';
 import {containsOnlyEmojis} from '@libs/EmojiUtils';
 import FontUtils from '@styles/utils/FontUtils';
 import variables from '@styles/variables';
 import useTheme from './useTheme';
 
-// const defaultEmptyArray: Array<keyof MarkdownStyle> = [];
-const defaultEmptyArray: unknown = [];
+const defaultEmptyArray: Array<keyof MarkdownStyle> = [];
 
-// function useMarkdownStyle(message: string | null = null, excludeStyles: Array<keyof MarkdownStyle> = defaultEmptyArray): MarkdownStyle {
-function useMarkdownStyle(message: string | null = null, excludeStyles: unknown = defaultEmptyArray): unknown {
+function useMarkdownStyle(message: string | null = null, excludeStyles: Array<keyof MarkdownStyle> = defaultEmptyArray): MarkdownStyle {
     const theme = useTheme();
     const hasMessageOnlyEmojis = message != null && message.length > 0 && containsOnlyEmojis(message);
-    const emojiFontSize = hasMessageOnlyEmojis ? variables.fontSizeOnlyEmojis : variables.fontSizeNormal;
+    const emojiFontSize = hasMessageOnlyEmojis ? variables.fontSizeOnlyEmojis : variables.fontSizeEmojisWithinText;
 
     // this map is used to reset the styles that are not needed - passing undefined value can break the native side
     const nonStylingDefaultValues: Record<string, string | number> = useMemo(
@@ -40,6 +38,7 @@ function useMarkdownStyle(message: string | null = null, excludeStyles: unknown 
             },
             emoji: {
                 fontSize: emojiFontSize,
+                lineHeight: variables.lineHeightXLarge,
             },
             blockquote: {
                 borderColor: theme.border,
@@ -92,16 +91,16 @@ function useMarkdownStyle(message: string | null = null, excludeStyles: unknown 
             loadingIndicatorContainer: {},
         };
 
-        // if (excludeStyles.length) {
-        //     excludeStyles.forEach((key) => {
-        //         const style: Record<string, unknown> = styling[key];
-        //         if (style) {
-        //             Object.keys(style).forEach((styleKey) => {
-        //                 style[styleKey] = nonStylingDefaultValues[styleKey] ?? style[styleKey];
-        //             });
-        //         }
-        //     });
-        // }
+        if (excludeStyles.length) {
+            excludeStyles.forEach((key) => {
+                const style: Record<string, unknown> = styling[key];
+                if (style) {
+                    Object.keys(style).forEach((styleKey) => {
+                        style[styleKey] = nonStylingDefaultValues[styleKey] ?? style[styleKey];
+                    });
+                }
+            });
+        }
 
         return styling;
     }, [theme, emojiFontSize, excludeStyles, nonStylingDefaultValues]);

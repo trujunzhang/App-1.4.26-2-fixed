@@ -2,10 +2,11 @@ import {Str} from 'expensify-common';
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import * as Ieattaicons from '@components/Icon/Ieattaicons';
+import BaseListItem from '@components/Ieatta/components/SelectionList/BaseListItem';
+import type {ListItem} from '@components/Ieatta/components/SelectionList/types';
 import ImagePlaceholder from '@components/ImagePlaceholder';
 import PressableWithFeedback from '@components/Pressable/PressableWithFeedback';
 import SelectCircle from '@components/SelectCircle';
-import BaseListItem from '@components/SelectionList/BaseListItem';
 import Text from '@components/Text';
 import TextWithTooltip from '@components/TextWithTooltip';
 import useLocalize from '@hooks/useLocalize';
@@ -14,7 +15,7 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import CONST from '@src/CONST';
 import type {AddRecipeListItemProps, ChoiceRecipeItem} from './types';
 
-function AddRecipeListItem<TItem extends ChoiceRecipeItem>({
+function AddRecipeListItem<TItem extends ListItem>({
     item,
     isFocused,
     showTooltip,
@@ -73,7 +74,7 @@ function AddRecipeListItem<TItem extends ChoiceRecipeItem>({
                 <>
                     <View style={[styles.leftImageWrapperInSelectionListItem, styles.mr2]}>
                         <ImagePlaceholder
-                            sourceUri={item.recipeUrl}
+                            sourceUri={(item as unknown as ChoiceRecipeItem).recipeUrl}
                             style={[styles.w100, styles.h100]}
                             imageType="png"
                             placeholder={Ieattaicons.PNGBusinessMediumSquare}
@@ -102,6 +103,7 @@ function AddRecipeListItem<TItem extends ChoiceRecipeItem>({
                         )}
                     </View>
                     {!!item.rightElement && item.rightElement}
+                    {/* eslint-disable-next-line rulesdir/boolean-conditional-rendering */}
                     {canSelectMultiple && !item.isDisabled && (
                         <PressableWithFeedback
                             onPress={handleCheckboxPress}

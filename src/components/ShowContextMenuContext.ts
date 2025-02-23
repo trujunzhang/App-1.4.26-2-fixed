@@ -1,11 +1,11 @@
+import * as ReportActionContextMenu from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
+import type {ContextMenuAnchor} from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
 import {createContext} from 'react';
 // eslint-disable-next-line no-restricted-imports
 import type {GestureResponderEvent} from 'react-native';
 import type {OnyxEntry} from 'react-native-onyx';
 import * as DeviceCapabilities from '@libs/DeviceCapabilities';
 import * as ReportUtils from '@libs/ReportUtils';
-import * as ReportActionContextMenu from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
-import type {ContextMenuAnchor} from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
 import CONST from '@src/CONST';
 import type {Report, ReportAction, ReportNameValuePairs} from '@src/types/onyx';
 
@@ -44,7 +44,7 @@ ShowContextMenuContext.displayName = 'ShowContextMenuContext';
 function showContextMenuForReport(
     event: GestureResponderEvent | MouseEvent,
     anchor: ContextMenuAnchor,
-    reportID: string,
+    reportID: string | undefined,
     action: OnyxEntry<ReportAction>,
     checkIfContextMenuActive: () => void,
     isArchivedRoom = false,
@@ -60,7 +60,7 @@ function showContextMenuForReport(
         anchor,
         reportID,
         action?.reportActionID,
-        ReportUtils.getOriginalReportID(reportID, action),
+        reportID ? ReportUtils.getOriginalReportID(reportID, action) : undefined,
         undefined,
         checkIfContextMenuActive,
         checkIfContextMenuActive,

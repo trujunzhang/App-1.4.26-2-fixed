@@ -1,3 +1,7 @@
+import StepWrapper from '@expPages/settings/Security/TwoFactorAuth/StepWrapper/StepWrapper';
+import useTwoFactorAuthContext from '@expPages/settings/Security/TwoFactorAuth/TwoFactorAuthContext/useTwoFactorAuth';
+import TwoFactorAuthForm from '@expPages/settings/Security/TwoFactorAuth/TwoFactorAuthForm';
+import type {BaseTwoFactorAuthFormOnyxProps, BaseTwoFactorAuthFormRef} from '@expPages/settings/Security/TwoFactorAuth/TwoFactorAuthForm/types';
 import React, {useRef} from 'react';
 import {View} from 'react-native';
 import {withOnyx} from 'react-native-onyx';
@@ -8,10 +12,6 @@ import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import type {BackToParams} from '@libs/Navigation/types';
-import StepWrapper from '@expPages/settings/Security/TwoFactorAuth/StepWrapper/StepWrapper';
-import useTwoFactorAuthContext from '@expPages/settings/Security/TwoFactorAuth/TwoFactorAuthContext/useTwoFactorAuth';
-import TwoFactorAuthForm from '@expPages/settings/Security/TwoFactorAuth/TwoFactorAuthForm';
-import type {BaseTwoFactorAuthFormOnyxProps, BaseTwoFactorAuthFormRef} from '@expPages/settings/Security/TwoFactorAuth/TwoFactorAuthForm/types';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 

@@ -138,9 +138,9 @@ Yes. When a tag is manually edited, Expensify will log the change in the related
 
 If a tag is disabled in the accounting system, it will be removed from the workspace’s tags list in the workspace. However, the disabled tag will remain on approved and drafted expense reports that it has been previously added to. An admin can change the tag on an approved or reimbursed expense, and anyone can change the tag on an unapproved expense.
 
-**Can I set up multi-level tags in New Ieatta?**
+**Can I set up multi-level tags in New Expensify?**
 
-At this time, only single-level tags are available in New Ieatta. If you’ve used multi-level tags in Expensify Classic, you will see the first-level tag in New Ieatta. Multi-level tags are under development.
+At this time, only single-level tags are available in New Expensify. If you’ve used multi-level tags in Expensify Classic, you will see the first-level tag in New Expensify. Multi-level tags are under development.
 {% include faq-end.md %}
 
 </div>

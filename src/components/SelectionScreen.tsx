@@ -1,11 +1,11 @@
+import type {AccessVariant} from '@expPages/workspace/AccessOrNotFoundWrapper';
+import AccessOrNotFoundWrapper from '@expPages/workspace/AccessOrNotFoundWrapper';
 import isEmpty from 'lodash/isEmpty';
 import React from 'react';
 import type {StyleProp, ViewStyle} from 'react-native';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import * as PolicyUtils from '@libs/PolicyUtils';
-import type {AccessVariant} from '@expPages/workspace/AccessOrNotFoundWrapper';
-import AccessOrNotFoundWrapper from '@expPages/workspace/AccessOrNotFoundWrapper';
 import type {TranslationPaths} from '@src/languages/types';
 import type * as OnyxCommon from '@src/types/onyx/OnyxCommon';
 import type {ConnectionName, PolicyFeatureName} from '@src/types/onyx/Policy';
@@ -93,6 +93,18 @@ type SelectionScreenProps<T = string> = {
 
     /** Whether to update the focused index on a row select */
     shouldUpdateFocusedIndex?: boolean;
+
+    /** Whether to show the text input */
+    shouldShowTextInput?: boolean;
+
+    /** Label for the text input */
+    textInputLabel?: string;
+
+    /** Value for the text input */
+    textInputValue?: string;
+
+    /** Callback to fire when the text input changes */
+    onChangeText?: (text: string) => void;
 };
 
 function SelectionScreen<T = string>({
@@ -117,6 +129,10 @@ function SelectionScreen<T = string>({
     onClose,
     shouldSingleExecuteRowSelect,
     headerTitleAlreadyTranslated,
+    textInputLabel,
+    textInputValue,
+    onChangeText,
+    shouldShowTextInput,
     shouldUpdateFocusedIndex = false,
 }: SelectionScreenProps<T>) {
     const {translate} = useLocalize();
@@ -152,13 +168,18 @@ function SelectionScreen<T = string>({
                         sections={sections}
                         ListItem={listItem}
                         showScrollIndicator
+                        onChangeText={onChangeText}
                         shouldShowTooltips={false}
                         initiallyFocusedOptionKey={initiallyFocusedOptionKey}
                         listEmptyContent={listEmptyContent}
+                        textInputLabel={textInputLabel}
+                        textInputValue={textInputValue}
+                        shouldShowTextInput={shouldShowTextInput}
                         listFooterContent={listFooterContent}
                         sectionListStyle={!!sections.length && [styles.flexGrow0]}
                         shouldSingleExecuteRowSelect={shouldSingleExecuteRowSelect}
                         shouldUpdateFocusedIndex={shouldUpdateFocusedIndex}
+                        isAlternateTextMultilineSupported
                     >
                         <ErrorMessageRow
                             errors={errors}

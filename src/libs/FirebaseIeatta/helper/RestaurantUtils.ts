@@ -1,7 +1,6 @@
 import type {StackScreenProps} from '@react-navigation/stack';
 import lodashGet from 'lodash/get';
-import {FBCollections} from '@libs/FirebaseIeatta/constant';
-import type {AuthScreensParamList, CentralPaneScreensParamList} from '@navigation/types';
+import type {AuthScreensParamList} from '@navigation/types';
 import CONST from '@src/CONST';
 import type SCREENS from '@src/SCREENS';
 

@@ -2,6 +2,8 @@ import type {PhotoType} from '@libs/FirebaseIeatta/constant';
 import {documentIdFromCurrentDate} from '@libs/FirebaseIeatta/utils/md5_utils';
 
 export default {
+    SETTINGS_ROOT_RIGHT: 'settings_root_right',
+
     RESTAURANT: 'res',
     RESTAURANT_WITH_ID: {
         route: 'res/:restaurantId?',

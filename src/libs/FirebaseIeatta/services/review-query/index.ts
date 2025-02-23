@@ -19,7 +19,7 @@ import type {Query} from 'firebase/firestore';
 import {collection, orderBy, query, where} from 'firebase/firestore';
 import {db} from '@libs/FirebaseIeatta/config/firebase';
 import {FBCollections, ReviewType} from '@libs/FirebaseIeatta/constant';
-import {SortObject, SortTag} from '@libs/FirebaseIeatta/review-sort';
+import {SortTag} from '@libs/FirebaseIeatta/review-sort';
 import type {IFirebaseReviewQuery, IReviewQueryParas} from './types';
 
 export class FirebaseReviewQuery implements IFirebaseReviewQuery {

@@ -1,7 +1,6 @@
 import type {
     QueryAllUsers,
     QueryEventOrMenuInRestaurant,
-    QueryForPeopleInEvents,
     QueryForPeopleInEventsParameter,
     QueryForPhotos,
     QueryForPhotosParameter,

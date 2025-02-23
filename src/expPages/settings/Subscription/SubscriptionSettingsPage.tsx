@@ -1,3 +1,4 @@
+import NotFoundPage from '@expPages/ErrorPage/NotFoundPage';
 import React, {useEffect} from 'react';
 import {View} from 'react-native';
 import {useOnyx} from 'react-native-onyx';
@@ -11,7 +12,6 @@ import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useSubscriptionPlan from '@hooks/useSubscriptionPlan';
 import useThemeStyles from '@hooks/useThemeStyles';
 import Navigation from '@libs/Navigation/Navigation';
-import NotFoundPage from '@expPages/ErrorPage/NotFoundPage';
 import * as Subscription from '@userActions/Subscription';
 import ONYXKEYS from '@src/ONYXKEYS';
 import CardSection from './CardSection/CardSection';
@@ -49,6 +49,7 @@ function SubscriptionSettingsPage() {
                 shouldShowBackButton={shouldUseNarrowLayout}
                 shouldDisplaySearchRouter
                 icon={Illustrations.CreditCardsNew}
+                shouldUseHeadlineHeader
             />
             <ScrollView style={styles.pt3}>
                 <View style={[styles.flex1, shouldUseNarrowLayout ? styles.workspaceSectionMobile : styles.workspaceSection]}>

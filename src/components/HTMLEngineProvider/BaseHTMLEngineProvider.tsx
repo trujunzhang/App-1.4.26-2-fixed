@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useMemo} from 'react';
 import type {TextProps} from 'react-native';
 import {HTMLContentModel, HTMLElementModel, RenderHTMLConfigProvider, TRenderEngineProvider} from 'react-native-render-html';
@@ -50,12 +49,22 @@ function BaseHTMLEngineProvider({textSelectable = false, children, enableExperim
             }),
             comment: HTMLElementModel.fromCustomModel({
                 tagName: 'comment',
-                mixedUAStyles: {whiteSpace: 'pre'},
+                getMixedUAStyles: (tnode) => {
+                    if (tnode.attributes.islarge === undefined) {
+                        return {whiteSpace: 'pre'};
+                    }
+                    return {whiteSpace: 'pre', ...styles.onlyEmojisText};
+                },
                 contentModel: HTMLContentModel.block,
             }),
             'email-comment': HTMLElementModel.fromCustomModel({
                 tagName: 'email-comment',
-                mixedUAStyles: {whiteSpace: 'normal'},
+                getMixedUAStyles: (tnode) => {
+                    if (tnode.attributes.islarge === undefined) {
+                        return {whiteSpace: 'normal'};
+                    }
+                    return {whiteSpace: 'normal', ...styles.onlyEmojisText};
+                },
                 contentModel: HTMLContentModel.block,
             }),
             strong: HTMLElementModel.fromCustomModel({
@@ -103,6 +112,7 @@ function BaseHTMLEngineProvider({textSelectable = false, children, enableExperim
             styles.textSupporting,
             styles.textLineThrough,
             styles.mutedNormalTextLabel,
+            styles.onlyEmojisText,
             styles.onlyEmojisTextLineHeight,
         ],
     );
@@ -111,33 +121,32 @@ function BaseHTMLEngineProvider({textSelectable = false, children, enableExperim
     // We need to memoize this prop to make it referentially stable.
     const defaultTextProps: TextProps = useMemo(() => ({selectable: textSelectable, allowFontScaling: false, textBreakStrategy: 'simple'}), [textSelectable]);
     const defaultViewProps = {style: [styles.alignItemsStart, styles.userSelectText]};
-    // return (
-    //     <TRenderEngineProvider
-    //         customHTMLElementModels={customHTMLElementModels}
-    //         baseStyle={styles.webViewStyles.baseFontStyle}
-    //         tagsStyles={styles.webViewStyles.tagStyles}
-    //         enableCSSInlineProcessing={false}
-    //         systemFonts={Object.values(FontUtils.fontFamily.single).map((font) => font.fontFamily)}
-    //         htmlParserOptions={{
-    //             recognizeSelfClosing: true,
-    //         }}
-    //         domVisitors={{
-    //             // eslint-disable-next-line no-param-reassign
-    //             onText: (text) => (text.data = convertToLTR(text.data)),
-    //         }}
-    //     >
-    //         <RenderHTMLConfigProvider
-    //             defaultTextProps={defaultTextProps}
-    //             defaultViewProps={defaultViewProps}
-    //             renderers={htmlRenderers}
-    //             computeEmbeddedMaxWidth={HTMLEngineUtils.computeEmbeddedMaxWidth}
-    //             enableExperimentalBRCollapsing={enableExperimentalBRCollapsing}
-    //         >
-    //             {children}
-    //         </RenderHTMLConfigProvider>
-    //     </TRenderEngineProvider>
-    // );
-    return children;
+    return (
+        <TRenderEngineProvider
+            customHTMLElementModels={customHTMLElementModels}
+            baseStyle={styles.webViewStyles.baseFontStyle}
+            tagsStyles={styles.webViewStyles.tagStyles}
+            enableCSSInlineProcessing={false}
+            systemFonts={Object.values(FontUtils.fontFamily.single).map((font) => font.fontFamily)}
+            htmlParserOptions={{
+                recognizeSelfClosing: true,
+            }}
+            domVisitors={{
+                // eslint-disable-next-line no-param-reassign
+                onText: (text) => (text.data = convertToLTR(text.data)),
+            }}
+        >
+            <RenderHTMLConfigProvider
+                defaultTextProps={defaultTextProps}
+                defaultViewProps={defaultViewProps}
+                renderers={htmlRenderers}
+                computeEmbeddedMaxWidth={HTMLEngineUtils.computeEmbeddedMaxWidth}
+                enableExperimentalBRCollapsing={enableExperimentalBRCollapsing}
+            >
+                {children}
+            </RenderHTMLConfigProvider>
+        </TRenderEngineProvider>
+    );
 }
 
 BaseHTMLEngineProvider.displayName = 'BaseHTMLEngineProvider';

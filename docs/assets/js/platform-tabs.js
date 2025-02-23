@@ -12,7 +12,7 @@ if (expensifyClassicContent) {
 
 if (newExpensifyContent) {
     const tab = document.createElement('div');
-    tab.innerHTML = 'New Ieatta';
+    tab.innerHTML = 'New Expensify';
     tab.id = 'platform-tab-new-expensify';
 
     if (!expensifyClassicContent) {

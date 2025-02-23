@@ -1,3 +1,5 @@
+import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
+import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
 import React, {useMemo} from 'react';
 import type {StyleProp, TextStyle} from 'react-native';
 import {View} from 'react-native';
@@ -16,8 +18,6 @@ import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import Navigation from '@libs/Navigation/Navigation';
 import {areSettingsInErrorFields, settingsPendingAction} from '@libs/PolicyUtils';
-import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
-import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
 import type {ThemeStyles} from '@styles/index';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';

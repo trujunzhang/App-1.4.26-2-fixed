@@ -1,15 +1,16 @@
+import ReportAttachmentsContext from '@expPages/home/report/ReportAttachmentsContext';
 import React, {useContext, useState} from 'react';
 import type {StyleProp, ViewStyle} from 'react-native';
 import {View} from 'react-native';
 import AttachmentView from '@components/Attachments/AttachmentView';
 import type {Attachment} from '@components/Attachments/types';
 import Button from '@components/Button';
+import * as Expensicons from '@components/Icon/Expensicons';
 import PressableWithoutFeedback from '@components/Pressable/PressableWithoutFeedback';
 import SafeAreaConsumer from '@components/SafeAreaConsumer';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
-import ReportAttachmentsContext from '@expPages/home/report/ReportAttachmentsContext';
 import CONST from '@src/CONST';
 
 type CarouselItemProps = {
@@ -83,10 +84,11 @@ function CarouselItem({item, onPress, isFocused, isModalHovered}: CarouselItemPr
                     isHovered={isModalHovered}
                     isFocused={isFocused}
                     duration={item.duration}
+                    fallbackSource={Expensicons.AttachmentNotFound}
                 />
             </View>
 
-            {item.hasBeenFlagged && (
+            {!!item.hasBeenFlagged && (
                 <SafeAreaConsumer>
                     {({safeAreaPaddingBottomStyle}) => <View style={[styles.appBG, safeAreaPaddingBottomStyle]}>{renderButton([styles.m4, styles.alignSelfCenter])}</View>}
                 </SafeAreaConsumer>

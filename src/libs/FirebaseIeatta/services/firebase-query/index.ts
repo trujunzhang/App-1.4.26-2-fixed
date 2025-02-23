@@ -5,7 +5,6 @@ import type {DocumentReference, Query} from 'firebase/firestore';
 import {collection, doc, limit, orderBy, query, where} from 'firebase/firestore';
 import {db} from '@libs/FirebaseIeatta/config/firebase';
 import {FBCollections, PhotoType} from '@libs/FirebaseIeatta/constant';
-import type {IFBPeopleInEvent} from '@src/types/firebase';
 import type {
     QueryAllUsers,
     QueryEventOrMenuInRestaurant,

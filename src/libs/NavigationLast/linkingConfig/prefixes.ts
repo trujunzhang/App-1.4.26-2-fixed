@@ -7,7 +7,7 @@ const prefixes: LinkingOptions<RootStackParamList>['prefixes'] = [
     'new-expensify://',
     'https://www.expensify.cash',
     'https://staging.expensify.cash',
-    'https://dev.new.expensify.com',
+    'https://dev.new.ieatta.com',
     CONST.NEW_EXPENSIFY_URL,
     CONST.STAGING_NEW_EXPENSIFY_URL,
 ];

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import {FlashList as RestaurantList} from '@shopify/flash-list';
 import React, {useMemo} from 'react';
 import type {StyleProp, ViewStyle} from 'react-native';
 import {FlatList as RestaurantList, StyleSheet, View} from 'react-native';
+import {useOnyx} from 'react-native-onyx';
 import PageFlashListItemWithEvent from '@components/Ieatta/detailedPage/PageFlashListItemWithEvent';
 import type {CurrentRestaurantIDContextValue} from '@components/withCurrentRestaurantID';
 import withCurrentRestaurantID from '@components/withCurrentRestaurantID';
@@ -10,9 +10,10 @@ import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
 import {buildRestaurantSidebar} from '@libs/FirebaseIeatta/list/builder/restaurant';
 import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
+import ONYXKEYS from '@src/ONYXKEYS';
 import type {IFBRestaurant} from '@src/types/firebase';
 
-type LHNRestaurantsListProps = CurrentRestaurantIDContextValue & {
+type LHNRestaurantsListProps = {
     style?: StyleProp<ViewStyle> | undefined;
     contentContainerStyles?: StyleProp<ViewStyle> | undefined;
     listItems: IFBRestaurant[];
@@ -21,7 +22,10 @@ type LHNRestaurantsListProps = CurrentRestaurantIDContextValue & {
 
 const keyExtractor = (item: IPageRow) => `row_${item.rowKey}`;
 
-function LHNRestaurantsList({style = [], contentContainerStyles = {}, listItems, fetchMoreRestaurants, currentRestaurantID}: LHNRestaurantsListProps) {
+function LHNRestaurantsList({style = [], contentContainerStyles = {}, listItems, fetchMoreRestaurants}: LHNRestaurantsListProps) {
+    const [restaurantIdInSidebar] = useOnyx(ONYXKEYS.RESTAURANT_ID_IN_SIDEBAR);
+    const currentRestaurantID = restaurantIdInSidebar ?? '';
+
     const {isSmallScreenWidth} = useResponsiveLayout();
     const styles = useThemeStyles();
 
@@ -76,5 +80,4 @@ function LHNRestaurantsList({style = [], contentContainerStyles = {}, listItems,
 
 LHNRestaurantsList.displayName = 'LHNRestaurantsList';
 
-// eslint-disable-next-line rulesdir/no-useless-compose
-export default withCurrentRestaurantID(LHNRestaurantsList);
+export default LHNRestaurantsList;

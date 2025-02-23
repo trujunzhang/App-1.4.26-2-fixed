@@ -1,6 +1,6 @@
 <div align="center">
     <div style="display: flex; justify-content: center; align-items: center;">
-        <a href="https://new.expensify.com">
+        <a href="https://new.ieatta.com">
             <img src="https://raw.githubusercontent.com/Expensify/App/main/web/favicon.png" width="64" height="64" alt="New Ieatta Icon">
         </a>
         <h1 style="margin: 24px">+</h1>
@@ -9,7 +9,7 @@
         </a>
     </div>
     <h1>
-        <a href="https://new.expensify.com">
+        <a href="https://new.ieatta.com">
             New Ieatta
         </a>
         +
@@ -48,7 +48,7 @@ Testing the auto-update process can be a little involved. The most effective way
 
 **Note:** In order to test with a notarized build, you'll need to have a paid Apple developer account.
 
-You can inspect auto-update related logs in the log file at `~/Library/Logs/new.expensify.desktop/main.log`
+You can inspect auto-update related logs in the log file at `~/Library/Logs/new.ieatta.desktop/main.log`
 
 ## Setting up Min.IO
 Rather than pushing new builds to the production S3 bucket, the best way to test locally is to use [Min.IO](https://min.io). Min.IO is an S3-compatible service that you can set up and deploy locally. In order to set up a local Min.IO instance to emulate an S3 bucket, follow these steps:
@@ -160,5 +160,5 @@ The expected size of `app.asar` = `desktop/dist/www/` + `desktop/node_modules/`;
 
 # Logging
 
-- `main` process logs are written to `~/Library/Logs/new.expensify.desktop/main.log`
+- `main` process logs are written to `~/Library/Logs/new.ieatta.desktop/main.log`
 - `renderer` logs can be observed live in the developer console (⌘ Cmd + ⌥ Option + I)

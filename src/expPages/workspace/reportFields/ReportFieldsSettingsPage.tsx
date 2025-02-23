@@ -1,4 +1,7 @@
-import type {StackScreenProps} from '@react-navigation/stack';
+import NotFoundPage from '@expPages/ErrorPage/NotFoundPage';
+import AccessOrNotFoundWrapper from '@expPages/workspace/AccessOrNotFoundWrapper';
+import type {WithPolicyAndFullscreenLoadingProps} from '@expPages/workspace/withPolicyAndFullscreenLoading';
+import withPolicyAndFullscreenLoading from '@expPages/workspace/withPolicyAndFullscreenLoading';
 import {Str} from 'expensify-common';
 import React, {useState} from 'react';
 import {View} from 'react-native';
@@ -12,20 +15,17 @@ import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import localeCompare from '@libs/LocaleCompare';
 import Navigation from '@libs/Navigation/Navigation';
+import type {PlatformStackScreenProps} from '@libs/Navigation/PlatformStackNavigation/types';
 import * as PolicyUtils from '@libs/PolicyUtils';
 import * as ReportUtils from '@libs/ReportUtils';
 import * as WorkspaceReportFieldUtils from '@libs/WorkspaceReportFieldUtils';
 import type {SettingsNavigatorParamList} from '@navigation/types';
-import NotFoundPage from '@expPages/ErrorPage/NotFoundPage';
-import AccessOrNotFoundWrapper from '@expPages/workspace/AccessOrNotFoundWrapper';
-import type {WithPolicyAndFullscreenLoadingProps} from '@expPages/workspace/withPolicyAndFullscreenLoading';
-import withPolicyAndFullscreenLoading from '@expPages/workspace/withPolicyAndFullscreenLoading';
 import * as ReportField from '@userActions/Policy/ReportField';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';
 import type SCREENS from '@src/SCREENS';
 
-type ReportFieldsSettingsPageProps = WithPolicyAndFullscreenLoadingProps & StackScreenProps<SettingsNavigatorParamList, typeof SCREENS.WORKSPACE.REPORT_FIELDS_SETTINGS>;
+type ReportFieldsSettingsPageProps = WithPolicyAndFullscreenLoadingProps & PlatformStackScreenProps<SettingsNavigatorParamList, typeof SCREENS.WORKSPACE.REPORT_FIELDS_SETTINGS>;
 
 function ReportFieldsSettingsPage({
     policy,
@@ -113,7 +113,7 @@ function ReportFieldsSettingsPage({
                             style={[styles.moneyRequestMenuItem]}
                             titleStyle={styles.flex1}
                             title={WorkspaceReportFieldUtils.getReportFieldInitialValue(reportField)}
-                            description={translate('common.initialValue')}
+                            description={isDateFieldType ? translate('common.date') : translate('common.initialValue')}
                             shouldShowRightIcon={!isDateFieldType && !hasAccountingConnections}
                             interactive={!isDateFieldType && !hasAccountingConnections}
                             onPress={() => Navigation.navigate(ROUTES.WORKSPACE_EDIT_REPORT_FIELDS_INITIAL_VALUE.getRoute(policyID, reportFieldID))}

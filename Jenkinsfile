@@ -11,14 +11,14 @@ pipeline {
         }
         stage('Ready for node') { 
             steps {
-                nodejs('Node-v20.15.1') {
+                nodejs('Node-v20.18.1') {
                     sh 'npm install' 
                 }
             }
         }
         stage('Build android release apk') { 
             steps {
-                nodejs('Node-v20.15.1') {
+                nodejs('Node-v20.18.1') {
                     sh('''#!/bin/zsh -l
                          source ${HOME}/.zshrc
                          npm run android-build 

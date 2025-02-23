@@ -34,7 +34,7 @@ portfinder
                 env,
             },
             {
-                command: `wait-port dev.new.expensify.com:${port} && npx electronmon ./desktop/dev.js`,
+                command: `wait-port dev.new.ieatta.com:${port} && npx electronmon ./desktop/dev.js`,
                 name: 'Electron',
                 prefixColor: 'cyan.dim',
                 env,

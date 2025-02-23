@@ -1,3 +1,4 @@
+import WorkspaceResetBankAccountModal from '@expPages/workspace/WorkspaceResetBankAccountModal';
 import React from 'react';
 import Button from '@components/Button';
 import * as Expensicons from '@components/Icon/Expensicons';
@@ -8,7 +9,6 @@ import Section from '@components/Section';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
-import WorkspaceResetBankAccountModal from '@expPages/workspace/WorkspaceResetBankAccountModal';
 import * as BankAccounts from '@userActions/BankAccounts';
 import * as Report from '@userActions/Report';
 import type {ReimbursementAccount} from '@src/types/onyx';

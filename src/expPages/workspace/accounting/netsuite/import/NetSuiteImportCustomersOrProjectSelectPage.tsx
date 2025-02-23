@@ -1,3 +1,5 @@
+import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
+import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
 import React, {useCallback} from 'react';
 import RadioListItem from '@components/SelectionList/RadioListItem';
 import type {SelectorType} from '@components/SelectionScreen';
@@ -8,8 +10,6 @@ import {updateNetSuiteCustomersJobsMapping} from '@libs/actions/connections/NetS
 import * as ErrorUtils from '@libs/ErrorUtils';
 import Navigation from '@libs/Navigation/Navigation';
 import {areSettingsInErrorFields, settingsPendingAction} from '@libs/PolicyUtils';
-import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
-import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
 import * as Policy from '@userActions/Policy/Policy';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';

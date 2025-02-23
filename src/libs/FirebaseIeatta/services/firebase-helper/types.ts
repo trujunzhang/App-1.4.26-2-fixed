@@ -1,5 +1,5 @@
 import type {FBCollections} from '@libs/FirebaseIeatta/constant';
-import type {IeattaModelsWithoutUser, IFBEvent, IFBPeopleInEvent, IFBPhoto, IFBRecipe, IFBRestaurant, IFBReview, IFBUser} from '@src/types/firebase';
+import type {IeattaModelsWithoutUser, IFBUser} from '@src/types/firebase';
 
 type GetData = {path: FBCollections; id: string};
 

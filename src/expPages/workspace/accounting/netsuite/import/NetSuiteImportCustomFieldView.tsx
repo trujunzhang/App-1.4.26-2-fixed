@@ -1,3 +1,5 @@
+import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
+import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
 import React, {useCallback, useMemo, useState} from 'react';
 import type {ValueOf} from 'type-fest';
 import ConfirmModal from '@components/ConfirmModal';
@@ -13,8 +15,6 @@ import * as ErrorUtils from '@libs/ErrorUtils';
 import Navigation from '@libs/Navigation/Navigation';
 import * as PolicyUtils from '@libs/PolicyUtils';
 import {settingsPendingAction} from '@libs/PolicyUtils';
-import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
-import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
 import * as Policy from '@userActions/Policy/Policy';
 import CONST from '@src/CONST';
 import type {TranslationPaths} from '@src/languages/types';
@@ -96,7 +96,7 @@ function NetSuiteImportCustomFieldView({
             shouldBeBlocked={!customField}
             onBackButtonPress={() => Navigation.goBack(ROUTES.POLICY_ACCOUNTING_NETSUITE_IMPORT_CUSTOM_FIELD_MAPPING.getRoute(policyID, importCustomField))}
         >
-            {customField && (
+            {!!customField && (
                 <OfflineWithFeedback
                     errors={ErrorUtils.getLatestErrorField(config ?? {}, `${importCustomField}_${valueIndex}`)}
                     errorRowStyles={[styles.ph5, styles.pv3]}

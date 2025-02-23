@@ -1,10 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable no-invalid-this */
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line no-restricted-imports, lodash/import-scope
 import _ from 'lodash';
 import type {IFirebaseQuerySnapshot} from '@libs/FirebaseIeatta/types';
-import Log from '@libs/Log';
 import {upsetPersonalDetail} from '@userActions/Firebase/UserFB';
 
 class ListenerUsersSnapshot {

@@ -18,7 +18,7 @@ import FullPageOfflineBlockingView from './BlockingViews/FullPageOfflineBlocking
 import FormHelpMessage from './FormHelpMessage';
 import Icon from './Icon';
 import getBankIcon from './Icon/BankIcons';
-import PlaidLink from './PlaidLink';
+// import PlaidLink from './PlaidLink';
 import RadioButtons from './RadioButtons';
 import Text from './Text';
 
@@ -201,35 +201,35 @@ function AddPlaidBankAccount({
 
     const renderPlaidLink = () => {
         if (!!token && !bankName) {
-            return (
-                <PlaidLink
-                    token={token}
-                    onSuccess={({publicToken, metadata}) => {
-                        Log.info('[PlaidLink] Success!');
-                        // BankAccounts.openPlaidBankAccountSelector(publicToken, metadata?.institution?.name ?? '', allowDebit, bankAccountID);
-                    }}
-                    onError={handlePlaidError}
-                    onEvent={(event, metadata) => {
-                        BankAccounts.setPlaidEvent(event);
-                        // Handle Plaid login errors (will potentially reset plaid token and item depending on the error)
-                        // if (event === 'ERROR') {
-                        //     Log.hmmm('[PlaidLink] Error: ', {...metadata});
-                        //     if (bankAccountID && metadata && 'error_code' in metadata) {
-                        //         BankAccounts.handlePlaidError(bankAccountID, metadata.error_code ?? '', metadata.error_message ?? '', metadata.request_id);
-                        //     }
-                        // }
-
-                        // Limit the number of times a user can submit Plaid credentials
-                        if (event === 'SUBMIT_CREDENTIALS') {
-                            App.handleRestrictedEvent(event);
-                        }
-                    }}
-                    // User prematurely exited the Plaid flow
-                    // eslint-disable-next-line react/jsx-props-no-multi-spaces
-                    onExit={onExitPlaid}
-                    receivedRedirectURI={receivedRedirectURI}
-                />
-            );
+            //             return (
+            //                 <PlaidLink
+            //                     token={token}
+            //                     onSuccess={({publicToken, metadata}) => {
+            //                         Log.info('[PlaidLink] Success!');
+            //                         BankAccounts.openPlaidBankAccountSelector(publicToken, metadata?.institution?.name ?? '', allowDebit, bankAccountID);
+            //                     }}
+            //                     onError={handlePlaidError}
+            //                     onEvent={(event, metadata) => {
+            //                         BankAccounts.setPlaidEvent(event);
+            //                         // Handle Plaid login errors (will potentially reset plaid token and item depending on the error)
+            //                         if (event === 'ERROR') {
+            //                             Log.hmmm('[PlaidLink] Error: ', {...metadata});
+            //                             if (bankAccountID && metadata && 'error_code' in metadata) {
+            //                                 BankAccounts.handlePlaidError(bankAccountID, metadata.error_code ?? '', metadata.error_message ?? '', metadata.request_id);
+            //                             }
+            //                         }
+            //
+            //                         // Limit the number of times a user can submit Plaid credentials
+            //                         if (event === 'SUBMIT_CREDENTIALS') {
+            //                             App.handleRestrictedEvent(event);
+            //                         }
+            //                     }}
+            //                     // User prematurely exited the Plaid flow
+            //                     // eslint-disable-next-line react/jsx-props-no-multi-spaces
+            //                     onExit={onExitPlaid}
+            //                     receivedRedirectURI={receivedRedirectURI}
+            //                 />
+            //             );
         }
 
         if (plaidDataErrorMessage) {
@@ -252,7 +252,8 @@ function AddPlaidBankAccount({
 
     // Plaid Link view
     if (!plaidBankAccounts.length) {
-        return <FullPageOfflineBlockingView>{renderPlaidLink()}</FullPageOfflineBlockingView>;
+        // return <FullPageOfflineBlockingView>{renderPlaidLink()}</FullPageOfflineBlockingView>;
+        return null;
     }
 
     return (

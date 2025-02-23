@@ -1,3 +1,4 @@
+import {useAccountingContext} from '@expPages/workspace/accounting/AccountingContext';
 import React, {useEffect, useState} from 'react';
 import {useOnyx} from 'react-native-onyx';
 import * as Expensicons from '@components/Icon/Expensicons';
@@ -7,7 +8,6 @@ import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import {isAuthenticationError} from '@libs/actions/connections';
 import {getAdminPoliciesConnectedToNetSuite} from '@libs/actions/Policy/Policy';
 import Navigation from '@libs/Navigation/Navigation';
-import {useAccountingContext} from '@expPages/workspace/accounting/AccountingContext';
 import type {AnchorPosition} from '@styles/index';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
@@ -53,17 +53,17 @@ function ConnectToNetSuiteFlow({policyID}: ConnectToNetSuiteFlowProps) {
             return;
         }
         setIsReuseConnectionsPopoverOpen(true);
-        // eslint-disable-next-line react-compiler/react-compiler
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
     }, []);
 
     if (threeDotsMenuContainerRef) {
         if (!shouldUseNarrowLayout) {
             threeDotsMenuContainerRef.current?.measureInWindow((x, y, width, height) => {
-                setReuseConnectionPopoverPosition({
-                    horizontal: x + width,
-                    vertical: y + height,
-                });
+                const horizontal = x + width;
+                const vertical = y + height;
+                if (reuseConnectionPopoverPosition.horizontal !== horizontal || reuseConnectionPopoverPosition.vertical !== vertical) {
+                    setReuseConnectionPopoverPosition({horizontal, vertical});
+                }
             });
         }
 

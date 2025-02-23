@@ -10,11 +10,20 @@ function PROJECT_ieatta_files() {
     copy_file_from_source_to_dest "Jenkinsfile"
 }
 
+function PROJECT_env_files() {
+    copy_file_from_source_to_dest ".env.production" "delete"
+    copy_file_from_source_to_dest ".env.staging" "delete"
+}
+
 function PROJECT_ieatta_project() {
     step=$((step + 1))
     info "Start copying ieatta project files and folders"
 
-    # copy_folder_from_source_to_dest "assets/ieatta"
+    check_and_add_keys_in_package_json \
+        "new.ieatta" \
+        '["name"]' \
+        '"name": "new.ieatta"'
 
     PROJECT_ieatta_files
+    PROJECT_env_files
 }

@@ -1,3 +1,5 @@
+import BaseReactionList from '@expPages/home/report/ReactionList/BaseReactionList';
+import type {ReactionListRef} from '@expPages/home/ReportScreenContext';
 import React, {forwardRef, useImperativeHandle} from 'react';
 import type {ForwardedRef} from 'react';
 import {withOnyx} from 'react-native-onyx';
@@ -6,8 +8,6 @@ import withCurrentUserPersonalDetails from '@components/withCurrentUserPersonalD
 import useBasePopoverReactionList from '@hooks/useBasePopoverReactionList';
 import type {BasePopoverReactionListOnyxProps, BasePopoverReactionListPropsWithLocalWithOnyx} from '@hooks/useBasePopoverReactionList/types';
 import useLocalize from '@hooks/useLocalize';
-import BaseReactionList from '@expPages/home/report/ReactionList/BaseReactionList';
-import type {ReactionListRef} from '@expPages/home/ReportScreenContext';
 import ONYXKEYS from '@src/ONYXKEYS';
 
 function BasePopoverReactionList(props: BasePopoverReactionListPropsWithLocalWithOnyx, ref: ForwardedRef<Partial<ReactionListRef>>) {

@@ -1,4 +1,5 @@
 // eslint-disable-next-line lodash/import-scope
+import type {SignInPageLayoutRef} from '@expPages/signin/SignInPageLayout/types';
 import React, {useEffect, useRef, useState} from 'react';
 import type {OnyxEntry} from 'react-native-onyx';
 import {withOnyx} from 'react-native-onyx';
@@ -19,7 +20,6 @@ import * as Localize from '@libs/Localize';
 import Navigation from '@libs/Navigation/Navigation';
 import Performance from '@libs/Performance';
 import Visibility from '@libs/Visibility';
-import type {SignInPageLayoutRef} from '@expPages/signin/SignInPageLayout/types';
 import * as App from '@userActions/App';
 import * as Session from '@userActions/Session';
 import CONST from '@src/CONST';

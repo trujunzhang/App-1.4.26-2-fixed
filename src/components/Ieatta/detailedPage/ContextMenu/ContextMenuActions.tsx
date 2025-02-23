@@ -12,7 +12,7 @@ import type IconAsset from '@src/types/utils/IconAsset';
 import type {ContextMenuAnchor} from './DetailedPageActionContextMenu';
 import * as DetailedPageActionContextMenu from './DetailedPageActionContextMenu';
 
-type ShouldShow = (type: string, selection: IPageRow, menuTarget: MutableRefObject<ContextMenuAnchor> | undefined) => boolean;
+type ShouldShow = (selection: IPageRow, menuTarget: MutableRefObject<ContextMenuAnchor> | undefined) => boolean;
 
 type ContextMenuActionPayload = {
     transaction?: OnyxEntry<Transaction>;
@@ -59,7 +59,7 @@ const ContextMenuActions: ContextMenuAction[] = [
         isAnonymousAction: true,
         textTranslateKey: 'detailedPageActionContextMenu.editAction',
         icon: Expensicons.Pencil,
-        shouldShow: (type: string, selection: IPageRow, menuTarget: MutableRefObject<ContextMenuAnchor> | undefined) => {
+        shouldShow: (selection: IPageRow, menuTarget: MutableRefObject<ContextMenuAnchor> | undefined) => {
             return true;
         },
         onPress: (_closePopover, {openContextMenu, selection}) => {
@@ -77,7 +77,7 @@ const ContextMenuActions: ContextMenuAction[] = [
         isAnonymousAction: true,
         textTranslateKey: 'detailedPageActionContextMenu.deleteAction',
         icon: Expensicons.Trashcan,
-        shouldShow: (type: string, selection: IPageRow, menuTarget: MutableRefObject<ContextMenuAnchor> | undefined) => {
+        shouldShow: (selection: IPageRow, menuTarget: MutableRefObject<ContextMenuAnchor> | undefined) => {
             return true;
         },
         onPress: (_closePopover, {openContextMenu, selection}) => {

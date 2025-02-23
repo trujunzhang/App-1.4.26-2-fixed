@@ -1,7 +1,6 @@
 /* eslint-disable rulesdir/prefer-underscore-method */
 import React, {useState} from 'react';
-import RestaurantCardView from '@components/LHNRestaurantsList/RestaurantCardView';
-import RestaurantRowView from '@components/LHNRestaurantsList/RestaurantRowView';
+import {RestaurantCardView, RestaurantRowView} from '@components/Ieatta/LHNRestaurantsList';
 import {restaurants} from '@libs/FirebaseIeatta/data/Restaurants';
 
 /**

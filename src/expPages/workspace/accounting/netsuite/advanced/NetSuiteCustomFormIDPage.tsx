@@ -1,3 +1,6 @@
+import type {ExpenseRouteParams} from '@expPages/workspace/accounting/netsuite/types';
+import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
+import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
 import {useRoute} from '@react-navigation/native';
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
@@ -15,9 +18,6 @@ import * as ErrorUtils from '@libs/ErrorUtils';
 import Navigation from '@libs/Navigation/Navigation';
 import {settingsPendingAction} from '@libs/PolicyUtils';
 import * as ValidationUtils from '@libs/ValidationUtils';
-import type {ExpenseRouteParams} from '@expPages/workspace/accounting/netsuite/types';
-import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
-import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
 import * as Policy from '@userActions/Policy/Policy';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';

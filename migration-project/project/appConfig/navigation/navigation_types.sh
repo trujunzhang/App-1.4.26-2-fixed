@@ -27,18 +27,24 @@ function app_navigation_types_import() {
         "type CentralPaneScreensParamList = {"  \
         "type CentralPaneScreensParamList = IeattaCentralPaneScreensParamList \& {"  
 
-    auth_params_line="type AuthScreensParamList = CentralPaneScreensParamList \&"
-    auth_add_lines=(
-        "type AuthScreensParamList = IeattaFullPaneScreensParamList \&"
-        "    CentralPaneScreensParamList \&"
-    )
-    join_by auth_add_strings "\n" "${auth_add_lines[@]}"
+    check_replace_lines_in_file                 \
+        "$modal_js"                             \
+        "IeattaFullPaneScreensParamList \&"   \
+        "type AuthScreensParamList = "  \
+        "type AuthScreensParamList = IeattaFullPaneScreensParamList \& "  
 
-    check_replace_lines_in_file \
-         "$modal_js" \
-         "IeattaFullPaneScreensParamList &" \
-         "$auth_params_line" \
-         "$auth_add_strings"  
+    # auth_params_line="type AuthScreensParamList = CentralPaneScreensParamList \&"
+    # auth_add_lines=(
+    #     "type AuthScreensParamList = IeattaFullPaneScreensParamList \&"
+    #     "    CentralPaneScreensParamList \&"
+    # )
+    # join_by auth_add_strings "\n" "${auth_add_lines[@]}"
+
+    # check_replace_lines_in_file \
+    #      "$modal_js" \
+    #      "IeattaFullPaneScreensParamList &" \
+    #      "$auth_params_line" \
+    #      "$auth_add_strings"  
 
     add_lines_in_file            \
         "$modal_js"              \

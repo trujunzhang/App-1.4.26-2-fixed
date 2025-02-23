@@ -1,4 +1,4 @@
-import * as SearchUtils from '@libs/SearchUtils';
+import {buildSearchQueryJSON, getPolicyIDFromSearchQuery} from '@libs/SearchQueryUtils';
 import type {NavigationPartialRoute} from './types';
 
 function extractPolicyIDFromQuery(route?: NavigationPartialRoute<string>) {
@@ -11,12 +11,12 @@ function extractPolicyIDFromQuery(route?: NavigationPartialRoute<string>) {
     }
 
     const queryString = route.params.q as string;
-    const queryJSON = SearchUtils.buildSearchQueryJSON(queryString);
+    const queryJSON = buildSearchQueryJSON(queryString);
     if (!queryJSON) {
         return undefined;
     }
 
-    return SearchUtils.getPolicyIDFromSearchQuery(queryJSON);
+    return getPolicyIDFromSearchQuery(queryJSON);
 }
 
 export default extractPolicyIDFromQuery;

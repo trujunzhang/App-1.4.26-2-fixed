@@ -1,3 +1,5 @@
+import withPolicy from '@expPages/workspace/withPolicy';
+import type {WithPolicyProps} from '@expPages/workspace/withPolicy';
 import React from 'react';
 import RadioListItem from '@components/SelectionList/RadioListItem';
 import type {ListItem} from '@components/SelectionList/types';
@@ -8,8 +10,6 @@ import {clearSageIntacctErrorField, updateSageIntacctEntity} from '@libs/actions
 import * as ErrorUtils from '@libs/ErrorUtils';
 import Navigation from '@libs/Navigation/Navigation';
 import {settingsPendingAction} from '@libs/PolicyUtils';
-import withPolicy from '@expPages/workspace/withPolicy';
-import type {WithPolicyProps} from '@expPages/workspace/withPolicy';
 import CONST from '@src/CONST';
 
 function SageIntacctEntityPage({policy}: WithPolicyProps) {

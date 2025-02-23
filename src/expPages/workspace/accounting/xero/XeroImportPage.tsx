@@ -1,3 +1,5 @@
+import withPolicy from '@expPages/workspace/withPolicy';
+import type {WithPolicyProps} from '@expPages/workspace/withPolicy';
 import React, {useMemo} from 'react';
 import ConnectionLayout from '@components/ConnectionLayout';
 import MenuItemWithTopDescription from '@components/MenuItemWithTopDescription';
@@ -8,8 +10,6 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import Navigation from '@libs/Navigation/Navigation';
 import {getCurrentXeroOrganizationName} from '@libs/PolicyUtils';
 import * as PolicyUtils from '@libs/PolicyUtils';
-import withPolicy from '@expPages/workspace/withPolicy';
-import type {WithPolicyProps} from '@expPages/workspace/withPolicy';
 import {getTrackingCategories} from '@userActions/connections/Xero';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';

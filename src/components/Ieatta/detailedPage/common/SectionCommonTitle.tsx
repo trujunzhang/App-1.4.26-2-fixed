@@ -4,6 +4,7 @@ import * as Expensicons from '@components/Icon/Expensicons';
 import IconWithTooltip from '@components/Ieatta/components/IconWithTooltip';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import type {ISectionTitleRow} from '@libs/FirebaseIeatta/list/types/rows/common';
@@ -49,6 +50,7 @@ function SectionCommonTitle({
     cameraIconToolTip = 'photos.takePhoto.button.recipe',
     onCameraIconPressed = () => {},
 }: SectionCommonTitleProps) {
+    const {isSmallScreenWidth} = useResponsiveLayout();
     const styles = useThemeStyles();
     const theme = useTheme();
     const {translate} = useLocalize();
@@ -80,8 +82,10 @@ function SectionCommonTitle({
         );
     };
 
+    const innerStyle = isSmallScreenWidth ? [styles.justifyContentBetween] : [styles.gap2];
+
     return (
-        <View style={[styles.flexRow, styles.justifyContentBetween, styles.pl4, styles.pr4, styles.pt8, styles.pb4]}>
+        <View style={[styles.flexRow, styles.pl4, styles.pr4, styles.pt8, styles.pb4, innerStyle]}>
             {/* Left Container */}
             <Text
                 style={[

@@ -1,6 +1,7 @@
 /* eslint-disable rulesdir/prefer-type-fest */
 
 /* eslint-disable rulesdir/prefer-at */
+import ReceiptDropUI from '@expPages/iou/ReceiptDropUI';
 import lodashGet from 'lodash/get';
 import React, {useCallback, useContext, useEffect, useReducer, useRef, useState} from 'react';
 import {ActivityIndicator, PanResponder, PixelRatio, View} from 'react-native';
@@ -29,7 +30,6 @@ import * as Browser from '@libs/Browser';
 import * as FileUtils from '@libs/fileDownload/FileUtils';
 import {PhotoType} from '@libs/FirebaseIeatta/constant';
 import Navigation from '@libs/Navigation/Navigation';
-import ReceiptDropUI from '@expPages/iou/ReceiptDropUI';
 import CONST from '@src/CONST';
 import type {TranslationPaths} from '@src/languages/types';
 import {isEmptyObject} from '@src/types/utils/EmptyObject';
@@ -346,10 +346,10 @@ function IEATTATakePhotoPage({route}: Omit<IEATTATakePhotoPageProps, 'user'>) {
                     {({openPicker}) => (
                         <PressableWithFeedback
                             accessibilityLabel={translate('common.chooseFile')}
-                            // role={CONST.ACCESSIBILITY_ROLE.BUTTON}
+                            role={CONST.ROLE.BUTTON}
                             onPress={() => {
                                 openPicker({
-                                    onPicked: setReceiptAndNavigate,
+                                    onPicked: (data) => setReceiptAndNavigate(data.at(0) ?? {}),
                                 });
                             }}
                         >
@@ -426,7 +426,7 @@ function IEATTATakePhotoPage({route}: Omit<IEATTATakePhotoPageProps, 'user'>) {
                         style={[styles.p9]}
                         onPress={() => {
                             openPicker({
-                                onPicked: setReceiptAndNavigate,
+                                onPicked: (data) => setReceiptAndNavigate(data.at(0) ?? {}),
                             });
                         }}
                     />

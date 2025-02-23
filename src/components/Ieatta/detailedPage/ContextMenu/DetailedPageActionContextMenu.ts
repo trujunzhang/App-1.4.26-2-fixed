@@ -17,7 +17,6 @@ type ContextMenuType = ValueOf<typeof CONST.CONTEXT_MENU_TYPES>;
 type ContextMenuAnchor = View | RNText | TextInput | HTMLDivElement | null | undefined;
 
 type ShowContextMenu = (
-    type: ContextMenuType,
     event: GestureResponderEvent | MouseEvent,
     selection: IPageRow,
     contextMenuAnchor: ContextMenuAnchor,
@@ -90,7 +89,6 @@ function hideContextMenu(shouldDelay?: boolean, onHideCallback = () => {}) {
  * @param isUnreadChat - Flag to check if the chat has unread messages in the LHN. Used for the Mark as Read/Unread action
  */
 function showContextMenu(
-    type: ContextMenuType,
     event: GestureResponderEvent | MouseEvent,
     selection: IPageRow,
     contextMenuAnchor: ContextMenuAnchor,
@@ -110,7 +108,7 @@ function showContextMenu(
         contextMenuRef.current.runAndResetOnPopoverHide();
     }
 
-    contextMenuRef.current.showContextMenu(type, event, selection, contextMenuAnchor, onShow, onHide, shouldCloseOnTarget, setIsEmojiPickerActive, isOverflowMenu);
+    contextMenuRef.current.showContextMenu(event, selection, contextMenuAnchor, onShow, onHide, shouldCloseOnTarget, setIsEmojiPickerActive, isOverflowMenu);
 }
 
 /**

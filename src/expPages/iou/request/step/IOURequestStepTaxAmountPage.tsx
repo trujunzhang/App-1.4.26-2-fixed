@@ -1,3 +1,5 @@
+import type {CurrentMoney} from '@expPages/iou/MoneyRequestAmountForm';
+import MoneyRequestAmountForm from '@expPages/iou/MoneyRequestAmountForm';
 import {useFocusEffect} from '@react-navigation/native';
 import React, {useCallback, useRef} from 'react';
 import type {OnyxEntry} from 'react-native-onyx';
@@ -8,8 +10,6 @@ import * as CurrencyUtils from '@libs/CurrencyUtils';
 import Navigation from '@libs/Navigation/Navigation';
 import * as ReportUtils from '@libs/ReportUtils';
 import * as TransactionUtils from '@libs/TransactionUtils';
-import type {CurrentMoney} from '@expPages/iou/MoneyRequestAmountForm';
-import MoneyRequestAmountForm from '@expPages/iou/MoneyRequestAmountForm';
 import * as IOU from '@userActions/IOU';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';

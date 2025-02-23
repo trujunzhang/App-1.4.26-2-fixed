@@ -1,34 +1,9 @@
-    "@react-native-firebase/analytics": "^12.3.0",
-    "@react-native-firebase/app": "^12.3.0",
-    "@react-native-firebase/crashlytics": "^12.3.0",
-    "@react-native-firebase/perf": "^12.3.0",
-
-
-npm install "@react-native-firebase/app" "@react-native-firebase/auth" "@react-native-firebase/firestore" "@react-native-firebase/perf" "@react-native-firebase/analytics" "@react-native-firebase/crashlytics"
-
-        "@react-native-firebase/app": "^20.1.0",
-        "@react-native-firebase/auth": "^20.1.0",
-        "@react-native-firebase/firestore": "^20.1.0",
-        "@react-native-firebase/perf": "^20.1.0",
-
-
-    "realm": "^20.0.0",
-    "@realm/react": "^0.11.0",
-
-"realm": "^12.11.1",
-"@realm/react": "^0.6.2",
-
-
-    "shellcheck": "^1.1.0",
-    "@kie/act-js": "^2.6.2",
-
-
 <div align="center">
-    <a href="https://new.expensify.com">
+    <a href="https://new.ieatta.com">
         <img src="https://raw.githubusercontent.com/Expensify/App/main/web/favicon.png" width="64" height="64" alt="New Ieatta Icon">
     </a>
     <h1>
-        <a href="https://new.expensify.com">
+        <a href="https://new.ieatta.com">
             New Ieatta
         </a>
     </h1>
@@ -52,6 +27,7 @@ npm install "@react-native-firebase/app" "@react-native-firebase/auth" "@react-n
 * [Expensify Code of Conduct](CODE_OF_CONDUCT.md)
 * [Contributor License Agreement](contributingGuides/CLA.md)
 * [React StrictMode](contributingGuides/STRICT_MODE.md)
+* [Left Hand Navigation(LHN)](contributingGuides/LEFT_HAND_NAVIGATION.md)
 
 ----
 
@@ -63,9 +39,9 @@ These instructions should get you set up ready to work on New Ieatta 🙌
 2. Install `watchman`: `brew install watchman`
 3. Install dependencies: `npm install`
 4. Install `mkcert`: `brew install mkcert` followed by `npm run setup-https`. If you are not using macOS, follow the instructions [here](https://github.com/FiloSottile/mkcert?tab=readme-ov-file#installation).
-5. Create a host entry in your local hosts file, `/etc/hosts` for dev.new.expensify.com pointing to localhost:
+5. Create a host entry in your local hosts file, `/etc/hosts` for dev.new.ieatta.com pointing to localhost:
 ```
-127.0.0.1 dev.new.expensify.com
+127.0.0.1 dev.new.ieatta.com
 ```
 
 You can use any IDE or code editing tool for developing on any platform. Use your favorite!
@@ -76,7 +52,7 @@ In order to have more consistent builds, we use a strict `node` and `npm` versio
 ## Configuring HTTPS
 The webpack development server now uses https. If you're using a mac, you can simply run `npm run setup-https`.
 
-If you're using another operating system, you will need to ensure `mkcert` is installed, and then follow the instructions in the repository to generate certificates valid for `dev.new.expensify.com` and `localhost`. The certificate should be named `certificate.pem` and the key should be named `key.pem`. They should be placed in `config/webpack`.
+If you're using another operating system, you will need to ensure `mkcert` is installed, and then follow the instructions in the repository to generate certificates valid for `dev.new.ieatta.com` and `localhost`. The certificate should be named `certificate.pem` and the key should be named `key.pem`. They should be placed in `config/webpack`.
 
 ## Running the web app 🕸
 * To run the **development web app**: `npm run web`
@@ -174,7 +150,7 @@ You create this certificate by following the instructions in [`Configuring HTTPS
 2. Select the emulator you want to run if prompted. (If single emulator is available, then it will open automatically)
 3. Let the script execute till the message `🎉 Done!`.
 
-**Note:** If you want to run app on `https://dev.new.expensify.com:8082`, then just do the Android flow and use `npm run startAndroidEmulator` to start the Android Emulator every time (It will configure the emulator).
+**Note:** If you want to run app on `https://dev.new.ieatta.com:8082`, then just do the Android flow and use `npm run startAndroidEmulator` to start the Android Emulator every time (It will configure the emulator).
 
 
 Possible Scenario:
@@ -199,6 +175,7 @@ Often times in order to write a unit test, you may need to mock data, a componen
 to help run our Unit tests.
 
 * To run the **Jest unit tests**: `npm run test`
+* UI tests guidelines can be found [here](tests/ui/README.md)
 
 ## Performance tests
 We use Reassure for monitoring performance regression. More detailed information can be found [here](tests/perf-test/README.md):
@@ -299,7 +276,7 @@ web: `npm run symbolicate-release:web`
     - Perfetto UI (https://ui.perfetto.dev/)
     - Google Chrome's Tracing UI (chrome://tracing)
 
----
+----
 
 # App Structure and Conventions
 
@@ -459,6 +436,104 @@ export default withOnyx({
 1. The major difference between React Native and React are the [components](https://reactnative.dev/docs/components-and-apis) that are used in the `render()` method. Everything else is exactly the same. Any React skills you have can be applied to React Native.
 1. The application uses [`react-navigation`](https://reactnavigation.org/) for navigating between parts of the app.
 1. [Higher Order Components](https://reactjs.org/docs/higher-order-components.html) are used to connect React components to persistent storage via [`react-native-onyx`](https://github.com/Expensify/react-native-onyx).
+
+----
+# HybridApp
+
+Currently, the production Expensify app contains both "Expensify Classic" and "New Ieatta". The file structure is as follows:
+
+- 📂 [**App**](https://github.com/Expensify/App)
+    - 📂 [**android**](https://github.com/Expensify/App/tree/main/android): New Ieatta Android specific code (not a part of HybridApp native code)
+    - 📂 [**ios**](https://github.com/Expensify/App/tree/main/ios): New Ieatta iOS specific code (not a part of HybridApp native code)
+    - 📂 [**src**](https://github.com/Expensify/App/tree/main/src): New Ieatta TypeScript logic
+    - 📂 [**Mobile-Expensify**](https://github.com/Expensify/Mobile-Expensify): `git` submodule that is pointed to [Mobile-Expensify](https://github.com/Expensify/Mobile-Expensify)
+        - 📂 [**Android**](https://github.com/Expensify/Mobile-Expensify/tree/main/Android): Expensify Classic Android specific code
+        - 📂 [**iOS**](https://github.com/Expensify/Mobile-Expensify/tree/main/iOS): Expensify Classic iOS specific code
+        - 📂 [**app**](https://github.com/Expensify/Mobile-Expensify/tree/main/app): Expensify Classic JavaScript logic (aka YAPL)
+
+You can only build HybridApp if you have been granted access to [`Mobile-Expensify`](https://github.com/Expensify/Mobile-Expensify). For most contributors, you will be working on the standalone NewDot application.
+
+## Getting started with HybridApp
+
+1. If you haven't, please follow [these instructions](https://github.com/Expensify/App?tab=readme-ov-file#getting-started) to setup the NewDot local environment.
+2. Run `git submodule update --init --progress --depth 100` to download the `Mobile-Expensify` sourcecode.
+- If you have access to `Mobile-Expensify` and the command fails, add this to your `~/.gitconfig` file:
+
+    ```
+    [url "https://github.com/"]
+        insteadOf = ssh://git@github.com/
+    ```
+3. The first time you build the app you will need to build YAPL (OldDot javascript logic). Simply run `npm run grunt:build:shared` from the `Mobile-Expensify` submodule
+    - The following runtime error often indicates that YAPL has not been built correctly: `undefined is not an object (evaluating'Store.ReportHistory.bindCacheClearingEvents')`
+
+At this point, the default behavior of some `npm` scripts will change to target HybridApp:
+- `npm run android` - build HybridApp for Android
+- `npm run ios` - build HybridApp for iOS
+- `npm run ipad` - build HybridApp for iPad
+- `npm run ipad-sm` - build HybridApp for small iPad
+- `npm run pod-install` - install pods for HybridApp
+- `npm run clean` - clean native code of HybridApp
+
+If for some reason, you need to target the standalone NewDot application, you can append `*-standalone` to each of these scripts (eg. `npm run ios-standalone` will build NewDot instead of HybridApp). The same concept applies to the installation of standalone NewDot node modules. To skip the installation of HybridApp-specific patches and node modules, use `npm run i-standalone` or `npm run install-standalone`.
+
+## Working with HybridApp
+Day-to-day work with HybridApp shouldn't differ much from the work on the standalone NewDot repo. 
+
+The main difference is that the native code which runs React Native is located in `./Mobile-Expensify/Android` and `./Mobile-Expensify/iOS` directories. It means, that changes in `./android` and `./ios` folders in the root **won't affect the HybridApp build**. 
+
+In that case, if you'd like to eg. remove `Pods`, you need to do it in `./Mobile-Expensify/iOS`. The same rule applies to Android builds - if you'd like to delete `.cxx`, `build` or `.gradle` directories, you need to go to `./Mobile-Expensify/android` first. 
+
+Additionally, If you'd like to open the HybridApp project in Android Studio or XCode, you **must choose a workspace located in the `Mobile-Expensify`** directory:
+
+- Android: `./Mobile-Expensify/Android`
+- iOS: `./Mobile-Expensify/iOS/Expensify.xcworkspace`
+
+### Updating the Mobile-Expensify submodule
+
+`Mobile-Expensify` directory is a git submodule. It means, that it points to a specific commit on the `Mobile-Expensify` repository. If you'd like to download the most recent changes from `main`, please use the following command:
+
+`git submodule update --remote`
+
+### Modifying Mobile-Expensify code
+
+It's important to emphasise that a git submodule is just a **regular git repository** after all. It means that you can switch branches, pull the newest changes, and execute all regular git commands within the `Mobile-Expensify` directory. 
+
+> [!Note]  
+> #### For external contributors
+>
+> If you'd like to modify the `Mobile-Expensify` source code, it is best that you create your own fork. Then, you can swap origin of the remote repository by executing this command:
+>
+> `cd Mobile-Expensify && git remote set-url origin <YOUR_FORK_URL>`
+>
+> This way, you'll attach the submodule to your fork repository.
+
+### Adding HybridApp-related patches
+
+Applying patches from the `patches` directory is performed automatically with the `npm install` command executed in `Expensify/App`.
+
+If you'd like to add HybridApp-specific patches, use the `--patch-dir` flag:
+
+`npx patch-package <PACKAGE_NAME> --patch-dir Mobile-Expensify/patches`
+
+### HybridApp troubleshooting
+
+#### Cleaning the repo
+- `npm run clean` - deep clean of all HybridApp artifacts (including NewDot's `node_modules`)
+- `npm run clean -- --ios` - clean only iOS HybridApp artifacts (`Pods`, `build` folder, `DerivedData`)
+- `npm run clean -- --android` - clean only Android HybridApp artifacts (`.cxx`, `build`, and `.gradle` folders, execute `./gradlew clean`)
+
+If you'd like to do it manually, remember to `cd Mobile-Expensify` first!
+
+#### Common errors
+1. **Please check your internet connection** - set `_isOnDev` in `api.js` to always return `false` 
+2. **CDN: trunk URL couldn't be downloaded** - `cd Mobile-Expensify/iOS && pod repo remove trunk`
+
+3. **Task :validateSigningRelease FAILED** - open `Mobile-Expensify/Android/build.gradle` and do the following:
+    ```
+    - signingConfig signingConfigs.release
+    + signingConfig signingConfigs.debug
+    ```
+4. **Build service could not create build operation: unknown error while handling message: MsgHandlingError(message: "unable to initiate PIF transfer session (operation in progress?)")** - reopen XCode
 
 ----
 

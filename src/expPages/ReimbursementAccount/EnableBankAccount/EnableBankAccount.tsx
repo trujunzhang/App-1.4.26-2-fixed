@@ -1,3 +1,4 @@
+import WorkspaceResetBankAccountModal from '@expPages/workspace/WorkspaceResetBankAccountModal';
 import React from 'react';
 import type {OnyxEntry} from 'react-native-onyx';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
@@ -12,7 +13,6 @@ import Section from '@components/Section';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
-import WorkspaceResetBankAccountModal from '@expPages/workspace/WorkspaceResetBankAccountModal';
 import * as BankAccounts from '@userActions/ReimbursementAccount';
 import CONST from '@src/CONST';
 import type {ReimbursementAccount} from '@src/types/onyx';

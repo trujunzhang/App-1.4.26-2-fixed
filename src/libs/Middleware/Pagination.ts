@@ -15,7 +15,7 @@ type PagedResource<TResourceKey extends OnyxCollectionKey> = OnyxValues[TResourc
 type PaginationCommonConfig<TResourceKey extends OnyxCollectionKey = OnyxCollectionKey, TPageKey extends OnyxPagesKey = OnyxPagesKey> = {
     resourceCollectionKey: TResourceKey;
     pageCollectionKey: TPageKey;
-    sortItems: (items: OnyxValues[TResourceKey]) => Array<PagedResource<TResourceKey>>;
+    sortItems: (items: OnyxValues[TResourceKey], reportID: string) => Array<PagedResource<TResourceKey>>;
     getItemID: (item: PagedResource<TResourceKey>) => string;
 };
 
@@ -35,7 +35,7 @@ const paginationConfigs = new Map<string, PaginationConfigMapValue>();
 // Local cache of paginated Onyx resources
 const resources = new Map<OnyxCollectionKey, OnyxCollection<OnyxValues[OnyxCollectionKey]>>();
 
-// Local cache of Onyx expPages objects
+// Local cache of Onyx pages objects
 const pages = new Map<OnyxPagesKey, OnyxCollection<OnyxValues[OnyxPagesKey]>>();
 
 function registerPaginationConfig<TResourceKey extends OnyxCollectionKey, TPageKey extends OnyxPagesKey>({
@@ -72,8 +72,8 @@ function isPaginatedRequest(request: Request | PaginatedRequest): request is Pag
  *
  * 1. Extracting the paginated resources from the response
  * 2. Sorting them
- * 3. Merging the new page of resources with any preexisting expPages it overlaps with
- * 4. Updating the saved expPages in Onyx for that resource.
+ * 3. Merging the new page of resources with any preexisting pages it overlaps with
+ * 4. Updating the saved pages in Onyx for that resource.
  *
  * It does this to keep track of what it's fetched via pagination and what may have showed up from other sources,
  * so it can keep track of and fill any potential gaps in paginated lists.
@@ -96,7 +96,7 @@ const Pagination: Middleware = (requestResponse, request) => {
 
         // Create a new page based on the response
         const pageItems = (response.onyxData.find((data) => data.key === resourceKey)?.value ?? {}) as OnyxValues[typeof resourceCollectionKey];
-        const sortedPageItems = sortItems(pageItems);
+        const sortedPageItems = sortItems(pageItems, resourceID);
         if (sortedPageItems.length === 0) {
             // Must have at least 1 action to create a page.
             Log.hmmm(`[Pagination] Did not receive any items in the response to ${request.command}`);
@@ -115,7 +115,7 @@ const Pagination: Middleware = (requestResponse, request) => {
         const resourceCollections = resources.get(resourceCollectionKey) ?? {};
         const existingItems = resourceCollections[resourceKey] ?? {};
         const allItems = fastMerge(existingItems, pageItems, true);
-        const sortedAllItems = sortItems(allItems);
+        const sortedAllItems = sortItems(allItems, resourceID);
 
         const pagesCollections = pages.get(pageCollectionKey) ?? {};
         const existingPages = pagesCollections[pageKey] ?? [];

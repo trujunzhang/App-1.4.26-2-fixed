@@ -1,11 +1,11 @@
 /* eslint-disable react/no-unstable-nested-components */
 
 /* eslint-disable import/no-relative-packages */
+// import InitialSettingsPage from '@pages/settings/InitialSettingsPage';
 import React from 'react';
 import {View} from 'react-native';
 import NoDropZone from '@components/DragAndDrop/NoDropZone';
-// import InitialSettingsPage from '@pages/settings/InitialSettingsPage';
-import InitialSettingsPage from '@expPages/settings/InitialSettingsPage';
+import InitialSettingsPage from '@pages/settings/InitialSettingsPage';
 import SCREENS from '@src/SCREENS';
 import type ReactComponentModule from '@src/types/utils/ReactComponentModule';
 import type {DrawerContentComponentProps, DrawerNavigationOptions} from '../../../../plugins/react-navigation-drawer-6.6.10/packages/drawer/src';

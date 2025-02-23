@@ -1,3 +1,5 @@
+import {ReactionListContext} from '@expPages/home/ReportScreenContext';
+import type {ReactionListAnchor, ReactionListEvent} from '@expPages/home/ReportScreenContext';
 import sortBy from 'lodash/sortBy';
 import React, {useContext, useRef} from 'react';
 import {View} from 'react-native';
@@ -9,8 +11,6 @@ import withCurrentUserPersonalDetails from '@components/withCurrentUserPersonalD
 import type {WithCurrentUserPersonalDetailsProps} from '@components/withCurrentUserPersonalDetails';
 import useThemeStyles from '@hooks/useThemeStyles';
 import * as EmojiUtils from '@libs/EmojiUtils';
-import {ReactionListContext} from '@expPages/home/ReportScreenContext';
-import type {ReactionListAnchor, ReactionListEvent} from '@expPages/home/ReportScreenContext';
 import CONST from '@src/CONST';
 import type {Locale, ReportAction, ReportActionReactions} from '@src/types/onyx';
 import type {PendingAction} from '@src/types/onyx/OnyxCommon';
@@ -88,8 +88,6 @@ function ReportActionItemEmojiReactions({
     const reactionListRef = useContext(ReactionListContext);
     const popoverReactionListAnchors = useRef<PopoverReactionListAnchors>({});
 
-    let totalReactionCount = 0;
-
     const reportActionID = reportAction.reportActionID;
 
     // Each emoji is sorted by the oldest timestamp of user reactions so that they will always appear in the same order for everyone
@@ -104,7 +102,6 @@ function ReportActionItemEmojiReactions({
             if (reactionCount === 0) {
                 return null;
             }
-            totalReactionCount += reactionCount;
 
             const onPress = () => {
                 toggleReaction(emoji, true);
@@ -128,6 +125,8 @@ function ReportActionItemEmojiReactions({
         }),
         ['oldestTimestamp'],
     );
+
+    const totalReactionCount = formattedReactions.reduce((prev, curr) => (curr === null ? prev : prev + curr.reactionCount), 0);
 
     return (
         totalReactionCount > 0 && (

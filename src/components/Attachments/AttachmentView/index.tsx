@@ -10,9 +10,11 @@ import EReceipt from '@components/EReceipt';
 import Icon from '@components/Icon';
 import * as Expensicons from '@components/Icon/Expensicons';
 import ScrollView from '@components/ScrollView';
+import Text from '@components/Text';
 import {usePlaybackContext} from '@components/VideoPlayerContexts/PlaybackContext';
 import useLocalize from '@hooks/useLocalize';
 import useNetwork from '@hooks/useNetwork';
+import useStyledSafeAreaInsets from '@hooks/useStyledSafeAreaInsets';
 import useStyleUtils from '@hooks/useStyleUtils';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
@@ -72,6 +74,9 @@ type AttachmentViewProps = Attachment & {
     /* Flag indicating whether the attachment has been uploaded. */
     isUploaded?: boolean;
 
+    /** Whether the attachment is deleted */
+    isDeleted?: boolean;
+
     /** Flag indicating if the attachment is being uploaded. */
     isUploading?: boolean;
 };
@@ -98,15 +103,16 @@ function AttachmentView({
     duration,
     isUsedAsChatAttachment,
     isUploaded = true,
+    isDeleted,
     isUploading = false,
 }: AttachmentViewProps) {
+    const [transaction] = useOnyx(`${ONYXKEYS.COLLECTION.TRANSACTION}${transactionID}`);
     const {translate} = useLocalize();
     const {updateCurrentlyPlayingURL} = usePlaybackContext();
     const attachmentCarouselPagerContext = useContext(AttachmentCarouselPagerContext);
 
-    const [transaction] = useOnyx(`${ONYXKEYS.COLLECTION.TRANSACTION}${transactionID}`);
-
     const theme = useTheme();
+    const {safeAreaPaddingBottomStyle} = useStyledSafeAreaInsets();
     const styles = useThemeStyles();
     const StyleUtils = useStyleUtils();
     const [loadComplete, setLoadComplete] = useState(false);
@@ -124,7 +130,7 @@ function AttachmentView({
 
     const [imageError, setImageError] = useState(false);
 
-    useNetwork({onReconnect: () => setImageError(false)});
+    const {isOffline} = useNetwork({onReconnect: () => setImageError(false)});
 
     useEffect(() => {
         FileUtils.getFileResolution(file).then((resolution) => {
@@ -171,7 +177,7 @@ function AttachmentView({
     // will appear with a source that is a blob
     const isSourcePDF = typeof source === 'string' && Str.isPDF(source);
     const isFilePDF = file && Str.isPDF(file.name ?? translate('attachmentView.unknownFilename'));
-    if (!hasPDFFailedToLoad && (isSourcePDF || isFilePDF)) {
+    if (!hasPDFFailedToLoad && !isUploading && (isSourcePDF || isFilePDF)) {
         const encryptedSourceUrl = isAuthTokenRequired ? addEncryptedAuthTokenToURL(source as string) : (source as string);
 
         const onPDFLoadComplete = (path: string) => {
@@ -223,15 +229,20 @@ function AttachmentView({
     if (isFileImage) {
         if (imageError && (typeof fallbackSource === 'number' || typeof fallbackSource === 'function')) {
             return (
-                <Icon
-                    src={fallbackSource}
-                    height={variables.defaultAvatarPreviewSize}
-                    width={variables.defaultAvatarPreviewSize}
-                    additionalStyles={[styles.alignItemsCenter, styles.justifyContentCenter, styles.flex1]}
-                    fill={theme.border}
-                />
+                <View style={[styles.flexColumn, styles.alignItemsCenter, styles.justifyContentCenter]}>
+                    <Icon
+                        src={fallbackSource}
+                        width={variables.iconSizeSuperLarge}
+                        height={variables.iconSizeSuperLarge}
+                        fill={theme.icon}
+                    />
+                    <View>
+                        <Text style={[styles.notFoundTextHeader]}>{translate('attachmentView.attachmentNotFound')}</Text>
+                    </View>
+                </View>
             );
         }
+
         let imageSource = imageError && fallbackSource ? (fallbackSource as string) : (source as string);
 
         if (isHighResolution) {
@@ -265,11 +276,14 @@ function AttachmentView({
                         isImage={isFileImage}
                         onPress={onPress}
                         onError={() => {
+                            if (isOffline) {
+                                return;
+                            }
                             setImageError(true);
                         }}
                     />
                 </View>
-                {isHighResolution && <HighResolutionInfo isUploaded={isUploaded} />}
+                <View style={safeAreaPaddingBottomStyle}>{isHighResolution && <HighResolutionInfo isUploaded={isUploaded} />}</View>
             </>
         );
     }
@@ -292,6 +306,7 @@ function AttachmentView({
             // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             shouldShowLoadingSpinnerIcon={shouldShowLoadingSpinnerIcon || isUploading}
             containerStyles={containerStyles}
+            isDeleted={isDeleted}
             isUploading={isUploading}
         />
     );

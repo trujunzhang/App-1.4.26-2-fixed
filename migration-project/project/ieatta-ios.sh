@@ -67,7 +67,7 @@ function PROJECT_ieatta_ios() {
     step=$((step + 1))
     info "Start copying ieatta ios"
 
-    rm "ios/Podfile.lock"
+    rm "$DEST_PROJECT/ios/Podfile.lock"
     ieatta_ios_podfile
     ieatta_ios_google_login
 }

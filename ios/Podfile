@@ -2,17 +2,15 @@ require File.join(File.dirname(`node --print "require.resolve('expo/package.json
 # Set the type of Mapbox SDK to use
 # This value is used by $RNMapboxMaps
 $RNMapboxMapsImpl = 'mapbox'
-$VCDisableFrameProcessors = true
 
-
-
+#======== static frameworks ========= 
 use_frameworks! :linkage => :static
-# right after `use_frameworks! :linkage => :static`
 $RNFirebaseAsStaticFramework = true
-# Override Firebase SDK Version
-# $FirebaseSDKVersion = '10.19.0'
-$FirebaseSDKVersion = '11.4.0'
+$FirebaseSDKVersion = '11.7.0'
+#======== static frameworks ========= 
 
+$VCDisableFrameProcessors = true
+ENV['PROJECT_ROOT_PATH'] = "./";
 
 def node_require(script)
   # Resolve script with node to allow for hoisting
@@ -26,8 +24,7 @@ end
 node_require('react-native/scripts/react_native_pods.rb')
 node_require('react-native-permissions/scripts/setup.rb')
 
-# Our min supported iOS version is higher than the default (min_ios_version_supported) to support libraires such as Airship
-platform :ios, 14.0
+platform :ios, min_ios_version_supported
 prepare_react_native_project!
 
 
@@ -92,6 +89,7 @@ target 'NewIeatta' do
   # ENV Variable enables/disables TurboModules
   ENV['RCT_NEW_ARCH_ENABLED'] = '1';
 
+
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
@@ -113,24 +111,11 @@ target 'NewIeatta' do
       installer,
       config[:reactNativePath],
       :mac_catalyst_enabled => false,
-      # :ccache_enabled => true
+      :ccache_enabled => true
     )
     __apply_Xcode_14_3_RC_post_install_workaround(installer)
 
     installer.pods_project.targets.each do |target|
-
-      if target.name == 'BoringSSL-GRPC'
-        target.source_build_phase.files.each do |file|
-          if file.settings && file.settings['COMPILER_FLAGS']
-            flags = file.settings['COMPILER_FLAGS'].split
-            flags.reject! { |flag| flag == '-GCC_WARN_INHIBIT_ALL_WARNINGS' }
-            file.settings['COMPILER_FLAGS'] = flags.join(' ')
-          end
-        end
-      end
-
-
-
       if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
         target.build_configurations.each do |config|
           config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
@@ -142,6 +127,7 @@ end
 
 target 'NotificationServiceExtension' do
   pod 'AirshipServiceExtension'
+  pod 'AppLogs', :path => '../node_modules/react-native-app-logs/AppLogsPod'
 end
 
 pod 'FullStory', :http => 'https://ios-releases.fullstory.com/fullstory-1.52.0-xcframework.tar.gz'

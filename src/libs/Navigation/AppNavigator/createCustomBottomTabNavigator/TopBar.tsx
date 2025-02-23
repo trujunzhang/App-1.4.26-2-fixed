@@ -1,3 +1,4 @@
+import SignInButton from '@expPages/home/sidebar/SignInButton';
 import React from 'react';
 import {View} from 'react-native';
 import {useOnyx} from 'react-native-onyx';
@@ -10,14 +11,18 @@ import useLocalize from '@hooks/useLocalize';
 import usePolicy from '@hooks/usePolicy';
 import useThemeStyles from '@hooks/useThemeStyles';
 import Navigation from '@libs/Navigation/Navigation';
-import * as SearchUtils from '@libs/SearchUtils';
-import SignInButton from '@expPages/home/sidebar/SignInButton';
+import * as SearchQueryUtils from '@libs/SearchQueryUtils';
 import * as Session from '@userActions/Session';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
 
-type TopBarProps = {breadcrumbLabel: string; activeWorkspaceID?: string; shouldDisplaySearch?: boolean; shouldDisplayCancelSearch?: boolean};
+type TopBarProps = {
+    breadcrumbLabel: string;
+    activeWorkspaceID?: string;
+    shouldDisplaySearch?: boolean;
+    shouldDisplayCancelSearch?: boolean;
+};
 
 function TopBar({breadcrumbLabel, activeWorkspaceID, shouldDisplaySearch = true, shouldDisplayCancelSearch = false}: TopBarProps) {
     const styles = useThemeStyles();
@@ -61,7 +66,7 @@ function TopBar({breadcrumbLabel, activeWorkspaceID, shouldDisplaySearch = true,
                         accessibilityLabel={translate('common.cancel')}
                         style={[styles.textBlue]}
                         onPress={() => {
-                            Navigation.goBack(ROUTES.SEARCH_CENTRAL_PANE.getRoute({query: SearchUtils.buildCannedSearchQuery()}));
+                            Navigation.goBack(ROUTES.SEARCH_CENTRAL_PANE.getRoute({query: SearchQueryUtils.buildCannedSearchQuery()}));
                         }}
                     >
                         <Text style={[styles.textBlue]}>{translate('common.cancel')}</Text>

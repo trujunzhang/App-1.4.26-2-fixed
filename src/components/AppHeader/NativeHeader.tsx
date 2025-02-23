@@ -14,7 +14,6 @@ import Navigation from '@navigation/Navigation';
 import SignInOrAvatarWithOptionalStatus from '@pages/home/sidebar/SignInOrAvatarWithOptionalStatus';
 import SearchRestaurantsButton from '@pages/searchPages/restaurants/SearchRouter/SearchRestaurantsButton';
 import variables from '@styles/variables';
-import * as Session from '@userActions/Session';
 import CONST from '@src/CONST';
 import type {TranslationPaths} from '@src/languages/types';
 import ROUTES from '@src/ROUTES';
@@ -88,7 +87,7 @@ function NativeHeader({
                         accessibilityLabel={translate('headerPanel.menu.button')}
                         role={CONST.ROLE.BUTTON}
                         style={[styles.flexRow]}
-                        onPress={Session.checkIfActionIsAllowed(showSideBar)}
+                        onPress={showSideBar}
                     >
                         <IconMenuSvg
                             fill={theme.icon}
@@ -111,7 +110,7 @@ function NativeHeader({
                         accessibilityLabel={translate('headerPanel.photo.local')}
                         role={CONST.ROLE.BUTTON}
                         style={[styles.flexRow, styles.pr4]}
-                        onPress={Session.checkIfActionIsAllowed(showLocalPhotoPage)}
+                        onPress={showLocalPhotoPage}
                     >
                         <Icon
                             fill={theme.icon}

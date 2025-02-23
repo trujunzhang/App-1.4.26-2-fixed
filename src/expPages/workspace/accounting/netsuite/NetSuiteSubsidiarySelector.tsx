@@ -1,3 +1,5 @@
+import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
+import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
 import React, {useMemo} from 'react';
 import {View} from 'react-native';
 import BlockingView from '@components/BlockingViews/BlockingView';
@@ -12,8 +14,6 @@ import {updateNetSuiteSubsidiary} from '@libs/actions/connections/NetSuiteComman
 import * as ErrorUtils from '@libs/ErrorUtils';
 import Navigation from '@libs/Navigation/Navigation';
 import {settingsPendingAction} from '@libs/PolicyUtils';
-import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
-import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
 import variables from '@styles/variables';
 import * as Policy from '@userActions/Policy/Policy';
 import CONST from '@src/CONST';

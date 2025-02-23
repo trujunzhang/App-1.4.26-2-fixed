@@ -9,8 +9,6 @@ import type {ValueOf} from 'type-fest';
 import type {RenderSuggestionMenuItemProps} from '@components/AutoCompleteSuggestions/types';
 import Button from '@components/Button';
 import FormAlertWrapper from '@components/FormAlertWrapper';
-import getBankIcon from '@components/Icon/BankIcons';
-import type {BankName} from '@components/Icon/BankIconsUtils';
 import * as Expensicons from '@components/Icon/Expensicons';
 import MenuItem from '@components/MenuItem';
 import OfflineWithFeedback from '@components/OfflineWithFeedback';
@@ -20,17 +18,16 @@ import useNetwork from '@hooks/useNetwork';
 import type {FormattedSelectedPaymentMethodIcon} from '@hooks/usePaymentMethodState/types';
 import useStyleUtils from '@hooks/useStyleUtils';
 import useThemeStyles from '@hooks/useThemeStyles';
-import * as CardUtils from '@libs/CardUtils';
+import {clearAddPaymentMethodError, clearDeletePaymentMethodError} from '@libs/actions/PaymentMethods';
+import {getCardFeedIcon, getDescriptionForPolicyDomainCard, isExpensifyCard, maskCardNumber} from '@libs/CardUtils';
 import Log from '@libs/Log';
 import Navigation from '@libs/Navigation/Navigation';
-import * as PaymentUtils from '@libs/PaymentUtils';
-import * as PolicyUtils from '@libs/PolicyUtils';
+import {formatPaymentMethods} from '@libs/PaymentUtils';
 import variables from '@styles/variables';
-import * as PaymentMethods from '@userActions/PaymentMethods';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
-import type {AccountData} from '@src/types/onyx';
+import type {AccountData, CompanyCardFeed} from '@src/types/onyx';
 import type {BankIcon} from '@src/types/onyx/Bank';
 import type {Errors} from '@src/types/onyx/OnyxCommon';
 import type PaymentMethod from '@src/types/onyx/PaymentMethod';
@@ -123,13 +120,13 @@ type PaymentMethodItem = PaymentMethod & {
 
 function dismissError(item: PaymentMethodItem) {
     if (item.cardID) {
-        PaymentMethods.clearDeletePaymentMethodError(ONYXKEYS.CARD_LIST, item.cardID);
+        clearDeletePaymentMethodError(ONYXKEYS.CARD_LIST, item.cardID);
         return;
     }
 
     const isBankAccount = item.accountType === CONST.PAYMENT_METHODS.PERSONAL_BANK_ACCOUNT;
     const paymentList = isBankAccount ? ONYXKEYS.BANK_ACCOUNT_LIST : ONYXKEYS.FUND_LIST;
-    const paymentID = isBankAccount ? item.accountData?.bankAccountID ?? '' : item.accountData?.fundID ?? '';
+    const paymentID = isBankAccount ? item.accountData?.bankAccountID ?? CONST.DEFAULT_NUMBER_ID : item.accountData?.fundID ?? CONST.DEFAULT_NUMBER_ID;
 
     if (!paymentID) {
         Log.info('Unable to clear payment method error: ', undefined, item);
@@ -137,23 +134,34 @@ function dismissError(item: PaymentMethodItem) {
     }
 
     if (item.pendingAction === CONST.RED_BRICK_ROAD_PENDING_ACTION.DELETE) {
-        PaymentMethods.clearDeletePaymentMethodError(paymentList, paymentID);
+        clearDeletePaymentMethodError(paymentList, paymentID);
         if (!isBankAccount) {
-            PaymentMethods.clearDeletePaymentMethodError(ONYXKEYS.FUND_LIST, paymentID);
+            clearDeletePaymentMethodError(ONYXKEYS.FUND_LIST, paymentID);
         }
     } else {
-        PaymentMethods.clearAddPaymentMethodError(paymentList, paymentID);
+        clearAddPaymentMethodError(paymentList, paymentID);
         if (!isBankAccount) {
-            PaymentMethods.clearAddPaymentMethodError(ONYXKEYS.FUND_LIST, paymentID);
+            clearAddPaymentMethodError(ONYXKEYS.FUND_LIST, paymentID);
         }
     }
 }
 
-function shouldShowDefaultBadge(filteredPaymentMethods: PaymentMethod[], isDefault = false): boolean {
+function shouldShowDefaultBadge(filteredPaymentMethods: PaymentMethod[], item: PaymentMethod, walletLinkedAccountID: number, isDefault = false): boolean {
     if (!isDefault) {
         return false;
     }
+    // Find all payment methods that are marked as default
+    const defaultPaymentMethods = filteredPaymentMethods.filter((method: PaymentMethod) => !!method.isDefault);
 
+    // If there is more than one payment method, show the default badge only for the most recently added default account.
+    if (defaultPaymentMethods.length > 1) {
+        if (item.accountType === CONST.PAYMENT_METHODS.PERSONAL_BANK_ACCOUNT) {
+            return item.accountData?.bankAccountID === walletLinkedAccountID;
+        }
+        if (item.accountType === CONST.PAYMENT_METHODS.DEBIT_CARD) {
+            return item.accountData?.fundID === walletLinkedAccountID;
+        }
+    }
     const defaultablePaymentMethodCount = filteredPaymentMethods.filter(
         (method) => method.accountType === CONST.PAYMENT_METHODS.PERSONAL_BANK_ACCOUNT || method.accountType === CONST.PAYMENT_METHODS.DEBIT_CARD,
     ).length;
@@ -196,6 +204,7 @@ function PaymentMethodList({
 
     const [isUserValidated] = useOnyx(ONYXKEYS.USER, {selector: (user) => !!user?.validated});
     const [bankAccountList = {}, bankAccountListResult] = useOnyx(ONYXKEYS.BANK_ACCOUNT_LIST);
+    const [userWallet] = useOnyx(ONYXKEYS.USER_WALLET);
     const isLoadingBankAccountList = isLoadingOnyxValue(bankAccountListResult);
     const [cardList = {}, cardListResult] = useOnyx(ONYXKEYS.CARD_LIST);
     const isLoadingCardList = isLoadingOnyxValue(cardListResult);
@@ -204,41 +213,35 @@ function PaymentMethodList({
     const [isLoadingPaymentMethods = true, isLoadingPaymentMethodsResult] = useOnyx(ONYXKEYS.IS_LOADING_PAYMENT_METHODS);
     const isLoadingPaymentMethodsOnyx = isLoadingOnyxValue(isLoadingPaymentMethodsResult);
 
-    const getDescriptionForPolicyDomainCard = (domainName: string): string => {
-        // A domain name containing a policyID indicates that this is a workspace feed
-        const policyID = domainName.match(CONST.REGEX.EXPENSIFY_POLICY_DOMAIN_NAME)?.[1];
-        if (policyID) {
-            const policy = PolicyUtils.getPolicy(policyID.toUpperCase());
-            return policy?.name ?? domainName;
-        }
-        return domainName;
-    };
-
     const filteredPaymentMethods = useMemo(() => {
         if (shouldShowAssignedCards) {
             const assignedCards = Object.values(isLoadingCardList ? {} : cardList ?? {})
                 // Filter by active cards associated with a domain
                 .filter((card) => !!card.domainName && CONST.EXPENSIFY_CARD.ACTIVE_STATES.includes(card.state ?? 0));
-            const assignedCardsSorted = lodashSortBy(assignedCards, (card) => !CardUtils.isExpensifyCard(card.cardID));
+            const assignedCardsSorted = lodashSortBy(assignedCards, (card) => !isExpensifyCard(card.cardID));
 
             const assignedCardsGrouped: PaymentMethodItem[] = [];
             assignedCardsSorted.forEach((card) => {
-                const icon = getBankIcon({bankName: card.bank as BankName, isCard: true, styles});
+                const icon = getCardFeedIcon(card.bank as CompanyCardFeed);
 
-                if (!CardUtils.isExpensifyCard(card.cardID)) {
+                if (!isExpensifyCard(card.cardID)) {
                     assignedCardsGrouped.push({
                         key: card.cardID.toString(),
-                        title: card.bank,
+                        title: maskCardNumber(card.cardName, card.bank),
                         description: getDescriptionForPolicyDomainCard(card.domainName),
                         shouldShowRightIcon: false,
                         interactive: false,
                         canDismissError: false,
                         errors: card.errors,
+                        pendingAction: card.pendingAction,
                         brickRoadIndicator:
                             card.fraud === CONST.EXPENSIFY_CARD.FRAUD_TYPES.DOMAIN || card.fraud === CONST.EXPENSIFY_CARD.FRAUD_TYPES.INDIVIDUAL
                                 ? CONST.BRICK_ROAD_INDICATOR_STATUS.ERROR
                                 : undefined,
-                        ...icon,
+                        icon,
+                        iconStyles: [styles.cardIcon],
+                        iconWidth: variables.cardIconWidth,
+                        iconHeight: variables.cardIconHeight,
                     });
                     return;
                 }
@@ -271,11 +274,15 @@ function PaymentMethodList({
                     interactive: true,
                     canDismissError: true,
                     errors: card.errors,
+                    pendingAction: card.pendingAction,
                     brickRoadIndicator:
                         card.fraud === CONST.EXPENSIFY_CARD.FRAUD_TYPES.DOMAIN || card.fraud === CONST.EXPENSIFY_CARD.FRAUD_TYPES.INDIVIDUAL
                             ? CONST.BRICK_ROAD_INDICATOR_STATUS.ERROR
                             : undefined,
-                    ...icon,
+                    icon,
+                    iconStyles: [styles.cardIcon],
+                    iconWidth: variables.cardIconWidth,
+                    iconHeight: variables.cardIconHeight,
                 });
             });
             return assignedCardsGrouped;
@@ -286,7 +293,7 @@ function PaymentMethodList({
         // const paymentCardList = fundList ?? {};
         // const filteredCardList = Object.values(paymentCardList).filter((card) => !!card.accountData?.additionalData?.isP2PDebitCard);
         const filteredCardList = {};
-        let combinedPaymentMethods = PaymentUtils.formatPaymentMethods(isLoadingBankAccountList ? {} : bankAccountList ?? {}, filteredCardList, styles);
+        let combinedPaymentMethods = formatPaymentMethods(isLoadingBankAccountList ? {} : bankAccountList ?? {}, filteredCardList, styles);
 
         if (filterType !== '') {
             combinedPaymentMethods = combinedPaymentMethods.filter((paymentMethod) => paymentMethod.accountType === filterType);
@@ -347,7 +354,7 @@ function PaymentMethodList({
 
     const onPressItem = useCallback(() => {
         if (!isUserValidated) {
-            Navigation.navigate(ROUTES.SETTINGS_WALLET_VERIFY_ACCOUNT.getRoute(ROUTES.SETTINGS_ADD_BANK_ACCOUNT));
+            Navigation.navigate(ROUTES.SETTINGS_WALLET_VERIFY_ACCOUNT.getRoute(Navigation.getActiveRoute(), ROUTES.SETTINGS_ADD_BANK_ACCOUNT));
             return;
         }
         onPress();
@@ -362,7 +369,6 @@ function PaymentMethodList({
                     text={translate('walletPage.addBankAccount')}
                     large
                     success
-                    isDisabled={!isUserValidated}
                     onPress={onPress}
                 />
             ) : (
@@ -375,7 +381,7 @@ function PaymentMethodList({
                 />
             ),
 
-        [shouldShowAddBankAccountButton, onPressItem, translate, onPress, buttonRef, styles.paymentMethod, listItemStyle, isUserValidated],
+        [shouldShowAddBankAccountButton, onPressItem, translate, onPress, buttonRef, styles.paymentMethod, listItemStyle],
     );
 
     /**
@@ -401,7 +407,12 @@ function PaymentMethodList({
                     iconWidth={item.iconWidth ?? item.iconSize}
                     iconStyles={item.iconStyles}
                     badgeText={
-                        shouldShowDefaultBadge(filteredPaymentMethods, invoiceTransferBankAccountID ? invoiceTransferBankAccountID === item.methodID : item.isDefault)
+                        shouldShowDefaultBadge(
+                            filteredPaymentMethods,
+                            item,
+                            userWallet?.walletLinkedAccountID ?? CONST.DEFAULT_NUMBER_ID,
+                            invoiceTransferBankAccountID ? invoiceTransferBankAccountID === item.methodID : item.isDefault,
+                        )
                             ? translate('paymentMethodList.defaultPaymentMethod')
                             : undefined
                     }
@@ -418,7 +429,18 @@ function PaymentMethodList({
             </OfflineWithFeedback>
         ),
 
-        [styles.ph6, styles.paymentMethod, styles.badgeBordered, filteredPaymentMethods, invoiceTransferBankAccountID, translate, listItemStyle, shouldShowSelectedState, selectedMethodID],
+        [
+            styles.ph6,
+            styles.paymentMethod,
+            styles.badgeBordered,
+            filteredPaymentMethods,
+            invoiceTransferBankAccountID,
+            translate,
+            listItemStyle,
+            shouldShowSelectedState,
+            selectedMethodID,
+            userWallet?.walletLinkedAccountID,
+        ],
     );
 
     return (

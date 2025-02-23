@@ -81,7 +81,7 @@ function SearchRestaurantsRouter({onRouterClose, restaurantsSearch, restauransLi
                 taxRatesOptions: [],
             };
         }
-        return OptionsListUtils.getSearchOptions(options, '', betas ?? []);
+        return OptionsListUtils.getSearchOptions(options, betas ?? []);
     }, [areOptionsInitialized, betas, options]);
 
     /**
@@ -256,7 +256,8 @@ function SearchRestaurantsRouter({onRouterClose, restaurantsSearch, restauransLi
                 isFullWidth={isSmallScreenWidth}
                 updateSearch={onSearchChange}
                 onSubmit={() => {
-                    onSearchSubmit(SearchRestaurantUtils.buildSearchQueryJSON(textInputValue));
+                    onSearchRestaurantsChanged(textInputValue);
+                    // onSearchSubmit(SearchRestaurantUtils.buildSearchQueryJSON(textInputValue));
                 }}
                 routerListRef={listRef}
                 shouldShowOfflineMessage
@@ -271,7 +272,7 @@ function SearchRestaurantsRouter({onRouterClose, restaurantsSearch, restauransLi
                 reportForContextualSearch={contextualReportData}
                 recentSearches={sortedRecentSearches?.slice(0, 5)}
                 recentReports={recentReports}
-                onSearchSubmit={onSearchSubmit}
+                onSearchRestaurantsChanged={onSearchRestaurantsChanged}
                 updateUserSearchQuery={updateUserSearchQuery}
                 closeAndClearRouter={closeAndClearRouter}
                 onEndReached={onEndReached}

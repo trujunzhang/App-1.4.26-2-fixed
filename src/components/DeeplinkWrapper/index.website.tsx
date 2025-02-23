@@ -32,7 +32,7 @@ function promptToOpenInDesktopApp(initialUrl = '') {
         // Match any magic link (/v/<account id>/<6 digit code>)
         const isMagicLink = CONST.REGEX.ROUTES.VALIDATE_LOGIN.test(window.location.pathname);
 
-        App.beginDeepLinkRedirect(!isMagicLink, Link.getInternalNewIeattaPath(initialUrl));
+        App.beginDeepLinkRedirect(!isMagicLink, Link.getInternalNewExpensifyPath(initialUrl));
     }
 }
 

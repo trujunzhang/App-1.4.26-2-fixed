@@ -1,3 +1,5 @@
+import ChangeExpensifyLoginLink from '@expPages/signin/ChangeExpensifyLoginLink';
+import Terms from '@expPages/signin/Terms';
 import {useIsFocused} from '@react-navigation/native';
 import React, {forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState} from 'react';
 import type {ForwardedRef} from 'react';
@@ -22,8 +24,6 @@ import AccountUtils from '@libs/AccountUtils';
 import canFocusInputOnScreenFocus from '@libs/canFocusInputOnScreenFocus';
 import * as ErrorUtils from '@libs/ErrorUtils';
 import * as ValidationUtils from '@libs/ValidationUtils';
-import ChangeExpensifyLoginLink from '@expPages/signin/ChangeExpensifyLoginLink';
-import Terms from '@expPages/signin/Terms';
 import * as SessionActions from '@userActions/Session';
 import * as User from '@userActions/User';
 import CONST from '@src/CONST';

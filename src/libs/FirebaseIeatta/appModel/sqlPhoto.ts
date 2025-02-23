@@ -1,7 +1,6 @@
 /* eslint-disable rulesdir/no-inline-named-export */
 
 /* eslint-disable import/prefer-default-export */
-import {throws} from 'assert';
 import {FBCollections} from '@libs/FirebaseIeatta/constant';
 import {documentIdFromCurrentDate} from '@libs/FirebaseIeatta/utils/md5_utils';
 import {getDateStringForCreatedOrUpdatedDate} from '@libs/FirebaseIeatta/utils/timeago_helper';

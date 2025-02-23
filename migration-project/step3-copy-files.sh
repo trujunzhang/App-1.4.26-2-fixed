@@ -110,7 +110,8 @@ function test_project() {
     # PROJECT_ieatta_iconset
 
     # EDIT_webpack_common
-    EDIT_link_to
+    # EDIT_link_to
+    PROJECT_ieatta_project
 }
 
 step1_copy_project

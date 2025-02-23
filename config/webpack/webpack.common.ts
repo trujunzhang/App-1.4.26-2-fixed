@@ -4,12 +4,15 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
+import TerserPlugin from 'terser-webpack-plugin';
 import type {Class} from 'type-fest';
 import type {Configuration, WebpackPluginInstance} from 'webpack';
 import {DefinePlugin, EnvironmentPlugin, IgnorePlugin, ProvidePlugin} from 'webpack';
 import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
 import CustomVersionFilePlugin from './CustomVersionFilePlugin';
 import type Environment from './types';
+
+dotenv.config();
 
 type Options = {
     rel: string;
@@ -37,7 +40,10 @@ const includeModules = [
     'react-native-qrcode-svg',
     'react-native-view-shot',
     '@react-native/assets',
+    'expo',
     'expo-av',
+    'expo-image-manipulator',
+    'expo-modules-core',
 ].join('|');
 
 const environmentToLogoSuffixMap: Record<string, string> = {
@@ -79,10 +85,11 @@ const getCommonConfiguration = ({file = '.env', platform = 'web'}: Environment):
         new HtmlWebpackPlugin({
             template: 'web/index.html',
             filename: 'index.html',
-            splashLogo: fs.readFileSync(path.resolve(__dirname, `../../assets/images/new-expensify${mapEnvironmentToLogoSuffix(file)}.svg`), 'utf-8'),
+            splashLogo: fs.readFileSync(path.resolve(__dirname, `../../assets/ieatta/splash/splash${mapEnvironmentToLogoSuffix(file)}.svg`), 'utf-8'),
             isWeb: platform === 'web',
             isProduction: file === '.env.production',
             isStaging: file === '.env.staging',
+            useThirdPartyScripts: process.env.USE_THIRD_PARTY_SCRIPTS === 'true' || (platform === 'web' && ['.env.production', '.env.staging'].includes(file)),
         }),
         new PreloadWebpackPlugin({
             rel: 'preload',
@@ -173,7 +180,7 @@ const getCommonConfiguration = ({file = '.env', platform = 'web'}: Environment):
             // We are importing this worker as a string by using asset/source otherwise it will default to loading via an HTTPS request later.
             // This causes issues if we have gone offline before the pdfjs web worker is set up as we won't be able to load it from the server.
             {
-                test: new RegExp('node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs'),
+                test: new RegExp('node_modules/pdfjs-dist/build/pdf.worker.min.mjs'),
                 type: 'asset/source',
             },
 
@@ -228,8 +235,6 @@ const getCommonConfiguration = ({file = '.env', platform = 'web'}: Environment):
             'react-native-config': 'react-web-config',
             // eslint-disable-next-line @typescript-eslint/naming-convention
             'react-native$': 'react-native-web',
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            'react-native-sound': 'react-native-web-sound',
             // Module alias for web & desktop
             // https://webpack.js.org/configuration/resolve/#resolvealias
             // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -285,6 +290,20 @@ const getCommonConfiguration = ({file = '.env', platform = 'web'}: Environment):
     },
 
     optimization: {
+        minimizer: [
+            // default settings accordint to https://webpack.js.org/configuration/optimization/#optimizationminimizer
+            // with addition of preserving the class name for ImageManipulator (expo module)
+            new TerserPlugin({
+                terserOptions: {
+                    compress: {
+                        passes: 2,
+                    },
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
+                    keep_classnames: /ImageManipulator|ImageModule/,
+                },
+            }),
+            '...',
+        ],
         runtimeChunk: 'single',
         splitChunks: {
             cacheGroups: {

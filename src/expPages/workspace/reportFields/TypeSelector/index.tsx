@@ -1,3 +1,4 @@
+import type {ReportFieldItemType} from '@expPages/workspace/reportFields/ReportFieldTypePicker';
 import {Str} from 'expensify-common';
 import type {ForwardedRef} from 'react';
 import React, {forwardRef, useState} from 'react';
@@ -6,7 +7,6 @@ import type {MenuItemBaseProps} from '@components/MenuItem';
 import MenuItemWithTopDescription from '@components/MenuItemWithTopDescription';
 import useLocalize from '@hooks/useLocalize';
 import * as WorkspaceReportFieldUtils from '@libs/WorkspaceReportFieldUtils';
-import type {ReportFieldItemType} from '@expPages/workspace/reportFields/ReportFieldTypePicker';
 import CONST from '@src/CONST';
 import type {PolicyReportFieldType} from '@src/types/onyx/Policy';
 import TypeSelectorModal from './TypeSelectorModal';

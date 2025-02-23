@@ -8,10 +8,10 @@ type StateAndCountry = {state?: State; country?: Country};
 
 /**
  * Extracts the 'state' and 'country' query parameters from the route/ url and validates it against COMMON_CONST.STATES and CONST.ALL_COUNTRIES.
- * Example 1: Url: https://new.expensify.com/settings/profile/address?state=MO Returns: state=MO
- * Example 2: Url: https://new.expensify.com/settings/profile/address?state=ASDF Returns: state=undefined
- * Example 3: Url: https://new.expensify.com/settings/profile/address Returns: state=undefined
- * Example 4: Url: https://new.expensify.com/settings/profile/address?state=MO-hash-a12341 Returns: state=MO
+ * Example 1: Url: https://new.ieatta.com/settings/profile/address?state=MO Returns: state=MO
+ * Example 2: Url: https://new.ieatta.com/settings/profile/address?state=ASDF Returns: state=undefined
+ * Example 3: Url: https://new.ieatta.com/settings/profile/address Returns: state=undefined
+ * Example 4: Url: https://new.ieatta.com/settings/profile/address?state=MO-hash-a12341 Returns: state=MO
  * Similarly for country parameter.
  */
 export default function useGeographicalStateAndCountryFromRoute(stateParamName = 'state', countryParamName = 'country'): StateAndCountry {

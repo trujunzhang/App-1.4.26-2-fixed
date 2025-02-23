@@ -1,3 +1,5 @@
+import Licenses from '@expPages/signin/Licenses';
+import Socials from '@expPages/signin/Socials';
 import React from 'react';
 import type {StyleProp, TextStyle} from 'react-native';
 import {View} from 'react-native';
@@ -13,8 +15,6 @@ import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useStyleUtils from '@hooks/useStyleUtils';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
-import Licenses from '@expPages/signin/Licenses';
-import Socials from '@expPages/signin/Socials';
 import variables from '@styles/variables';
 import CONST from '@src/CONST';
 import type {TranslationPaths} from '@src/languages/types';
@@ -93,8 +93,8 @@ const columns = ({navigateFocus = () => {}}: Pick<FooterProps, 'navigateFocus'>)
                 translationPath: 'footer.expensifyHelp',
             },
             {
-                href: CONST.FOOTER.COMMUNITY_URL,
-                translationPath: 'footer.community',
+                href: CONST.FOOTER.TERMS_URL,
+                translationPath: 'footer.terms',
             },
             {
                 href: CONST.FOOTER.PRIVACY_URL,

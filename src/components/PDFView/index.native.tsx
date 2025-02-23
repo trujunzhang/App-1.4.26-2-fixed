@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useCallback, useEffect, useState} from 'react';
 import type {StyleProp, ViewStyle} from 'react-native';
 import {View} from 'react-native';
@@ -139,7 +138,7 @@ function PDFView({onToggleKeyboard, onLoadComplete, fileName, onPress, isFocused
 
         return (
             <View style={containerStyles}>
-                {/* {shouldAttemptPDFLoad && (
+                {/*                 {shouldAttemptPDFLoad && (
                     <PDF
                         fitPolicy={0}
                         trustAllCerts={false}

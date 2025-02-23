@@ -1,3 +1,5 @@
+import {getRerenderCount, resetRerenderCount} from '@expPages/home/report/ReportActionCompose/ComposerWithSuggestions/index.e2e';
+import {onSubmitAction} from '@expPages/home/report/ReportActionCompose/ReportActionCompose';
 import type {NativeConfig} from 'react-native-config';
 import Config from 'react-native-config';
 import {runOnUI} from 'react-native-reanimated';
@@ -9,8 +11,6 @@ import getConfigValueOrThrow from '@libs/E2E/utils/getConfigValueOrThrow';
 import getPromiseWithResolve from '@libs/E2E/utils/getPromiseWithResolve';
 import Navigation from '@libs/Navigation/Navigation';
 import Performance from '@libs/Performance';
-import {getRerenderCount, resetRerenderCount} from '@expPages/home/report/ReportActionCompose/ComposerWithSuggestions/index.e2e';
-import {onSubmitAction} from '@expPages/home/report/ReportActionCompose/ReportActionCompose';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';
 import * as NativeCommands from '../../../../tests/e2e/nativeCommands/NativeCommandsAction';
@@ -21,6 +21,7 @@ const test = (config: NativeConfig) => {
 
     const reportID = getConfigValueOrThrow('reportID', config);
     const message = getConfigValueOrThrow('message', config);
+    const name = getConfigValueOrThrow('name', config);
 
     E2ELogin().then((neededLogin) => {
         if (neededLogin) {
@@ -42,10 +43,10 @@ const test = (config: NativeConfig) => {
         });
 
         Performance.subscribeToMeasurements((entry) => {
-            if (entry.name === CONST.TIMING.MESSAGE_SENT) {
+            if (entry.name === CONST.TIMING.SEND_MESSAGE) {
                 E2EClient.submitTestResults({
                     branch: Config.E2E_BRANCH,
-                    name: 'Message sent',
+                    name: `${name} Message sent`,
                     metric: entry.duration,
                     unit: 'ms',
                 }).then(messageSentResolve);
@@ -77,7 +78,7 @@ const test = (config: NativeConfig) => {
 
                                     E2EClient.submitTestResults({
                                         branch: Config.E2E_BRANCH,
-                                        name: 'Composer typing rerender count',
+                                        name: `${name} Composer typing rerender count`,
                                         metric: rerenderCount,
                                         unit: 'renders',
                                     })

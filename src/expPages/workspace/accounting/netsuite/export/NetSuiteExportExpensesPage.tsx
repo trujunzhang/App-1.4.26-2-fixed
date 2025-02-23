@@ -1,12 +1,3 @@
-import {useRoute} from '@react-navigation/native';
-import React, {useMemo} from 'react';
-import ConnectionLayout from '@components/ConnectionLayout';
-import MenuItemWithTopDescription from '@components/MenuItemWithTopDescription';
-import OfflineWithFeedback from '@components/OfflineWithFeedback';
-import useLocalize from '@hooks/useLocalize';
-import useThemeStyles from '@hooks/useThemeStyles';
-import Navigation from '@libs/Navigation/Navigation';
-import {areSettingsInErrorFields, findSelectedBankAccountWithDefaultSelect, findSelectedVendorWithDefaultSelect, settingsPendingAction} from '@libs/PolicyUtils';
 import type {ExpenseRouteParams, MenuItem} from '@expPages/workspace/accounting/netsuite/types';
 import {
     exportExpensesDestinationSettingName,
@@ -17,6 +8,15 @@ import {
 } from '@expPages/workspace/accounting/netsuite/utils';
 import type {WithPolicyConnectionsProps} from '@expPages/workspace/withPolicyConnections';
 import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
+import {useRoute} from '@react-navigation/native';
+import React, {useMemo} from 'react';
+import ConnectionLayout from '@components/ConnectionLayout';
+import MenuItemWithTopDescription from '@components/MenuItemWithTopDescription';
+import OfflineWithFeedback from '@components/OfflineWithFeedback';
+import useLocalize from '@hooks/useLocalize';
+import useThemeStyles from '@hooks/useThemeStyles';
+import Navigation from '@libs/Navigation/Navigation';
+import {areSettingsInErrorFields, findSelectedBankAccountWithDefaultSelect, findSelectedVendorWithDefaultSelect, settingsPendingAction} from '@libs/PolicyUtils';
 import * as Policy from '@userActions/Policy/Policy';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';

@@ -1,3 +1,4 @@
+import WorkspaceResetBankAccountModal from '@expPages/workspace/WorkspaceResetBankAccountModal';
 import React from 'react';
 import type {OnyxEntry} from 'react-native-onyx';
 import Button from '@components/Button';
@@ -12,7 +13,6 @@ import Section from '@components/Section';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
-import WorkspaceResetBankAccountModal from '@expPages/workspace/WorkspaceResetBankAccountModal';
 import * as BankAccounts from '@userActions/BankAccounts';
 import CONST from '@src/CONST';
 import type * as OnyxTypes from '@src/types/onyx';
@@ -85,7 +85,7 @@ function ContinueBankAccountSetup({policyName = '', onBackButtonPress, reimburse
                 </Section>
             </ScrollView>
 
-            {reimbursementAccount?.shouldShowResetModal && <WorkspaceResetBankAccountModal reimbursementAccount={reimbursementAccount} />}
+            {!!reimbursementAccount?.shouldShowResetModal && <WorkspaceResetBankAccountModal reimbursementAccount={reimbursementAccount} />}
         </ScreenWrapper>
     );
 }

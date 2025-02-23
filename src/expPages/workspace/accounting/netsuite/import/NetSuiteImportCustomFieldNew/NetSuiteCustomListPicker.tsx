@@ -1,8 +1,8 @@
+import type {CustomListSelectorType} from '@expPages/workspace/accounting/netsuite/types';
 import React, {useState} from 'react';
 import MenuItemWithTopDescription from '@components/MenuItemWithTopDescription';
 import useLocalize from '@hooks/useLocalize';
 import Navigation from '@libs/Navigation/Navigation';
-import type {CustomListSelectorType} from '@expPages/workspace/accounting/netsuite/types';
 import CONST from '@src/CONST';
 import type {Policy} from '@src/types/onyx';
 import NetSuiteCustomListSelectorModal from './NetSuiteCustomListSelectorModal';

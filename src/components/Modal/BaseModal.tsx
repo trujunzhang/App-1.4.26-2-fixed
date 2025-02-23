@@ -24,11 +24,11 @@ import type BaseModalProps from './types';
 
 function BaseModal(
     {
-        headerContent,
         isVisible,
         onClose,
         shouldSetModalVisibility = true,
         onModalHide = () => {},
+        headerContent,
         type,
         popoverAnchorPosition = {},
         innerContainerStyle = {},
@@ -44,6 +44,7 @@ function BaseModal(
         animationInTiming,
         animationOutTiming,
         statusBarTranslucent = true,
+        navigationBarTranslucent = true,
         onLayout,
         avoidKeyboard = false,
         children,
@@ -62,6 +63,7 @@ function BaseModal(
     const StyleUtils = useStyleUtils();
     const {windowWidth, windowHeight} = useWindowDimensions();
     // We need to use isSmallScreenWidth instead of shouldUseNarrowLayout to apply correct modal width
+    // eslint-disable-next-line rulesdir/prefer-shouldUseNarrowLayout-instead-of-isSmallScreenWidth
     const {isSmallScreenWidth} = useResponsiveLayout();
     const keyboardStateContextValue = useKeyboardState();
 
@@ -193,7 +195,7 @@ function BaseModal(
               safeAreaPaddingRight,
               shouldAddBottomSafeAreaMargin,
               shouldAddTopSafeAreaMargin,
-              shouldAddBottomSafeAreaPadding: !keyboardStateContextValue?.isKeyboardShown && shouldAddBottomSafeAreaPadding,
+              shouldAddBottomSafeAreaPadding: (!avoidKeyboard || !keyboardStateContextValue?.isKeyboardShown) && shouldAddBottomSafeAreaPadding,
               shouldAddTopSafeAreaPadding,
               modalContainerStyleMarginTop: modalContainerStyle.marginTop,
               modalContainerStyleMarginBottom: modalContainerStyle.marginBottom,
@@ -209,6 +211,7 @@ function BaseModal(
     const modalContextValue = useMemo(
         () => ({
             activeModalType: isVisible ? type : undefined,
+            default: false,
         }),
         [isVisible, type],
     );
@@ -256,6 +259,7 @@ function BaseModal(
                     animationInTiming={animationInTiming}
                     animationOutTiming={animationOutTiming}
                     statusBarTranslucent={statusBarTranslucent}
+                    navigationBarTranslucent={navigationBarTranslucent}
                     onLayout={onLayout}
                     avoidKeyboard={avoidKeyboard}
                     customBackdrop={shouldUseCustomBackdrop ? <Overlay onPress={handleBackdropPress} /> : undefined}

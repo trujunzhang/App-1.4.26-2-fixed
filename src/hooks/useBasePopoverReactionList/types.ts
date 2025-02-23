@@ -1,7 +1,7 @@
+import type {ReactionListAnchor, ReactionListEvent} from '@expPages/home/ReportScreenContext';
 import type {OnyxEntry} from 'react-native-onyx';
 import type {LocaleContextProps} from '@components/LocaleContextProvider';
 import type {WithCurrentUserPersonalDetailsProps} from '@components/withCurrentUserPersonalDetails';
-import type {ReactionListAnchor, ReactionListEvent} from '@expPages/home/ReportScreenContext';
 import type {AnchorPosition} from '@src/styles';
 import type {ReportActionReactions} from '@src/types/onyx';
 

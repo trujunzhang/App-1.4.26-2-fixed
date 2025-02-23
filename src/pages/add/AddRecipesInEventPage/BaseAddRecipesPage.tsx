@@ -5,10 +5,10 @@ import FullScreenLoadingIndicator from '@components/FullscreenLoadingIndicator';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
 import * as Expensicons from '@components/Icon/Expensicons';
 import IconWithTooltip from '@components/Ieatta/components/IconWithTooltip';
+import SelectionList from '@components/Ieatta/components/SelectionList';
 import AddRecipeListItem from '@components/Ieatta/components/Selections/AddRecipeListItem';
-import type {ChoiceRecipeItem} from '@components/Ieatta/components/Selections/types';
+import type {ChoiceOrderedUserItem, ChoiceRecipeItem} from '@components/Ieatta/components/Selections/types';
 import ScreenWrapper from '@components/ScreenWrapper';
-import SelectionList from '@components/SelectionList';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import {ParseModelPeopleInEvent} from '@libs/FirebaseIeatta/appModel';
@@ -68,7 +68,12 @@ function BaseAddRecipesPage({restaurantId, peopleInEvent, recipeDictInRestaurant
     };
 
     const sections = useMemo(() => {
-        return convertToRadioItemForRecipes({title: translate('add.recipe.section.title'), recipeDictInRestaurant, recipeIds: lodashGet(peopleInEvent, 'recipeIds', []), searchValue});
+        return convertToRadioItemForRecipes({
+            title: translate('add.recipe.section.title'),
+            recipeDictInRestaurant,
+            recipeIds: lodashGet(peopleInEvent, 'recipeIds', []),
+            searchValue,
+        });
     }, [peopleInEvent, recipeDictInRestaurant, searchValue, translate]);
 
     const headerMessage = OptionsListUtils.getHeaderMessageForNonUserList(false, searchValue);
@@ -103,7 +108,7 @@ function BaseAddRecipesPage({restaurantId, peopleInEvent, recipeDictInRestaurant
                 {shouldShowLoading ? (
                     <FullScreenLoadingIndicator style={[styles.flex1, styles.pRelative]} />
                 ) : (
-                    <SelectionList
+                    <SelectionList<ChoiceRecipeItem>
                         ListItem={AddRecipeListItem}
                         sectionTitleStyles={styles.mt5}
                         sections={sections}

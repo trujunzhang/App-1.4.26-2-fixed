@@ -1,3 +1,4 @@
+import type {CustomListSelectorType} from '@expPages/workspace/accounting/netsuite/types';
 import {Str} from 'expensify-common';
 import React, {useMemo} from 'react';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
@@ -8,7 +9,6 @@ import RadioListItem from '@components/SelectionList/RadioListItem';
 import useDebouncedState from '@hooks/useDebouncedState';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
-import type {CustomListSelectorType} from '@expPages/workspace/accounting/netsuite/types';
 import CONST from '@src/CONST';
 import type {Policy} from '@src/types/onyx';
 
@@ -61,7 +61,7 @@ function NetSuiteCustomListSelectorModal({isVisible, currentCustomListValue, onC
                       },
                   ],
             headerMessage: isEmpty ? translate('common.noResultsFound') : '',
-            showTextInput: customListData.length > CONST.NETSUITE_CONFIG.NETSUITE_CUSTOM_LIST_LIMIT,
+            showTextInput: customListData.length > CONST.STANDARD_LIST_ITEM_LIMIT,
         };
     }, [debouncedSearchValue, policy?.connections?.netsuite?.options?.data?.customLists, translate, currentCustomListValue]);
 

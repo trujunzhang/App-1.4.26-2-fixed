@@ -34,7 +34,7 @@ build/
 local.properties
 *.iml
 *.hprof
-android/app/src/main/java/com/ieatta/chat/generated/
+android/app/src/main/java/com/expensify/chat/generated/
 .cxx/
 
 # VIM
@@ -43,7 +43,7 @@ android/app/src/main/java/com/ieatta/chat/generated/
 *~
 
 # Vscode
-.vscode/.react
+.vscode
 
 # node.js
 #
@@ -60,6 +60,7 @@ buck-out/
 \.buckd/
 *.keystore
 !debug.keystore
+.!*!*
 !my-upload-key.keystore
 android/app/android-fastlane-json-key.json
 
@@ -111,10 +112,6 @@ tsconfig.tsbuildinfo
 # Mock-github
 /repo/
 
-# Workflow test logs
-/workflow_tests/logs/
-/workflow_tests/repo/
-
 # Yalc
 .yalc
 yalc.lock
@@ -131,10 +128,6 @@ config/webpack/*.pem
 .expo
 dist/
 web-build/
-*.tar.gz
-
-# jest
-*.snap
 
 # Yarn
 .yarn/*
@@ -144,7 +137,6 @@ web-build/
 !.yarn/sdks
 !.yarn/versions
 
-
 # Storage location for downloaded app source maps (see scripts/symbolicate-profile.ts)
 .sourcemaps/
 
@@ -153,15 +145,3 @@ docs/.bundle
 
 # Output of react compiler healthcheck dev script
 react-compiler-output.txt
-
-# neovim's files
-*-E
-*.swp
-.nx/
-# emacs's files
-*#
-
-
-
-
-.env.local

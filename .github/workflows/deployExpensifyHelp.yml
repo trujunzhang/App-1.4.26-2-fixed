@@ -21,7 +21,7 @@ on:
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
-  group: "expPages"
+  group: "pages"
   cancel-in-progress: false
 
 jobs:
@@ -49,13 +49,13 @@ jobs:
         run: ./.github/scripts/enforceRedirect.sh
 
       - name: Build with Jekyll
-        uses: actions/jekyll-build-expPages@0143c158f4fa0c5dcd99499a5d00859d79f70b0e
+        uses: actions/jekyll-build-pages@0143c158f4fa0c5dcd99499a5d00859d79f70b0e
         with:
           source: ./docs/
           destination: ./docs/_site
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/expPages-action@f0a1cd58cd66095dee69bfa18fa5efd1dde93bca
+        uses: cloudflare/pages-action@f0a1cd58cd66095dee69bfa18fa5efd1dde93bca
         id: deploy
         if: env.IS_PR_FROM_FORK != 'true'
         with:

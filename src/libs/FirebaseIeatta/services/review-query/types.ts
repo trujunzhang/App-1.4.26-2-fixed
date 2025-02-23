@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
-import type {FBCollections, ReviewType} from '@libs/FirebaseIeatta/constant';
-import type {SortObject} from '@libs/FirebaseIeatta/review-sort';
-import {SortTag} from '@libs/FirebaseIeatta/review-sort';
+import type {ReviewType} from '@libs/FirebaseIeatta/constant';
 
 interface IReviewQueryParas {
     relatedId: string;

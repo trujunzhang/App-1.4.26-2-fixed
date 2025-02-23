@@ -12,13 +12,12 @@ import type {
     ViewStyle,
 } from 'react-native';
 import type {AnimatedStyle} from 'react-native-reanimated';
-import type AddRecipeListItem from '@components/Ieatta/components/Selections/AddRecipeListItem';
-import type AddUserListItem from '@components/Ieatta/components/Selections/AddUserListItem';
 import type {SearchRouterItem} from '@components/Search/SearchRouter/SearchRouterList';
 import type {BrickRoad} from '@libs/WorkspacesSettingsUtils';
 // eslint-disable-next-line no-restricted-imports
 import type CursorStyles from '@styles/utils/cursor/types';
 import type CONST from '@src/CONST';
+import type {Attendee} from '@src/types/onyx/IOU';
 import type {Errors, Icon, PendingAction} from '@src/types/onyx/OnyxCommon';
 import type {SearchPersonalDetails, SearchReport, SearchReportAction, SearchTransaction} from '@src/types/onyx/SearchResults';
 import type {ReceiptErrors} from '@src/types/onyx/Transaction';
@@ -236,6 +235,9 @@ type TransactionListItemType = ListItem &
 
         /** Key used internally by React */
         keyForList: string;
+
+        /** Attendees in the transaction */
+        attendees?: Attendee[];
     };
 
 type ReportActionListItemType = ListItem &
@@ -292,6 +294,12 @@ type ListItemProps<TItem extends ListItem> = CommonListItemProps<TItem> & {
 
     /** Whether to show RBR */
     shouldDisplayRBR?: boolean;
+
+    /** Whether we highlight all the selected items */
+    shouldHighlightSelectedItem?: boolean;
+
+    /** Styles applied for the title */
+    titleStyles?: StyleProp<TextStyle>;
 };
 
 type BaseListItemProps<TItem extends ListItem> = CommonListItemProps<TItem> & {
@@ -326,7 +334,10 @@ type RadioListItemProps<TItem extends ListItem> = ListItemProps<TItem>;
 
 type TableListItemProps<TItem extends ListItem> = ListItemProps<TItem>;
 
-type TransactionListItemProps<TItem extends ListItem> = ListItemProps<TItem>;
+type TransactionListItemProps<TItem extends ListItem> = ListItemProps<TItem> & {
+    /** Whether the item's action is loading */
+    isLoading?: boolean;
+};
 
 type ReportListItemProps<TItem extends ListItem> = ListItemProps<TItem>;
 
@@ -341,9 +352,7 @@ type ValidListItem =
     | typeof ReportListItem
     | typeof ChatListItem
     | typeof SearchQueryListItem
-    | typeof SearchRouterItem
-    | typeof AddRecipeListItem
-    | typeof AddUserListItem;
+    | typeof SearchRouterItem;
 
 type Section<TItem extends ListItem> = {
     /** Title of the section */
@@ -440,6 +449,12 @@ type BaseSelectionListProps<TItem extends ListItem> = Partial<ChildrenProps> & {
     /** Item `keyForList` to focus initially */
     initiallyFocusedOptionKey?: string | null;
 
+    /** Whether the text input should be shown after list header */
+    shouldShowTextInputAfterHeader?: boolean;
+
+    /** Whether to include padding bottom */
+    includeSafeAreaPaddingBottom?: boolean;
+
     /** Callback to fire when the list is scrolled */
     onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
 
@@ -451,6 +466,9 @@ type BaseSelectionListProps<TItem extends ListItem> = Partial<ChildrenProps> & {
 
     /** Styles to apply to the header message */
     headerMessageStyle?: StyleProp<ViewStyle>;
+
+    /** Styles to apply to submit button */
+    confirmButtonStyles?: StyleProp<ViewStyle>;
 
     /** Text to display on the confirm button */
     confirmButtonText?: string;
@@ -466,6 +484,9 @@ type BaseSelectionListProps<TItem extends ListItem> = Partial<ChildrenProps> & {
 
     /** Whether to show the default confirm button */
     showConfirmButton?: boolean;
+
+    /** Whether to use the default theme for the confirm button */
+    shouldUseDefaultTheme?: boolean;
 
     /** Whether tooltips should be shown */
     shouldShowTooltips?: boolean;
@@ -512,6 +533,9 @@ type BaseSelectionListProps<TItem extends ListItem> = Partial<ChildrenProps> & {
     /** Whether focus event should be delayed */
     shouldDelayFocus?: boolean;
 
+    /** Callback to fire when the text input changes */
+    onArrowFocus?: (focusedItem: TItem) => void;
+
     /** Whether to show the loading indicator for new options */
     isLoadingNewOptions?: boolean;
 
@@ -541,6 +565,9 @@ type BaseSelectionListProps<TItem extends ListItem> = Partial<ChildrenProps> & {
 
     /** Styles for the section title */
     sectionTitleStyles?: StyleProp<ViewStyle>;
+
+    /** Styles applid for the title of the list item */
+    listItemTitleStyles?: StyleProp<TextStyle>;
 
     /** This may improve scroll performance for large lists */
     removeClippedSubviews?: boolean;
@@ -588,14 +615,37 @@ type BaseSelectionListProps<TItem extends ListItem> = Partial<ChildrenProps> & {
 
     /** Additional styles to apply to scrollable content */
     contentContainerStyle?: StyleProp<ViewStyle>;
+
+    /** Whether we highlight all the selected items */
+    shouldHighlightSelectedItem?: boolean;
+
+    /** Determines if the focused item should remain at the top of the viewable area when navigating with arrow keys */
+    shouldKeepFocusedItemAtTopOfViewableArea?: boolean;
+
+    /** Whether to debounce scrolling on focused index change */
+    shouldDebounceScrolling?: boolean;
+
+    /** Whether to prevent the active cell from being virtualized and losing focus in browsers */
+    shouldPreventActiveCellVirtualization?: boolean;
+
+    /** Whether to scroll to the focused index */
+    shouldScrollToFocusedIndex?: boolean;
+
+    /** Called when scrollable content view of the ScrollView changes */
+    onContentSizeChange?: (w: number, h: number) => void;
+
+    /** Initial number of items to render */
+    initialNumToRender?: number;
 } & TRightHandSideComponent<TItem>;
 
 type SelectionListHandle = {
-    scrollAndHighlightItem?: (items: string[], timeout: number) => void;
+    scrollAndHighlightItem?: (items: string[]) => void;
     clearInputAfterSelect?: () => void;
     scrollToIndex: (index: number, animated?: boolean) => void;
     updateAndScrollToFocusedIndex: (newFocusedIndex: number) => void;
     updateExternalTextInputFocus: (isTextInputFocused: boolean) => void;
+    getFocusedOption: () => ListItem | undefined;
+    focusTextInput: () => void;
 };
 
 type ItemLayout = {

@@ -1,3 +1,5 @@
+import type {ReportFieldItemType} from '@expPages/workspace/reportFields/ReportFieldTypePicker';
+import ReportFieldTypePicker from '@expPages/workspace/reportFields/ReportFieldTypePicker';
 import React from 'react';
 import {View} from 'react-native';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
@@ -5,8 +7,6 @@ import Modal from '@components/Modal';
 import ScreenWrapper from '@components/ScreenWrapper';
 import Text from '@components/Text';
 import useThemeStyles from '@hooks/useThemeStyles';
-import type {ReportFieldItemType} from '@expPages/workspace/reportFields/ReportFieldTypePicker';
-import ReportFieldTypePicker from '@expPages/workspace/reportFields/ReportFieldTypePicker';
 import CONST from '@src/CONST';
 import type {PolicyReportFieldType} from '@src/types/onyx/Policy';
 

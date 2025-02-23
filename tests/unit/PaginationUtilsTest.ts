@@ -88,7 +88,7 @@ describe('PaginationUtils', () => {
             ]);
 
             const pages = [
-                // Given these expPages
+                // Given these pages
                 ['17', '16', '15', '14'],
                 ['12', '11', '10', '9'],
                 ['7', '6', '5', '4', '3', '2', '1'],
@@ -125,7 +125,7 @@ describe('PaginationUtils', () => {
             ]);
 
             const pages = [
-                // Given these expPages
+                // Given these pages
                 ['17', '16', '15', '14'],
                 ['12', '11', '10', '9'],
                 ['7', '6', '5', '4', '3', '2', '1'],
@@ -185,7 +185,7 @@ describe('PaginationUtils', () => {
             expect(result.hasNextPage).toBe(false);
         });
 
-        it('does not include actions outside of expPages', () => {
+        it('does not include actions outside of pages', () => {
             const input = createItems([
                 // Given these sortedItems
                 '17',
@@ -208,7 +208,7 @@ describe('PaginationUtils', () => {
             ]);
 
             const pages = [
-                // Given these expPages
+                // Given these pages
                 ['17', '16', '15', '14'],
                 ['12', '11', '10', '9'],
                 ['7', '6', '5', '4', '3', '2'],
@@ -237,7 +237,7 @@ describe('PaginationUtils', () => {
             ]);
 
             const pages = [
-                // Given these expPages
+                // Given these pages
                 [CONST.PAGINATION_START_ID, '15', '14'],
             ];
 
@@ -264,7 +264,7 @@ describe('PaginationUtils', () => {
             ]);
 
             const pages = [
-                // Given these expPages
+                // Given these pages
                 ['17', '16', CONST.PAGINATION_END_ID],
             ];
 
@@ -283,7 +283,7 @@ describe('PaginationUtils', () => {
     });
 
     describe('mergeAndSortContinuousPages', () => {
-        it('merges continuous expPages', () => {
+        it('merges continuous pages', () => {
             const sortedItems = createItems([
                 // Given these sortedItems
                 '5',
@@ -293,19 +293,19 @@ describe('PaginationUtils', () => {
                 '1',
             ]);
             const pages = [
-                // Given these expPages
+                // Given these pages
                 ['5', '4', '3'],
                 ['3', '2', '1'],
             ];
             const expectedResult = [
-                // Expect these expPages
+                // Expect these pages
                 ['5', '4', '3', '2', '1'],
             ];
             const result = PaginationUtils.mergeAndSortContinuousPages(sortedItems, pages, getID);
             expect(result).toStrictEqual(expectedResult);
         });
 
-        it('merges overlapping expPages', () => {
+        it('merges overlapping pages', () => {
             const sortedItems = createItems([
                 // Given these sortedItems
                 '5',
@@ -315,19 +315,19 @@ describe('PaginationUtils', () => {
                 '1',
             ]);
             const pages = [
-                // Given these expPages
+                // Given these pages
                 ['4', '3', '2'],
                 ['3', '2', '1'],
             ];
             const expectedResult = [
-                // Expect these expPages
+                // Expect these pages
                 ['4', '3', '2', '1'],
             ];
             const result = PaginationUtils.mergeAndSortContinuousPages(sortedItems, pages, getID);
             expect(result).toStrictEqual(expectedResult);
         });
 
-        it('merges included expPages', () => {
+        it('merges included pages', () => {
             const sortedItems = createItems([
                 // Given these sortedItems
                 '5',
@@ -337,19 +337,19 @@ describe('PaginationUtils', () => {
                 '1',
             ]);
             const pages = [
-                // Given these expPages
+                // Given these pages
                 ['5', '4', '3', '2', '1'],
                 ['5', '4', '3', '2'],
             ];
             const expectedResult = [
-                // Expect these expPages
+                // Expect these pages
                 ['5', '4', '3', '2', '1'],
             ];
             const result = PaginationUtils.mergeAndSortContinuousPages(sortedItems, pages, getID);
             expect(result).toStrictEqual(expectedResult);
         });
 
-        it('do not merge separate expPages', () => {
+        it('do not merge separate pages', () => {
             const sortedItems = createItems([
                 // Given these sortedItems
                 '5',
@@ -359,12 +359,12 @@ describe('PaginationUtils', () => {
                 '1',
             ]);
             const pages = [
-                // Given these expPages
+                // Given these pages
                 ['5', '4'],
                 ['2', '1'],
             ];
             const expectedResult = [
-                // Expect these expPages
+                // Expect these pages
                 ['5', '4'],
                 ['2', '1'],
             ];
@@ -372,7 +372,7 @@ describe('PaginationUtils', () => {
             expect(result).toStrictEqual(expectedResult);
         });
 
-        it('sorts expPages', () => {
+        it('sorts pages', () => {
             const sortedItems = createItems([
                 // Given these sortedItems
                 '9',
@@ -386,14 +386,14 @@ describe('PaginationUtils', () => {
                 '1',
             ]);
             const pages = [
-                // Given these expPages
+                // Given these pages
                 ['3', '2', '1'],
                 ['3', '2'],
                 ['6', '5'],
                 ['9', '8'],
             ];
             const expectedResult = [
-                // Expect these expPages
+                // Expect these pages
                 ['9', '8'],
                 ['6', '5'],
                 ['3', '2', '1'],
@@ -409,48 +409,48 @@ describe('PaginationUtils', () => {
                 '3',
             ]);
             const pages = [
-                // Given these expPages
+                // Given these pages
                 ['6', '5', '4', '3', '2', '1'],
             ];
             const expectedResult = [
-                // Expect these expPages
+                // Expect these pages
                 ['4', '3'],
             ];
             const result = PaginationUtils.mergeAndSortContinuousPages(sortedItems, pages, getID);
             expect(result).toStrictEqual(expectedResult);
         });
 
-        it('removes expPages that are empty', () => {
+        it('removes pages that are empty', () => {
             const sortedItems = createItems([
                 // Given these sortedItems
                 '4',
             ]);
             const pages = [
-                // Given these expPages
+                // Given these pages
                 ['6', '5'],
                 ['3', '2', '1'],
             ];
 
-            // Expect these expPages
+            // Expect these pages
             const expectedResult: Pages = [];
             const result = PaginationUtils.mergeAndSortContinuousPages(sortedItems, pages, getID);
             expect(result).toStrictEqual(expectedResult);
         });
 
-        it('handles expPages with a single action', () => {
+        it('handles pages with a single action', () => {
             const sortedItems = createItems([
                 // Given these sortedItems
                 '4',
                 '2',
             ]);
             const pages = [
-                // Given these expPages
+                // Given these pages
                 ['4'],
                 ['2'],
                 ['2'],
             ];
             const expectedResult = [
-                // Expect these expPages
+                // Expect these pages
                 ['4'],
                 ['2'],
             ];
@@ -467,13 +467,13 @@ describe('PaginationUtils', () => {
                 '4',
             ]);
             const pages = [
-                // Given these expPages
+                // Given these pages
                 ['2', '1'],
                 ['1', '3'],
                 ['4'],
             ];
             const expectedResult = [
-                // Expect these expPages
+                // Expect these pages
                 ['2', '1', '3'],
                 ['4'],
             ];
@@ -490,12 +490,12 @@ describe('PaginationUtils', () => {
                 '5',
             ]);
             const pages = [
-                // Given these expPages
+                // Given these pages
                 ['5', '4'],
                 ['2', '1'],
             ];
             const expectedResult = [
-                // Expect these expPages
+                // Expect these pages
                 ['1', '2'],
                 ['4', '5'],
             ];
@@ -510,12 +510,12 @@ describe('PaginationUtils', () => {
                 '2',
             ]);
             const pages = [
-                // Given these expPages
+                // Given these pages
                 ['1', '2'],
                 [CONST.PAGINATION_START_ID, '1'],
             ];
             const expectedResult = [
-                // Expect these expPages
+                // Expect these pages
                 [CONST.PAGINATION_START_ID, '1', '2'],
             ];
             const result = PaginationUtils.mergeAndSortContinuousPages(sortedItems, pages, getID);
@@ -529,12 +529,12 @@ describe('PaginationUtils', () => {
                 '2',
             ]);
             const pages = [
-                // Given these expPages
+                // Given these pages
                 ['2', CONST.PAGINATION_END_ID],
                 ['1', '2'],
             ];
             const expectedResult = [
-                // Expect these expPages
+                // Expect these pages
                 ['1', '2', CONST.PAGINATION_END_ID],
             ];
             const result = PaginationUtils.mergeAndSortContinuousPages(sortedItems, pages, getID);
@@ -549,12 +549,12 @@ describe('PaginationUtils', () => {
                 '3',
             ]);
             const pages = [
-                // Given these expPages
+                // Given these pages
                 [CONST.PAGINATION_START_ID, '1', '2', '3', CONST.PAGINATION_END_ID],
                 [CONST.PAGINATION_START_ID, '2', CONST.PAGINATION_END_ID],
             ];
             const expectedResult = [
-                // Expect these expPages
+                // Expect these pages
                 [CONST.PAGINATION_START_ID, '1', '2', '3', CONST.PAGINATION_END_ID],
             ];
             const result = PaginationUtils.mergeAndSortContinuousPages(sortedItems, pages, getID);
@@ -569,12 +569,12 @@ describe('PaginationUtils', () => {
                 '3',
             ]);
             const pages = [
-                // Given these expPages
+                // Given these pages
                 [CONST.PAGINATION_START_ID, '1', '2', '3'],
                 ['2', '3', CONST.PAGINATION_END_ID],
             ];
             const expectedResult = [
-                // Expect these expPages
+                // Expect these pages
                 [CONST.PAGINATION_START_ID, '1', '2', '3', CONST.PAGINATION_END_ID],
             ];
             const result = PaginationUtils.mergeAndSortContinuousPages(sortedItems, pages, getID);

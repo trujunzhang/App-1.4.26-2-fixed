@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// import {Onfido as OnfidoSDK} from 'onfido-sdk-ui';
+import {Onfido as OnfidoSDK} from 'onfido-sdk-ui';
 import React, {forwardRef, useEffect} from 'react';
 import type {ForwardedRef} from 'react';
 import type {LocaleContextProps} from '@components/LocaleContextProvider';
@@ -22,10 +21,6 @@ type InitializeOnfidoProps = OnfidoProps &
 type OnfidoEvent = Event & {
     detail?: Record<string, unknown>;
 };
-
-class OnfidoSDK {
-    static init(p: unknown) {}
-}
 
 function initializeOnfido({sdkToken, onSuccess, onError, onUserExit, preferredLocale, translate, theme}: InitializeOnfidoProps) {
     OnfidoSDK.init({
@@ -93,12 +88,12 @@ function initializeOnfido({sdkToken, onSuccess, onError, onUserExit, preferredLo
                 },
             },
         ],
-        // onComplete: (data) => {
-        //     if (isEmptyObject(data)) {
-        //         Log.warn('Onfido completed with no data');
-        //     }
-        //     onSuccess(data);
-        // },
+        onComplete: (data) => {
+            if (isEmptyObject(data)) {
+                Log.warn('Onfido completed with no data');
+            }
+            onSuccess(data);
+        },
         onError: (error: OnfidoError) => {
             const errorType = error.type;
             const errorMessage: string = error.message ?? CONST.ERROR.UNKNOWN_ERROR;

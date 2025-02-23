@@ -2,8 +2,8 @@ import * as Expensicons from '@components/Icon/Expensicons';
 import * as Illustrations from '@components/Icon/Illustrations';
 import type * as SubscriptionUtils from '@libs/SubscriptionUtils';
 import {PAYMENT_STATUS} from '@libs/SubscriptionUtils';
-import type {BillingStatusResult} from '@expPages/settings/Subscription/CardSection/utils';
-import CardSectionUtils from '@expPages/settings/Subscription/CardSection/utils';
+import type {BillingStatusResult} from '@src/expPages/settings/Subscription/CardSection/utils';
+import CardSectionUtils from '@src/expPages/settings/Subscription/CardSection/utils';
 import type {TranslationParameters, TranslationPaths} from '@src/languages/types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- this param is required for the mock

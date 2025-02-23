@@ -35,7 +35,7 @@ You now have access to the MacOS GUI. Now, let’s set up chrome remote desktop 
 4.  Download google chrome.
 5.  Go to [remotedesktop.google.com/access](https://remotedesktop.google.com/access) and set up remote access on the MacOS instance. 
 6.  Once that’s done, you can access the Mac instance’s GUI using your local machine from this website - [remotedesktop.google.com/access](https://remotedesktop.google.com/access).
-7.  Run the following commands to install tools like cocoapods, node etc which are needed to run New Ieatta.
+7.  Run the following commands to install tools like cocoapods, node etc which are needed to run New Expensify.
 
 ```shell
 # Install homebrew

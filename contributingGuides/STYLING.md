@@ -98,7 +98,7 @@ const SettingsScreen = props => (
 const SomeOtherScreen = props => (
     <View>
         <Text style={[styles.settingsScreenText]}>
-            New Ieatta
+            New Expensify
         </Text>
     </View>
 );
@@ -115,7 +115,7 @@ const SettingsScreen = props => (
 const SomeOtherScreen = props => (
     <View>
         <Text style={[styles.defaultScreenText]}>
-            New Ieatta
+            New Expensify
         </Text>
     </View>
 );

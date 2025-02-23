@@ -41,7 +41,6 @@ const emptySelection: IPageRow = {
 function PopoverDetailedPageActionContextMenu(_props: unknown, ref: ForwardedRef<DetailedPageActionContextMenu>) {
     const {isSmallScreenWidth} = useResponsiveLayout();
     const {translate} = useLocalize();
-    const typeRef = useRef<ContextMenuType>();
     const selectionRef = useRef<IPageRow>(emptySelection);
 
     const toastId = React.useRef<number | string | null>(null);
@@ -137,7 +136,6 @@ function PopoverDetailedPageActionContextMenu(_props: unknown, ref: ForwardedRef
     /**
      * Show the DetailedPageActionContextMenu modal popover.
      *
-     * @param type - context menu type [EMAIL, LINK, REPORT_ACTION]
      * @param [event] - A press event.
      * @param [selection] - Copied content.
      * @param contextMenuAnchor - popoverAnchor
@@ -150,7 +148,6 @@ function PopoverDetailedPageActionContextMenu(_props: unknown, ref: ForwardedRef
      * @param isUnreadChat - Flag to check if the chat is unread in the LHN. Used for the Mark as Read/Unread action
      */
     const showContextMenu: DetailedPageActionContextMenu['showContextMenu'] = (
-        type,
         event,
         selection,
         contextMenuAnchor,
@@ -195,7 +192,6 @@ function PopoverDetailedPageActionContextMenu(_props: unknown, ref: ForwardedRef
                 });
             }
         }).then(() => {
-            typeRef.current = type;
             selectionRef.current = selection;
             setIsPopoverVisible(true);
         });
@@ -242,7 +238,11 @@ function PopoverDetailedPageActionContextMenu(_props: unknown, ref: ForwardedRef
         actionDeleteNavigateTo({
             item: selectionRef.current,
             onSuccess: () => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.delete.success', {modalName: selectionRef.current.modalName})});
+                ShowNotify.updateNotify({
+                    isSmallScreenWidth,
+                    id: toastId.current,
+                    message: translate('notify.delete.success', {modalName: selectionRef.current.modalName}),
+                });
             },
             onFailure: (error: any) => {
                 ShowNotify.updateNotify({
@@ -306,7 +306,6 @@ function PopoverDetailedPageActionContextMenu(_props: unknown, ref: ForwardedRef
             >
                 <BaseDetailedPageActionContextMenu
                     isVisible
-                    type={typeRef.current}
                     selection={selectionRef.current}
                     anchor={contextMenuTargetNode}
                     contentRef={contentRef}

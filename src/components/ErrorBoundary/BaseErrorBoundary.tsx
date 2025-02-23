@@ -1,8 +1,8 @@
+import GenericErrorPage from '@expPages/ErrorPage/GenericErrorPage';
+import UpdateRequiredView from '@expPages/ErrorPage/UpdateRequiredView';
 import React, {useState} from 'react';
 import {ErrorBoundary} from 'react-error-boundary';
 import BootSplash from '@libs/BootSplash';
-import GenericErrorPage from '@expPages/ErrorPage/GenericErrorPage';
-import UpdateRequiredView from '@expPages/ErrorPage/UpdateRequiredView';
 import CONST from '@src/CONST';
 import {useSplashScreenStateContext} from '@src/SplashScreenStateContext';
 import type {BaseErrorBoundaryProps, LogError} from './types';
@@ -27,7 +27,7 @@ function BaseErrorBoundary({logError = () => {}, errorMessage, children}: BaseEr
 
     return (
         <ErrorBoundary
-            fallback={updateRequired ? <UpdateRequiredView /> : <GenericErrorPage />}
+            FallbackComponent={updateRequired ? UpdateRequiredView : GenericErrorPage}
             onError={catchError}
         >
             {children}

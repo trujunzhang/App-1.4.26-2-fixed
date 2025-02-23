@@ -1,11 +1,11 @@
+import StepWrapper from '@expPages/settings/Security/TwoFactorAuth/StepWrapper/StepWrapper';
+import useTwoFactorAuthContext from '@expPages/settings/Security/TwoFactorAuth/TwoFactorAuthContext/useTwoFactorAuth';
 import React from 'react';
 import ConfirmationPage from '@components/ConfirmationPage';
 import LottieAnimations from '@components/LottieAnimations';
 import useEnvironment from '@hooks/useEnvironment';
 import useLocalize from '@hooks/useLocalize';
 import Navigation from '@navigation/Navigation';
-import StepWrapper from '@expPages/settings/Security/TwoFactorAuth/StepWrapper/StepWrapper';
-import useTwoFactorAuthContext from '@expPages/settings/Security/TwoFactorAuth/TwoFactorAuthContext/useTwoFactorAuth';
 import * as Link from '@userActions/Link';
 import * as TwoFactorAuthActions from '@userActions/TwoFactorAuthActions';
 import CONST from '@src/CONST';

@@ -27,9 +27,6 @@ type BaseDetailedPageActionContextMenuProps = {
     /** The copy selection. */
     selection: IPageRow;
 
-    /** String representing the context menu type [LINK, REPORT_ACTION] which controls context menu choices  */
-    type?: ContextMenuType;
-
     /** Target node which is the target of ContentMenu */
     anchor?: MutableRefObject<ContextMenuAnchor>;
 
@@ -45,15 +42,7 @@ type BaseDetailedPageActionContextMenuProps = {
 
 type MenuItemRefs = Record<string, ContextMenuItemHandle | null>;
 
-function BaseDetailedPageActionContextMenu({
-    type = CONST.CONTEXT_MENU_TYPES.REPORT_ACTION,
-    anchor,
-    contentRef,
-    isVisible = false,
-    selection,
-    checkIfContextMenuActive,
-    setIsEmojiPickerActive,
-}: BaseDetailedPageActionContextMenuProps) {
+function BaseDetailedPageActionContextMenu({anchor, contentRef, isVisible = false, selection, checkIfContextMenuActive, setIsEmojiPickerActive}: BaseDetailedPageActionContextMenuProps) {
     const StyleUtils = useStyleUtils();
     const {translate} = useLocalize();
     const {isSmallScreenWidth} = useResponsiveLayout();
@@ -65,7 +54,7 @@ function BaseDetailedPageActionContextMenu({
 
     const shouldEnableArrowNavigation = !false && (isVisible || shouldKeepOpen);
 
-    const filteredContextMenuActions = ContextMenuActions.filter((contextAction) => contextAction.shouldShow(type, selection, anchor));
+    const filteredContextMenuActions = ContextMenuActions.filter((contextAction) => contextAction.shouldShow(selection, anchor));
 
     // Context menu actions that are not rendered as menu items are excluded from arrow navigation
     const nonMenuItemActionIndexes = filteredContextMenuActions.map((contextAction, index) =>
@@ -116,7 +105,6 @@ function BaseDetailedPageActionContextMenu({
 
     const openOverflowMenu = (event: GestureResponderEvent | MouseEvent, anchorRef: MutableRefObject<View | null>) => {
         showContextMenu(
-            CONST.CONTEXT_MENU_TYPES.REPORT_ACTION,
             event,
             selection,
             anchorRef?.current as ViewType | RNText | null,

@@ -4,7 +4,7 @@ import {create} from '@storybook/theming/create';
 import colors from '../src/styles/theme/colors';
 
 const theme: ThemeVars = create({
-    brandTitle: 'New Ieatta UI Docs',
+    brandTitle: 'New Expensify UI Docs',
     brandImage: 'logomark.svg',
     fontBase: 'Expensify Neue',
     fontCode: 'monospace',

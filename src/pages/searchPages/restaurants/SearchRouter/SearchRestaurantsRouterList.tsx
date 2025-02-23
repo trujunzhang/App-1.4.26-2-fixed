@@ -2,16 +2,20 @@ import React, {forwardRef, useCallback} from 'react';
 import type {ForwardedRef} from 'react';
 import {useOnyx} from 'react-native-onyx';
 import * as Expensicons from '@components/Icon/Expensicons';
+import SelectionList from '@components/Ieatta/components/SelectionList';
 import SearchRestaurantsListItem from '@components/Ieatta/components/Selections/SearchRestaurantsListItem';
 import type {SearchRestaurantsItem, SearchRestaurantsItemProps} from '@components/Ieatta/components/Selections/types';
 import {usePersonalDetails} from '@components/OnyxProvider';
-import SelectionList from '@components/SelectionList';
 import SearchQueryListItem from '@components/SelectionList/Search/SearchQueryListItem';
 import type {SearchQueryItem, SearchQueryListItemProps} from '@components/SelectionList/Search/SearchQueryListItem';
 import type {SectionListDataType, SelectionListHandle, UserListItemProps} from '@components/SelectionList/types';
 import useLocalize from '@hooks/useLocalize';
 import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
+import {PageSection, RowPressableType, SkeletonViewType} from '@libs/FirebaseIeatta/list/constant';
+import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
+import type {IRestaurantSidebarRow} from '@libs/FirebaseIeatta/list/types/rows/restaurant';
+import {pageItemNavigateTo} from '@libs/ieatta/pageNavigationUtils';
 import type {SearchQueryJSON} from '@libs/ieatta/SearchRestaurantUtils';
 import * as SearchRestaurantUtils from '@libs/ieatta/SearchRestaurantUtils';
 import Navigation from '@libs/Navigation/Navigation';
@@ -40,7 +44,10 @@ type SearchRestaurantsRouterListProps = {
     recentReports: OptionData[];
 
     /** Callback to submit query when selecting a list item */
-    onSearchSubmit: (query: SearchQueryJSON | undefined) => void;
+    // onSearchSubmit: (query: SearchQueryJSON | undefined) => void;
+
+    /** Called when the search text changes */
+    onSearchRestaurantsChanged: (searchText: string) => void;
 
     /** Context present when opening SearchRestaurantsRouter from a report, invoice or workspace page */
     reportForContextualSearch?: OptionData;
@@ -107,7 +114,7 @@ function SearchRestaurantsRouterList(
         reportForContextualSearch,
         recentSearches,
         recentReports,
-        onSearchSubmit,
+        onSearchRestaurantsChanged,
         updateUserSearchQuery,
         closeAndClearRouter,
         restauransList,
@@ -155,6 +162,7 @@ function SearchRestaurantsRouterList(
     //     });
     // }
 
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     const recentSearchesData = recentSearches?.map(({query, timestamp}) => {
         const searchQueryJSON = SearchRestaurantUtils.buildSearchQueryJSON(query);
         return {
@@ -167,7 +175,7 @@ function SearchRestaurantsRouterList(
     });
 
     if (!currentQuery?.inputQuery && recentSearchesData && recentSearchesData.length > 0) {
-        sections.push({title: translate('search.recentSearches'), data: recentSearchesData});
+        // sections.push({title: translate('search.recentSearches'), data: recentSearchesData});
     }
 
     // const styledRecentReports = recentReports.map((item) => ({...item, pressableStyle: styles.br2, wrapperStyle: [styles.pr3, styles.pl3]}));
@@ -177,30 +185,45 @@ function SearchRestaurantsRouterList(
     const onSelectRow = useCallback(
         (item: OptionData | SearchQueryItem | SearchRestaurantsItem) => {
             if (isSearchQueryItem(item)) {
-                if (item.isContextualSearchItem) {
-                    // Handle selection of "Contextual search suggestion"
-                    updateUserSearchQuery(`${item?.query} ${currentQuery?.inputQuery ?? ''}`);
-                    return;
-                }
+                // if (item.isContextualSearchItem) {
+                //     // Handle selection of "Contextual search suggestion"
+                //     updateUserSearchQuery(`${item?.query} ${currentQuery?.inputQuery ?? ''}`);
+                //     return;
+                // }
 
-                // Handle selection of "Recent search"
-                if (!item?.query) {
-                    return;
-                }
-                onSearchSubmit(SearchRestaurantUtils.buildSearchQueryJSON(item?.query));
+                // // Handle selection of "Recent search"
+                // if (!item?.query) {
+                //     return;
+                // }
+                // onSearchSubmit(SearchRestaurantUtils.buildSearchQueryJSON(item?.query));
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+                const queryItem: SearchQueryItem = item as SearchQueryItem;
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                onSearchRestaurantsChanged(queryItem?.searchQuery ?? '');
                 return;
             }
 
             // Handle selection of "Recent chat"
             closeAndClearRouter();
             if ('uniqueId' in item && item?.uniqueId) {
-                // Navigation.navigate(ROUTES.REPORT_WITH_ID.getRoute(item?.reportID));
-                Navigation.navigate(ROUTES.RESTAURANT_WITH_ID.getRoute(item?.uniqueId));
+                const rowData: IRestaurantSidebarRow = {
+                    restaurant: item,
+                    isFocused: false,
+                };
+                const pageRow: IPageRow = {
+                    rowType: PageSection.RESTAURANT_SEARCH_ROW,
+                    rowData,
+                    rowKey: 'PageSection.RESTAURANT_SEARCH_ROW',
+                    modalName: 'restaurant',
+                    pressType: RowPressableType.SINGLE_PRESS,
+                };
+                pageItemNavigateTo(pageRow);
+                // Navigation.navigate(ROUTES.RESTAURANT_WITH_ID.getRoute(item?.uniqueId));
             } else if ('login' in item) {
                 Report.navigateToAndOpenReport(item.login ? [item.login] : [], false);
             }
         },
-        [closeAndClearRouter, onSearchSubmit, currentQuery, updateUserSearchQuery],
+        [closeAndClearRouter, onSearchRestaurantsChanged],
     );
 
     return (

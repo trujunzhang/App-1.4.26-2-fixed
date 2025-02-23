@@ -32,6 +32,7 @@ export enum PageSection {
      */
     SIDEBAR_RESTAURANT_CARD,
     SIDEBAR_RESTAURANT_ROW,
+    RESTAURANT_SEARCH_ROW,
 
     /**
      |--------------------------------------------------

@@ -10,11 +10,7 @@ import Tooltip from '@components/Tooltip';
 import useLocalize from '@hooks/useLocalize';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
-import Performance from '@libs/Performance';
 import variables from '@styles/variables';
-import * as Session from '@userActions/Session';
-import Timing from '@userActions/Timing';
-import CONST from '@src/CONST';
 import {useSearchRestaurantsRouterContext} from './SearchRestaurantsRouterContext';
 
 type SearchRestaurantsButtonProps = {
@@ -33,12 +29,12 @@ function SearchRestaurantsButton({style, showAsButton = true}: SearchRestaurants
             <PressableWithoutFeedback
                 accessibilityLabel={translate('common.search')}
                 style={[styles.flexRow, styles.touchableButtonImage, style]}
-                onPress={Session.checkIfActionIsAllowed(() => {
+                onPress={() => {
                     // Timing.start(CONST.TIMING.SEARCH_ROUTER_RENDER);
                     // Performance.markStart(CONST.TIMING.SEARCH_ROUTER_RENDER);
 
                     openSearchRestaurantsRouter();
-                })}
+                }}
             >
                 {showAsButton ? (
                     <Icon

@@ -2,6 +2,7 @@ import {Str} from 'expensify-common';
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import Avatar from '@components/Avatar';
+import type {ListItem} from '@components/Ieatta/components/SelectionList/types';
 import PressableWithFeedback from '@components/Pressable/PressableWithFeedback';
 import SelectCircle from '@components/SelectCircle';
 import BaseListItem from '@components/SelectionList/BaseListItem';
@@ -14,7 +15,7 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import CONST from '@src/CONST';
 import type {AddUserListItemProps, ChoiceOrderedUserItem} from './types';
 
-function AddUserListItem<TItem extends ChoiceOrderedUserItem>({
+function AddUserListItem<TItem extends ListItem>({
     item,
     isFocused,
     showTooltip,
@@ -76,7 +77,7 @@ function AddUserListItem<TItem extends ChoiceOrderedUserItem>({
                         <Avatar
                             containerStyles={[styles.actionAvatar]}
                             shouldShowAsAvatar
-                            avatarUrl={item.userUrl}
+                            avatarUrl={(item as unknown as ChoiceOrderedUserItem).userUrl}
                             type={CONST.ICON_TYPE_AVATAR}
                             name={item.text}
                             size={CONST.AVATAR_SIZE.MEDIUM}
@@ -105,6 +106,7 @@ function AddUserListItem<TItem extends ChoiceOrderedUserItem>({
                         )}
                     </View>
                     {!!item.rightElement && item.rightElement}
+                    {/* eslint-disable-next-line rulesdir/boolean-conditional-rendering */}
                     {canSelectMultiple && (
                         <PressableWithFeedback
                             onPress={handleCheckboxPress}

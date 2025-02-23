@@ -26,6 +26,7 @@ type IeattaFullPaneScreensParamList = {
 };
 
 type RightIeattaNavigatorParamList = {
+    [SCREENS.RIGHT_IEATTA.SETTINGS_ROOT_RIGHT]: undefined;
     [SCREENS.RIGHT_IEATTA.RESTAURANT]: {
         restaurantId: string;
     };

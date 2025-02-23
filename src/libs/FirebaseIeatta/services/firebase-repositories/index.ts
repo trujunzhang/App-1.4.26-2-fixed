@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {collection, onSnapshot, query, where} from 'firebase/firestore';
+import {collection, onSnapshot, query} from 'firebase/firestore';
 import {db} from '@libs/FirebaseIeatta/config/firebase';
 import {FBCollections} from '@libs/FirebaseIeatta/constant';
 import ListenerUsersSnapshot from './ListenerUsersSnapshot';

@@ -40,7 +40,7 @@ There are two steps to enable Expensify Card notifications. You’ll first enabl
 **iPhone**
 
 1. Go to your device settings.
-2. Find and tap **New Ieatta**.
+2. Find and tap **New Expensify**.
 3. Tap **Notifications** and enable notifications.
 4. Customize your alerts. Depending on your phone model, you may have extra options to customize the types of notifications you receive.
 
@@ -48,7 +48,7 @@ There are two steps to enable Expensify Card notifications. You’ll first enabl
 
 1. Go to your device settings.
 2. Tap **Notifications** and select **Apps notifications**.
-3. Find and tap **New Ieatta**. 
+3. Find and tap **New Expensify**. 
 4. Enable notifications.
 5. Customize your alerts. Depending on your phone model, you may have extra options to customize the types of notifications you receive.
 

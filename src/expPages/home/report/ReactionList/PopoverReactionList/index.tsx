@@ -1,7 +1,7 @@
+import type {ReactionListRef} from '@expPages/home/ReportScreenContext';
 import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
 import type {ForwardedRef} from 'react';
 import type {InnerReactionListRef} from '@hooks/useBasePopoverReactionList/types';
-import type {ReactionListRef} from '@expPages/home/ReportScreenContext';
 import BasePopoverReactionList from './BasePopoverReactionList';
 
 function PopoverReactionList(props: unknown, ref: ForwardedRef<ReactionListRef>) {

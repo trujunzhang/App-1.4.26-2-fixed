@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import type {OnyxEntry} from 'react-native-onyx';
 import {withOnyx} from 'react-native-onyx';
@@ -39,13 +38,13 @@ function RequestorOnfidoStep({onBackButtonPress, reimbursementAccount, onfidoTok
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 
-    // const submitOnfidoData = (onfidoData: OnfidoData) => {
-    //     BankAccounts.verifyIdentityForBankAccount(reimbursementAccount.achData?.bankAccountID ?? -1, {
-    //         ...onfidoData,
-    //         applicantID: onfidoApplicantID ?? '-1',
-    //     });
-    //     BankAccounts.updateReimbursementAccountDraft({isOnfidoSetupComplete: true});
-    // };
+    const submitOnfidoData = (onfidoData: OnfidoData) => {
+        BankAccounts.verifyIdentityForBankAccount(reimbursementAccount.achData?.bankAccountID ?? -1, {
+            ...onfidoData,
+            applicantID: onfidoApplicantID ?? '-1',
+        });
+        BankAccounts.updateReimbursementAccountDraft({isOnfidoSetupComplete: true});
+    };
 
     const handleOnfidoError = () => {
         // In case of any unexpected error we log it to the server, show a growl, and return the user back to the requestor step so they can try again.
@@ -74,12 +73,12 @@ function RequestorOnfidoStep({onBackButtonPress, reimbursementAccount, onfidoTok
             />
             <FullPageOfflineBlockingView>
                 <ScrollView contentContainerStyle={styles.flex1}>
-                    {/* <Onfido
+                    <Onfido
                         sdkToken={onfidoToken ?? ''}
                         onUserExit={handleOnfidoUserExit}
                         onError={handleOnfidoError}
                         onSuccess={submitOnfidoData}
-                    /> */}
+                    />
                 </ScrollView>
             </FullPageOfflineBlockingView>
         </ScreenWrapper>

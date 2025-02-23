@@ -102,7 +102,6 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
-apply from: new File(["node", "--print", "require.resolve('@sentry/react-native/package.json')"].execute().text.trim(), "../sentry.gradle")
 android {
     ndkVersion rootProject.ext.ndkVersion
 
@@ -115,8 +114,8 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         multiDexEnabled rootProject.ext.multiDexEnabled
-        versionCode 1009005101
-        versionName "9.0.51-1"
+        versionCode 1009008601
+        versionName "9.0.86-1"
         // Supported language variants must be declared here to avoid from being removed during the compilation.
         // This also helps us to not include unnecessary language variants in the APK.
         resConfigs "en", "es"
@@ -153,19 +152,15 @@ android {
     }
 
     signingConfigs {
-        //release {
-        //    storeFile file(MYAPP_UPLOAD_STORE_FILE)
-        //    storePassword System.getenv('MYAPP_UPLOAD_STORE_PASSWORD')
-        //    keyAlias MYAPP_UPLOAD_KEY_ALIAS
-        //    keyPassword System.getenv('MYAPP_UPLOAD_KEY_PASSWORD')
-        //}
-         release {
+        release {
             storeFile file(MYAPP_UPLOAD_STORE_FILE)
+            // storePassword System.getenv('MYAPP_UPLOAD_STORE_PASSWORD')
             storePassword 'ieatta' // store password of ieatta
+            // keyAlias MYAPP_UPLOAD_KEY_ALIAS
             keyAlias 'keyieatta' // key alias of ieatta
+            // keyPassword System.getenv('MYAPP_UPLOAD_KEY_PASSWORD')
             keyPassword 'kieatta' // key password of ieatta
         }
-       
         debug {
             storeFile file('debug.keystore')
             storePassword 'android'
@@ -211,7 +206,7 @@ afterEvaluate {
     def hermesCTask = gradle.includedBuild("react-native").task(":packages:react-native:ReactAndroid:hermes-engine:buildHermesC")
 
     android.applicationVariants.configureEach { variant ->
-        if (variant.buildType.name == "release") {
+        if (variant.buildType.name == "release" || variant.buildType.name == "adhoc") {
             def variantName = variant.name.capitalize()
             def bundleTask = tasks.named("createBundle${variantName}JsAndAssets").getOrNull()
 
@@ -248,7 +243,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // Plaid SDK
-    // implementation project(':react-native-plaid-link-sdk')
+    //implementation project(':react-native-plaid-link-sdk')
 
     // Fixes a version conflict between airship and react-native-plaid-link-sdk
     // This may be fixed by a newer version of the plaid SDK (not working as of 10.0.0)

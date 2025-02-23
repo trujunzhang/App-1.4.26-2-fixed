@@ -38,6 +38,7 @@ function replace_app_identifier() {
 	strings_array=(
      "New Expensify"  "New Ieatta"
      "new\.expensify\.com" "new\.ieatta\.com"
+     "new\.expensify\.desktop"  "new\.ieatta\.desktop"
      # >> .gitignore:
      # >>   android/app/src/main/java/com/expensify/chat/generated/
      "com\.expensify\.chat" "com\.ieatta\.track"
@@ -148,7 +149,7 @@ function rename_Xcode_Project() {
         target_file=${project_files[$j + 1]}
 
         if [  -f "$DEST_PROJECT/${source_file}" ]; then
-            info "  rename ios file: source: $source_file, dest: $target_file"
+            info "  Rename ios file: source: $source_file, dest: $target_file"
             mv "$DEST_PROJECT/${source_file}" "$DEST_PROJECT/${target_file}"
         fi
     done
@@ -166,7 +167,7 @@ function rename_Xcode_Project() {
         target_folder=${project_folders[$j + 1]}
 
         if [  -d "$DEST_PROJECT/${source_folder}" ]; then
-            info "  rename ios folder: source: $source_folder, dest: $target_folder"
+            info "  Rename ios folder: source: $source_folder, dest: $target_folder"
             mv "$DEST_PROJECT/${source_folder}" "$DEST_PROJECT/${target_folder}"
         fi
     done
@@ -178,7 +179,7 @@ function rename_Xcode_Project() {
 
 function rename_Android_project() {
     step=$((step + 1))
-    info "Start rename Android project"
+    info "Start renaming Android project"
 
     source_main_package="android/app/src/main/java/com/expensify/chat"
     target_main_package="android/app/src/main/java/com/ieatta/track"

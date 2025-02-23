@@ -18,7 +18,6 @@ import type {RestaurantItemProps} from './type';
 
 function RestaurantCardView({rowData, hovered}: RestaurantItemProps) {
     const {restaurant, isFocused} = rowData;
-    // const {isMediumScreenWidth, isTabletScreenWidth} = useWindowDimensions();
     const {isMediumScreenWidth} = useResponsiveLayout();
     const {windowWidth} = useWindowDimensions();
     const isTabletScreenWidth = false;

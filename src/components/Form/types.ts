@@ -1,3 +1,9 @@
+import type ConstantSelector from '@expPages/Debug/ConstantSelector';
+import type BusinessTypePicker from '@expPages/ReimbursementAccount/BusinessInfo/substeps/TypeBusiness/BusinessTypePicker';
+import type DimensionTypeSelector from '@expPages/workspace/accounting/intacct/import/DimensionTypeSelector';
+import type NetSuiteCustomFieldMappingPicker from '@expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldNew/NetSuiteCustomFieldMappingPicker';
+import type NetSuiteCustomListPicker from '@expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldNew/NetSuiteCustomListPicker';
+import type NetSuiteMenuWithTopDescriptionForm from '@expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldNew/NetSuiteMenuWithTopDescriptionForm';
 import type {ComponentType, FocusEvent, Key, MutableRefObject, ReactNode, Ref} from 'react';
 import type {GestureResponderEvent, NativeSyntheticEvent, StyleProp, TextInputFocusEventData, TextInputSubmitEditingEventData, ViewStyle} from 'react-native';
 import type {ValueOf} from 'type-fest';
@@ -6,6 +12,7 @@ import type AddressSearch from '@components/AddressSearch';
 import type AmountForm from '@components/AmountForm';
 import type AmountPicker from '@components/AmountPicker';
 import type AmountTextInput from '@components/AmountTextInput';
+import type {FileObject} from '@components/AttachmentModal';
 import type CheckboxWithLabel from '@components/CheckboxWithLabel';
 import type CountryPicker from '@components/CountryPicker';
 import type CountrySelector from '@components/CountrySelector';
@@ -14,6 +21,7 @@ import type DatePicker from '@components/DatePicker';
 import type EmojiPickerButtonDropdown from '@components/EmojiPicker/EmojiPickerButtonDropdown';
 import type PercentageForm from '@components/PercentageForm';
 import type Picker from '@components/Picker';
+import type PushRowWithModal from '@components/PushRowWithModal';
 import type RadioButtons from '@components/RadioButtons';
 import type RoomNameInput from '@components/RoomNameInput';
 import type SingleChoiceQuestion from '@components/SingleChoiceQuestion';
@@ -21,15 +29,12 @@ import type StatePicker from '@components/StatePicker';
 import type StateSelector from '@components/StateSelector';
 import type TextInput from '@components/TextInput';
 import type TextPicker from '@components/TextPicker';
+import type TimeModalPicker from '@components/TimeModalPicker';
+import type UploadFile from '@components/UploadFile';
 import type ValuePicker from '@components/ValuePicker';
-import type ConstantSelector from '@expPages/Debug/ConstantSelector';
-import type BusinessTypePicker from '@expPages/ReimbursementAccount/BusinessInfo/substeps/TypeBusiness/BusinessTypePicker';
-import type DimensionTypeSelector from '@expPages/workspace/accounting/intacct/import/DimensionTypeSelector';
-import type NetSuiteCustomFieldMappingPicker from '@expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldNew/NetSuiteCustomFieldMappingPicker';
-import type NetSuiteCustomListPicker from '@expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldNew/NetSuiteCustomListPicker';
-import type NetSuiteMenuWithTopDescriptionForm from '@expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldNew/NetSuiteMenuWithTopDescriptionForm';
 import type {Country} from '@src/CONST';
 import type {OnyxFormKey, OnyxValues} from '@src/ONYXKEYS';
+import type {Form} from '@src/types/form';
 import type {BaseForm} from '@src/types/form/Form';
 
 /**
@@ -63,9 +68,12 @@ type ValidInputs =
     | typeof NetSuiteMenuWithTopDescriptionForm
     | typeof CountryPicker
     | typeof StatePicker
-    | typeof ConstantSelector;
+    | typeof ConstantSelector
+    | typeof UploadFile
+    | typeof PushRowWithModal
+    | typeof TimeModalPicker;
 
-type ValueTypeKey = 'string' | 'boolean' | 'date' | 'country' | 'reportFields' | 'disabledListValues';
+type ValueTypeKey = 'string' | 'boolean' | 'date' | 'country' | 'reportFields' | 'disabledListValues' | 'entityChart';
 type ValueTypeMap = {
     string: string;
     boolean: boolean;
@@ -73,6 +81,7 @@ type ValueTypeMap = {
     country: Country | '';
     reportFields: string[];
     disabledListValues: boolean[];
+    entityChart: FileObject[];
 };
 type FormValue = ValueOf<ValueTypeMap>;
 
@@ -158,6 +167,7 @@ type FormProps<TFormID extends OnyxFormKey = OnyxFormKey> = {
 type FormRef<TFormID extends OnyxFormKey = OnyxFormKey> = {
     resetForm: (optionalValue: FormOnyxValues<TFormID>) => void;
     resetErrors: () => void;
+    resetFormFieldError: (fieldID: keyof Form) => void;
 };
 
 type InputRefs = Record<string, MutableRefObject<InputComponentBaseProps>>;

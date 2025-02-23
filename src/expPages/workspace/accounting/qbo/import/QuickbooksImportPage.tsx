@@ -1,13 +1,15 @@
-import React from 'react';
+import {shouldSwitchLocationsToReportFields} from '@expPages/workspace/accounting/qbo/utils';
+import type {WithPolicyProps} from '@expPages/workspace/withPolicy';
+import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
+import React, {useEffect} from 'react';
 import ConnectionLayout from '@components/ConnectionLayout';
 import MenuItemWithTopDescription from '@components/MenuItemWithTopDescription';
 import OfflineWithFeedback from '@components/OfflineWithFeedback';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
+import * as QuickbooksOnline from '@libs/actions/connections/QuickbooksOnline';
 import * as PolicyUtils from '@libs/PolicyUtils';
 import Navigation from '@navigation/Navigation';
-import type {WithPolicyProps} from '@expPages/workspace/withPolicy';
-import withPolicyConnections from '@expPages/workspace/withPolicyConnections';
 import CONST from '@src/CONST';
 import ROUTES from '@src/ROUTES';
 
@@ -22,7 +24,16 @@ function QuickbooksImportPage({policy}: WithPolicyProps) {
     const {translate} = useLocalize();
     const styles = useThemeStyles();
     const policyID = policy?.id ?? '-1';
-    const {syncClasses, syncCustomers, syncLocations, syncTax, pendingFields, errorFields} = policy?.connections?.quickbooksOnline?.config ?? {};
+    const qboConfig = policy?.connections?.quickbooksOnline?.config;
+    const {syncClasses, syncCustomers, syncLocations, syncTax, pendingFields, errorFields} = qboConfig ?? {};
+
+    // If we previously selected tags but now we have the line items restriction for locations, we need to switch to report fields
+    useEffect(() => {
+        if (!shouldSwitchLocationsToReportFields(qboConfig)) {
+            return;
+        }
+        QuickbooksOnline.updateQuickbooksOnlineSyncLocations(policyID, CONST.INTEGRATION_ENTITY_MAP_TYPES.REPORT_FIELD, qboConfig?.syncLocations);
+    }, [qboConfig, policyID]);
 
     const sections: QBOSectionType[] = [
         {
@@ -71,7 +82,6 @@ function QuickbooksImportPage({policy}: WithPolicyProps) {
             contentContainerStyle={styles.pb2}
             titleStyle={styles.ph5}
             connectionName={CONST.POLICY.CONNECTIONS.NAME.QBO}
-            onBackButtonPress={() => Navigation.goBack(ROUTES.POLICY_ACCOUNTING.getRoute(policyID))}
         >
             {sections.map((section) => (
                 <OfflineWithFeedback
@@ -91,6 +101,6 @@ function QuickbooksImportPage({policy}: WithPolicyProps) {
     );
 }
 
-QuickbooksImportPage.displayName = 'PolicyQuickbooksImportPage';
+QuickbooksImportPage.displayName = 'QuickbooksImportPage';
 
 export default withPolicyConnections(QuickbooksImportPage);

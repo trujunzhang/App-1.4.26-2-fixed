@@ -163,8 +163,11 @@ function copy_file() {
 function copy_file_from_source_to_dest() {
     file_name=$1
 
+    DEFAULTVALUE="ignore"
+    need_delete="${2:-$DEFAULTVALUE}"
+
     info "Copying file: $file_name"
-    copy_file  "$SOURCE_PROJECT/${file_name}" "$DEST_PROJECT/${file_name}" 
+    copy_file  "$SOURCE_PROJECT/${file_name}" "$DEST_PROJECT/${file_name}" "$need_delete" 
 }
 
 

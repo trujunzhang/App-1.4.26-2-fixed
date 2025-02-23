@@ -1,6 +1,6 @@
+import type {ToggleSettingOptionRowProps} from '@expPages/workspace/workflows/ToggleSettingsOptionRow';
 import type {MenuItemProps} from '@components/MenuItem';
 import type {OfflineWithFeedbackProps} from '@components/OfflineWithFeedback';
-import type {ToggleSettingOptionRowProps} from '@expPages/workspace/workflows/ToggleSettingsOptionRow';
 
 type MenuItem = MenuItemProps & {
     /** Type of the item */

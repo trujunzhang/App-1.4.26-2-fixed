@@ -1,3 +1,5 @@
+import LongTermsForm from '@expPages/EnablePayments/TermsPage/LongTermsForm';
+import ShortTermsForm from '@expPages/EnablePayments/TermsPage/ShortTermsForm';
 import React from 'react';
 import {View} from 'react-native';
 import {useOnyx} from 'react-native-onyx';
@@ -7,8 +9,6 @@ import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import type {SubStepProps} from '@hooks/useSubStep/types';
 import useThemeStyles from '@hooks/useThemeStyles';
-import LongTermsForm from '@expPages/EnablePayments/TermsPage/LongTermsForm';
-import ShortTermsForm from '@expPages/EnablePayments/TermsPage/ShortTermsForm';
 import ONYXKEYS from '@src/ONYXKEYS';
 
 function FeesStep({onNext}: SubStepProps) {

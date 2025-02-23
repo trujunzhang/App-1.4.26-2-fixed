@@ -65,13 +65,13 @@ function buildOldDotURL(url: string, shortLivedAuthToken?: string): Promise<stri
 /**
  * @param shouldSkipCustomSafariLogic When true, we will use `Linking.openURL` even if the browser is Safari.
  */
-function openExternalLink(url: string, shouldSkipCustomSafariLogic = false) {
-    asyncOpenURL(Promise.resolve(), url, shouldSkipCustomSafariLogic);
+function openExternalLink(url: string, shouldSkipCustomSafariLogic = false, shouldOpenInSameTab = false) {
+    asyncOpenURL(Promise.resolve(), url, shouldSkipCustomSafariLogic, shouldOpenInSameTab);
 }
 
-function openOldDotLink(url: string) {
+function openOldDotLink(url: string, shouldOpenInSameTab = false) {
     if (isNetworkOffline) {
-        buildOldDotURL(url).then((oldDotURL) => openExternalLink(oldDotURL));
+        buildOldDotURL(url).then((oldDotURL) => openExternalLink(oldDotURL, undefined, shouldOpenInSameTab));
         return;
     }
 
@@ -82,6 +82,8 @@ function openOldDotLink(url: string) {
             .then((response) => (response ? buildOldDotURL(url, response.shortLivedAuthToken) : buildOldDotURL(url)))
             .catch(() => buildOldDotURL(url)),
         (oldDotURL) => oldDotURL,
+        undefined,
+        shouldOpenInSameTab,
     );
 }
 
@@ -135,7 +137,7 @@ function openTravelDotLink(policyID: OnyxEntry<string>, postLoginPath?: string) 
     });
 }
 
-function getInternalNewIeattaPath(href: string) {
+function getInternalNewExpensifyPath(href: string) {
     const attrPath = Url.getPathFromURL(href);
     return (Url.hasSameExpensifyOrigin(href, CONST.NEW_EXPENSIFY_URL) || Url.hasSameExpensifyOrigin(href, CONST.STAGING_NEW_EXPENSIFY_URL) || href.startsWith(CONST.DEV_NEW_EXPENSIFY_URL)) &&
         !CONST.PATHS_TO_TREAT_AS_EXTERNAL.find((path) => attrPath.startsWith(path))
@@ -156,7 +158,7 @@ function getInternalExpensifyPath(href: string) {
 function openLink(href: string, environmentURL: string, isAttachment = false) {
     const hasSameOrigin = Url.hasSameExpensifyOrigin(href, environmentURL);
     const hasExpensifyOrigin = Url.hasSameExpensifyOrigin(href, CONFIG.EXPENSIFY.EXPENSIFY_URL) || Url.hasSameExpensifyOrigin(href, CONFIG.EXPENSIFY.STAGING_API_ROOT);
-    const internalNewIeattaPath = getInternalNewIeattaPath(href);
+    const internalNewExpensifyPath = getInternalNewExpensifyPath(href);
     const internalExpensifyPath = getInternalExpensifyPath(href);
 
     // There can be messages from Concierge with links to specific NewDot reports. Those URLs look like this:
@@ -173,18 +175,18 @@ function openLink(href: string, environmentURL: string, isAttachment = false) {
 
     // If we are handling a New Ieatta link then we will assume this should be opened by the app internally. This ensures that the links are opened internally via react-navigation
     // instead of in a new tab or with a page refresh (which is the default behavior of an anchor tag)
-    if (internalNewIeattaPath && hasSameOrigin) {
-        if (Session.isAnonymousUser() && !Session.canAnonymousUserAccessRoute(internalNewIeattaPath)) {
+    if (internalNewExpensifyPath && hasSameOrigin) {
+        if (Session.isAnonymousUser() && !Session.canAnonymousUserAccessRoute(internalNewExpensifyPath)) {
             Session.signOutAndRedirectToSignIn();
             return;
         }
-        Navigation.navigate(internalNewIeattaPath as Route);
+        Navigation.navigate(internalNewExpensifyPath as Route);
         return;
     }
-
     // If we are handling an old dot Expensify link we need to open it with openOldDotLink() so we can navigate to it with the user already logged in.
     // As attachments also use expensify.com we don't want it working the same as links.
-    if (internalExpensifyPath && !isAttachment) {
+    const isPublicOldDotURL = (Object.values(CONST.OLD_DOT_PUBLIC_URLS) as string[]).includes(href);
+    if (internalExpensifyPath && !isAttachment && !isPublicOldDotURL) {
         openOldDotLink(internalExpensifyPath);
         return;
     }
@@ -218,4 +220,4 @@ function openExternalLinkWithToken(url: string, shouldSkipCustomSafariLogic = fa
     );
 }
 
-export {buildOldDotURL, openOldDotLink, openExternalLink, openLink, getInternalNewIeattaPath, getInternalExpensifyPath, openTravelDotLink, buildTravelDotURL, openExternalLinkWithToken};
+export {buildOldDotURL, openOldDotLink, openExternalLink, openLink, getInternalNewExpensifyPath, getInternalExpensifyPath, openTravelDotLink, buildTravelDotURL, openExternalLinkWithToken};

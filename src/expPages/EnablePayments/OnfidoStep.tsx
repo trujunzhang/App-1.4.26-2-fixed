@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useCallback} from 'react';
 import {withOnyx} from 'react-native-onyx';
 import type {OnyxEntry} from 'react-native-onyx';
@@ -45,17 +44,17 @@ function OnfidoStep({walletOnfidoData = DEFAULT_WALLET_ONFIDO_DATA}: OnfidoStepP
         Growl.error(translate('onfidoStep.genericError'), 10000);
     }, [translate]);
 
-    // const verifyIdentity = useCallback(
-    //     (data: OnfidoData) => {
-    //         BankAccounts.verifyIdentity({
-    //             onfidoData: JSON.stringify({
-    //                 ...data,
-    //                 applicantID: walletOnfidoData?.applicantID,
-    //             }),
-    //         });
-    //     },
-    //     [walletOnfidoData?.applicantID],
-    // );
+    const verifyIdentity = useCallback(
+        (data: OnfidoData) => {
+            BankAccounts.verifyIdentity({
+                onfidoData: JSON.stringify({
+                    ...data,
+                    applicantID: walletOnfidoData?.applicantID,
+                }),
+            });
+        },
+        [walletOnfidoData?.applicantID],
+    );
 
     return (
         <>
@@ -63,7 +62,7 @@ function OnfidoStep({walletOnfidoData = DEFAULT_WALLET_ONFIDO_DATA}: OnfidoStepP
                 title={translate('onfidoStep.verifyIdentity')}
                 onBackButtonPress={goToPreviousStep}
             />
-            {/* <FullPageOfflineBlockingView>
+            <FullPageOfflineBlockingView>
                 {shouldShowOnfido ? (
                     <Onfido
                         sdkToken={walletOnfidoData.sdkToken ?? ''}
@@ -74,7 +73,7 @@ function OnfidoStep({walletOnfidoData = DEFAULT_WALLET_ONFIDO_DATA}: OnfidoStepP
                 ) : (
                     <OnfidoPrivacy />
                 )}
-            </FullPageOfflineBlockingView> */}
+            </FullPageOfflineBlockingView>
         </>
     );
 }

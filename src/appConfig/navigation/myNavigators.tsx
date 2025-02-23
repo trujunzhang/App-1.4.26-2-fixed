@@ -8,6 +8,7 @@ import type ReactComponentModule from '@src/types/utils/ReactComponentModule';
 import type {RightIeattaNavigatorParamList} from './types';
 
 const RightIeattaStackNavigator = createModalStackNavigator<RightIeattaNavigatorParamList>({
+    [SCREENS.RIGHT_IEATTA.SETTINGS_ROOT_RIGHT]: () => require<ReactComponentModule>('@pages/settings/InitialSettingsPage').default,
     [SCREENS.RIGHT_IEATTA.RESTAURANT]: () => require<ReactComponentModule>('@pages/edit/restaurant').default,
     [SCREENS.RIGHT_IEATTA.EVENT]: () => require<ReactComponentModule>('@pages/edit/event').default,
     [SCREENS.RIGHT_IEATTA.RECIPE]: () => require<ReactComponentModule>('@pages/edit/recipe').default,

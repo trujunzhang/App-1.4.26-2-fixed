@@ -1,10 +1,11 @@
 import type {ReactNode} from 'react';
 import React, {useMemo} from 'react';
 import type {StyleProp, TextStyle, ViewStyle} from 'react-native';
-import {View} from 'react-native';
+import {Linking, View} from 'react-native';
 import useThemeStyles from '@hooks/useThemeStyles';
 import EnvironmentBadge from './EnvironmentBadge';
 import Text from './Text';
+import TextLink from './TextLink';
 
 type HeaderProps = {
     /** Anchor of the title (left/middle) */
@@ -22,11 +23,17 @@ type HeaderProps = {
     /** Additional text styles */
     textStyles?: StyleProp<TextStyle>;
 
+    /** Additional header styles */
+    style?: StyleProp<ViewStyle>;
+
     /** Additional header container styles */
     containerStyles?: StyleProp<ViewStyle>;
+
+    /** The URL link associated with the attachment's subtitle, if available */
+    subTitleLink?: string;
 };
 
-function Header({titleAnchor = 'middle', title = '', subtitle = '', textStyles = [], containerStyles = [], shouldShowEnvironmentBadge = false}: HeaderProps) {
+function Header({titleAnchor = 'middle', title = '', subtitle = '', textStyles = [], style, containerStyles = [], shouldShowEnvironmentBadge = false, subTitleLink = ''}: HeaderProps) {
     const styles = useThemeStyles();
     const renderedSubtitle = useMemo(
         () => (
@@ -47,6 +54,21 @@ function Header({titleAnchor = 'middle', title = '', subtitle = '', textStyles =
         [subtitle, styles],
     );
 
+    const renderedSubTitleLink = useMemo(
+        () => (
+            <TextLink
+                onPress={() => {
+                    Linking.openURL(subTitleLink);
+                }}
+                numberOfLines={1}
+                style={styles.label}
+            >
+                {subTitleLink}
+            </TextLink>
+        ),
+        [styles.label, subTitleLink],
+    );
+
     const innerStyles = useMemo(() => {
         return titleAnchor === 'left' ? [styles.justifyContentStart, styles.alignItemsStart] : [styles.justifyContentCenter, styles.alignItemsCenter];
     }, [titleAnchor, styles.justifyContentStart, styles.alignItemsStart, styles.justifyContentCenter, styles.alignItemsCenter]);
@@ -65,6 +87,7 @@ function Header({titleAnchor = 'middle', title = '', subtitle = '', textStyles =
                       )
                     : title}
                 {renderedSubtitle}
+                {!!subTitleLink && renderedSubTitleLink}
             </View>
             {shouldShowEnvironmentBadge && <EnvironmentBadge />}
         </View>

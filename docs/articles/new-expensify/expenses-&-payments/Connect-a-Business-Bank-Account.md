@@ -1,10 +1,10 @@
 ---
 title: Connect a Business Bank Account
-description: How to connect a business bank account to New Ieatta
+description: How to connect a business bank account to New Expensify
 ---
 <div id="new-expensify" markdown="1">
 
-To connect a bank account in New Ieatta, you must first enable the Make or Track Payments Workflow.
+To connect a bank account in New Expensify, you must first enable the Make or Track Payments Workflow.
 # Step 1: Enable Make or track payments
 1. Head to **Workspaces** > **More Features** > **Enable Workflows** 
 2. From there, a Workflows setting will appear in the left-hand menu
@@ -80,6 +80,9 @@ Wait until the end of the second business day. If you still don’t see them, pl
 
 Once that's all set, make sure to contact your account manager or concierge, and our team will be able to re-trigger those three test transactions!
 
+## Is my data safe?
+
+We take security seriously. Our measures align with what banks use to protect sensitive financial data. We regularly test and update our security to stay ahead of any threats. Plus, we’re checked daily by McAfee for extra reassurance against hackers. You can verify our security strength below or on the McAfee SECURE site. Discover how Expensify safeguards your information [here](https://help.expensify.com/articles/new-expensify/settings/Encryption-and-Data-Security).
 
 {% include faq-end.md %}
 

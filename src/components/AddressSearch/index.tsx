@@ -63,6 +63,7 @@ function AddressSearch(
         onBlur,
         onInputChange,
         onPress,
+        onCountryChange,
         predefinedPlaces = [],
         preferredLocale,
         renamedInputKeys = {
@@ -195,7 +196,7 @@ function AddressSearch(
 
         // If the address is not in the US, use the full length state name since we're displaying the address's
         // state / province in a TextInput instead of in a picker.
-        if (country !== CONST.COUNTRY.US) {
+        if (country !== CONST.COUNTRY.US && country !== CONST.COUNTRY.CA) {
             values.state = longStateName;
         }
 
@@ -221,7 +222,7 @@ function AddressSearch(
             }
         }
 
-        // Not all expPages define the Address Line 2 field, so in that case we append any additional address details
+        // Not all pages define the Address Line 2 field, so in that case we append any additional address details
         // (e.g. Apt #) to Address Line 1
         if (subpremise && typeof renamedInputKeys?.street2 === 'undefined') {
             values.street += `, ${subpremise}`;
@@ -244,6 +245,7 @@ function AddressSearch(
             onInputChange?.(values);
         }
 
+        onCountryChange?.(values.country);
         onPress?.(values);
     };
 

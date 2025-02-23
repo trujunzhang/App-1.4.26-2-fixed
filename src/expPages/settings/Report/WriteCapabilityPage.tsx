@@ -1,6 +1,6 @@
-import type {RouteProp} from '@react-navigation/native';
+import withReportOrNotFound from '@expPages/home/report/withReportOrNotFound';
+import type {WithReportOrNotFoundProps} from '@expPages/home/report/withReportOrNotFound';
 import {useRoute} from '@react-navigation/native';
-import type {StackScreenProps} from '@react-navigation/stack';
 import React, {useCallback} from 'react';
 import {withOnyx} from 'react-native-onyx';
 import type {OnyxEntry} from 'react-native-onyx';
@@ -12,10 +12,9 @@ import SelectionList from '@components/SelectionList';
 import RadioListItem from '@components/SelectionList/RadioListItem';
 import useLocalize from '@hooks/useLocalize';
 import Navigation from '@libs/Navigation/Navigation';
+import type {PlatformStackRouteProp, PlatformStackScreenProps} from '@libs/Navigation/PlatformStackNavigation/types';
 import * as ReportUtils from '@libs/ReportUtils';
 import type {ReportSettingsNavigatorParamList} from '@navigation/types';
-import withReportOrNotFound from '@expPages/home/report/withReportOrNotFound';
-import type {WithReportOrNotFoundProps} from '@expPages/home/report/withReportOrNotFound';
 import * as ReportActions from '@userActions/Report';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
@@ -30,10 +29,10 @@ type WriteCapabilityPageOnyxProps = {
 
 type WriteCapabilityPageProps = WriteCapabilityPageOnyxProps &
     WithReportOrNotFoundProps &
-    StackScreenProps<ReportSettingsNavigatorParamList, typeof SCREENS.REPORT_SETTINGS.WRITE_CAPABILITY>;
+    PlatformStackScreenProps<ReportSettingsNavigatorParamList, typeof SCREENS.REPORT_SETTINGS.WRITE_CAPABILITY>;
 
 function WriteCapabilityPage({report, policy}: WriteCapabilityPageProps) {
-    const route = useRoute<RouteProp<ReportSettingsNavigatorParamList, typeof SCREENS.REPORT_SETTINGS.WRITE_CAPABILITY>>();
+    const route = useRoute<PlatformStackRouteProp<ReportSettingsNavigatorParamList, typeof SCREENS.REPORT_SETTINGS.WRITE_CAPABILITY>>();
     const {translate} = useLocalize();
     const writeCapabilityOptions = Object.values(CONST.REPORT.WRITE_CAPABILITIES).map((value) => ({
         value,
