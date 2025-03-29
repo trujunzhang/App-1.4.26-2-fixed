@@ -2,7 +2,7 @@
 // eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import lodashGet from 'lodash/get';
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {usePagination} from 'react-firebase-pagination-hooks';
 import {Linking, View} from 'react-native';
 import {useOnyx} from 'react-native-onyx';
@@ -25,6 +25,7 @@ type SidebarLinksDataProps = {
 
 function SidebarLinksData({insets}: SidebarLinksDataProps) {
     const styles = useThemeStyles();
+    // eslint-disable-next-line rulesdir/prefer-shouldUseNarrowLayout-instead-of-isSmallScreenWidth
     const {isSmallScreenWidth} = useResponsiveLayout();
     const {translate} = useLocalize();
 
@@ -63,25 +64,37 @@ function SidebarLinksData({insets}: SidebarLinksDataProps) {
         }
     }, [isSmallScreenWidth, restaurants, restaurantIdInSidebar]);
 
-    useEffect(() => {
-        if (isSmallScreenWidth) {
+    const checkAndNavigation = (url: string | null | undefined) => {
+        if (url === null || url === undefined) {
             return;
         }
-        // eslint-disable-next-line rulesdir/prefer-early-return
-        Linking.getInitialURL().then((url) => {
-            if (url !== null) {
-                const parsedUrl = new URL(url);
-                if (parsedUrl.pathname === '/' || parsedUrl.pathname === '/r') {
-                    // only url is on the home page
-                    if (restaurantIdInSidebar === '' || restaurantIdInSidebar === null || restaurantIdInSidebar === undefined) {
-                        /* empty */
-                    } else {
-                        Navigation.navigate(ROUTES.RESTAURANT_WITH_ID.getRoute(restaurantIdInSidebar));
-                    }
-                }
+        const parsedUrl = new URL(url);
+        if (parsedUrl.pathname === '/' || parsedUrl.pathname === '/res' || parsedUrl.pathname === '/app_side_bar') {
+            // only url is on the home page
+            if (restaurantIdInSidebar === '' || restaurantIdInSidebar === null || restaurantIdInSidebar === undefined) {
+                /* empty */
+            } else {
+                Navigation.navigate(ROUTES.RESTAURANT_WITH_ID.getRoute(restaurantIdInSidebar));
             }
-        });
-    }, [isSmallScreenWidth, restaurantIdInSidebar]);
+        }
+    };
+    const handleOpenURL = (event: {url: string}) => {
+        console.log('Incoming URL:', event.url);
+        // Handle the URL, e.g., navigate to a specific screen
+    };
+
+    // useEffect(() => {
+    //    if (isSmallScreenWidth) {
+    //        return;
+    //    }
+    //    const linkingEvent = Linking.addEventListener('url', ({url}) => {
+    //        console.log('URL changed to:', url);
+    //    });
+    //    Linking.getInitialURL().then((url) => {});
+    //    return () => {
+    //        linkingEvent.remove();
+    //    };
+    // }, [isSmallScreenWidth, restaurantIdInSidebar]);
 
     return (
         <View

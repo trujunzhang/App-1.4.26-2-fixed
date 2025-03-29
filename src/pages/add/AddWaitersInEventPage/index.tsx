@@ -4,7 +4,7 @@ import type {StackScreenProps} from '@react-navigation/stack';
 import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import React from 'react';
-import {useCollection, useCollectionOnce, useDocumentData} from 'react-firebase-hooks/firestore';
+import {useCollection, useDocumentData} from 'react-firebase-hooks/firestore';
 import {FBCollections, PhotoType, ReviewType} from '@libs/FirebaseIeatta/constant';
 import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
 import {emptyEventTag, emptyRestaurantTag} from '@libs/ieatta/editFormUtils';
@@ -39,13 +39,13 @@ function AddWaitersInEventPage({route}: AddWaitersInEventPageProps) {
      | Waiters in the restaurant
      |--------------------------------------------------
      */
-    const [photoSnapshot, loader] = useCollection(
+    const [photoSnapshot, loading, error] = useCollection<IFBPhoto>(
         FirebaseQuery.queryForPhotos({
             relatedId: restaurantId,
             photoType: PhotoType.Waiter,
         }),
     );
-    const waitersInRestaurant = photoSnapshot === undefined ? [] : _.map(photoSnapshot.docs, (item) => item.data() as IFBPhoto);
+    const waitersInRestaurant: IFBPhoto[] = photoSnapshot === undefined ? [] : _.map(photoSnapshot.docs, (item) => item.data());
 
     return (
         <BaseAddWaitersPage

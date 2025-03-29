@@ -69,7 +69,7 @@ function EDIT_webpack_common() {
          "react-native-toast-message"  \
          "$forms_line" \
          "$form_keys_strings"  \
-         "check"
+         
 
     check_replace_lines_in_file  \
         "$config_js" \

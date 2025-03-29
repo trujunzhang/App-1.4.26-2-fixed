@@ -2,7 +2,19 @@ import type {PhotoType} from '@libs/FirebaseIeatta/constant';
 import {documentIdFromCurrentDate} from '@libs/FirebaseIeatta/utils/md5_utils';
 
 export default {
-    SETTINGS_ROOT_RIGHT: 'settings_root_right',
+    APP_SIDE_BAR: 'mobile',
+
+    SETTINGS_ROOT_RIGHT: 'settings',
+
+    SETTINGS_PROFILE_RIGHT: 'settings/profile',
+    SETTINGS_DISPLAY_NAME_RIGHT: 'settings/profile/display-name',
+    SETTINGS_ABOUT_RIGHT: 'settings/about',
+    SETTINGS_TROUBLESHOOT_RIGHT: 'settings/troubleshoot',
+
+    SETTINGS_LANGUAGE_RIGHT: 'settings/preferences/language',
+    SETTINGS_THEME_RIGHT: 'settings/preferences/theme',
+
+    SETTINGS_PREFERENCES_RIGHT: 'settings/preferences',
 
     RESTAURANT: 'res',
     RESTAURANT_WITH_ID: {

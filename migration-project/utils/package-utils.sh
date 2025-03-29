@@ -8,17 +8,6 @@ function remove_keys_in_package_json() {
    node -e "let pkg=require('${json_file}'); delete pkg${status}; require('fs').writeFileSync('${json_file}', JSON.stringify(pkg, null, 2));"
 }
 
-function removed_dependencies_in_package_json() {
-	dependencies=("$@")
-    for ((i = 0; i < ${#dependencies[@]}; i = i + 2)); do
-        checkString=${dependencies[$i]} 
-        library_name=${dependencies[$i + 1]} 
-   
-        info "  Removing ${library_name}"
-        check_and_remove_keys_in_package_json "$checkString" "['dependencies']['${library_name}']"
-    done
-}
-
 function check_and_remove_keys_in_package_json() {
     checkString=$1
     status=$2
@@ -33,6 +22,17 @@ function check_and_remove_keys_in_package_json() {
     fi
 }
 
+function removed_dependencies_in_package_json() {
+	dependencies=("$@")
+    for ((i = 0; i < ${#dependencies[@]}; i = i + 2)); do
+        checkString=${dependencies[$i]} 
+        library_name=${dependencies[$i + 1]} 
+   
+        info "  Removing ${library_name}"
+        check_and_remove_keys_in_package_json "$checkString" "['dependencies']['${library_name}']"
+    done
+}
+
 function run_npm_install() {
     if [ ! -d "$DEST_PROJECT/node_modules" ]; then
         npm install --prefix "$DEST_PROJECT"
@@ -40,20 +40,30 @@ function run_npm_install() {
 }
 
 function install_third_dependencies() {
-    dependenciesType=$1
-    library=$2
+    version=$1
+    dependenciesType=$2
+    library=$3
 
     if [ "$dependenciesType" == "devDependencies" ] ; then
-        npm install --save-dev $library --prefix "$DEST_PROJECT"
+        if [ "$version" == "ignore" ] ; then
+            npm install --save-dev "$library" --prefix "$DEST_PROJECT"
+        else
+            npm install --save "$library@$version" --prefix "$DEST_PROJECT"
+        fi
     else
-        npm install --save $library --prefix "$DEST_PROJECT"
+        if [ "$version" == "ignore" ] ; then
+            npm install --save "$library" --prefix "$DEST_PROJECT"
+        else
+            npm install --save "$library@$version" --prefix "$DEST_PROJECT"
+        fi
     fi
 }
 
 function check_and_install_dependencies() {
-    dependenciesType=$1
-    checkString=$2
-    library=$3
+    version=$1
+    dependenciesType=$2
+    checkString=$3
+    library=$4
 
     json_file="$DEST_PROJECT/package.json"
  
@@ -62,13 +72,14 @@ function check_and_install_dependencies() {
     else
         success "  $checkString not exists in $json_file"
 
-        install_third_dependencies $dependenciesType $library
+        install_third_dependencies "$version" "$dependenciesType" "$library"
     fi
 }
 
-function check_and_install_third_dependencies() {
-    dependenciesType=$1
-    library=$2
+function L_check_and_install_third_dependencies() {
+    version=$1
+    dependenciesType=$2
+    library=$3
 
     json_file="$DEST_PROJECT/package.json"
  
@@ -77,19 +88,20 @@ function check_and_install_third_dependencies() {
     else
         success "  $library not exists in $json_file"
 
-        install_third_dependencies $dependenciesType $library
+        install_third_dependencies "$version" "$dependenciesType" "$library"
     fi
 }
 
-function install_dependencies_in_package_json() {
-    dependenciesType=$1
+function install_dependencies_with_array() {
+    version=$1
+    dependenciesType=$2
 	dependencies=("$@")
 
-    for ((i = 1; i < ${#dependencies[@]}; i = i + 1)); do
+    for ((i = 2; i < ${#dependencies[@]}; i = i + 1)); do
         library_name=${dependencies[$i]} 
    
         info "  Installing ${library_name}"
-        check_and_install_third_dependencies "${dependenciesType}" "${library_name}" 
+        L_check_and_install_third_dependencies "$version" "${dependenciesType}" "${library_name}" 
     done
 }
 

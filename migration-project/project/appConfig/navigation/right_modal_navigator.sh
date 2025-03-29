@@ -11,7 +11,7 @@ function EDIT_app_right_modal_navigator() {
         "import {RightIeattaStackNavigator}"  \
         "import NAVIGATORS from '@src/NAVIGATORS';"  \
         "import {RightIeattaStackNavigator} from '@src/appConfig/navigation/myNavigators';" \
-        "check"
+        
 
 
     component_line="component={ModalStackNavigators.SettingsModalStackNavigator}"

@@ -88,6 +88,7 @@ const queryForPhotos: QueryForPhotos = ({relatedId, photoType, size = -1}: Query
             break;
         }
     }
+    queryConstraints.push(orderBy('updatedAt', 'desc'));
     return query(collection(db, FBCollections.Photos), ...queryConstraints);
 };
 

@@ -1,8 +1,12 @@
-import FloatingActionButtonAndPopover from '@expPages/home/sidebar/SidebarScreen/FloatingActionButtonAndPopover';
+import FloatingActionButtonAndPopover from '@expPages/home/sidebar/FloatingActionButtonAndPopover';
 import React, {useCallback, useRef} from 'react';
 import type FloatingActionButtonPopoverMenuRef from './types';
 
-function BottomTabBarFloatingActionButton() {
+type BottomTabBarFloatingActionButtonProps = {
+    isTooltipAllowed: boolean;
+};
+
+function BottomTabBarFloatingActionButton({isTooltipAllowed}: BottomTabBarFloatingActionButtonProps) {
     const popoverModal = useRef<FloatingActionButtonPopoverMenuRef>(null);
 
     /**
@@ -32,6 +36,7 @@ function BottomTabBarFloatingActionButton() {
     return (
         <FloatingActionButtonAndPopover
             ref={popoverModal}
+            isTooltipAllowed={isTooltipAllowed}
             onShowCreateMenu={createDragoverListener}
             onHideCreateMenu={removeDragoverListener}
         />

@@ -16,14 +16,14 @@ export class SqlPhoto extends Realm.Object<SqlPhoto> {
     relatedId?: string;
     photoType?: string;
 
-    /** photo's uniqueId on the 'IFBPhoto' **/
+    /** photo's uniqueId on the 'IFBPhoto' * */
     firebasePhotoId?: string;
-    /** page id on the taking photo page **/
+    /** page id on the taking photo page * */
     pageId?: string;
 
-    /** uniqueId of the restaurant/recipe on the 'edit' page, when selecting a cover **/
+    /** uniqueId of the restaurant/recipe on the 'edit' page, when selecting a cover * */
     coverId?: string;
-    /** type: 'Restaurant' | 'Recipe' **/
+    /** type: 'Restaurant' | 'Recipe' * */
     coverType?: string;
 
     static schema: ObjectSchema = {
@@ -40,7 +40,7 @@ export class SqlPhoto extends Realm.Object<SqlPhoto> {
             firebasePhotoId: 'string',
             pageId: 'string',
             coverId: 'string',
-            cotverType: 'string',
+            coverType: 'string',
         },
         primaryKey: 'uniqueId',
     };

@@ -1,25 +1,24 @@
 // The cards_ object keys don't follow normal naming convention, so to test this reliably we have to disable liner
 
 /* eslint-disable @typescript-eslint/naming-convention */
-import {buildCardFeedsData, buildIndividualCardsData} from '@expPages/Search/SearchAdvancedFiltersPage/SearchFiltersCardPage';
+import {buildCardFeedsData, buildCardsData} from '@expPages/Search/SearchAdvancedFiltersPage/SearchFiltersCardPage';
 import type {LocaleContextProps} from '@components/LocaleContextProvider';
-import type {CardList, WorkspaceCardsList} from '@src/types/onyx';
+// eslint-disable-next-line no-restricted-syntax
+import * as PolicyUtils from '@libs/PolicyUtils';
+import type {CardList, Policy, WorkspaceCardsList} from '@src/types/onyx';
 
-jest.mock('@libs/PolicyUtils', () => {
-    return {
-        getPolicy(policyID: string) {
-            switch (policyID) {
-                case '1':
-                    return {name: ''};
-                case '2':
-                    return {name: 'test1'};
-                case '3':
-                    return {name: 'test2'};
-                default:
-                    return {name: ''};
-            }
-        },
-    };
+// Use jest.spyOn to mock the implementation
+jest.spyOn(PolicyUtils, 'getPolicy').mockImplementation((policyID?: string): Policy => {
+    switch (policyID) {
+        case '1':
+            return {name: ''} as Policy;
+        case '2':
+            return {name: 'test1'} as Policy;
+        case '3':
+            return {name: 'test2'} as Policy;
+        default:
+            return {name: ''} as Policy;
+    }
 });
 
 const workspaceCardFeeds = {
@@ -157,14 +156,130 @@ const cardList = {
     },
 };
 
+const workspaceCardFeedsHiddenOnSearch = {
+    'cards_11111_Expensify Card': {
+        '21534278': {
+            accountID: 1,
+            bank: 'Expensify Card',
+            cardID: 21534278,
+            domainName: 'expensify-policy1.exfy',
+            nameValuePairs: {cardTitle: 'Not Issued card'},
+            isVirtual: false,
+            lastFourPAN: '',
+            state: 2, // STATE_NOT_ISSUED
+        },
+        '21539025': {
+            accountID: 1,
+            bank: 'Expensify Card',
+            cardID: 21539025,
+            domainName: 'expensify-policy1.exfy',
+            nameValuePairs: {cardTitle: 'Not activated card'},
+            isVirtual: false,
+            lastFourPAN: '',
+            state: 4, // NOT_ACTIVATED
+        },
+    },
+};
+
+const cardListHiddenOnSearch = {
+    '21534538': {
+        accountID: 1,
+        bank: 'Expensify Card',
+        cardID: 21534538,
+        domainName: 'expensify-policy1.exfy',
+        nameValuePairs: {cardTitle: 'Not Issued card'},
+        isVirtual: false,
+        lastFourPAN: '',
+        state: 2, // STATE_NOT_ISSUED
+    },
+    '21534525': {
+        accountID: 1,
+        bank: 'Expensify Card',
+        cardID: 21534525,
+        domainName: 'expensify-policy1.exfy',
+        nameValuePairs: {cardTitle: 'Not activated card'},
+        isVirtual: false,
+        lastFourPAN: '',
+        state: 4, // NOT_ACTIVATED
+    },
+};
+
+const workspaceCardFeedsClosed = {
+    'cards_11111_Expensify Card': {
+        '21534278': {
+            accountID: 1,
+            bank: 'Expensify Card',
+            cardID: 21534278,
+            domainName: 'expensify-policy1.exfy',
+            nameValuePairs: {cardTitle: 'Not Issued card'},
+            isVirtual: false,
+            lastFourPAN: '1234',
+            state: 6, // CLOSED
+        },
+        '21539012': {
+            accountID: 1,
+            bank: 'Expensify Card',
+            cardID: 21539012,
+            domainName: 'expensify-policy1.exfy',
+            nameValuePairs: {cardTitle: 'Not activated card'},
+            isVirtual: false,
+            lastFourPAN: '3211',
+            state: 6, // CLOSED
+        },
+        '21539027': {
+            accountID: 1,
+            bank: 'Expensify Card',
+            cardID: 21539027,
+            domainName: 'expensify-policy1.exfy',
+            nameValuePairs: {cardTitle: 'Not activated card'},
+            isVirtual: false,
+            lastFourPAN: '',
+            state: 3, // OPEN
+        },
+    },
+};
+
+const cardListClosed = {
+    '21534538': {
+        accountID: 1,
+        bank: 'Expensify Card',
+        cardID: 21534538,
+        domainName: 'expensify-policy1.exfy',
+        nameValuePairs: {cardTitle: 'Not Issued card'},
+        isVirtual: false,
+        lastFourPAN: '',
+        state: 6, // CLOSED
+    },
+    '21534525': {
+        accountID: 1,
+        bank: 'Expensify Card',
+        cardID: 21534525,
+        domainName: 'expensify-policy1.exfy',
+        nameValuePairs: {cardTitle: 'Not activated card'},
+        isVirtual: false,
+        lastFourPAN: '',
+        state: 6, // CLOSED
+    },
+    '21534526': {
+        accountID: 1,
+        bank: 'Expensify Card',
+        cardID: 21534526,
+        domainName: 'expensify-policy1.exfy',
+        nameValuePairs: {cardTitle: 'Not activated card'},
+        isVirtual: false,
+        lastFourPAN: '',
+        state: 3, // OPEN
+    },
+};
+
 const domainFeedDataMock = {testDomain: {domainName: 'testDomain', bank: 'Expensify Card', correspondingCardIDs: ['11111111']}};
 
 const translateMock = jest.fn();
 
-describe('buildIndividualCardsData', () => {
-    const result = buildIndividualCardsData(workspaceCardFeeds as unknown as Record<string, WorkspaceCardsList | undefined>, cardList as unknown as CardList, {}, ['21588678']);
-
+describe('buildCardsData individual cards', () => {
     it("Builds all individual cards and doesn't generate duplicates", () => {
+        const result = buildCardsData(workspaceCardFeeds as unknown as Record<string, WorkspaceCardsList | undefined>, cardList as unknown as CardList, {}, ['21588678']);
+
         expect(result.unselected.length + result.selected.length).toEqual(11);
 
         // Check if Expensify card was built correctly
@@ -181,11 +296,36 @@ describe('buildIndividualCardsData', () => {
             isSelected: false,
         });
     });
+    it("Doesn't include physical cards that haven't been issued or haven't been activated", () => {
+        const result = buildCardsData(workspaceCardFeedsHiddenOnSearch as unknown as Record<string, WorkspaceCardsList | undefined>, cardListHiddenOnSearch as unknown as CardList, {}, []);
+        expect(result.unselected.length + result.selected.length).toEqual(0);
+    });
 });
 
-describe('buildIndividualCardsData with empty argument objects', () => {
+describe('buildCardsData closed cards', () => {
+    it("Builds all closed cards and doesn't generate duplicates", () => {
+        const result = buildCardsData(workspaceCardFeedsClosed as unknown as Record<string, WorkspaceCardsList | undefined>, cardListClosed as unknown as CardList, {}, ['21539012'], true);
+        expect(result.unselected.length + result.selected.length).toEqual(4);
+
+        // Check if Expensify card was built correctly
+        const expensifyCard = result.selected.find((card) => card.keyForList === '21539012');
+        expect(expensifyCard).toMatchObject({
+            lastFourPAN: '3211',
+            isSelected: true,
+        });
+
+        // Check if company card was built correctly
+        const companyCard = result.unselected.find((card) => card.keyForList === '21534525');
+        expect(companyCard).toMatchObject({
+            lastFourPAN: '',
+            isSelected: false,
+        });
+    });
+});
+
+describe('buildCardsData with empty argument objects', () => {
     it('Returns empty array when cardList and workspaceCardFeeds are empty', () => {
-        const result = buildIndividualCardsData({}, {}, {}, []);
+        const result = buildCardsData({}, {}, {}, []);
         expect(result).toEqual({selected: [], unselected: []});
     });
 });

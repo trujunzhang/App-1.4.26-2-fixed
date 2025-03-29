@@ -8,7 +8,7 @@ function app_onyxkeys_FirebaseSyncStatus() {
         "import type FirebaseSyncStatus " \
         "import type ExpensifyCardSettings from './ExpensifyCardSettings';"  \
         "import type FirebaseSyncStatus from './FirebaseSyncStatus';"        \
-        "check"
+        
 
 
     add_lines_in_file                    \
@@ -16,7 +16,7 @@ function app_onyxkeys_FirebaseSyncStatus() {
         "FirebaseSyncStatus,"            \
         "ValidateMagicCodeAction,"       \
         "    FirebaseSyncStatus,"        \
-        "check"
+        
 
 }
 
@@ -28,7 +28,7 @@ function app_onyxkeys_add_lines() {
         "import type \* as IeattaFormTypes" \
         "import type \* as FormTypes from './types/form';"      \
         "import type \* as IeattaFormTypes from './types/form/ieatta';" \
-        "check"
+        
 
 
     # =========================== keys ===============================
@@ -50,7 +50,7 @@ function app_onyxkeys_add_lines() {
          "FIREBASE_CURRENT_SYNC_ID" \
          "$keys_line" \
          "$app_keys_strings"  \
-         "check"
+         
 
     keys_type_line="type OnyxValuesMapping = {"
     app_type_keys_lines=(
@@ -66,7 +66,7 @@ function app_onyxkeys_add_lines() {
          "OnyxTypes.FirebaseSyncStatus" \
          "$keys_type_line" \
          "$app_type_keys_strings"  \
-         "check"
+         
 
 
 
@@ -94,7 +94,7 @@ function app_onyxkeys_add_lines() {
          "ieattaRestaurantDraft" \
          "$forms_line" \
          "$form_keys_strings"  \
-         "check"
+         
 
 
     form_type_line="type OnyxFormValuesMapping = {"
@@ -114,7 +114,7 @@ function app_onyxkeys_add_lines() {
          "IeattaFormTypes.EditRestaurantForm" \
          "$form_type_line" \
          "$form_type_keys_strings"  \
-         "check"
+         
 
 }
 

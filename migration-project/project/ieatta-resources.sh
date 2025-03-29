@@ -23,7 +23,7 @@ function ieatta_resources_copy_radar() {
          "Radar:" \
          "$keys_type_line" \
          "$app_type_keys_strings"  \
-         "check"
+         
 }
 
 function PROJECT_ieatta_resources() {

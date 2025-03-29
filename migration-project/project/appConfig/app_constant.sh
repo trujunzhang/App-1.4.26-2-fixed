@@ -12,13 +12,13 @@ function EDIT_app_constant() {
         "import appConst from"  \
         "import type {ValueOf} from 'type-fest';"  \
         "import appConst from './appConfig/appConst';" \
-        "check"
+        
 
     add_lines_in_file         \
         "$config_js"          \
         "...appConst,"        \
         "const CONST = {"     \
         "    ...appConst,"    \
-        "check"
+        
 
 }

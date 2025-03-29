@@ -89,7 +89,7 @@ export enum PageSection {
      | Common
      |--------------------------------------------------
      */
-    // photo(restaurant/recipe)
+    // photo on the small screen with horizontal flatlist(restaurant/recipe)
     SECTION_PHOTO_TITLE,
     SECTION_PHOTO_ROW,
     SECTION_PHOTO_ITEM,

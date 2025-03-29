@@ -23,7 +23,7 @@ function EDIT_header_with_back_button_js() {
          "titleAnchor?" \
          "$keys_type_line" \
          "$app_type_keys_strings"  \
-         "check"
+         
 
 
     params_line="function HeaderWithBackButton({" 
@@ -38,20 +38,20 @@ function EDIT_header_with_back_button_js() {
          "titleAnchor = 'middle'" \
          "$params_line" \
          "$params_keys_strings"  \
-         "check"
+         
 
     add_lines_in_file \
          "$header_with_back_button_js" \
          "headerStyles,"      \
          "styles.headerBar,"  \
          "                headerStyles,"      \
-         "check"
+         
 
     add_lines_in_file \
          "$header_with_back_button_js" \
          "titleAnchor={titleAnchor}"  \
          " <Header" \
          "                titleAnchor={titleAnchor}"  \
-         "check"
+         
 
 }

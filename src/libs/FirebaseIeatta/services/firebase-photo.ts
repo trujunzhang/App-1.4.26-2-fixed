@@ -2,84 +2,42 @@
 import {ParseModelPhotos} from '@libs/FirebaseIeatta/appModel';
 import type {ParseModelPhotosEmptyPhotoParams} from '@libs/FirebaseIeatta/appModel/photo';
 import {FBCollections} from '@libs/FirebaseIeatta/constant';
-// import { SqlRepository } from '@shared-sql/repository/sql-repository'
-// eslint-disable-next-line import/no-named-as-default
-import {CloudinaryUtils} from '@libs/FirebaseIeatta/utils/cloudinaryUtils';
+import CloudinaryUtils from '@libs/FirebaseIeatta/utils/cloudinaryUtils';
 import Log from '@libs/Log';
-import type {IFBPhoto} from '@src/types/firebase';
 import FirebaseHelper from './firebase-helper';
+import type {UserProperties} from './firebase-helper/types';
 
-// import {deleteLocalImage} from '@shared-sql/model/sql-photo'
+type BaseSaveTakenPhotoIfOfflineParams = {
+    emptyParams: ParseModelPhotosEmptyPhotoParams;
+};
+type SaveTakenPhotoOnWebAppIfOfflineParams = BaseSaveTakenPhotoIfOfflineParams & {
+    blobHttps?: string;
+    imageBase64?: string;
+};
 
-type SaveTakenPhotoIfOfflineParams = {
-    imagePath: string;
+type SaveTakenPhotoOnNativeAppIfOfflineParams = BaseSaveTakenPhotoIfOfflineParams & {
+    fileUri: string;
     isOnWeb: boolean;
     isSyncing?: boolean;
-    emptyParams: ParseModelPhotosEmptyPhotoParams;
+};
+
+type SaveUserPhotoParams = {
+    userId: string;
+    fileUriOrBlobHttps: string;
 };
 
 class FirebasePhoto {
-    // eslint-disable-next-line @lwc/lwc/no-async-await
-    async savePhoto({imagePath, model}: {imagePath: string; model: IFBPhoto}) {
-        // const isNetworkPresent = await NetworkCheck.check()
-        const isNetworkPresent = true;
-        // const isNetworkPresent = false
-
-        if (isNetworkPresent) {
-            try {
-                await FirebasePhoto.savePhotoWithCloudinary({
-                    imagePath,
-                    uniqueId: model.uniqueId,
-                });
-                // await deleteLocalImage(imagePath)
-            } catch (error) {
-                // Exception throw from uploading image to cloudinary
-                // Save it as Sqlite.
-                // await this._saveAsSqlPhoto({uniqueId: model.uniqueId!, imagePath})
-            }
-        } else {
-            // No network.
-            // Save it as Sqlite.
-            // await this._saveAsSqlPhoto({uniqueId: model.uniqueId!, imagePath})
-        }
-    }
-
-    // async _saveAsSqlPhoto({uniqueId, imagePath}: { uniqueId: string; imagePath: string }) {
-    // await SqlRepository.insertPhoto({id: uniqueId, offlinePath: imagePath})
-    // }
-
-    static async savePhotoWithCloudinary({imagePath, uniqueId}: {imagePath: string; uniqueId: string}) {
-        // Update the photo model.
-        const data = await new FirebaseHelper().getData({
-            path: FBCollections.Photos,
-            id: uniqueId,
-        });
-        const model: IFBPhoto | undefined = data as IFBPhoto | undefined;
-        if (model !== undefined && model !== null) {
-            // Upload image to Cloudinary.
-            const originalUrl: string = await CloudinaryUtils.uploadToCloudinary(imagePath);
-            const nextModel = ParseModelPhotos.updateFromCloudinary({
-                model: {...model},
-                originalUrl,
-            });
-            // Finally: Save photo to Firebase collection.
-            await new FirebaseHelper().setData({
-                path: FBCollections.Photos,
-                model: nextModel,
-            });
-        }
-    }
-
     /**
-     * Save taken photo as Firebase collection.
+     * Save taken photo as Firebase collection on the native app.
      *
-     * @param imagePath - the local path of the taken photo, without 'file://'.
+     * @param fileUri - the local path of the taken photo, with 'file://'.
      */
-    static async saveTakenPhotoIfOffline({imagePath, isOnWeb, isSyncing = false, emptyParams}: SaveTakenPhotoIfOfflineParams): Promise<string> {
-        let photoUrl = `file://${imagePath}`;
+    static async saveTakenPhotoForNativeAppIfOffline({fileUri, isOnWeb, isSyncing = false, emptyParams}: SaveTakenPhotoOnNativeAppIfOfflineParams): Promise<string | undefined> {
+        let photoUrl: string | undefined = `${fileUri}`;
         let uploadToCloudinarySucess = false;
         try {
-            const url = await CloudinaryUtils.uploadToCloudinary(imagePath);
+            const base64 = await new CloudinaryUtils().readAsBase64FromExpoFileSystem(fileUri);
+            const url: string | undefined = await new CloudinaryUtils().uploadToCloudinary(base64);
             photoUrl = url;
             uploadToCloudinarySucess = true;
 
@@ -98,7 +56,7 @@ class FirebasePhoto {
         const emptyModel = ParseModelPhotos.emptyPhoto(emptyParams);
         const nextModel = ParseModelPhotos.updateFromCloudinary({
             model: {...emptyModel},
-            originalUrl: photoUrl,
+            originalUrl: photoUrl ?? '',
         });
         await new FirebaseHelper().setData({
             path: FBCollections.Photos,
@@ -109,6 +67,80 @@ class FirebasePhoto {
         }
         return Promise.resolve(photoUrl);
     }
+
+    /**
+     * Save taken photo as Firebase collection on the native/web app.
+     *
+     * @param fileUriOrBlobHttps - the local path of the taken photo, with 'file://' or 'blob://.
+     */
+    static async saveUserPhoto({fileUriOrBlobHttps, userId}: SaveUserPhotoParams): Promise<string | undefined> {
+        let photoUrl: string | undefined;
+        let uploadToCloudinarySucess = false;
+        try {
+            const base64: string | undefined = await new CloudinaryUtils().readAsBase64(fileUriOrBlobHttps);
+            if (base64 !== undefined) {
+                const url: string | undefined = await new CloudinaryUtils().uploadToCloudinary(base64);
+                photoUrl = url;
+                uploadToCloudinarySucess = true;
+
+                Log.info(`get cloudinary url after taking photo: ${url}`);
+            }
+        } catch (error: any) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            Log.warn('Error saving photo to cloudinary', error);
+        }
+        if (uploadToCloudinarySucess === false) {
+            return Promise.reject(new Error('Error saving photo to cloudinary on the mobile'));
+        }
+
+        if (photoUrl !== undefined && photoUrl !== null) {
+            const properties: UserProperties = {originalUrl: photoUrl};
+            await new FirebaseHelper().updateUserProperties({userId, properties});
+        }
+
+        return Promise.resolve(photoUrl);
+    }
+
+    /**
+     * Save taken photo as Firebase collection on the web app.
+     *
+     * @param imagePath - the local path of the taken photo, without 'file://'.
+     */
+    static async saveTakenPhotoForWebAppIfOffline({blobHttps, imageBase64, emptyParams}: SaveTakenPhotoOnWebAppIfOfflineParams): Promise<string | undefined> {
+        let photoUrl: string | undefined;
+        let uploadToCloudinarySucess = false;
+        try {
+            let base64: string | undefined = imageBase64;
+            if (base64 === undefined && blobHttps !== undefined) {
+                base64 = await new CloudinaryUtils().readAsBase64FromBlob(blobHttps);
+            }
+            if (base64 !== undefined) {
+                const url: string | undefined = await new CloudinaryUtils().uploadToCloudinary(base64);
+                photoUrl = url;
+                uploadToCloudinarySucess = true;
+                Log.info(`get cloudinary url after taking photo: ${url}`);
+            }
+        } catch (error: any) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            Log.warn('Error saving photo to cloudinary', error);
+        }
+        // It can not be offline mode on the web. If upload to cloudinary failed, return error.
+        if (uploadToCloudinarySucess === false || photoUrl === undefined || photoUrl === null) {
+            return Promise.reject(new Error('Error saving photo to cloudinary on the web'));
+        }
+        const emptyModel = ParseModelPhotos.emptyPhoto(emptyParams);
+        const nextModel = ParseModelPhotos.updateFromCloudinary({
+            model: {...emptyModel},
+            originalUrl: photoUrl,
+        });
+        await new FirebaseHelper().setData({
+            path: FBCollections.Photos,
+            model: nextModel,
+        });
+        return Promise.resolve(photoUrl);
+    }
 }
 
 export default FirebasePhoto;
+
+export type {SaveTakenPhotoOnNativeAppIfOfflineParams, SaveTakenPhotoOnWebAppIfOfflineParams};

@@ -2,8 +2,7 @@ import type Realm from 'realm';
 import {UpdateMode} from 'realm';
 import {ParseModelSqlPhotos} from '@libs/FirebaseIeatta/appModel';
 import {RealmCollections, RealmWriteMode} from '@libs/Realm/constant';
-import type {IeattaModelsWithUser, IFBSqlPhoto} from '@src/types/firebase';
-import type {SQLPhotoCoverType} from '@src/types/firebase';
+import type {IeattaModelsWithUser, IFBSqlPhoto, SQLPhotoCoverType} from '@src/types/firebase';
 import type IRealmHelper from './types';
 import type {DeleteData, SetData, UpdateSqlPhotoCover} from './types';
 
@@ -76,7 +75,7 @@ class RealmHelper implements IRealmHelper {
         const existObjects = realm.objects<IFBSqlPhoto>(RealmCollections.SqlPhotos).filtered(`firebasePhotoId = "${firebasePhotoId}"`);
         if (existObjects.length === 1) {
             const lastModal: IFBSqlPhoto = existObjects[0] as IFBSqlPhoto;
-            const nextModal = ParseModelSqlPhotos.updateCover({model: lastModal, coverId, coverType});
+            const nextModal: IFBSqlPhoto = ParseModelSqlPhotos.updateCover({model: lastModal, coverId, coverType});
             realm.write(() => {
                 realm.create<IeattaModelsWithUser>(RealmCollections.SqlPhotos, nextModal, UpdateMode.Modified);
             });

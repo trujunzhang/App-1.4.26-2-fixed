@@ -26,6 +26,7 @@ type AddWaitersGridListProps = FBPhotosGridListProps & {
 type BasePhotosGridListProps = CommonPhotosGridListProps & {
     initialPanelWidth?: number;
     isCoverPage?: boolean;
+    shouldShowAsSmallScreen?: boolean;
     generatePageRow: (item: IFBPhoto | IFBSqlPhoto, itemWidth: number, itemHeight: number) => IPageRow;
 };
 

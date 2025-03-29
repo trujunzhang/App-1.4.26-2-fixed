@@ -13,13 +13,13 @@ import lodashGet from 'lodash/get';
 import React, {useCallback, useRef, useState} from 'react';
 import {ActivityIndicator, Alert, AppState, InteractionManager, View} from 'react-native';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
-import {withOnyx} from 'react-native-onyx';
 import {RESULTS} from 'react-native-permissions';
 import Animated, {runOnJS, useAnimatedStyle, useSharedValue, withDelay, withSequence, withSpring, withTiming} from 'react-native-reanimated';
 import type {Camera, PhotoFile, Point} from 'react-native-vision-camera';
 import {useCameraDevice} from 'react-native-vision-camera';
 import Hand from '@assets/images/hand.svg';
 import Shutter from '@assets/images/shutter.svg';
+import type {FileObject} from '@components/AttachmentModal';
 import AttachmentPicker from '@components/AttachmentPicker';
 import Button from '@components/Button';
 import Icon from '@components/Icon';
@@ -51,6 +51,7 @@ import TakePhotoScreenWrapper from './TakePhotoScreenWrapper';
 import type {IEATTATakePhotoPageOnyxProps, IEATTATakePhotoPageProps} from './types';
 
 function IEATTATakePhotoPage({route}: IEATTATakePhotoPageProps) {
+    // eslint-disable-next-line rulesdir/prefer-shouldUseNarrowLayout-instead-of-isSmallScreenWidth
     const {isSmallScreenWidth} = useResponsiveLayout();
     const realm = useRealm();
 
@@ -160,6 +161,51 @@ function IEATTATakePhotoPage({route}: IEATTATakePhotoPageProps) {
         Navigation.goBack();
     };
 
+    /**
+     * Sets the Receipt objects and navigates the user to the next page
+     * three menus:
+     *    "Take photo"
+     *    "Choose from gallery"
+     *    "Choose file"
+     * return
+     *    file: file.uri: file:///data/user/0/com.ieatta.track.dev/cache/rn_image_picker_lib_temp_de3d0173-44f4-48b2-ac27-059a2e3b2c01.png
+     */
+    const setReceiptAndNavigate = (file: FileObject) => {
+        Log.info('');
+        Log.info('================================');
+        Log.info(`currentPhotoPath in the taken photo: ${JSON.stringify(file)}`);
+        Log.info('================================');
+        Log.info('');
+
+        toastId.current = ShowNotify.initialAndShowNotify({isSmallScreenWidth, message: translate('notify.takePhoto.start'), autoClose: false});
+
+        const authUserModel = getAuthUserFromPersonalDetails(personalData);
+        if (_.isUndefined(authUserModel)) {
+            ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.auth.unAuthed')});
+            return;
+        }
+
+        if (_.isUndefined(file.uri)) {
+            ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.takePhoto.error.camera')});
+            return;
+        }
+
+        const firebasePhotoId = documentIdFromCurrentDate();
+        FirebasePhoto.saveTakenPhotoForNativeAppIfOffline({
+            fileUri: file.uri,
+            isOnWeb: false,
+            emptyParams: {authUserModel, photoUniqueId: firebasePhotoId, relatedId, photoType},
+        })
+            .then(() => {
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.takePhoto.success')});
+                // navigationToEditPhoto({photoId: firebasePhotoId});
+            })
+            .catch((error: string) => {
+                Log.warn('Error taking photo', error);
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.takePhoto.error.noNetWork')});
+            });
+    };
+
     const capturePhoto = useCallback(() => {
         if (!camera.current && (cameraPermissionStatus === RESULTS.DENIED || cameraPermissionStatus === RESULTS.BLOCKED)) {
             askForPermissions();
@@ -195,7 +241,7 @@ function IEATTATakePhotoPage({route}: IEATTATakePhotoPageProps) {
 
                 Log.info('');
                 Log.info('================================');
-                Log.info(`currentPhotoPath in the take photo: ${currentPhotoPath}`);
+                Log.info(`currentPhotoPath in the taken photo: ${currentPhotoPath}`);
                 Log.info('================================');
                 Log.info('');
 
@@ -205,8 +251,8 @@ function IEATTATakePhotoPage({route}: IEATTATakePhotoPageProps) {
                     return;
                 }
 
-                return FirebasePhoto.saveTakenPhotoIfOffline({
-                    imagePath: currentPhotoPath,
+                return FirebasePhoto.saveTakenPhotoForNativeAppIfOffline({
+                    fileUri: source,
                     isOnWeb: false,
                     emptyParams: {authUserModel, photoUniqueId: firebasePhotoId, relatedId, photoType, filePath: currentPhotoPath},
                 });
@@ -299,15 +345,15 @@ function IEATTATakePhotoPage({route}: IEATTATakePhotoPageProps) {
             )}
             <View style={[styles.flexRow, styles.justifyContentAround, styles.alignItemsCenter, styles.pv3]}>
                 <AttachmentPicker>
-                    {() => (
+                    {({openPicker}) => (
                         <PressableWithFeedback
                             role={CONST.ROLE.BUTTON}
                             accessibilityLabel={translate('receipt.gallery')}
                             style={[styles.alignItemsStart]}
                             onPress={() => {
-                                // openPicker({
-                                //     onPicked: setReceiptAndNavigate,
-                                // });
+                                openPicker({
+                                    onPicked: (data) => setReceiptAndNavigate(data.at(0) ?? {}),
+                                });
                             }}
                         >
                             <Icon
@@ -355,6 +401,4 @@ function IEATTATakePhotoPage({route}: IEATTATakePhotoPageProps) {
 
 IEATTATakePhotoPage.displayName = 'IEATTATakePhotoPage';
 
-const IEATTATakePhotoPageWithOnyx = withOnyx<IEATTATakePhotoPageProps, IEATTATakePhotoPageOnyxProps>({})(IEATTATakePhotoPage);
-
-export default IEATTATakePhotoPageWithOnyx;
+export default IEATTATakePhotoPage;

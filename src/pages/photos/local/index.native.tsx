@@ -6,6 +6,7 @@ import {View} from 'react-native';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
 import BasePhotosGridList from '@components/Ieatta/components/PhotosGrid/BasePhotosGridList';
 import ScreenWrapper from '@components/ScreenWrapper';
+import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import {PageSection, RowPressableType} from '@libs/FirebaseIeatta/list/constant';
@@ -42,14 +43,26 @@ function IEATTALocalPhotosPage({route}: IEATTALocalPhotosPageProps) {
         };
     };
 
+    const renderEmpty = () => {
+        return (
+            <View style={[styles.flex1, styles.flexColumn, styles.w100, styles.h100, styles.justifyContentCenter, styles.alignItemsCenter]}>
+                <Text style={[styles.lg]}>{translate('photos.local.noPhotos')}</Text>
+            </View>
+        );
+    };
+
     return (
         <ScreenWrapper testID={IEATTALocalPhotosPage.displayName}>
             <View style={[styles.flex1]}>
                 <HeaderWithBackButton title={translate('photos.local.title')} />
-                <BasePhotosGridList
-                    photos={sqlPhotosInPage}
-                    generatePageRow={generatePageRow}
-                />
+                {sqlPhotosInPage.length === 0 ? (
+                    renderEmpty()
+                ) : (
+                    <BasePhotosGridList
+                        photos={sqlPhotosInPage}
+                        generatePageRow={generatePageRow}
+                    />
+                )}
             </View>
         </ScreenWrapper>
     );

@@ -14,7 +14,6 @@ import type {
 import type {AnimatedStyle} from 'react-native-reanimated';
 import type AddRecipeListItem from '@components/Ieatta/components/Selections/AddRecipeListItem';
 import type AddUserListItem from '@components/Ieatta/components/Selections/AddUserListItem';
-import type {SearchRouterItem} from '@components/Search/SearchRouter/SearchRouterList';
 import type {BrickRoad} from '@libs/WorkspacesSettingsUtils';
 // eslint-disable-next-line no-restricted-imports
 import type CursorStyles from '@styles/utils/cursor/types';
@@ -25,6 +24,7 @@ import type {SearchPersonalDetails, SearchReport, SearchReportAction, SearchTran
 import type {ReceiptErrors} from '@src/types/onyx/Transaction';
 import type ChildrenProps from '@src/types/utils/ChildrenProps';
 import type IconAsset from '@src/types/utils/IconAsset';
+import SearchRestaurantsListItem from '../Selections/SearchRestaurantsListItem';
 import type ChatListItem from './ChatListItem';
 import type InviteMemberListItem from './InviteMemberListItem';
 import type RadioListItem from './RadioListItem';
@@ -346,17 +346,14 @@ type ReportListItemProps<TItem extends ListItem> = ListItemProps<TItem>;
 type ChatListItemProps<TItem extends ListItem> = ListItemProps<TItem>;
 
 type ValidListItem =
-    | typeof RadioListItem
-    | typeof UserListItem
-    | typeof TableListItem
-    | typeof InviteMemberListItem
-    | typeof TransactionListItem
-    | typeof ReportListItem
-    | typeof ChatListItem
-    | typeof SearchQueryListItem
-    | typeof SearchRouterItem
-    | typeof AddRecipeListItem
-    | typeof AddUserListItem;
+    // | typeof RadioListItem
+    // | typeof UserListItem
+    // | typeof TableListItem
+    // | typeof InviteMemberListItem
+    // | typeof TransactionListItem
+    // | typeof ReportListItem
+    // | typeof ChatListItem
+    typeof SearchQueryListItem | typeof AddRecipeListItem | typeof AddUserListItem | typeof SearchRestaurantsListItem;
 
 type Section<TItem extends ListItem> = {
     /** Title of the section */

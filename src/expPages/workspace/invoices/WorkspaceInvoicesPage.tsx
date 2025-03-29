@@ -7,14 +7,14 @@ import useLocalize from '@hooks/useLocalize';
 import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
 import type {PlatformStackScreenProps} from '@libs/Navigation/PlatformStackNavigation/types';
-import type {FullScreenNavigatorParamList} from '@navigation/types';
+import type {WorkspaceSplitNavigatorParamList} from '@navigation/types';
 import CONST from '@src/CONST';
 import type SCREENS from '@src/SCREENS';
 import WorkspaceInvoiceBalanceSection from './WorkspaceInvoiceBalanceSection';
 import WorkspaceInvoiceVBASection from './WorkspaceInvoiceVBASection';
 import WorkspaceInvoicingDetailsSection from './WorkspaceInvoicingDetailsSection';
 
-type WorkspaceInvoicesPageProps = PlatformStackScreenProps<FullScreenNavigatorParamList, typeof SCREENS.WORKSPACE.INVOICES>;
+type WorkspaceInvoicesPageProps = PlatformStackScreenProps<WorkspaceSplitNavigatorParamList, typeof SCREENS.WORKSPACE.INVOICES>;
 function WorkspaceInvoicesPage({route}: WorkspaceInvoicesPageProps) {
     const {translate} = useLocalize();
     const styles = useThemeStyles();

@@ -10,8 +10,10 @@ import withViewportOffsetTop from '@components/withViewportOffsetTop';
 import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
 import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
-import type {AuthScreensParamList, RightIeattaNavigatorParamList, RootStackParamList} from '@libs/Navigation/types';
+import type {PlatformStackNavigationProp} from '@libs/Navigation/PlatformStackNavigation/types';
+import type {AuthScreensParamList, ReportsSplitNavigatorParamList, RightIeattaNavigatorParamList, RootNavigatorParamList} from '@libs/Navigation/types';
 import Navigation from '@navigation/Navigation';
+import {HomeSplitNavigatorParamList} from '@src/appConfig/navigation/types';
 import PageFlashListItemWithEvent from './PageFlashListItemWithEvent';
 
 type DetailedPageLayoutProps = ViewportOffsetTopProps & {
@@ -25,7 +27,10 @@ type DetailedPageLayoutProps = ViewportOffsetTopProps & {
      *
      * This is required because transitionEnd event doesn't trigger in the testing environment.
      */
-    navigation?: StackNavigationProp<RootStackParamList> | StackNavigationProp<AuthScreensParamList> | StackNavigationProp<RightIeattaNavigatorParamList>;
+    // TODO: djzhang
+    // navigation?: StackNavigationProp<RootStackParamList> | StackNavigationProp<AuthScreensParamList> | StackNavigationProp<RightIeattaNavigatorParamList>;
+    // navigation?: PlatformStackNavigationProp<RootNavigatorParamList> | PlatformStackNavigationProp<ReportsSplitNavigatorParamList>;
+    navigation?: PlatformStackNavigationProp<RootNavigatorParamList> | PlatformStackNavigationProp<HomeSplitNavigatorParamList> | PlatformStackNavigationProp<RightIeattaNavigatorParamList>;
 
     shouldShowLoading: boolean;
     loadingContent?: React.ReactNode;
@@ -46,10 +51,13 @@ function DetailedPageLayout({rowsData, fetchMoreReviews, shouldShowNotFoundPage,
     // Log.info("================================")
     // Log.info("")
 
+    // navigation?: PlatformStackNavigationProp<RootNavigatorParamList> | PlatformStackNavigationProp<ReportsSplitNavigatorParamList>;
+
     return (
         <View style={[styles.flex1]}>
             <ScreenWrapper
-                navigation={navigation as StackNavigationProp<RootStackParamList> | StackNavigationProp<AuthScreensParamList>}
+                // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
+                navigation={navigation as PlatformStackNavigationProp<RootNavigatorParamList> | PlatformStackNavigationProp<ReportsSplitNavigatorParamList>}
                 style={screenWrapperStyle}
                 shouldEnableKeyboardAvoidingView
                 testID={DetailedPageLayout.displayName}

@@ -1,11 +1,12 @@
 import type {StackScreenProps} from '@react-navigation/stack';
 import lodashGet from 'lodash/get';
-import type {AuthScreensParamList} from '@navigation/types';
+import type {PlatformStackScreenProps} from '@libs/Navigation/PlatformStackNavigation/types';
+import type {HomeSplitNavigatorParamList} from '@src/appConfig/navigation/types';
 import CONST from '@src/CONST';
 import type SCREENS from '@src/SCREENS';
 
-// type RestartScreenNavigationProps = StackScreenProps<CentralPaneScreensParamList, typeof SCREENS.RESTAURANT>;
-type RestartScreenNavigationProps = StackScreenProps<AuthScreensParamList, typeof SCREENS.RESTAURANT>;
+// type RestartScreenNavigationProps = StackScreenProps<AuthScreensParamList, typeof SCREENS.RESTAURANT>;
+type RestartScreenNavigationProps = PlatformStackScreenProps<HomeSplitNavigatorParamList, typeof SCREENS.RESTAURANT>;
 
 /**
  * Get the currently viewed restaurant ID as number

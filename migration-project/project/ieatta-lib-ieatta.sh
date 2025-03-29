@@ -7,12 +7,12 @@ function lib_ieatta-dependencies() {
         'react-toastify'
         'react-native-toast-message'
     )
-	install_dependencies_in_package_json "dependencies" "${third_dependencies[@]}"
+	install_dependencies_with_array "latest" "dependencies" "${third_dependencies[@]}"
 
     third_dev_dependencies=(
 
     )
-	install_dependencies_in_package_json "devDependencies" "${third_dev_dependencies[@]}"
+	install_dependencies_with_array "latest" "devDependencies" "${third_dev_dependencies[@]}"
 }
 
 function PROJECT_ieatta_lib_ieatta() {

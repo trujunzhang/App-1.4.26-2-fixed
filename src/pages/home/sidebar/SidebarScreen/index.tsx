@@ -5,7 +5,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {useCallback, useRef} from 'react';
 import useResponsiveLayout from '@hooks/useResponsiveLayout';
-import FreezeWrapper from '@libs/Navigation/FreezeWrapper';
 import BaseSidebarScreen from './BaseSidebarScreen';
 
 function SidebarScreen(props: any) {
@@ -37,14 +36,12 @@ function SidebarScreen(props: any) {
     };
 
     return (
-        <FreezeWrapper keepVisible={!isSmallScreenWidth}>
-            <BaseSidebarScreen
-                // eslint-disable-next-line react/jsx-props-no-spreading
-                {...props}
-            >
-                {/* <FloatingActionButtonAndPopover /> */}
-            </BaseSidebarScreen>
-        </FreezeWrapper>
+        <BaseSidebarScreen
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...props}
+        >
+            {/* <FloatingActionButtonAndPopover /> */}
+        </BaseSidebarScreen>
     );
 }
 

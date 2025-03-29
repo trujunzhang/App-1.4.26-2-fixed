@@ -25,8 +25,23 @@ function edit_git_ignore() {
     # sed_exception_tmp_file=".!*!*"
     sed_exception_tmp_file="\.!\*!\*"
 
-    add_lines_in_file ".gitignore" "!my-upload-key.keystore" "!debug.keystore" "!my-upload-key.keystore" "check"
-    add_lines_in_file ".gitignore" "$sed_exception_tmp_file" "!debug.keystore" "${sed_exception_tmp_file}" "check"
+    # add_lines_in_file ".gitignore" "!my-upload-key.keystore" "!debug.keystore" "!my-upload-key.keystore" 
+    # add_lines_in_file ".gitignore" "obsidian" "!debug.keystore" ".obsidian" 
+    # add_lines_in_file ".gitignore" "$sed_exception_tmp_file" "!debug.keystore" "${sed_exception_tmp_file}" 
+
+     webpack_array_string=(
+        "!my-upload-key.keystore"
+        ".obsidian"
+        "${sed_exception_tmp_file}"
+        "*-E"
+     )
+     join_by webpack_add_lines "\n" "${webpack_array_string[@]}"
+     add_lines_in_file \
+         '.gitignore' \
+         "obsidian" \
+         "!debug.keystore" \
+         "$webpack_add_lines" \
+         
 }
 
 function replace_app_identifier() {
@@ -56,7 +71,7 @@ function replace_app_identifier() {
     for ((j = 0; j < ${#ARRAY[@]}; j = j + 1)); do
         dest_filePath=${ARRAY[$j]} 
 
-        FILE=`basename "$filePath"`
+        FILE=`basename "$dest_filePath"`
         NAME=`echo "$FILE" | cut -d'.' -f1`
         EXTENSION=`echo "$FILE" | cut -d'.' -f2`
 
@@ -96,9 +111,9 @@ function move_pages_to_exppages() {
 
     exist_string="expPages"
 
-    add_lines_in_file 'tsconfig.json'    "$exist_string"      '"@pages/\*": \["\./src/pages/\*"\],'           '            "@expPages/\*": \["./src/expPages/\*\"],'  "check"
-    add_lines_in_file ".eslintrc.js"     "$exist_string"      "'@pages': './src/pages',"                      "            '@expPages': './src/expPages',"            "check"
-    add_lines_in_file "babel.config.js"  "$exist_string"      "'@pages': './src/pages',"                      "            '@expPages': './src/expPages',"            "check"
+    add_lines_in_file 'tsconfig.json'    "$exist_string"      '"@pages/\*": \["\./src/pages/\*"\],'           '            "@expPages/\*": \["./src/expPages/\*\"],'  
+    add_lines_in_file ".eslintrc.js"     "$exist_string"      "'@pages': './src/pages',"                      "            '@expPages': './src/expPages',"            
+    add_lines_in_file "babel.config.js"  "$exist_string"      "'@pages': './src/pages',"                      "            '@expPages': './src/expPages',"            
     webpack_array_string=(
         "            // eslint-disable-next-line @typescript-eslint/naming-convention" 
         "            '@expPages': path.resolve(__dirname, '../../src/expPages/'),"
@@ -109,7 +124,7 @@ function move_pages_to_exppages() {
         "$exist_string" \
         "'@pages': path.resolve(__dirname, '../../src/pages/')," \
         "$webpack_add_lines" \
-        "check"
+        
 
     if [  -f "$DEST_PROJECT/src/pages/home/ReportScreen.tsx" ]; then
         info "Start moving 'src/pages' to 'src/expPages"
@@ -200,6 +215,9 @@ function rename_Android_project() {
 function prepare_run_apps() {
    step=$((step + 1))
    info "Start preparing run-apps"
+
+   info "Start removing unnecessary files [docs]"
+   rm -rf "$DEST_PROJECT/docs"
 
    remove_keys_in_package_json "['devDependencies']['@kie/act-js']"
    remove_keys_in_package_json "['devDependencies']['shellcheck']"

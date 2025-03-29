@@ -7,13 +7,13 @@ function lib_realm-dependencies() {
     third_dependencies=(
         "@realm/react"
     )
-	install_dependencies_in_package_json "dependencies" "${third_dependencies[@]}"
-    check_and_install_dependencies "dependencies" '"realm"' "realm@community"
+	install_dependencies_with_array "latest" "dependencies" "${third_dependencies[@]}"
+    check_and_install_dependencies "ignore" "dependencies" '"realm"' "realm@community"
 
     third_dev_dependencies=(
 
     )
-	install_dependencies_in_package_json "devDependencies" "${third_dev_dependencies[@]}"
+	install_dependencies_with_array "latest" "devDependencies" "${third_dev_dependencies[@]}"
 }
 
 function PROJECT_ieatta_lib_realm() {

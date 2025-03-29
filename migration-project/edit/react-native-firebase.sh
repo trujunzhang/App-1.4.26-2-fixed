@@ -3,6 +3,9 @@
 function EDIT_react-native-firebase-dependencies() {
     run_npm_install
 
+    # firebaseVersion="21.11.0"
+    firebaseVersion="latest"
+
     third_dependencies=(
         # firebase
         "@react-native-firebase/app" 
@@ -12,7 +15,7 @@ function EDIT_react-native-firebase-dependencies() {
         "@react-native-firebase/analytics" 
         "@react-native-firebase/crashlytics"
     )
-	install_dependencies_in_package_json "dependencies" "${third_dependencies[@]}"
+	install_dependencies_with_array "$firebaseVersion" "dependencies" "${third_dependencies[@]}"
 }
 
 function EDIT_react-native-firebase() {

@@ -1,3 +1,3 @@
-import FloatingActionButtonAndPopover from '@expPages/home/sidebar/SidebarScreen/FloatingActionButtonAndPopover';
+import FloatingActionButtonAndPopover from '@expPages/home/sidebar/FloatingActionButtonAndPopover';
 
 export default FloatingActionButtonAndPopover;

@@ -1,8 +1,0 @@
-# See https://github.com/rhysd/actionlint/blob/main/docs/config.md
-self-hosted-runner:
-  labels:
-    - ubuntu-latest-xl
-    - macos-15-large
-    - macos-15-xlarge
-    - ubuntu-latest-reassure-tests
-    - macos-12

@@ -188,7 +188,8 @@ function trackConnectionChanges() {
 function subscribeToNetInfo(): () => void {
     // Note: We are disabling the configuration for NetInfo when using the local web API since requests can get stuck in a 'Pending' state and are not reliable indicators for "offline".
     // If you need to test the "recheck" feature then switch to the production API proxy server.
-    if (!CONFIG.IS_USING_LOCAL_WEB) {
+    if (!CONFIG.IS_USING_LOCAL_WEB && false) {
+        // TODO: djzhang not to subscribe
         // Calling NetInfo.configure (re)checks current state. We use it to force a recheck whenever we (re)subscribe
         NetInfo.configure({
             // By default, NetInfo uses `/` for `reachabilityUrl`

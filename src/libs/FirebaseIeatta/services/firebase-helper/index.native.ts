@@ -1,8 +1,8 @@
 import firestore from '@react-native-firebase/firestore';
 import {FBCollections} from '@libs/FirebaseIeatta/constant';
-import type {IeattaModelsWithoutUser, IFBUser} from '@src/types/firebase';
+import type {IeattaModelsWithoutUser, IFBRestaurant, IFBUser} from '@src/types/firebase';
 import type IFirebaseHelper from './types';
-import type {DeleteData, GetData, SetData, UpdateCover} from './types';
+import type {DeleteData, GetData, SetData, UpdateCover, UpdateUserProperties} from './types';
 
 class FirebaseHelper implements IFirebaseHelper {
     /**
@@ -57,6 +57,17 @@ class FirebaseHelper implements IFirebaseHelper {
 
     /**
      |--------------------------------------------------
+     | Set properties for user
+     |--------------------------------------------------
+     */
+    updateUserProperties({userId, properties}: UpdateUserProperties) {
+        const doc = firestore().collection(FBCollections.Profiles).doc(userId);
+        doc.set(properties, {merge: true});
+        return Promise.resolve();
+    }
+
+    /**
+     |--------------------------------------------------
      | Get User Data by email
      |--------------------------------------------------
      */
@@ -80,6 +91,15 @@ class FirebaseHelper implements IFirebaseHelper {
      */
     deleteData({path, uniqueId}: DeleteData): Promise<void> {
         return firestore().collection(path).doc(uniqueId).delete();
+    }
+
+    /**
+     |--------------------------------------------------
+     | Get the first restaurant
+     |--------------------------------------------------
+     */
+    getFirstRestaurant(): Promise<IFBRestaurant | null | undefined> {
+        return Promise.resolve(null);
     }
 }
 

@@ -4,18 +4,24 @@ function lib_page-dependencies() {
     run_npm_install
 
     third_dependencies=(
+        "@sentry/react-native"
         "@react-oauth/google"
-        "react-native-date-picker"
         "react-datetime"
         "moment"
         "@likashefqet/react-native-image-zoom"
     )
-	install_dependencies_in_package_json "dependencies" "${third_dependencies[@]}"
+	install_dependencies_with_array "latest" "dependencies" "${third_dependencies[@]}"
+
+    date_picker_version="5.0.10"
+    # date_picker_version="latest"
+    # version:
+       # v5.0.11: ios app can not be compiled
+    check_and_install_dependencies "$date_picker_version" "dependencies" "react-native-date-picker" "react-native-date-picker"
 
     third_dev_dependencies=(
 
     )
-	install_dependencies_in_package_json "devDependencies" "${third_dev_dependencies[@]}"
+	install_dependencies_with_array "latest" "devDependencies" "${third_dev_dependencies[@]}"
 }
 
 function PROJECT_ieatta_lib_pages() {
@@ -36,7 +42,6 @@ function PROJECT_ieatta_lib_pages() {
     copy_file_from_source_to_dest "src/components/Icon/Ieattaicons.ts"
     copy_file_from_source_to_dest "src/components/Icon/IeattaStars.ts"
     copy_file_from_source_to_dest "src/components/Icon/IconMenuSvg.tsx"
-    copy_file_from_source_to_dest "src/components/withCurrentRestaurantID.tsx"
 
     lib_page-dependencies
 }

@@ -14,7 +14,7 @@ function lib_firebase-dependencies() {
         # "react-firebase-hooks": "^5.1.1",
         # "react-firebase-pagination-hooks": "github:trujunzhang/react-firebase-pagination-hooks",
     )
-	install_dependencies_in_package_json "dependencies" "${third_dependencies[@]}"
+	install_dependencies_with_array "latest" "dependencies" "${third_dependencies[@]}"
     check_and_add_dependencies_keys   \
             "github:trujunzhang/react-firebase-pagination-hooks"    \
             '["dependencies"]["react-firebase-pagination-hooks"]'       \
@@ -23,7 +23,7 @@ function lib_firebase-dependencies() {
     third_dev_dependencies=(
         "@types/blueimp-md5"
     )
-	install_dependencies_in_package_json "devDependencies" "${third_dev_dependencies[@]}"
+	install_dependencies_with_array "latest" "devDependencies" "${third_dev_dependencies[@]}"
 }
 
 function lib_firebase-config() {

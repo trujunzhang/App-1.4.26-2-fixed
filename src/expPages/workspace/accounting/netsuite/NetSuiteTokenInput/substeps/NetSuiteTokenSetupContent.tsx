@@ -1,3 +1,4 @@
+import type {SubStepWithPolicy} from '@expPages/workspace/accounting/netsuite/types';
 import React from 'react';
 import {View} from 'react-native';
 import Button from '@components/Button';
@@ -5,13 +6,12 @@ import FixedFooter from '@components/FixedFooter';
 import RenderHTML from '@components/RenderHTML';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
-import type {SubStepProps} from '@hooks/useSubStep/types';
 import useThemeStyles from '@hooks/useThemeStyles';
 import Parser from '@libs/Parser';
 import CONST from '@src/CONST';
 import type {TranslationPaths} from '@src/languages/types';
 
-function NetSuiteTokenSetupContent({onNext, screenIndex}: SubStepProps) {
+function NetSuiteTokenSetupContent({onNext, screenIndex}: SubStepWithPolicy) {
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 

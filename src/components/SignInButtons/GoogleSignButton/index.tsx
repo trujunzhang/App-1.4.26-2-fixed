@@ -4,7 +4,6 @@
 // import {useGoogleLogin, useGoogleOneTapLogin} from '@react-oauth/google';
 import type {OAuthCredential} from 'firebase/auth';
 import {getAuth, GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
-// import {transform} from 'lodash';
 import React, {useCallback} from 'react';
 import PressableWithoutFeedback from '@components/Pressable/PressableWithoutFeedback';
 import useLocalize from '@hooks/useLocalize';
@@ -24,6 +23,7 @@ import type {GoogleSignInButtonProps} from './types';
  * @returns
  */
 function GoogleSignInButton({isLoading = false}: GoogleSignInButtonProps) {
+    // eslint-disable-next-line rulesdir/prefer-shouldUseNarrowLayout-instead-of-isSmallScreenWidth
     const {isSmallScreenWidth} = useResponsiveLayout();
     const styles = useThemeStyles();
     const {translate} = useLocalize();

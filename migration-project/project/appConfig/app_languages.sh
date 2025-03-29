@@ -8,7 +8,7 @@ function app_en_languages() {
         "import appEnLanguage"  \
         "import CONST from '@src/CONST';"   \
         "import appEnLanguage from '@src/appConfig/languages/en';" \
-        "check"
+        
 
 
     add_lines_in_file             \
@@ -16,7 +16,7 @@ function app_en_languages() {
         "...appEnLanguage,"       \
         "const translations = {"  \
         "    ...appEnLanguage,"   \
-        "check"
+        
 
 }
 
@@ -28,7 +28,7 @@ function app_es_languages() {
         "import appEsLanguage"  \
         "import CONST from '@src/CONST';"   \
         "import appEsLanguage from '@src/appConfig/languages/es';"  \
-        "check"
+        
 
 
     add_lines_in_file             \
@@ -36,7 +36,7 @@ function app_es_languages() {
         "...appEsLanguage,"       \
         "const translations = {"  \
         "    ...appEsLanguage,"   \
-        "check"
+        
 
 }
 

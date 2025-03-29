@@ -71,13 +71,27 @@ function check_replace_lines_in_file() {
     check_replace_lines_in_file_with_dest_path "$dest_path" "$checkString" "$oldLine" "$newLine"
 }
 
-function add_lines_in_file_with_dest_path() {
+function check_add_line_in_header_in_file() {
+    filePath=$1
+    checkString=$2
+    newLine=$3
+
+    dest_path="$DEST_PROJECT/$filePath"
+
+    if  grep "$checkString" $dest_path; then
+        error "  $checkString already exists in $dest_path"
+    else
+        success "  $checkString not exists in $dest_path"
+        echo -e "$newLine\n$(cat $dest_path)" > $dest_path
+    fi
+}
+
+
+function L_add_lines_in_file_with_dest_path() {
     dest_path=$1
     checkString=$2
     oldLine=$3
     newLines=$4
-    DEFAULTVALUE="ignore"
-    need_check="${5:-$DEFAULTVALUE}"
 
     # info "========== debug =============="
     # info "oldLine:$oldLine"
@@ -86,14 +100,10 @@ function add_lines_in_file_with_dest_path() {
     # info "dest_path:$dest_path"
     # info "========== debug =============="
 
-    if [ "$need_check" == "check" ] ; then
-        if  grep "$checkString" $dest_path; then
-            error "  $checkString already exists in $dest_path"
-        else
-            success "  $checkString not exists in $dest_path"
-            replace_lines_in_file_with_dest_path "$dest_path" "$oldLine" "$oldLine\n$newLines"
-        fi
+    if  grep "$checkString" $dest_path; then
+        error "  $checkString already exists in $dest_path"
     else
+        success "  $checkString not exists in $dest_path"
         replace_lines_in_file_with_dest_path "$dest_path" "$oldLine" "$oldLine\n$newLines"
     fi
 }
@@ -103,12 +113,10 @@ function add_lines_in_file() {
     checkString=$2
     oldLine=$3
     newLines=$4
-    DEFAULTVALUE="ignore"
-    need_check="${5:-$DEFAULTVALUE}"
 
     dest_path="$DEST_PROJECT/$filePath"
 
-    add_lines_in_file_with_dest_path "$dest_path" "$checkString" "$oldLine" "$newLines" "$need_check"
+    L_add_lines_in_file_with_dest_path "$dest_path" "$checkString" "$oldLine" "$newLines" 
 }
 
 function add_new_line_to_file() {

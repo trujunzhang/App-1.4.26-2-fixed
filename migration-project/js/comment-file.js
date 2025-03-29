@@ -32,7 +32,7 @@ var startIndex = -1;
 var endIndex = -1;
 var matchCount = 0;
 
-function check_weather_match_line(p) {
+function check_whether_match_line(p) {
     const line = textByLine[p].toLowerCase();
     var nextLine = '';
     if (p + 1 < textByLine.length) {
@@ -56,7 +56,7 @@ for (var i = 0; i < textByLine.length; i++) {
     const line = textByLine[i].toLowerCase();
 
     if (startIndex == -1) {
-        if (check_weather_match_line(i)) {
+        if (check_whether_match_line(i)) {
             console.log('matched line: ', line);
             if (line.includes('//') == false) {
                 if (line.includes('{/*') == false) {

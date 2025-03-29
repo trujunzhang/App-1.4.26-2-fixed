@@ -62,6 +62,12 @@ export default {
     h80: {
         height: '80%',
     },
+    h70: {
+        height: '70%',
+    },
+    h40: {
+        height: '40%',
+    },
 
     /**
      * Ieatta styles

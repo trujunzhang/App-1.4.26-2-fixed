@@ -28,7 +28,7 @@ type ReportActionItemSingleProps = ChildrenProps & {
     isHovered?: boolean;
 };
 
-const showUserDetails = (accountID: string) => {
+const showUserDetails = (accountID: number | undefined) => {
     Navigation.navigate(ROUTES.PROFILE.getRoute(accountID));
 };
 
@@ -56,7 +56,9 @@ function ReviewItemSingle({review, children, isHovered = false}: ReportActionIte
     ];
 
     const showActorDetails = useCallback(() => {
-        showUserDetails(review.creatorId);
+        // TODO: djzhang
+        showUserDetails(Number(review.creatorId));
+        // showUserDetails(review.creatorId);
     }, [review.creatorId]);
 
     const getAvatar = () => {

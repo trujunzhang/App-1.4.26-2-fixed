@@ -6,9 +6,7 @@ import utils from './utils';
 
 const traceMap: TraceMap = {};
 
-const startTrace: StartTrace = (customEventName) => {};
-
-const startTracexxx: StartTrace = (customEventName) => {
+const startTrace: StartTrace = (customEventName) => {
     const start = global.performance.now();
 
     if (Environment.isDevelopment()) {
@@ -35,8 +33,7 @@ const startTracexxx: StartTrace = (customEventName) => {
     perfTrace.start();
 };
 
-const stopTrace: StopTrace = (customEventName) => {};
-const stopTracexxx: StopTrace = (customEventName) => {
+const stopTrace: StopTrace = (customEventName) => {
     if (Environment.isDevelopment()) {
         return;
     }

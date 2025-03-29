@@ -21,7 +21,7 @@ function EDIT_expensify_js() {
          "import PopoverPhotosPageContextMenu" \
          "$keys_type_line" \
          "$app_type_keys_strings"  \
-         "check"
+         
 
 
     function_line="<DeeplinkWrapper"
@@ -64,6 +64,6 @@ function EDIT_expensify_js() {
          "<PopoverPhotosPageContextMenu " \
          "$keys_type_line" \
          "$app_type_keys_strings"  \
-         "check"
+         
 
 }

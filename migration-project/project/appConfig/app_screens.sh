@@ -11,7 +11,7 @@ function EDIT_app_screens() {
         "import {appSCREENS}"  \
         "import type DeepValueOf from './types/utils/DeepValueOf';" \
         "import {appSCREENS} from './appConfig/appScreens';"  \
-        "check"
+        
 
 
     add_lines_in_file             \
@@ -19,7 +19,7 @@ function EDIT_app_screens() {
         "appSCREENS,"             \
         "const SCREENS = {"       \
         "    ...appSCREENS,"      \
-        "check"
+        
 
 
     add_lines_in_file             \
@@ -27,7 +27,7 @@ function EDIT_app_screens() {
         "'EditIeatta',"           \
         "    RIGHT_MODAL: {"      \
         "        EDIT_IEATTA: 'EditIeatta'," \
-        "check"
+        
 
 
 }

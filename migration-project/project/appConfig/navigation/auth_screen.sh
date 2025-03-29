@@ -3,6 +3,13 @@
 function app_auth_screen_add_components() {
     auth_screen_js="src/libs/Navigation/AppNavigator/AuthScreens.tsx"
 
+    add_lines_in_file \
+        "$auth_screen_js" \
+        "const loadHomeSplitNavigator"        \
+        "const loadReportSplitNavigator = () => require<ReactComponentModule>('./Navigators/ReportsSplitNavigator').default;"     \
+        "const loadHomeSplitNavigator = () => require<ReactComponentModule>('../../../appConfig/navigation/HomeSplitNavigator').default;"  \
+        
+
     function_line="<RootStack.Navigator"
     function_export_lines=(
         "                {isDevelopment \&\& <DebugAndSwitchRouter />}"
@@ -16,20 +23,19 @@ function app_auth_screen_add_components() {
          "$function_line" \
          "$function_export_strings"  
 
-
-    function_line="component={BottomTabNavigator}"
+    function_line="getComponent={loadReportSplitNavigator}"
     function_export_lines=(
-        "                        // component={BottomTabNavigator}"
-        "                        getComponent={loadHomeScreen}"
+        "                        // getComponent={loadReportSplitNavigator}"
+        "                        getComponent={loadHomeSplitNavigator}"
         "                    />"
         "                    <RootStack.Screen"
         "                        name={SCREENS.CENTER_IEATTA.PHOTO_GRID_VIEW}"
-        "                        options={rootNavigatorOptions.fullScreen}"
+        "                        options={rootNavigatorScreenOptions.fullScreen}"
         "                        getComponent={() => require<ReactComponentModule>('@pages/photos/online/FBPhotosGridView').default}"
         "                    />"
         "                    <RootStack.Screen"
         "                        name={SCREENS.CENTER_IEATTA.PHOTO_PAGE_VIEW}"
-        "                        options={rootNavigatorOptions.fullScreen}"
+        "                        options={rootNavigatorScreenOptions.fullScreen}"
         "                        getComponent={() => {"
         "                            const screen = require<ReactComponentModule>('@pages/photos/online/FBPhotosPageView').default;"
         "                            return screen;"
@@ -39,7 +45,7 @@ function app_auth_screen_add_components() {
 
     check_replace_lines_in_file \
          "$auth_screen_js" \
-         "{loadHomeScreen}" \
+         "{loadHomeSplitNavigator}" \
          "$function_line" \
          "$function_export_strings"  
 
@@ -68,10 +74,6 @@ function app_auth_screen_toggle_search_restaurants_router() {
         "// const {toggleSearch} = useSearchRouterContext();"
         "    const {toggleSearchRestaurantsRouter} = useSearchRestaurantsRouterContext();"
         ""
-        "    const loadHomeScreen = useMemo(() => {"
-        "        return isSmallScreenWidth ? loadNativeHomeScreen : loadWebHomeScreen;"
-        "    }, [isSmallScreenWidth]);"
-        ""
     )
     join_by function_export_strings "\n" "${function_export_lines[@]}"
 
@@ -96,6 +98,16 @@ function app_auth_screen_toggle_search_restaurants_router() {
          "$function_export_strings"  
 }
 
+function replace_import_for_avatar_screen() {
+    auth_screen_js="src/libs/Navigation/AppNavigator/AuthScreens.tsx"
+
+    check_replace_lines_in_file \
+         "$auth_screen_js" \
+         "pages/settings/Profile/ProfileAvatar" \
+         "../../../expPages/settings/Profile/ProfileAvatar"   \
+         "../../../pages/settings/Profile/ProfileAvatar" 
+}
+
 function EDIT_app_auth_screen() {
     step=$((step + 1))
     info "Start editing app auth screen"
@@ -104,7 +116,6 @@ function EDIT_app_auth_screen() {
 
     define_line="import CONFIG from '@src/CONFIG';" 
     define_rules_lines=(
-        "import {loadNativeHomeScreen, loadWebHomeScreen} from '@src/appConfig/navigation/home';" 
         "import useEnvironment from '@hooks/useEnvironment';"
         "import DebugAndSwitchRouter from '@components/Debug/DebugAndSwitchRouter';"
         "import SearchRestaurantsModal from '@pages/searchPages/restaurants';"
@@ -114,19 +125,19 @@ function EDIT_app_auth_screen() {
 
     add_lines_in_file \
          "$auth_screen_js" \
-         "import {loadNativeHomeScreen, loadWebHomeScreen}" \
+         "import DebugAndSwitchRouter" \
          "$define_line" \
          "$define_rules_string"  \
-         "check"
-
+         
 
     add_lines_in_file \
          "$auth_screen_js" \
          "const {isDevelopment}" \
-         "const styles = useThemeStyles();"   \
+         "const theme = useTheme();"   \
          "    const {isDevelopment} = useEnvironment();" \
-         "check"
+         
 
+    replace_import_for_avatar_screen
 
     app_auth_screen_toggle_search_restaurants_router
     app_auth_screen_add_components

@@ -4,8 +4,6 @@ import type {StyleProp, ViewStyle} from 'react-native';
 import {FlatList as RestaurantList, StyleSheet, View} from 'react-native';
 import {useOnyx} from 'react-native-onyx';
 import PageFlashListItemWithEvent from '@components/Ieatta/detailedPage/PageFlashListItemWithEvent';
-import type {CurrentRestaurantIDContextValue} from '@components/withCurrentRestaurantID';
-import withCurrentRestaurantID from '@components/withCurrentRestaurantID';
 import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
 import {buildRestaurantSidebar} from '@libs/FirebaseIeatta/list/builder/restaurant';

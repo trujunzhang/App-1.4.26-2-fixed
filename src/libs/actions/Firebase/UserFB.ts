@@ -1,36 +1,57 @@
 /* eslint-disable jsdoc/no-types */
+// eslint-disable-next-line lodash/import-scope
+import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import Onyx from 'react-native-onyx';
-// eslint-disable-next-line no-restricted-imports
+import type {OnyxEntry, OnyxUpdate} from 'react-native-onyx';
+import type {ValueOf} from 'type-fest';
 import {generateLoggedUserId} from '@libs/FirebaseIeatta/utils/md5_utils';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import type {IFBUser} from '@src/types/firebase';
-import type PersonalDetails from '@src/types/onyx/PersonalDetails';
+import type {Locale, PersonalDetails, PersonalDetailsList, PrivatePersonalDetails} from '@src/types/onyx';
 
-let currentUserAccountID = '';
-let currentEmail = '';
+let currentUserTheme: ValueOf<typeof CONST.THEME> = CONST.THEME.DEFAULT;
 Onyx.connect({
-    key: ONYXKEYS.SESSION,
+    key: ONYXKEYS.PREFERRED_THEME,
     callback: (val) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        currentUserAccountID = lodashGet(val, 'accountID', -1);
-        currentEmail = lodashGet(val, 'email', '');
+        currentUserTheme = val ?? CONST.THEME.DEFAULT;
     },
 });
 
-let myPersonalDetails = {};
+let currentUserLocale: Locale = CONST.LOCALES.DEFAULT;
+Onyx.connect({
+    key: ONYXKEYS.NVP_PREFERRED_LOCALE,
+    callback: (val) => {
+        currentUserLocale = val ?? CONST.LOCALES.DEFAULT;
+    },
+});
+
+let currentUserEmail = '';
+let currentUserAccountID: number | undefined;
+Onyx.connect({
+    key: ONYXKEYS.SESSION,
+    callback: (val) => {
+        currentUserEmail = val?.email ?? '';
+        currentUserAccountID = val?.accountID;
+    },
+});
+
+let allPersonalDetails: OnyxEntry<PersonalDetailsList>;
+let loggedUserId: string | undefined;
 Onyx.connect({
     key: ONYXKEYS.PERSONAL_DETAILS_LIST,
     callback: (val) => {
-        if (!val || !currentUserAccountID) {
+        allPersonalDetails = val;
+
+        const personalDetails: PersonalDetailsList = allPersonalDetails ?? {};
+        const personalData: PersonalDetails | null = personalDetails[currentUserAccountID ?? ''];
+
+        if (_.isUndefined(personalData) || _.isNull(personalData)) {
             return;
         }
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        myPersonalDetails = val[currentUserAccountID];
+        loggedUserId = personalData.userID;
     },
 });
 
@@ -111,8 +132,27 @@ function setLoginError(errorMessage: string) {
 }
 
 function upsetPersonalDetail(user: IFBUser) {
+    const userId = user.id;
+    if (userId === loggedUserId) {
+        const accountID = currentUserAccountID ?? generateLoggedUserId();
+        Onyx.merge(ONYXKEYS.PERSONAL_DETAILS_LIST, {[accountID]: buildPersonalDetails(user, accountID)});
+
+        // update the logged user's theme
+        if (currentUserTheme !== user.preferredTheme) {
+            Onyx.set(ONYXKEYS.PREFERRED_THEME, user.preferredTheme ?? CONST.THEME.DEFAULT);
+        }
+
+        // update the logged user's locale
+        if (currentUserLocale !== user.preferredLocale) {
+            Onyx.set(ONYXKEYS.NVP_PREFERRED_LOCALE, user.preferredLocale ?? CONST.LOCALES.DEFAULT);
+        }
+    }
     const accountID = generateLoggedUserId();
-    Onyx.merge(ONYXKEYS.PERSONAL_DETAILS_LIST, {[user.id]: buildPersonalDetails(user, accountID)});
+    Onyx.merge(ONYXKEYS.PERSONAL_DETAILS_LIST, {[userId]: buildPersonalDetails(user, accountID)});
+}
+
+function updateFBUserTheme(theme: ValueOf<typeof CONST.THEME>) {
+    Onyx.set(ONYXKEYS.PREFERRED_THEME, theme);
 }
 
 export {
@@ -121,4 +161,5 @@ export {
     setIsLoading,
     setLoginError,
     upsetPersonalDetail,
+    // updateFBUserTheme,
 };

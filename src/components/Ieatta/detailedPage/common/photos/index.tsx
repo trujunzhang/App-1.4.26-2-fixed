@@ -2,12 +2,14 @@
 // eslint-disable-next-line no-restricted-imports, lodash/import-scope
 import _ from 'lodash';
 import React from 'react';
-import {useCollectionOnce} from 'react-firebase-hooks/firestore';
+import {useCollection} from 'react-firebase-hooks/firestore';
 import DetailedPhotosList from '@components/Ieatta/detailedPage/common/photoAndWaiter/DetailedPhotosList';
 import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
 import type {IFBPhoto} from '@src/types/firebase';
 import type {DetailedPhotoProps} from './types';
 
+// This component is used in the detailed page.
+// That shows the photos on the web app on the small screen.
 function DetailedPhotosRow({photoRow}: DetailedPhotoProps) {
     const {relatedId, photoType} = photoRow;
 
@@ -16,7 +18,7 @@ function DetailedPhotosRow({photoRow}: DetailedPhotoProps) {
      | List(photos)
      |--------------------------------------------------
      */
-    const [photosSnapshot, loader] = useCollectionOnce(
+    const [photosSnapshot, loading, error] = useCollection(
         FirebaseQuery.queryForPhotos({
             relatedId,
             photoType,

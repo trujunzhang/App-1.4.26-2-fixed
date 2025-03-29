@@ -19,7 +19,7 @@ function EDIT_header_js() {
          "titleAnchor?" \
          "$keys_type_line" \
          "$app_type_keys_strings"  \
-         "check"
+         
 
     check_replace_lines_in_file \
          "$header_js" \

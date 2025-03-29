@@ -51,9 +51,12 @@ function ImagePlaceholder(props: ImagePlaceholderProps) {
     // Log.info('================================');
     // Log.info('');
 
+    const imageKey = imageUri === '' ? 'imagePlaceholder' : imageUri;
+
     const originalImageContent = (
         <Image
             {...restProps}
+            key={imageKey}
             source={{uri: imageUri}}
             onLoad={(event: ImageOnLoadEvent) => {
                 setShowPlaceholder(false);

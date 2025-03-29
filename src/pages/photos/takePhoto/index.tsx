@@ -1,11 +1,14 @@
+/* eslint-disable react-compiler/react-compiler */
+
 /* eslint-disable rulesdir/prefer-type-fest */
 
 /* eslint-disable rulesdir/prefer-at */
 import ReceiptDropUI from '@expPages/iou/ReceiptDropUI';
+// eslint-disable-next-line lodash/import-scope
+import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import React, {useCallback, useContext, useEffect, useReducer, useRef, useState} from 'react';
 import {ActivityIndicator, PanResponder, PixelRatio, View} from 'react-native';
-import {withOnyx} from 'react-native-onyx';
 import type Webcam from 'react-webcam';
 import Hand from '@assets/images/hand.svg';
 import ReceiptUpload from '@assets/images/receipt-upload.svg';
@@ -26,9 +29,15 @@ import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useTabNavigatorFocus from '@hooks/useTabNavigatorFocus';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
+import {isMobile, isMobileWebKit} from '@libs/Browser';
 import * as Browser from '@libs/Browser';
 import * as FileUtils from '@libs/fileDownload/FileUtils';
 import {PhotoType} from '@libs/FirebaseIeatta/constant';
+import {getAuthUserFromPersonalDetails} from '@libs/FirebaseIeatta/models/auth_user_model';
+import FirebasePhoto from '@libs/FirebaseIeatta/services/firebase-photo';
+import {documentIdFromCurrentDate} from '@libs/FirebaseIeatta/utils/md5_utils';
+import * as ShowNotify from '@libs/ieatta/Notify';
+import Log from '@libs/Log';
 import Navigation from '@libs/Navigation/Navigation';
 import CONST from '@src/CONST';
 import type {TranslationPaths} from '@src/languages/types';
@@ -44,12 +53,17 @@ function IEATTATakePhotoPage({route}: Omit<IEATTATakePhotoPageProps, 'user'>) {
     const theme = useTheme();
     const styles = useThemeStyles();
 
+    const personalData = useCurrentUserPersonalDetails();
+
+    const toastId = React.useRef<number | string | null>(null);
+
     // Grouping related states
     const [isAttachmentInvalid, setIsAttachmentInvalid] = useState(false);
     const [attachmentInvalidReasonTitle, setAttachmentInvalidReasonTitle] = useState<TranslationPaths>();
     const [attachmentInvalidReason, setAttachmentValidReason] = useState<TranslationPaths>();
 
     const [receiptImageTopPosition, setReceiptImageTopPosition] = useState(0);
+    // eslint-disable-next-line rulesdir/prefer-shouldUseNarrowLayout-instead-of-isSmallScreenWidth
     const {isSmallScreenWidth} = useResponsiveLayout();
     const {translate} = useLocalize();
     const {isDraggingOver} = useContext(DragAndDropContext);
@@ -205,15 +219,37 @@ function IEATTATakePhotoPage({route}: Omit<IEATTATakePhotoPageProps, 'user'>) {
      * Sets the Receipt objects and navigates the user to the next page
      */
     const setReceiptAndNavigate = (file: FileObject) => {
-        validateReceipt(file).then((isFileValid) => {
-            if (!isFileValid) {
-                return;
-            }
-            // Store the receipt on the transaction object in Onyx
-            const source = URL.createObjectURL(file as Blob);
+        // Store the receipt on the transaction object in Onyx
+        // blob:https://dev.new.ieatta.com:8082/3e5874db-27ac-4679-9285-c6936440dcbe
+        const source = URL.createObjectURL(file as Blob);
 
-            navigateToConfirmationStep(file, source);
-        });
+        Log.info('');
+        Log.info('================================');
+        Log.info(`currentPhotoPath in the taken photo: ${source}`);
+        Log.info('================================');
+        Log.info('');
+
+        toastId.current = ShowNotify.initialAndShowNotify({isSmallScreenWidth, message: translate('notify.takePhoto.start'), autoClose: false});
+
+        const authUserModel = getAuthUserFromPersonalDetails(personalData);
+        if (_.isUndefined(authUserModel)) {
+            ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.auth.unAuthed')});
+            return;
+        }
+
+        const firebasePhotoId = documentIdFromCurrentDate();
+        FirebasePhoto.saveTakenPhotoForWebAppIfOffline({
+            blobHttps: source,
+            emptyParams: {authUserModel, photoUniqueId: firebasePhotoId, relatedId, photoType},
+        })
+            .then(() => {
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.takePhoto.success')});
+                // navigationToEditPhoto({photoId: firebasePhotoId});
+            })
+            .catch((error: string) => {
+                Log.warn('Error taking photo', error);
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.takePhoto.error.noNetWork')});
+            });
     };
 
     const setupCameraPermissionsAndCapabilities = (stream: MediaStream) => {
@@ -236,18 +272,36 @@ function IEATTATakePhotoPage({route}: Omit<IEATTATakePhotoPageProps, 'user'>) {
 
         const imageBase64 = cameraRef.current.getScreenshot();
 
-        const filename = `receipt_${Date.now()}.png`;
-        const file = FileUtils.base64ToFile(imageBase64 ?? '', filename);
-        const source = URL.createObjectURL(file);
-        // IOU.setMoneyRequestReceipt(transactionID, source, file.name, action !== CONST.IOU.ACTION.EDIT);
+        // const filename = `receipt_${Date.now()}.png`;
+        // const file = FileUtils.base64ToFile(imageBase64 ?? '', filename);
+        // const source = URL.createObjectURL(file);
 
-        // if (action === CONST.IOU.ACTION.EDIT) {
-        //     updateScanAndNavigate(file, source);
-        //     return;
-        // }
+        toastId.current = ShowNotify.initialAndShowNotify({isSmallScreenWidth, message: translate('notify.takePhoto.start'), autoClose: false});
 
-        navigateToConfirmationStep(file, source);
-    }, [navigateToConfirmationStep, requestCameraPermission]);
+        const authUserModel = getAuthUserFromPersonalDetails(personalData);
+        if (_.isUndefined(authUserModel)) {
+            ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.auth.unAuthed')});
+            return;
+        }
+        if (_.isNull(imageBase64)) {
+            ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.takePhoto.error.camera')});
+            return;
+        }
+
+        const firebasePhotoId = documentIdFromCurrentDate();
+        FirebasePhoto.saveTakenPhotoForWebAppIfOffline({
+            imageBase64,
+            emptyParams: {authUserModel, photoUniqueId: firebasePhotoId, relatedId, photoType},
+        })
+            .then(() => {
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.takePhoto.success')});
+                // navigationToEditPhoto({photoId: firebasePhotoId});
+            })
+            .catch((error: string) => {
+                Log.warn('Error taking photo', error);
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.takePhoto.error.noNetWork')});
+            });
+    }, [isSmallScreenWidth, personalData, photoType, relatedId, requestCameraPermission, translate]);
 
     const clearTorchConstraints = useCallback(() => {
         if (!trackRef.current) {
@@ -363,7 +417,7 @@ function IEATTATakePhotoPage({route}: Omit<IEATTATakePhotoPageProps, 'user'>) {
                     )}
                 </AttachmentPicker>
                 <PressableWithFeedback
-                    // role={CONST.ACCESSIBILITY_ROLE.BUTTON}
+                    role={CONST.ROLE.BUTTON}
                     accessibilityLabel={translate('receipt.shutter')}
                     style={[styles.alignItemsCenter]}
                     onPress={capturePhoto}
@@ -374,7 +428,7 @@ function IEATTATakePhotoPage({route}: Omit<IEATTATakePhotoPageProps, 'user'>) {
                     />
                 </PressableWithFeedback>
                 <PressableWithFeedback
-                    // role={CONST.ACCESSIBILITY_ROLE.BUTTON}
+                    role={CONST.ROLE.BUTTON}
                     accessibilityLabel={translate('receipt.flash')}
                     style={[styles.alignItemsEnd, !isTorchAvailable && styles.opacity0]}
                     onPress={toggleFlashlight}
@@ -442,14 +496,7 @@ function IEATTATakePhotoPage({route}: Omit<IEATTATakePhotoPageProps, 'user'>) {
             shouldShowWrapper
             testID={IEATTATakePhotoPage.displayName}
         >
-            <View
-                style={[
-                    styles.flex1,
-                    // TODO: djzhang(2024/11/05)
-                    // !Browser.isMobile()
-                    // && styles.uploadReceiptView(isSmallScreenWidth)
-                ]}
-            >
+            <View style={[styles.flex1, !isMobile() && styles.uploadFileView(isSmallScreenWidth)]}>
                 {!isDraggingOver && (Browser.isMobile() ? mobileCameraView() : desktopUploadView())}
                 <ReceiptDropUI
                     onDrop={(e) => {
@@ -477,6 +524,4 @@ function IEATTATakePhotoPage({route}: Omit<IEATTATakePhotoPageProps, 'user'>) {
 
 IEATTATakePhotoPage.displayName = 'IEATTATakePhotoPage';
 
-const IEATTATakePhotoPageWithOnyx = withOnyx<Omit<IEATTATakePhotoPageProps, 'user'>, Omit<IEATTATakePhotoPageOnyxProps, 'user'>>({})(IEATTATakePhotoPage);
-
-export default IEATTATakePhotoPageWithOnyx;
+export default IEATTATakePhotoPage;

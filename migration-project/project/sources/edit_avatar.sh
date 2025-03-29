@@ -17,7 +17,7 @@ function avatar_js_comment_Icon() {
          "renderAvatar()" \
          ") : (" \
          "                renderAvatar()"  \
-         "check"
+         
 }
 
 function avatar_js_add_render_avatar() {
@@ -104,7 +104,7 @@ function EDIT_avatar_js() {
          "import ImagePlaceholder" \
          "$define_line" \
          "$define_rules_string"  \
-         "check"
+         
 
 
     define_line="type AvatarProps = {"
@@ -121,7 +121,7 @@ function EDIT_avatar_js() {
          "avatarUrl?" \
          "$define_line" \
          "$define_rules_string"  \
-         "check"
+         
 
 
     define_line="function Avatar({"
@@ -137,7 +137,7 @@ function EDIT_avatar_js() {
          "shouldShowAsAvatar = false," \
          "$define_line" \
          "$define_rules_string"  \
-         "check"
+         
 
     avatar_js_comment_Icon
     avatar_js_add_render_avatar

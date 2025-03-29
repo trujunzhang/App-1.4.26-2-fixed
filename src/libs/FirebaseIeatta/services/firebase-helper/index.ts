@@ -1,9 +1,10 @@
 import {collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where} from 'firebase/firestore';
 import {db} from '@libs/FirebaseIeatta/config/firebase';
 import {FBCollections} from '@libs/FirebaseIeatta/constant';
-import type {IeattaModelsWithoutUser, IFBUser} from '@src/types/firebase';
+import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
+import type {IeattaModelsWithoutUser, IFBRestaurant, IFBUser} from '@src/types/firebase';
 import type IFirebaseHelper from './types';
-import type {DeleteData, GetData, SetData, UpdateCover} from './types';
+import type {DeleteData, GetData, SetData, UpdateCover, UpdateUserProperties} from './types';
 
 class FirebaseHelper implements IFirebaseHelper {
     /**
@@ -50,6 +51,17 @@ class FirebaseHelper implements IFirebaseHelper {
 
     /**
      |--------------------------------------------------
+     | Set properties for user
+     |--------------------------------------------------
+     */
+    updateUserProperties({userId, properties}: UpdateUserProperties) {
+        return setDoc(doc(db, FBCollections.Profiles, userId), properties, {
+            merge: true,
+        });
+    }
+
+    /**
+     |--------------------------------------------------
      | Get User Data by email
      |--------------------------------------------------
      */
@@ -79,6 +91,28 @@ class FirebaseHelper implements IFirebaseHelper {
      */
     deleteData({path, uniqueId}: DeleteData): Promise<void> {
         return deleteDoc(doc(db, path, uniqueId));
+    }
+
+    /**
+     |--------------------------------------------------
+     | Get the first restaurant
+     |--------------------------------------------------
+     */
+    getFirstRestaurant(): Promise<IFBRestaurant | null | undefined> {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const q: any = FirebaseQuery.queryForRestaurants({size: 1});
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        const querySnapshots = getDocs(q);
+        return querySnapshots.then((querySnapshot) => {
+            // doc.data() is never undefined for query doc snapshots
+            if (querySnapshot.empty) {
+                return null;
+            }
+            if (querySnapshot.docs.at(0)?.data() !== undefined) {
+                return querySnapshot.docs.at(0)?.data() as IFBRestaurant;
+            }
+            return null;
+        });
     }
 }
 

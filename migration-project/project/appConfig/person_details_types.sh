@@ -19,7 +19,7 @@ function EDIT_type_person_details() {
          "userID?: string;" \
          "$forms_line" \
          "$form_keys_strings"  \
-         "check"
+         
 
 
 }

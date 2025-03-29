@@ -25,6 +25,7 @@ DerivedData
 *.mobileprovision
 ios-fastlane-json-key.json
 **/.xcode.env.local
+ios/tmp.xcconfig
 
 # Android/IntelliJ
 #
@@ -61,6 +62,7 @@ buck-out/
 *.keystore
 !debug.keystore
 .!*!*
+*-E
 !my-upload-key.keystore
 android/app/android-fastlane-json-key.json
 
@@ -145,3 +147,6 @@ docs/.bundle
 
 # Output of react compiler healthcheck dev script
 react-compiler-output.txt
+
+.env.local
+.obsidian

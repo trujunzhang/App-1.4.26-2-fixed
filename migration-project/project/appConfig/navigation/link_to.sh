@@ -32,5 +32,5 @@ function EDIT_link_to() {
          "check if the matchingBottomTabRoute.name is undefined"  \
          "$keys_type_line" \
          "$app_type_keys_strings"  \
-         "check"
+         
 }

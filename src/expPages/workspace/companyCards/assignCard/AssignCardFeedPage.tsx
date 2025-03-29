@@ -1,3 +1,4 @@
+import BankConnection from '@expPages/workspace/companyCards/BankConnection';
 import type {WithPolicyAndFullscreenLoadingProps} from '@expPages/workspace/withPolicyAndFullscreenLoading';
 import withPolicyAndFullscreenLoading from '@expPages/workspace/withPolicyAndFullscreenLoading';
 import React, {useEffect} from 'react';
@@ -6,12 +7,11 @@ import DelegateNoAccessWrapper from '@components/DelegateNoAccessWrapper';
 import ScreenWrapper from '@components/ScreenWrapper';
 import type {PlatformStackScreenProps} from '@libs/Navigation/PlatformStackNavigation/types';
 import type {SettingsNavigatorParamList} from '@navigation/types';
-import * as CompanyCards from '@userActions/CompanyCards';
+import {clearAssignCardStepAndData} from '@userActions/CompanyCards';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import type SCREENS from '@src/SCREENS';
 import AssigneeStep from './AssigneeStep';
-import BankConnection from './BankConnection';
 import CardNameStep from './CardNameStep';
 import CardSelectionStep from './CardSelectionStep';
 import ConfirmationStep from './ConfirmationStep';
@@ -30,7 +30,7 @@ function AssignCardFeedPage({route, policy}: AssignCardFeedPageProps) {
 
     useEffect(() => {
         return () => {
-            CompanyCards.clearAssignCardStepAndData();
+            clearAssignCardStepAndData();
         };
     }, []);
 

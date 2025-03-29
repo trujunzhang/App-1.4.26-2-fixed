@@ -60,9 +60,12 @@ function ImagePlaceholder(props: ImagePlaceholderProps) {
     // Log.info('================================');
     // Log.info('');
 
+    const imageKey = imageUri === '' ? 'imagePlaceholder' : imageUri;
+
     const originalImageContent = (
         <CachedImage
             {...restProps}
+            key={imageKey}
             uri={imageUri}
             onLoad={(event: NativeSyntheticEvent<ImageLoadEventData>) => {
                 setShowPlaceholder(false);

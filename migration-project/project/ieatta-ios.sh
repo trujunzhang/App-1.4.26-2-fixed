@@ -6,7 +6,7 @@ function ieatta_ios_podfile() {
         "#======== static frameworks ========= "
         "use_frameworks! :linkage => :static"
         "\$RNFirebaseAsStaticFramework = true"
-        "\$FirebaseSDKVersion = '11.7.0'"
+        "#\$FirebaseSDKVersion = '11.7.0'"
         "#======== static frameworks ========= "
         ""
     )
@@ -16,7 +16,7 @@ function ieatta_ios_podfile() {
         "FirebaseSDKVersion" \
         "$RNMapboxMapsImpl = 'mapbox'" \
         "$firebase_header_strings" \
-        "check"
+        
 
     boringssl_end_lines="      if target.respond_to?(:product_type) and target.product_type"
     boringssl_lines=(
@@ -67,7 +67,7 @@ function PROJECT_ieatta_ios() {
     step=$((step + 1))
     info "Start copying ieatta ios"
 
-    rm "$DEST_PROJECT/ios/Podfile.lock"
+    rm -rf "$DEST_PROJECT/ios/Podfile.lock"
     ieatta_ios_podfile
     ieatta_ios_google_login
 }

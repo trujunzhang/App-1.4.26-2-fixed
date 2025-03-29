@@ -6,7 +6,7 @@ $RNMapboxMapsImpl = 'mapbox'
 #======== static frameworks ========= 
 use_frameworks! :linkage => :static
 $RNFirebaseAsStaticFramework = true
-$FirebaseSDKVersion = '11.7.0'
+#$FirebaseSDKVersion = '11.7.0'
 #======== static frameworks ========= 
 
 $VCDisableFrameProcessors = true
@@ -127,6 +127,7 @@ end
 
 target 'NotificationServiceExtension' do
   pod 'AirshipServiceExtension'
+  pod 'GzipSwift'
   pod 'AppLogs', :path => '../node_modules/react-native-app-logs/AppLogsPod'
 end
 

@@ -10,7 +10,7 @@ function EDIT_metro_config_js() {
         "const defaultAdditionalExts" \
         "$default_source_lines" \
         "$default_additional_strings" \
-        "check"
+        
 
 
     # sourceExts: [...(isE2ETesting ? e2eSourceExts : []), ...defaultSourceExts, ...defaultAdditionalExts, 'jsx'],

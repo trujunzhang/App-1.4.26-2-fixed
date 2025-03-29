@@ -18,6 +18,7 @@ import variables from '@styles/variables';
 import CONST from '@src/CONST';
 import type ChildrenProps from '@src/types/utils/ChildrenProps';
 import type IconAsset from '@src/types/utils/IconAsset';
+import {getButtonRole, getButtonStyle} from './utils';
 import validateSubmitShortcut from './validateSubmitShortcut';
 
 type ButtonProps = Partial<ChildrenProps> & {
@@ -152,6 +153,12 @@ type ButtonProps = Partial<ChildrenProps> & {
 
     /** Whether the Enter keyboard listening is active whether or not the screen that contains the button is focused */
     isPressOnEnterActive?: boolean;
+
+    /** Whether is a nested button inside other button, since nesting buttons isn't valid html */
+    isNested?: boolean;
+
+    /** The text displays under the first line */
+    secondLineText?: string;
 };
 
 type KeyboardShortcutComponentProps = Pick<ButtonProps, 'isDisabled' | 'isLoading' | 'onPress' | 'pressOnEnter' | 'allowBubble' | 'enterKeyEventListenerPriority' | 'isPressOnEnterActive'>;
@@ -257,6 +264,8 @@ function Button(
         link = false,
         isContentCentered = false,
         isPressOnEnterActive,
+        isNested = false,
+        secondLineText = '',
         ...rest
     }: ButtonProps,
     ref: ForwardedRef<View>,
@@ -271,7 +280,7 @@ function Button(
             return rest.children;
         }
 
-        const textComponent = (
+        const primaryText = (
             <Text
                 numberOfLines={1}
                 style={[
@@ -284,6 +293,7 @@ function Button(
                     success && styles.buttonSuccessText,
                     danger && styles.buttonDangerText,
                     !!icon && styles.textAlignLeft,
+                    !!secondLineText && styles.noPaddingBottom,
                     textStyles,
                     isHovered && textHoverStyles,
                     link && styles.link,
@@ -295,6 +305,15 @@ function Button(
             >
                 {text}
             </Text>
+        );
+
+        const textComponent = secondLineText ? (
+            <View style={[styles.alignItemsCenter, styles.flexColumn, styles.flexShrink1]}>
+                {primaryText}
+                <Text style={[isLoading && styles.opacity0, styles.pointerEventsNone, styles.fontWeightNormal, styles.textDoubleDecker]}>{secondLineText}</Text>
+            </View>
+        ) : (
+            primaryText
         );
 
         const defaultFill = success || danger ? theme.textLight : theme.icon;
@@ -417,10 +436,10 @@ function Button(
                     isDisabled && !danger && !success ? styles.buttonDisabled : undefined,
                     shouldRemoveRightBorderRadius ? styles.noRightBorderRadius : undefined,
                     shouldRemoveLeftBorderRadius ? styles.noLeftBorderRadius : undefined,
-                    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                     text && shouldShowRightIcon ? styles.alignItemsStretch : undefined,
                     innerStyles,
                     link && styles.bgTransparent,
+                    getButtonStyle(styles, isNested),
                 ]}
                 hoverStyle={[
                     shouldUseDefaultHover && !isDisabled ? styles.buttonDefaultHovered : undefined,
@@ -432,7 +451,7 @@ function Button(
                 id={id}
                 testID={testID}
                 accessibilityLabel={accessibilityLabel}
-                role={CONST.ROLE.BUTTON}
+                role={getButtonRole(isNested)}
                 hoverDimmingValue={1}
                 onHoverIn={() => setIsHovered(true)}
                 onHoverOut={() => setIsHovered(false)}

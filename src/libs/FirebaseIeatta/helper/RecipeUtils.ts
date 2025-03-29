@@ -1,11 +1,12 @@
 import type {StackScreenProps} from '@react-navigation/stack';
 import lodashGet from 'lodash/get';
-import type {AuthScreensParamList} from '@libs/Navigation/types';
+import type {PlatformStackScreenProps} from '@libs/Navigation/PlatformStackNavigation/types';
+import type {HomeSplitNavigatorParamList} from '@src/appConfig/navigation/types';
 import CONST from '@src/CONST';
 import type SCREENS from '@src/SCREENS';
 
-// type RecipeScreenNavigationProps = StackScreenProps<CentralPaneScreensParamList, typeof SCREENS.RECIPE>;
-type RecipeScreenNavigationProps = StackScreenProps<AuthScreensParamList, typeof SCREENS.RECIPE>;
+// type RecipeScreenNavigationProps = StackScreenProps<AuthScreensParamList, typeof SCREENS.RECIPE>;
+type RecipeScreenNavigationProps = PlatformStackScreenProps<HomeSplitNavigatorParamList, typeof SCREENS.RECIPE>;
 
 /**
  * Get the currently viewed recipe ID as number

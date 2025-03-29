@@ -11,7 +11,7 @@ function EDIT_button_js() {
         "import variables" \
         "import CONST from '@src/CONST';"   \
         "import variables from '@styles/variables';" \
-        "check"
+        
 
     define_line="iconRightStyles?: StyleProp<ViewStyle>;"
     define_rules_lines=(
@@ -29,7 +29,7 @@ function EDIT_button_js() {
          "iconWidth?: number;" \
          "$define_line" \
          "$define_rules_string"  \
-         "check"
+         
 
 
     params_line="iconRightStyles = \[\]\,"
@@ -46,7 +46,7 @@ function EDIT_button_js() {
          "iconWidth = variables" \
          "$params_line" \
          "$params_rules_string"  \
-         "check"
+         
 
 
     icon_line="large={large}"
@@ -61,6 +61,6 @@ function EDIT_button_js() {
          "width={iconWidth}" \
          "$icon_line" \
          "$icon_rules_string"  \
-         "check"
+         
 
 }

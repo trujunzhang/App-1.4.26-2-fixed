@@ -26,7 +26,7 @@ function SectionWaiterTitle({waiterItem}: SectionWaiterTitleProps) {
     return (
         <SectionCommonTitle
             titleRow={titleRow}
-            shouldShowCameraIcon
+            shouldShowCameraIcon={false}
             cameraIconToolTip="photos.takePhoto.button.waiter"
             onCameraIconPressed={() => {
                 Navigation.navigate(ROUTES.TAKE_PHOTO.getRoute({photoType: PhotoType.Waiter, relatedId: restaurantId}));

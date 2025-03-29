@@ -46,6 +46,6 @@ function EDIT_eslint_js() {
          "you-dont-need-lodash-underscore/get" \
          "$lodash_line" \
          "$lodash_rules_strings"  \
-         "check"
+         
 
 }

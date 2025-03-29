@@ -2,30 +2,28 @@
 import _ from 'lodash';
 import React from 'react';
 import {Image, View} from 'react-native';
-import type {OnyxEntry} from 'react-native-onyx';
-import {withOnyx} from 'react-native-onyx';
+import {useOnyx} from 'react-native-onyx';
 import Text from '@components/Text';
 import useThemeStyles from '@hooks/useThemeStyles';
 import type {IPhotoLocalItemRow} from '@libs/FirebaseIeatta/list/types/rows/photo';
 import TailwindColors from '@styles/tailwindcss/colors';
 import ONYXKEYS from '@src/ONYXKEYS';
 
-type PhotoLocalItemOnyxProps = {
-    firebaseCurrentSyncId: OnyxEntry<string>;
-};
-type PhotoLocalItemProps = PhotoLocalItemOnyxProps & {
+type PhotoLocalItemProps = {
     localItem: IPhotoLocalItemRow;
 };
 
-function PhotoLocalItem({localItem, firebaseCurrentSyncId}: PhotoLocalItemProps) {
+function PhotoLocalItem({localItem}: PhotoLocalItemProps) {
     const styles = useThemeStyles();
     const {photo: item, photoWidth, photoHeight} = localItem;
+
+    const [firebaseCurrentSyncId] = useOnyx(ONYXKEYS.FIREBASE_CURRENT_SYNC_ID);
 
     return (
         <View
             style={[
-                _.isUndefined(photoWidth) ? styles.w100 : {width: photoWidth},
                 {
+                    width: photoWidth,
                     height: photoHeight,
                 },
             ]}
@@ -40,8 +38,8 @@ function PhotoLocalItem({localItem, firebaseCurrentSyncId}: PhotoLocalItemProps)
                         style={[
                             {
                                 color: TailwindColors.red500,
-                                fontSize: 48,
                             },
+                            styles.base,
                             styles.ml4,
                             styles.mt4,
                         ]}
@@ -54,10 +52,6 @@ function PhotoLocalItem({localItem, firebaseCurrentSyncId}: PhotoLocalItemProps)
     );
 }
 
-const PhotoLocalItemWithOnyx = withOnyx<PhotoLocalItemProps, PhotoLocalItemOnyxProps>({
-    firebaseCurrentSyncId: {
-        key: ONYXKEYS.FIREBASE_CURRENT_SYNC_ID,
-    },
-})(PhotoLocalItem);
+PhotoLocalItem.displayName = 'PhotoLocalItem';
 
-export default React.memo(PhotoLocalItemWithOnyx);
+export default React.memo(PhotoLocalItem);

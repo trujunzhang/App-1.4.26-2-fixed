@@ -1,32 +1,39 @@
-// eslint-disable-next-line no-restricted-imports
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import React from 'react';
-import {useCollectionOnce} from 'react-firebase-hooks/firestore';
+import {useCollection} from 'react-firebase-hooks/firestore';
 import RestaurantWithPhotosInfoPanel from '@components/Ieatta/detailedPage/header/RestaurantWithPhotosInfoPanel';
-import {PhotoType} from '@libs/FirebaseIeatta/constant';
+import {FBCollections, PhotoType} from '@libs/FirebaseIeatta/constant';
+import {printFirebaseError} from '@libs/FirebaseIeatta/services/firebase-error-helper';
 import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
 import type {IFBPhoto} from '@src/types/firebase';
 import type {RestaurantWithPhotosInfoPanelDataProps} from './types';
 
 function RestaurantWithPhotosInfoPanelData({restaurant}: RestaurantWithPhotosInfoPanelDataProps) {
+    const {uniqueId: restaurntUniqueId} = restaurant;
     /**
      |--------------------------------------------------
      | List(photos)
      |--------------------------------------------------
      */
-    const [photoSnapshot, loader] = useCollectionOnce(
+    const [photoSnapshot, loading, error] = useCollection<IFBPhoto>(
         FirebaseQuery.queryForPhotos({
-            relatedId: restaurant.uniqueId,
+            relatedId: restaurntUniqueId,
             photoType: PhotoType.Restaurant,
         }),
     );
 
-    const photos = photoSnapshot !== undefined ? _.map(photoSnapshot.docs, (item) => item.data()) : [];
+    // issue:
+    //     FirebaseError: The query requires an index. You can create it here
+    printFirebaseError(FBCollections.Restaurants, error);
+
+    const photos: IFBPhoto[] = photoSnapshot !== undefined ? _.map(photoSnapshot.docs, (item) => item.data()) : [];
 
     return (
         <RestaurantWithPhotosInfoPanel
             restaurant={restaurant}
-            photos={photos as IFBPhoto[]}
+            photos={photos}
         />
     );
 }

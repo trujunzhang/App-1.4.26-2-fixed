@@ -25,6 +25,8 @@ function modify_package_json() {
 
     delete_line_in_file "package.json"  '"expo-constants",'
     delete_line_in_file "package.json"  '"expo-file-system",'
+
+    check_and_remove_keys_in_package_json '"engines"' '["engines"]'
    
     overrides_keys_in_package_json "['dependencies']['react-native-svg']" "['overrides']['react-native-svg']"
 }

@@ -1,11 +1,12 @@
 import {ParseModelReviews} from '@libs/FirebaseIeatta/appModel';
 import {PageSection} from '@libs/FirebaseIeatta/list/constant';
 import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
+import type {IPhotoItemRow} from '@libs/FirebaseIeatta/list/types/rows/photo';
 import type {IEventsInRestaurantRow, IRestaurantSidebarRow} from '@libs/FirebaseIeatta/list/types/rows/restaurant';
 import type {IReviewInPageRow} from '@libs/FirebaseIeatta/list/types/rows/review';
 // import * as PhotosPageContextMenu from '@pages/photos/online/Popover/ContextMenu/PhotosPageContextMenu';
 import type {IFBRecipe} from '@src/types/firebase';
-import {navigationToEditEvent, navigationToEditRecipe, navigationToEditRestaurant, navigationToEditReview} from './editFormUtils';
+import {navigationToEditEvent, navigationToEditPhoto, navigationToEditRecipe, navigationToEditRestaurant, navigationToEditReview} from './editFormUtils';
 
 function actionEditNavigateTo(item: IPageRow) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -49,6 +50,8 @@ function actionEditNavigateTo(item: IPageRow) {
             break;
         }
         case PageSection.SECTION_PHOTO_ITEM: {
+            const photoRow: IPhotoItemRow = rowData as IPhotoItemRow;
+            navigationToEditPhoto({photoId: photoRow.photo.uniqueId});
             break;
         }
 

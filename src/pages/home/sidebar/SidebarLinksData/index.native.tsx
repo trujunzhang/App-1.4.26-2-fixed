@@ -20,6 +20,13 @@ import ONYXKEYS from '@src/ONYXKEYS';
 import type {IFBRestaurant} from '@src/types/firebase';
 import SidebarLinks from '../SidebarLinks';
 
+// Realm provides `kmToRadians` and `miToRadians`
+// to convert these measurements. Import the relevant
+// convenience method for your app's needs.
+// const radiusFromKm = kmToRadians(1.4);
+// const radiusFromKm = kmToRadians(2.0);
+const radiusFromKm = kmToRadians(1000 / 1000);
+
 type SidebarLinksDataProps = {
     insets: EdgeInsets;
 };
@@ -81,11 +88,6 @@ function SidebarLinksData({insets}: SidebarLinksDataProps) {
         }, []),
     );
 
-    // Realm provides `kmToRadians` and `miToRadians`
-    // to convert these measurements. Import the relevant
-    // convenience method for your app's needs.
-    const radiusFromKm = kmToRadians(1.4);
-
     // Define a GeoCircle
     const smallCircle = {
         center: new RestaurantGeoPoint({
@@ -127,6 +129,7 @@ function SidebarLinksData({insets}: SidebarLinksDataProps) {
                 isLoading={isLoading}
                 shouldShowRadar={nearbyRestaurants.length === 0}
                 shouldShowFBFirstSync={shouldShowFBFirstSync}
+                shouldShowLocalPhotosIcon
                 restaurantListItems={nearbyRestaurants}
                 fetchMoreRestaurants={loadMoreRestaurants}
             />

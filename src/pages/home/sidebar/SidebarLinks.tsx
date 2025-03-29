@@ -28,9 +28,19 @@ type SidebarLinksProps = {
     isLoading: boolean;
     shouldShowRadar?: boolean;
     shouldShowFBFirstSync?: boolean;
+    /** For mobile only */
+    shouldShowLocalPhotosIcon?: boolean;
 };
 
-function SidebarLinks({insets, restaurantListItems, fetchMoreRestaurants, isLoading, shouldShowRadar = false, shouldShowFBFirstSync = false}: SidebarLinksProps) {
+function SidebarLinks({
+    insets,
+    restaurantListItems,
+    fetchMoreRestaurants,
+    isLoading,
+    shouldShowRadar = false,
+    shouldShowFBFirstSync = false,
+    shouldShowLocalPhotosIcon = false,
+}: SidebarLinksProps) {
     const styles = useThemeStyles();
     const StyleUtils = useStyleUtils();
     const modal = useRef({});
@@ -99,7 +109,7 @@ function SidebarLinks({insets, restaurantListItems, fetchMoreRestaurants, isLoad
 
     return (
         <View style={[styles.flex1, styles.h100]}>
-            {isSmallScreenWidth ? <NativeHeader shouldShowLocalPhotosIcon /> : <WebHeader />}
+            {isSmallScreenWidth ? <NativeHeader shouldShowLocalPhotosIcon={shouldShowLocalPhotosIcon} /> : <WebHeader />}
             <View style={[styles.pRelative, styles.flex1]}>
                 {!shouldShowFBFirstSync && isLoading && restaurantListItems.length === 0 && (
                     <View style={[StyleSheet.absoluteFillObject, styles.highlightBG]}>

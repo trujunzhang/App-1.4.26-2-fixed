@@ -7,7 +7,7 @@ import {View} from 'react-native';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import Navigation from '@libs/Navigation/Navigation';
-import * as PolicyUtils from '@libs/PolicyUtils';
+import {getPolicy} from '@libs/PolicyUtils';
 import type {TranslationPaths} from '@src/languages/types';
 import type {ConnectionName, PolicyFeatureName} from '@src/types/onyx/Policy';
 import HeaderWithBackButton from './HeaderWithBackButton';
@@ -106,7 +106,7 @@ function ConnectionLayout({
 }: ConnectionLayoutProps) {
     const {translate} = useLocalize();
 
-    const policy = PolicyUtils.getPolicy(policyID);
+    const policy = getPolicy(policyID);
     const isConnectionEmpty = isEmpty(policy?.connections?.[connectionName]);
 
     const renderSelectionContent = useMemo(

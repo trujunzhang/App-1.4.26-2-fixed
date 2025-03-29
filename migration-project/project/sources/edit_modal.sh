@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 function EDIT_modal_js() {
@@ -8,8 +7,9 @@ function EDIT_modal_js() {
     modal_type_js="src/components/Modal/types.ts"
     modal_js="src/components/Modal/BaseModal.tsx"
 
-    keys_type_line="type BaseModalProps = Partial<ModalProps> \& {"
+    keys_type_line="fullscreen?: boolean;"
     app_type_keys_lines=(
+        ""
         "    /** Content of the modal header */"
         "    headerContent?: React.ReactNode;"
         ""
@@ -21,7 +21,7 @@ function EDIT_modal_js() {
          "headerContent?" \
          "$keys_type_line" \
          "$app_type_keys_strings"  \
-         "check"
+         
 
 
     add_lines_in_file \
@@ -29,7 +29,7 @@ function EDIT_modal_js() {
         "headerContent,"  \
         "onModalHide = () => {}," \
         "        headerContent,"  \
-        "check"
+        
 
 
     header_line="<ModalContent"

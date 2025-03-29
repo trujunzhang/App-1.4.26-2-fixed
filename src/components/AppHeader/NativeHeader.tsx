@@ -103,38 +103,40 @@ function NativeHeader({
                 textStyles={[styles.textAlignCenter]}
                 shouldShowEnvironmentBadge={false}
             />
-            {shouldShowSearchIcon && <SearchRestaurantsButton />}
-            {shouldShowLocalPhotosIcon && (
-                <Tooltip text={translate('headerPanel.photo.local')}>
-                    <PressableWithoutFeedback
-                        accessibilityLabel={translate('headerPanel.photo.local')}
-                        role={CONST.ROLE.BUTTON}
-                        style={[styles.flexRow, styles.pr4]}
-                        onPress={showLocalPhotoPage}
-                    >
-                        <Icon
-                            fill={theme.icon}
-                            src={Ieattaicons.PhotoLibrary}
-                        />
-                    </PressableWithoutFeedback>
-                </Tooltip>
-            )}
-            {shouldShowAddIcon && (
-                <Tooltip text={translate('headerPanel.add.button')}>
-                    <PressableWithoutFeedback
-                        accessibilityLabel={translate('headerPanel.add.button')}
-                        role={CONST.ROLE.BUTTON}
-                        style={[styles.flexRow, styles.pr4]}
-                        onPress={onAddIconPress}
-                    >
-                        <Icon
-                            fill={theme.icon}
-                            src={Expensicons.Plus}
-                        />
-                    </PressableWithoutFeedback>
-                </Tooltip>
-            )}
-            {shouldShowAvatar && <SignInOrAvatarWithOptionalStatus isCreateMenuOpen={isCreateMenuOpen} />}
+            <View style={[styles.flexRow, styles.alignItemsCenter, styles.gap3]}>
+                {shouldShowSearchIcon && <SearchRestaurantsButton />}
+                {shouldShowLocalPhotosIcon && (
+                    <Tooltip text={translate('headerPanel.photo.local')}>
+                        <PressableWithoutFeedback
+                            accessibilityLabel={translate('headerPanel.photo.local')}
+                            role={CONST.ROLE.BUTTON}
+                            style={[styles.flexRow]}
+                            onPress={showLocalPhotoPage}
+                        >
+                            <Icon
+                                fill={theme.icon}
+                                src={Ieattaicons.PhotoLibrary}
+                            />
+                        </PressableWithoutFeedback>
+                    </Tooltip>
+                )}
+                {shouldShowAddIcon && (
+                    <Tooltip text={translate('headerPanel.add.button')}>
+                        <PressableWithoutFeedback
+                            accessibilityLabel={translate('headerPanel.add.button')}
+                            role={CONST.ROLE.BUTTON}
+                            style={[styles.flexRow]}
+                            onPress={onAddIconPress}
+                        >
+                            <Icon
+                                fill={theme.icon}
+                                src={Expensicons.Plus}
+                            />
+                        </PressableWithoutFeedback>
+                    </Tooltip>
+                )}
+                {shouldShowAvatar && <SignInOrAvatarWithOptionalStatus isCreateMenuOpen={isCreateMenuOpen} />}
+            </View>
         </View>
     );
 }

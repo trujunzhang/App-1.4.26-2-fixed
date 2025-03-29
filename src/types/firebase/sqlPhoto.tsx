@@ -20,6 +20,6 @@ export interface IFBSqlPhoto {
     photoType: string;
     firebasePhotoId: string;
     pageId: string;
-    coverId?: string;
-    coverType?: SQLPhotoCoverTypeWithUnknow;
+    coverId: string;
+    coverType: SQLPhotoCoverTypeWithUnknow;
 }

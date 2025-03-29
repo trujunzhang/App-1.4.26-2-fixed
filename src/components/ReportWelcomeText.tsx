@@ -3,7 +3,6 @@ import {View} from 'react-native';
 import type {OnyxEntry} from 'react-native-onyx';
 import {useOnyx} from 'react-native-onyx';
 import useLocalize from '@hooks/useLocalize';
-import usePermissions from '@hooks/usePermissions';
 import useThemeStyles from '@hooks/useThemeStyles';
 import Navigation from '@libs/Navigation/Navigation';
 import {getPersonalDetailsForAccountIDs} from '@libs/OptionsListUtils';
@@ -14,6 +13,7 @@ import {
     getParticipantsAccountIDsForDisplay,
     getPolicyName,
     getReportName,
+    isAdminRoom as isAdminRoomReportUtils,
     isArchivedNonExpenseReport,
     isChatRoom as isChatRoomReportUtils,
     isConciergeChatReport,
@@ -54,13 +54,14 @@ function ReportWelcomeText({report, policy}: ReportWelcomeTextProps) {
     const isSelfDM = isSelfDMReportUtils(report);
     const isInvoiceRoom = isInvoiceRoomReportUtils(report);
     const isSystemChat = isSystemChatReportUtils(report);
+    const isAdminRoom = isAdminRoomReportUtils(report);
     const isDefault = !(isChatRoom || isPolicyExpenseChat || isSelfDM || isInvoiceRoom || isSystemChat);
     const participantAccountIDs = getParticipantsAccountIDsForDisplay(report, undefined, true, true);
     const isMultipleParticipant = participantAccountIDs.length > 1;
     const displayNamesWithTooltips = getDisplayNamesWithTooltips(getPersonalDetailsForAccountIDs(participantAccountIDs, personalDetails), isMultipleParticipant);
     const welcomeMessage = SidebarUtils.getWelcomeMessage(report, policy);
     const moneyRequestOptions = temporary_getMoneyRequestOptions(report, policy, participantAccountIDs);
-    const {canUseCombinedTrackSubmit} = usePermissions();
+
     const filteredOptions = moneyRequestOptions.filter(
         (item): item is Exclude<IOUType, typeof CONST.IOU.TYPE.REQUEST | typeof CONST.IOU.TYPE.SEND | typeof CONST.IOU.TYPE.CREATE | typeof CONST.IOU.TYPE.INVOICE> =>
             item !== CONST.IOU.TYPE.INVOICE,
@@ -69,7 +70,7 @@ function ReportWelcomeText({report, policy}: ReportWelcomeTextProps) {
         .map(
             (item, index) =>
                 `${index === filteredOptions.length - 1 && index > 0 ? `${translate('common.or')} ` : ''}${translate(
-                    canUseCombinedTrackSubmit && item === 'submit' ? `reportActionsView.create` : `reportActionsView.iouTypes.${item}`,
+                    item === 'submit' ? `reportActionsView.create` : `reportActionsView.iouTypes.${item}`,
                 )}`,
         )
         .join(', ');
@@ -79,7 +80,8 @@ function ReportWelcomeText({report, policy}: ReportWelcomeTextProps) {
             moneyRequestOptions.includes(CONST.IOU.TYPE.SUBMIT) ||
             moneyRequestOptions.includes(CONST.IOU.TYPE.TRACK) ||
             moneyRequestOptions.includes(CONST.IOU.TYPE.SPLIT)) &&
-        !isPolicyExpenseChat;
+        !isPolicyExpenseChat &&
+        !isAdminRoom;
 
     const navigateToReport = () => {
         if (!report?.reportID) {
@@ -123,9 +125,9 @@ function ReportWelcomeText({report, policy}: ReportWelcomeTextProps) {
                     ) : (
                         <Text>
                             <Text>{welcomeMessage.phrase1}</Text>
-                            <Text style={[styles.textStrong]}>{getDisplayNameForParticipant(report?.ownerAccountID)}</Text>
+                            <Text style={[styles.textStrong]}>{getDisplayNameForParticipant({accountID: report?.ownerAccountID})}</Text>
                             <Text>{welcomeMessage.phrase2}</Text>
-                            <Text style={[styles.textStrong]}>{getPolicyName(report)}</Text>
+                            <Text style={[styles.textStrong]}>{getPolicyName({report})}</Text>
                             <Text>{welcomeMessage.phrase3}</Text>
                         </Text>
                     ))}
@@ -140,18 +142,19 @@ function ReportWelcomeText({report, policy}: ReportWelcomeTextProps) {
                             <Text>{welcomeMessage.phrase1}</Text>
                             <Text>
                                 {report?.invoiceReceiver?.type === CONST.REPORT.INVOICE_RECEIVER_TYPE.INDIVIDUAL ? (
-                                    <Text style={[styles.textStrong]}>{getDisplayNameForParticipant(report?.invoiceReceiver?.accountID)}</Text>
+                                    <Text style={[styles.textStrong]}>{getDisplayNameForParticipant({accountID: report?.invoiceReceiver?.accountID})}</Text>
                                 ) : (
                                     <Text style={[styles.textStrong]}>{getPolicy(report?.invoiceReceiver?.policyID)?.name}</Text>
                                 )}
                             </Text>
                             <Text>{` ${translate('common.and')} `}</Text>
-                            <Text style={[styles.textStrong]}>{getPolicyName(report)}</Text>
+                            <Text style={[styles.textStrong]}>{getPolicyName({report})}</Text>
                             <Text>{welcomeMessage.phrase2}</Text>
                         </Text>
                     ))}
                 {isChatRoom &&
                     (!isInvoiceRoom || isArchivedRoom) &&
+                    !isAdminRoom &&
                     (welcomeMessage?.messageHtml ? (
                         <View style={styles.renderHTML}>
                             <RenderHTML html={welcomeMessage.messageHtml} />
@@ -171,6 +174,14 @@ function ReportWelcomeText({report, policy}: ReportWelcomeTextProps) {
                             {welcomeMessage.phrase2 !== undefined && <Text>{welcomeMessage.phrase2}</Text>}
                         </Text>
                     ))}
+                {isChatRoom && isAdminRoom && (
+                    <Text>
+                        <Text>{welcomeMessage.phrase1}</Text>
+                        {welcomeMessage.phrase2 !== undefined && <Text style={styles.textStrong}>{welcomeMessage.phrase2}</Text>}
+                        {welcomeMessage.phrase3 !== undefined && <Text>{welcomeMessage.phrase3}</Text>}
+                        {welcomeMessage.phrase4 !== undefined && <Text>{welcomeMessage.phrase4}</Text>}
+                    </Text>
+                )}
                 {isSelfDM && (
                     <Text>
                         <Text>{welcomeMessage.phrase1}</Text>

@@ -8,14 +8,14 @@ function app_config_add_lines() {
         "import appConfig from" \
         "import Config from 'react-native-config';" \
         "import appConfig from './appConfig/appConfig';" \
-        "check"
+        
 
     add_lines_in_file     \
         "$app_config_js"  \
         "...appConfig,"   \
         "ENVIRONMENT,"    \
         "    ...appConfig,"   \
-        "check"
+        
 
 }
 

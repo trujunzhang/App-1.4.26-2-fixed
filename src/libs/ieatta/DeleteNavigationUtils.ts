@@ -3,7 +3,7 @@ import {FBCollections} from '@libs/FirebaseIeatta/constant';
 import {PageSection} from '@libs/FirebaseIeatta/list/constant';
 import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
 import type {IUserInEventRow} from '@libs/FirebaseIeatta/list/types/rows/event';
-import type {IPhotoCarouselItemRow} from '@libs/FirebaseIeatta/list/types/rows/photo';
+import type {IPhotoCarouselItemRow, IPhotoItemRow} from '@libs/FirebaseIeatta/list/types/rows/photo';
 import type {IEventsInRestaurantRow, IRestaurantSidebarRow} from '@libs/FirebaseIeatta/list/types/rows/restaurant';
 import type {IReviewInPageRow} from '@libs/FirebaseIeatta/list/types/rows/review';
 import FirebaseHelper from '@libs/FirebaseIeatta/services/firebase-helper';
@@ -63,6 +63,8 @@ function actionDeleteNavigateTo({item, onSuccess, onFailure}: ActionDeleteNaviga
             break;
         }
         case PageSection.SECTION_PHOTO_ITEM: {
+            const photoRow: IPhotoItemRow = rowData as IPhotoItemRow;
+            new FirebaseHelper().deleteData({path: FBCollections.Photos, uniqueId: photoRow.photo.uniqueId}).then(onSuccess).catch(onFailure);
             break;
         }
 
@@ -74,6 +76,7 @@ function actionDeleteNavigateTo({item, onSuccess, onFailure}: ActionDeleteNaviga
         case PageSection.SECTION_REVIEW: {
             const reviewRow = rowData as IReviewInPageRow;
             const {review} = reviewRow;
+            new FirebaseHelper().deleteData({path: FBCollections.Reviews, uniqueId: review.uniqueId}).then(onSuccess).catch(onFailure);
             break;
         }
         case PageSection.SECTION_REVIEW_LOGGED_USER: {
@@ -99,16 +102,19 @@ function actionDeleteNavigateTo({item, onSuccess, onFailure}: ActionDeleteNaviga
         case PageSection.SIDEBAR_RESTAURANT_ROW:
         case PageSection.SIDEBAR_RESTAURANT_CARD: {
             const {restaurant} = rowData as IRestaurantSidebarRow;
+            new FirebaseHelper().deleteData({path: FBCollections.Restaurants, uniqueId: restaurant.uniqueId}).then(onSuccess).catch(onFailure);
             break;
         }
         case PageSection.RESTAURANT_EVENT:
         case PageSection.RESTAURANT_EVENT_WEB: {
             const {event} = rowData as IEventsInRestaurantRow;
+            new FirebaseHelper().deleteData({path: FBCollections.Events, uniqueId: event.uniqueId}).then(onSuccess).catch(onFailure);
             break;
         }
         case PageSection.RECIPE_ROW:
         case PageSection.RECIPE_ROW_WEB: {
             const recipe = rowData as IFBRecipe;
+            new FirebaseHelper().deleteData({path: FBCollections.Recipes, uniqueId: recipe.uniqueId}).then(onSuccess).catch(onFailure);
             break;
         }
         case PageSection.RESTAURANT_MENU_TITLE: {
@@ -122,10 +128,10 @@ function actionDeleteNavigateTo({item, onSuccess, onFailure}: ActionDeleteNaviga
          | Event
          |--------------------------------------------------
          */
+        // No event
         case PageSection.EVENT_USER:
         case PageSection.EVENT_USER_WEB: {
             const {peopleInEvent, user, recipes, showDivide} = rowData as IUserInEventRow;
-            new FirebaseHelper().deleteData({path: FBCollections.PeopleInEvent, uniqueId: peopleInEvent.uniqueId});
             break;
         }
         default: {

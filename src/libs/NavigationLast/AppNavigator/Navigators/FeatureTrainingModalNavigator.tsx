@@ -1,3 +1,4 @@
+import ProcessMoneyRequestHoldPage from '@expPages/ProcessMoneyRequestHoldPage';
 import TrackTrainingPage from '@expPages/TrackTrainingPage';
 import React from 'react';
 import {View} from 'react-native';
@@ -17,6 +18,10 @@ function FeatureTrainingModalNavigator() {
                     <Stack.Screen
                         name={SCREENS.FEATURE_TRAINING_ROOT}
                         component={TrackTrainingPage}
+                    />
+                    <Stack.Screen
+                        name={SCREENS.PROCESS_MONEY_REQUEST_HOLD_ROOT}
+                        component={ProcessMoneyRequestHoldPage}
                     />
                 </Stack.Navigator>
             </View>

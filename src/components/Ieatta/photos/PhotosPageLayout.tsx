@@ -9,7 +9,8 @@ import type {ViewportOffsetTopProps} from '@components/withViewportOffsetTop';
 import withViewportOffsetTop from '@components/withViewportOffsetTop';
 import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
-import type {AuthScreensParamList, RootStackParamList} from '@libs/Navigation/types';
+import type {PlatformStackNavigationProp} from '@libs/Navigation/PlatformStackNavigation/types';
+import type {AuthScreensParamList, ReportsSplitNavigatorParamList, RightIeattaNavigatorParamList, RootNavigatorParamList} from '@libs/Navigation/types';
 import Navigation from '@navigation/Navigation';
 import Variables from '@styles/variables';
 
@@ -32,7 +33,9 @@ type PhotosPageLayoutProps = ViewportOffsetTopProps & {
      *
      * This is required because transitionEnd event doesn't trigger in the testing environment.
      */
-    navigation?: StackNavigationProp<RootStackParamList> | StackNavigationProp<AuthScreensParamList>;
+    // TODO: djzhang
+    // navigation?: StackNavigationProp<RootStackParamList> | StackNavigationProp<AuthScreensParamList>;
+    navigation?: PlatformStackNavigationProp<RootNavigatorParamList> | PlatformStackNavigationProp<ReportsSplitNavigatorParamList>;
 
     headerPanel?: React.ReactNode;
 

@@ -31,6 +31,7 @@ export default {
             start: 'Start to save the photo',
             success: 'Save the photo success',
             error: {
+                camera: 'An error occurred while taking a photo, please try again.',
                 noNetWork: 'Save the photo on offline mode.',
             },
         },
@@ -88,6 +89,7 @@ export default {
         },
         local: {
             title: 'Local Photos',
+            noPhotos: 'no local photos',
         },
     },
     sections: {
@@ -258,6 +260,11 @@ export default {
         },
         syncDB: {
             message: 'Syncing database ...',
+        },
+    },
+    settingsPage: {
+        troubleshooting: {
+            description: 'If you are having trouble with IEATTA, you can try our troubleshooting guide.',
         },
     },
 };

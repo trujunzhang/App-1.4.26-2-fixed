@@ -16,7 +16,7 @@ function ieatta_android_root() {
          "react-native-google-signin.github.io" \
          "$keys_type_line" \
          "$app_type_keys_strings"  \
-         "check"
+         
 
     keys_type_line='classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")'
     app_type_keys_lines=(
@@ -30,7 +30,7 @@ function ieatta_android_root() {
          "for google login" \
          "$keys_type_line" \
          "$app_type_keys_strings"  \
-         "check"
+         
 }
 
 function ieatta_android_app() {
@@ -49,7 +49,7 @@ function ieatta_android_app() {
          "// google gms services" \
          "$keys_type_line" \
          "$app_type_keys_strings"  \
-         "check"
+         
 
     function_line="def enableProguardInReleaseBuilds = true"
     function_export_lines=(

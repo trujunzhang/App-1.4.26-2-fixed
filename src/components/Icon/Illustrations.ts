@@ -38,6 +38,7 @@ import ConciergeBlue from '@assets/images/product-illustrations/concierge--blue.
 import ConciergeExclamation from '@assets/images/product-illustrations/concierge--exclamation.svg';
 import CreditCardsBlue from '@assets/images/product-illustrations/credit-cards--blue.svg';
 import EmptyStateExpenses from '@assets/images/product-illustrations/emptystate__expenses.svg';
+import HoldExpense from '@assets/images/product-illustrations/emptystate__holdexpense.svg';
 import EmptyStateTravel from '@assets/images/product-illustrations/emptystate__travel.svg';
 import FolderWithPapers from '@assets/images/product-illustrations/folder-with-papers.svg';
 import GpsTrackOrange from '@assets/images/product-illustrations/gps-track--orange.svg';
@@ -64,6 +65,7 @@ import TeleScope from '@assets/images/product-illustrations/telescope.svg';
 import ThreeLeggedLaptopWoman from '@assets/images/product-illustrations/three_legged_laptop_woman.svg';
 import ToddBehindCloud from '@assets/images/product-illustrations/todd-behind-cloud.svg';
 import ToddWithPhones from '@assets/images/product-illustrations/todd-with-phones.svg';
+import ReportReceipt from '@assets/images/simple-illustration__report-receipt.svg';
 import BigVault from '@assets/images/simple-illustrations/emptystate__big-vault.svg';
 import Puzzle from '@assets/images/simple-illustrations/emptystate__puzzlepieces.svg';
 import Abacus from '@assets/images/simple-illustrations/simple-illustration__abacus.svg';
@@ -88,6 +90,7 @@ import ConciergeBubble from '@assets/images/simple-illustrations/simple-illustra
 import ConciergeNew from '@assets/images/simple-illustrations/simple-illustration__concierge.svg';
 import CreditCardsNew from '@assets/images/simple-illustrations/simple-illustration__credit-cards.svg';
 import CreditCardEyes from '@assets/images/simple-illustrations/simple-illustration__creditcardeyes.svg';
+import CreditCardsNewGreen from '@assets/images/simple-illustrations/simple-illustration__creditcards--green.svg';
 import EmailAddress from '@assets/images/simple-illustrations/simple-illustration__email-address.svg';
 import EmptyState from '@assets/images/simple-illustrations/simple-illustration__empty-state.svg';
 import EnvelopeReceipt from '@assets/images/simple-illustrations/simple-illustration__envelopereceipt.svg';
@@ -121,6 +124,7 @@ import PiggyBank from '@assets/images/simple-illustrations/simple-illustration__
 import Pillow from '@assets/images/simple-illustrations/simple-illustration__pillow.svg';
 import Profile from '@assets/images/simple-illustrations/simple-illustration__profile.svg';
 import QRCode from '@assets/images/simple-illustrations/simple-illustration__qr-code.svg';
+import RealtimeReport from '@assets/images/simple-illustrations/simple-illustration__realtimereports.svg';
 import ReceiptEnvelope from '@assets/images/simple-illustrations/simple-illustration__receipt-envelope.svg';
 import ReceiptLocationMarker from '@assets/images/simple-illustrations/simple-illustration__receipt-location-marker.svg';
 import ReceiptWrangler from '@assets/images/simple-illustrations/simple-illustration__receipt-wrangler.svg';
@@ -131,6 +135,7 @@ import SendMoney from '@assets/images/simple-illustrations/simple-illustration__
 import ShieldYellow from '@assets/images/simple-illustrations/simple-illustration__shield.svg';
 import SmallRocket from '@assets/images/simple-illustrations/simple-illustration__smallrocket.svg';
 import SplitBill from '@assets/images/simple-illustrations/simple-illustration__splitbill.svg';
+import Stopwatch from '@assets/images/simple-illustrations/simple-illustration__stopwatch.svg';
 import SubscriptionAnnual from '@assets/images/simple-illustrations/simple-illustration__subscription-annual.svg';
 import SubscriptionPPU from '@assets/images/simple-illustrations/simple-illustration__subscription-ppu.svg';
 import Tag from '@assets/images/simple-illustrations/simple-illustration__tag.svg';
@@ -195,6 +200,7 @@ export {
     MoneyReceipts,
     PinkBill,
     CreditCardsNew,
+    CreditCardsNewGreen,
     InvoiceBlue,
     LaptopwithSecondScreenandHourglass,
     LockOpen,
@@ -223,6 +229,8 @@ export {
     LockClosed,
     Gears,
     QRCode,
+    RealtimeReport,
+    HoldExpense,
     ReceiptEnvelope,
     Approval,
     WalletAlt,
@@ -251,6 +259,7 @@ export {
     ReceiptLocationMarker,
     Lightbulb,
     EmptyStateTravel,
+    Stopwatch,
     SubscriptionAnnual,
     SubscriptionPPU,
     ExpensifyApprovedLogo,
@@ -298,4 +307,5 @@ export {
     WellsFargoCompanyCardDetailLarge,
     Flash,
     ExpensifyMobileApp,
+    ReportReceipt,
 };

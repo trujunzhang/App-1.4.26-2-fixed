@@ -30,11 +30,12 @@ export class ParseModelSqlPhotos {
     }
 
     static updateCover({model, coverId, coverType}: {model: IFBSqlPhoto; coverId: string; coverType: SQLPhotoCoverType}): IFBSqlPhoto {
-        model.coverId = coverId;
-        model.coverType = coverType;
-        model.updatedAt = getDateStringForCreatedOrUpdatedDate();
+        const nextModal: IFBSqlPhoto = {...model};
+        nextModal.coverId = coverId;
+        nextModal.coverType = coverType;
+        nextModal.updatedAt = getDateStringForCreatedOrUpdatedDate();
 
-        return model;
+        return nextModal;
     }
 
     static toFBCollection(realmCollection: SQLPhotoCoverTypeWithUnknow): FBCollections.Restaurants | FBCollections.Recipes {

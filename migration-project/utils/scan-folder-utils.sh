@@ -1,6 +1,7 @@
 #!/bin/bash
 
 project_folder=(
+"migration-project"
 ".idea"
 ".well-known"
 "help"

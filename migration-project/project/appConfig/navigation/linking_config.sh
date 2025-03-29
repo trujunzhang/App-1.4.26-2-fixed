@@ -11,14 +11,20 @@ function EDIT_app_linking_config() {
         "import {LinkingCommonScreens, LinkingRightModal}"  \
         "import ROUTES from '@src/ROUTES';"    \
         "import {LinkingCommonScreens, LinkingRightModal} from '@src/appConfig/navigation/myLinkingConfig';" \
-        "check"
+        
+
+    right_modal_lines=(
+        "        ...(LinkingCommonScreens as any), // Common Ieatta's Screens"
+    )
+
+    join_by right_modal_strings "\n" "${right_modal_lines[@]}"
 
     add_lines_in_file            \
         "$modal_js"              \
         "// Common Ieatta's Screens"   \
         "// Main Routes"  \
-        "        ...LinkingCommonScreens, // Common Ieatta's Screens"   \
-        "check"
+        "$right_modal_strings"  \
+        
 
 
     right_settings_line="\[SCREENS\.RIGHT_MODAL\.SETTINGS\]\: {"
@@ -34,7 +40,12 @@ function EDIT_app_linking_config() {
          "$right_settings_line" \
          "$right_modal_strings"  
 
+    check_add_line_in_header_in_file \
+         "$modal_js" \
+         "no-unsafe-assignment" \
+         "/* eslint-disable @typescript-eslint/no-unsafe-assignment */"
 
+    node "$SOURCE_PROJECT/migration-project/js/comment-key-in-dict.js" "$DEST_PROJECT/$modal_js" "NAVIGATORS.REPORTS_SPLIT_NAVIGATOR"
 }
 
 

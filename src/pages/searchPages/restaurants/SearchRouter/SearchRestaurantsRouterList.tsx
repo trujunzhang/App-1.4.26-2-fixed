@@ -245,6 +245,8 @@ function SearchRestaurantsRouterList(
     );
 }
 
+SearchRestaurantsRouterItem.displayName = 'SearchRestaurantsRouterItem';
+
 export default forwardRef(SearchRestaurantsRouterList);
 export {SearchRestaurantsRouterItem};
 export type {ItemWithQuery};

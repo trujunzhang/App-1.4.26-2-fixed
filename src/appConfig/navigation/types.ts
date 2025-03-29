@@ -1,6 +1,16 @@
+import type {NavigatorScreenParams} from '@react-navigation/native';
+import type NAVIGATORS from '@src/NAVIGATORS';
 import type SCREENS from '@src/SCREENS';
 
-type IeattaCentralPaneScreensParamList = {
+type HomeSplitNavigatorParamList = {
+    [SCREENS.REPORT]: {
+        reportActionID: string;
+        reportID: string;
+        openOnAdminRoom?: boolean;
+        referrer?: string;
+    };
+    [SCREENS.HOME]: undefined;
+    [SCREENS.APP_SIDE_BAR]: undefined;
     [SCREENS.RESTAURANT]: {
         restaurantId: string;
         openOnAdminRoom?: boolean;
@@ -14,6 +24,7 @@ type IeattaCentralPaneScreensParamList = {
 };
 
 type IeattaFullPaneScreensParamList = {
+    // [SCREENS.HOME]: undefined;
     [SCREENS.CENTER_IEATTA.PHOTO_GRID_VIEW]: {
         relatedId: string;
         photoType: string;
@@ -26,6 +37,15 @@ type IeattaFullPaneScreensParamList = {
 };
 
 type RightIeattaNavigatorParamList = {
+    [SCREENS.RIGHT_IEATTA.HOME_RESTAURANT]: {
+        restaurantId: string;
+    };
+    [SCREENS.RIGHT_IEATTA.HOME_EVENT]: {
+        eventId: string;
+    };
+    [SCREENS.RIGHT_IEATTA.HOME_RECIPE]: {
+        recipeId: string;
+    };
     [SCREENS.RIGHT_IEATTA.SETTINGS_ROOT_RIGHT]: undefined;
     [SCREENS.RIGHT_IEATTA.RESTAURANT]: {
         restaurantId: string;
@@ -72,5 +92,7 @@ type RightIeattaNavigatorParamList = {
     };
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export type {IeattaCentralPaneScreensParamList, IeattaFullPaneScreensParamList, RightIeattaNavigatorParamList};
+type ReportsSplitNavigatorParamList = HomeSplitNavigatorParamList;
+
+// export type {HomeSplitNavigatorParamList, IeattaFullPaneScreensParamList, RightIeattaNavigatorParamList};
+export type {HomeSplitNavigatorParamList, ReportsSplitNavigatorParamList, IeattaFullPaneScreensParamList, RightIeattaNavigatorParamList};

@@ -1,4 +1,5 @@
 import {PortalProvider} from '@gorhom/portal';
+import * as Sentry from '@sentry/react-native';
 import React from 'react';
 import {LogBox} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -6,13 +7,13 @@ import {PickerStateProvider} from 'react-native-picker-select';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import '../wdyr';
 import ActiveElementRoleProvider from './components/ActiveElementRoleProvider';
-import ActiveWorkspaceContextProvider from './components/ActiveWorkspaceProvider';
 import ColorSchemeWrapper from './components/ColorSchemeWrapper';
 import ComposeProviders from './components/ComposeProviders';
 import CustomStatusBarAndBackground from './components/CustomStatusBarAndBackground';
 import CustomStatusBarAndBackgroundContextProvider from './components/CustomStatusBarAndBackground/CustomStatusBarAndBackgroundContextProvider';
 import ErrorBoundary from './components/ErrorBoundary';
 import FirebaseSync from './components/Firebase/sync';
+import FullScreenBlockingViewContextProvider from './components/FullScreenBlockingViewContextProvider';
 import HTMLEngineProvider from './components/HTMLEngineProvider';
 import AppNotify from './components/Ieatta/components/Notify';
 import InitialURLContextProvider from './components/InitialURLContextProvider';
@@ -33,7 +34,6 @@ import {FullScreenContextProvider} from './components/VideoPlayerContexts/FullSc
 import {PlaybackContextProvider} from './components/VideoPlayerContexts/PlaybackContext';
 import {VideoPopoverMenuContextProvider} from './components/VideoPlayerContexts/VideoPopoverMenuContext';
 import {VolumeContextProvider} from './components/VideoPlayerContexts/VolumeContext';
-import {CurrentRestaurantIDContextProvider} from './components/withCurrentRestaurantID';
 import {EnvironmentProvider} from './components/withEnvironment';
 import {KeyboardStateProvider} from './components/withKeyboardState';
 import CONFIG from './CONFIG';
@@ -41,15 +41,22 @@ import Expensify from './Expensify';
 import {ReportAttachmentsProvider} from './expPages/home/report/ReportAttachmentsContext';
 import {CurrentReportIDContextProvider} from './hooks/useCurrentReportID';
 import useDefaultDragAndDrop from './hooks/useDefaultDragAndDrop';
-import {ReportIDsContextProvider} from './hooks/useReportIDs';
 import OnyxUpdateManager from './libs/actions/OnyxUpdateManager';
 import {SearchRestaurantsRouterContextProvider} from './pages/searchPages/restaurants/SearchRouter/SearchRestaurantsRouterContext';
 import type {Route} from './ROUTES';
 // import './setup/backgroundTask';
 import {SplashScreenStateContextProvider} from './SplashScreenStateContext';
 
+Sentry.init({
+    dsn: 'https://ada799335a52a22f58e7783475f9e9fe@o76508.ingest.us.sentry.io/4508392789377024',
+
+    // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+    // spotlight: __DEV__,
+});
+
+/** Values passed to our top-level React Native component by HybridApp. Will always be undefined in "pure" NewDot builds. */
 type AppProps = {
-    /** URL passed to our top-level React Native component by HybridApp. Will always be undefined in "pure" NewDot builds. */
+    /** URL containing all necessary data to run React Native app (e.g. login data) */
     url?: Route;
 };
 
@@ -66,6 +73,8 @@ LogBox.ignoreLogs([
 const fill = {flex: 1};
 
 const StrictModeWrapper = CONFIG.USE_REACT_STRICT_MODE_IN_DEV ? React.StrictMode : ({children}: {children: React.ReactElement}) => children;
+
+// throw new Error('My first Sentry error!');
 
 function App({url}: AppProps) {
     useDefaultDragAndDrop();
@@ -87,10 +96,8 @@ function App({url}: AppProps) {
                                 SafeArea,
                                 LocaleContextProvider,
                                 HTMLEngineProvider,
-                                CurrentRestaurantIDContextProvider,
                                 SearchRestaurantsRouterContextProvider,
                                 RealmLocalProvider,
-                                KeyboardStateProvider,
                                 PopoverContextProvider,
                                 CurrentReportIDContextProvider,
                                 ScrollOffsetContextProvider,
@@ -99,16 +106,16 @@ function App({url}: AppProps) {
                                 EnvironmentProvider,
                                 CustomStatusBarAndBackgroundContextProvider,
                                 ActiveElementRoleProvider,
-                                ActiveWorkspaceContextProvider,
-                                ReportIDsContextProvider,
                                 PlaybackContextProvider,
                                 FullScreenContextProvider,
                                 VolumeContextProvider,
                                 VideoPopoverMenuContextProvider,
                                 KeyboardProvider,
+                                KeyboardStateProvider,
                                 SearchRouterContextProvider,
                                 ProductTrainingContextProvider,
                                 InputBlurContextProvider,
+                                FullScreenBlockingViewContextProvider,
                             ]}
                         >
                             <CustomStatusBarAndBackground />
@@ -129,4 +136,4 @@ function App({url}: AppProps) {
 
 App.displayName = 'App';
 
-export default App;
+export default Sentry.wrap(App);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type {StackScreenProps} from '@react-navigation/stack';
 import _ from 'lodash';
 import lodashGet from 'lodash/get';

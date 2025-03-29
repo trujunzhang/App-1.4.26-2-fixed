@@ -2,13 +2,14 @@
 // eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import React, {useCallback} from 'react';
-import {useCollection, useCollectionOnce, useDocumentData} from 'react-firebase-hooks/firestore';
+import {useCollection, useDocumentData} from 'react-firebase-hooks/firestore';
 import {usePagination} from 'react-firebase-pagination-hooks';
 import {DetailedPageSkeletonView} from '@components/Ieatta/components/SkeletonViews';
 import {FBCollections, ReviewType} from '@libs/FirebaseIeatta/constant';
 import type {EventScreenNavigationProps} from '@libs/FirebaseIeatta/helper/EventUtils';
 import {getEventID} from '@libs/FirebaseIeatta/helper/EventUtils';
 import {defaultSortObject} from '@libs/FirebaseIeatta/review-sort';
+import {printFirebaseError} from '@libs/FirebaseIeatta/services/firebase-error-helper';
 import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
 import {FirebaseReviewQuery} from '@libs/FirebaseIeatta/services/review-query';
 import {toRecipeDictInRestaurant} from '@libs/ieatta/eventUtils';
@@ -36,6 +37,7 @@ function EventScreen({route, navigation}: EventScreenProps) {
             id: eventId,
         }),
     );
+    printFirebaseError(FBCollections.Events, errorForEvent);
     /**
      |--------------------------------------------------
      | Single(Restaurant)
@@ -48,18 +50,20 @@ function EventScreen({route, navigation}: EventScreenProps) {
             id: restaurantId,
         }),
     );
+    printFirebaseError(FBCollections.Restaurants, errorForRestaurant);
 
     /**
      |--------------------------------------------------
      | List(recipes)
      |--------------------------------------------------
      */
-    const [recipesSnapshot, loader] = useCollectionOnce(
+    const [recipesSnapshot, loadingForRecipes, errorForRecipes] = useCollection(
         FirebaseQuery.queryEventOrMenuInRestaurant({
             path: FBCollections.Recipes,
             restaurantId,
         }),
     );
+    printFirebaseError(FBCollections.Recipes, errorForRecipes);
 
     const recipesInRestaurant = recipesSnapshot === undefined ? [] : _.map(recipesSnapshot.docs, (item) => item.data() as IFBRecipe);
     const recipeDictInRestaurant = toRecipeDictInRestaurant(recipesInRestaurant);
@@ -69,12 +73,13 @@ function EventScreen({route, navigation}: EventScreenProps) {
      | List(PeopleInEvents)
      |--------------------------------------------------
      */
-    const [peopleInEventsSnapshot] = useCollection<IFBPeopleInEvent>(
+    const [peopleInEventsSnapshot, loadingForPeopleInEvents, errorForPeopleInEvents] = useCollection<IFBPeopleInEvent>(
         FirebaseQuery.queryForPeopleInEvents({
             restaurantId,
             eventId,
         }),
     );
+    printFirebaseError(FBCollections.PeopleInEvent, errorForPeopleInEvents);
 
     const peopleInEvents = peopleInEventsSnapshot === undefined ? [] : _.map(peopleInEventsSnapshot.docs, (item) => item.data() as unknown as IFBPeopleInEvent);
 
@@ -95,6 +100,8 @@ function EventScreen({route, navigation}: EventScreenProps) {
     const [reviewsSnapshot, {loaded, loadingMore: loadingMoreReviews, hasMore: hasMoreReview, loadMore: loadMoreReviews}, errorForReviews] = usePagination(reviewQuery(), {
         limit: Variables.paginationLimitInDetailedReviews,
     });
+
+    printFirebaseError(FBCollections.Reviews, errorForReviews);
 
     const reviews = _.map(reviewsSnapshot, (item) => item.data() as IFBReview) || [];
 

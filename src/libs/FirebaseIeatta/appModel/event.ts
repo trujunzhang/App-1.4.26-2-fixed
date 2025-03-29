@@ -1,9 +1,9 @@
 import lodashGet from 'lodash/get';
 import type {IAuthUser} from '@libs/FirebaseIeatta/models/auth_user_model';
+import {documentIdFromCurrentDate} from '@libs/FirebaseIeatta/utils/md5_utils';
+import {slugifyToLower} from '@libs/FirebaseIeatta/utils/slug_helper';
+import {getDateStringForCreatedOrUpdatedDate} from '@libs/FirebaseIeatta/utils/timeago_helper';
 import type {IFBEvent} from '@src/types/firebase';
-import {documentIdFromCurrentDate} from '../utils/md5_utils';
-import {slugifyToLower} from '../utils/slug_helper';
-import {getDateStringForCreatedOrUpdatedDate} from '../utils/timeago_helper';
 
 // eslint-disable-next-line import/prefer-default-export,rulesdir/no-inline-named-export
 export class ParseModelEvents {
@@ -55,7 +55,7 @@ export class ParseModelEvents {
     }
 
     static addWaiter({model, waiterId}: {model: IFBEvent; waiterId: string}) {
-        const nextWaiters = model.waiterIds;
+        const nextWaiters = this.getWaiterIds(model);
         const newArray = nextWaiters.concat([waiterId]);
         // Delete duplicates from a list
         const uniqueChars = [...new Set(newArray)];
@@ -65,13 +65,21 @@ export class ParseModelEvents {
     }
 
     static removeWaiter({model, waiterId}: {model: IFBEvent; waiterId: string}) {
-        const nextWaiters = model.waiterIds;
+        const nextWaiters = this.getWaiterIds(model);
         const filterArray = nextWaiters.filter((value, index, arr) => {
             return value !== waiterId;
         });
         model.waiterIds = filterArray;
 
         return model;
+    }
+
+    static getWaiterIds(model: IFBEvent): string[] {
+        const waiterIds = model.waiterIds;
+        if (typeof waiterIds === 'object') {
+            return Object.values(waiterIds);
+        }
+        return waiterIds;
     }
 
     static toRealmModel(model: IFBEvent): IFBEvent {

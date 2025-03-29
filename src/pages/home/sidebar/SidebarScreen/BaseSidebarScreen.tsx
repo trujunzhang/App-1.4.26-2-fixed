@@ -29,7 +29,7 @@ function BaseSidebarScreen({children}: BaseSidebarScreenProps) {
 
     return (
         <ScreenWrapper
-            includeSafeAreaPaddingBottom={false}
+            includeSafeAreaPaddingBottom
             shouldEnableKeyboardAvoidingView={false}
             style={[styles.sidebar, Browser.isMobile() ? styles.userSelectNone : {}]}
             testID={BaseSidebarScreen.displayName}

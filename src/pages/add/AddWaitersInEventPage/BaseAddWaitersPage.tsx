@@ -18,6 +18,7 @@ import FirebaseHelper from '@libs/FirebaseIeatta/services/firebase-helper';
 import * as ShowNotify from '@libs/ieatta/Notify';
 import Navigation from '@libs/Navigation/Navigation';
 import TailwindColors from '@styles/tailwindcss/colors';
+import variables from '@styles/variables';
 import ROUTES from '@src/ROUTES';
 import type {IFBEvent, IFBPhoto, IFBSqlPhoto, IFBUser} from '@src/types/firebase';
 
@@ -31,9 +32,10 @@ type BaseAddWaitersPageProps = {
 function BaseAddWaitersPage({restaurantId, eventId, event, waitersInRestaurant}: BaseAddWaitersPageProps) {
     const styles = useThemeStyles();
     const {translate} = useLocalize();
+    // eslint-disable-next-line rulesdir/prefer-shouldUseNarrowLayout-instead-of-isSmallScreenWidth
     const {isSmallScreenWidth} = useResponsiveLayout();
 
-    const waitersArray: string[] = event != null ? event.waiterIds : [];
+    const waitersArray: string[] = event != undefined ? ParseModelEvents.getWaiterIds(event) : [];
 
     // eslint-disable-next-line rulesdir/no-negated-variables
     const shouldShowNotFoundView = false;
@@ -123,6 +125,8 @@ function BaseAddWaitersPage({restaurantId, eventId, event, waitersInRestaurant}:
                     <FullScreenLoadingIndicator style={[styles.flex1, styles.pRelative]} />
                 ) : (
                     <BasePhotosGridList
+                        initialPanelWidth={variables.sideBarWidth - 80}
+                        isCoverPage
                         photos={waitersInRestaurant}
                         generatePageRow={generatePageRow}
                     />

@@ -37,7 +37,7 @@ function SidebarDrawNavigator() {
                     drawerContent={(props: DrawerContentComponentProps) => <InitialSettingsPage shouldShowLeftBackArrow={false} />}
                 >
                     <Drawer.Screen
-                        name={SCREENS.HOME}
+                        name={SCREENS.APP_SIDE_BAR}
                         options={defaultScreenOptions}
                         getComponent={loadSidebarScreen}
                     />
@@ -50,3 +50,5 @@ function SidebarDrawNavigator() {
 const loadNativeHomeScreen = () => SidebarDrawNavigator as React.ComponentType;
 
 export default loadNativeHomeScreen;
+
+export {SidebarDrawNavigator};

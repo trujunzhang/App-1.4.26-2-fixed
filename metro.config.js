@@ -1,5 +1,6 @@
 const {getDefaultConfig: getExpoDefaultConfig} = require('expo/metro-config');
-const {getDefaultConfig: getReactNativeDefaultConfig} = require('@react-native/metro-config');
+// const {getDefaultConfig: getReactNativeDefaultConfig} = require('@react-native/metro-config');
+const {getSentryExpoConfig: getSentryExpoDefaultConfig} = require('@sentry/react-native/metro');
 
 const {mergeConfig} = require('@react-native/metro-config');
 const defaultAssetExts = require('metro-config/src/defaults/defaults').assetExts;
@@ -8,7 +9,8 @@ const defaultAdditionalExts = require('metro-config/src/defaults/defaults').addi
 const {wrapWithReanimatedMetroConfig} = require('react-native-reanimated/metro-config');
 require('dotenv').config();
 
-const defaultConfig = getReactNativeDefaultConfig(__dirname);
+// const defaultConfig = getReactNativeDefaultConfig(__dirname);
+const defaultConfig = getSentryExpoDefaultConfig(__dirname);
 const expoConfig = getExpoDefaultConfig(__dirname);
 
 const isE2ETesting = process.env.E2E_TESTING === 'true';

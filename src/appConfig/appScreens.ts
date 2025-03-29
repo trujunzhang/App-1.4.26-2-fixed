@@ -1,10 +1,22 @@
 const appSCREENS = {
+    APP_SIDE_BAR: 'sidebar',
+
     RESTAURANT: 'Restaurant',
     EVENT: 'Event',
     RECIPE: 'Recipe',
 
     RIGHT_IEATTA: {
+        HOME_RESTAURANT: 'Home_Restaurant',
+        HOME_EVENT: 'Home_Event',
+        HOME_RECIPE: 'Home_Recipe',
         SETTINGS_ROOT_RIGHT: 'Settings_Root_Right',
+        PROFILE_ROOT_RIGHT: 'Profile_Root_Right',
+        SETTINGS_DISPLAY_NAME_RIGHT: 'Settings_DisplayName_Right',
+        SETTINGS_ABOUT_RIGHT: 'Settings_About_Right',
+        SETTINGS_TROUBLESHOOT_RIGHT: 'Settings_Troubleshoot',
+        SETTINGS_LANGUAGE_RIGHT: 'Settings_Language_Right',
+        SETTINGS_THEME_RIGHT: 'Settings_Theme_Right',
+        PREFERENCES_ROOT_RIGHT: 'Preferences_Root_Right',
         RESTAURANT: 'EditIeatta_Restaurant',
         EVENT: 'EditIeatta_Event',
         RECIPE: 'EditIeatta_Recipe',

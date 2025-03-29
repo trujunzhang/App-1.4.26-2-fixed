@@ -12,6 +12,7 @@ function PROJECT_ieatta_iconset() {
            '"create-appicon"'
 
     check_and_install_dependencies  \
+        "latest"             \
         "devDependencies"     \
         '"icon-set-creator"'  \
         "icon-set-creator"

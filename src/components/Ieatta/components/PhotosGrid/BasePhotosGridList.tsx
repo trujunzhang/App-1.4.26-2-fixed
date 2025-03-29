@@ -57,11 +57,13 @@ function BasePhotosGridList({
     footerContent = null,
     generatePageRow,
     isCoverPage = false,
+    shouldShowAsSmallScreen = false,
     gap = 12,
     paddingHorizontal = 2,
     paddingTop = 2,
     initialPanelWidth = Variables.maxWidthInPhotosGridAndPage,
 }: BasePhotosGridListProps) {
+    // eslint-disable-next-line rulesdir/prefer-shouldUseNarrowLayout-instead-of-isSmallScreenWidth
     const {isSmallScreenWidth} = useResponsiveLayout();
     const styles = useThemeStyles();
     const {windowWidth} = useWindowDimensions();
@@ -75,15 +77,22 @@ function BasePhotosGridList({
         if (isCoverPage) {
             return Variables.photoGridItemCoverWidth;
         }
+        if (shouldShowAsSmallScreen) {
+            return Variables.photoGridItemMobileWidth;
+        }
         return isSmallScreenWidth ? Variables.photoGridItemMobileWidth : Variables.photoGridItemWebWidth;
-    }, [isSmallScreenWidth, isCoverPage]);
+    }, [isCoverPage, shouldShowAsSmallScreen, isSmallScreenWidth]);
     const itemHeight: number = useMemo(() => {
         if (isCoverPage) {
             return Variables.photoGridItemCoverHeight;
         }
+        if (shouldShowAsSmallScreen) {
+            return Variables.photoGridItemMobileHeight;
+        }
         return isSmallScreenWidth ? Variables.photoGridItemMobileHeight : Variables.photoGridItemWebHeight;
-    }, [isSmallScreenWidth, isCoverPage]);
+    }, [isCoverPage, shouldShowAsSmallScreen, isSmallScreenWidth]);
 
+    // eslint-disable-next-line rulesdir/no-use-state-initializer-functions
     const [numColumns, setNumColumns] = useState(calcNumColumns(contentWidth, itemWidth));
 
     const fixedItemWidth: number = useMemo(() => {

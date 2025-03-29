@@ -37,7 +37,6 @@ function RestaurantCardView({rowData, hovered}: RestaurantItemProps) {
                 hovered && !isFocused ? styles.sidebarLinkHover : null,
                 styles.w100,
                 {
-                    // height: isMediumScreenWidth || isTabletScreenWidth ? variables.restaurantCardViewTableHeight : variables.restaurantCardViewPhoneHeight,
                     height: cardHeight,
                 },
             ]}

@@ -10,7 +10,7 @@ function ieatta_theme_edit_variables_js() {
         "import ieattaVariables" \
         "import {PixelRatio} from 'react-native';" \
         "$import_header_strings" \
-        "check"
+        
 
 
     import_code_lines=(
@@ -23,7 +23,7 @@ function ieatta_theme_edit_variables_js() {
         "...ieattaVariables," \
         "w191: 191," \
         "$import_code_strings" \
-        "check"
+        
 }
 
 function ieatta_theme_edit_index_js() {
@@ -37,7 +37,7 @@ function ieatta_theme_edit_index_js() {
         "import IEATTAStyles from './ieatta';" \
         "import CONST from '@src/CONST';" \
         "$import_header_strings" \
-        "check"
+        
 
     import_code_lines=(
         "        // Tailwind style shadows"
@@ -47,7 +47,7 @@ function ieatta_theme_edit_index_js() {
         "        ...IEATTAStyles,"
         ""
         "        backgroundComponentBG: {"
-        "            background: theme.componentBG,"
+        "            backgroundColor: theme.componentBG,"
         "        },"
         ""
         "        backgroundHoverComponentBG: {"
@@ -77,7 +77,7 @@ function ieatta_theme_edit_index_js() {
         "// Tailwind style shadows"  \
         "...textDecorationLine," \
         "$import_code_strings" \
-        "check"
+        
 }
 
 function ieatta_theme_text_underline() {
@@ -90,21 +90,21 @@ function ieatta_theme_text_underline() {
         "textUnderline: Pick"  \
         "textDecorationSkipInkNone: Pick<TextStyle, 'textDecorationSkipInk'>;"  \
         "    textUnderline: Pick<TextStyle, 'textDecorationLine'>;"   \
-        "check"
+        
 
     add_lines_in_file \
         "$underline_native_js"   \
         "    textUnderline:"   \
         "textDecorationSkipInkNone: {}," \
         "    textUnderline: {},"   \
-        "check"
+        
 
     add_lines_in_file \
         "$underline_js"   \
         "{textDecorationLine: 'underline'}" \
         "const textUnderline: TextUnderlineStyles = {"  \
         "    textUnderline: {textDecorationLine: 'underline'}," \
-        "check"
+        
 
 }
 
@@ -160,7 +160,7 @@ function ieatta_theme_colors() {
          "import TailwindColors" \
          "import colors from '@styles/theme/colors';"  \
          "import TailwindColors from '@styles/tailwindcss/colors';" \
-         "check"
+         
 }
 
 function PROJECT_ieatta_theme() {

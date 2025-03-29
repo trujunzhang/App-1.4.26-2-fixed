@@ -1,6 +1,7 @@
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import * as Ieattaicons from '@components/Icon/Ieattaicons';
+import type {ListItem} from '@components/Ieatta/components/SelectionList/types';
 import ImagePlaceholder from '@components/ImagePlaceholder';
 import BaseListItem from '@components/SelectionList/BaseListItem';
 import Text from '@components/Text';
@@ -12,7 +13,7 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import type {IFBRestaurant} from '@src/types/firebase';
 import type {SearchRestaurantsItem, SearchRestaurantsItemProps} from './types';
 
-function SearchRestaurantsListItem<TItem extends SearchRestaurantsItem>({
+function SearchRestaurantsListItem<TItem extends ListItem>({
     item,
     isFocused,
     showTooltip,
@@ -43,7 +44,7 @@ function SearchRestaurantsListItem<TItem extends SearchRestaurantsItem>({
         }
     }, [item, onCheckboxPress, onSelectRow]);
 
-    const restaurantItem: IFBRestaurant = item;
+    const restaurantItem: IFBRestaurant = item as unknown as IFBRestaurant;
 
     return (
         <BaseListItem

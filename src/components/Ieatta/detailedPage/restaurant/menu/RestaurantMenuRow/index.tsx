@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line no-restricted-imports, lodash/import-scope
 import _ from 'lodash';
 import React from 'react';
-import {useCollectionOnce} from 'react-firebase-hooks/firestore';
+import {useCollection} from 'react-firebase-hooks/firestore';
 import RestaurantMenuList from '@components/Ieatta/detailedPage/restaurant/menu/RestaurantMenuList';
 import {FBCollections} from '@libs/FirebaseIeatta/constant';
 import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
@@ -17,7 +17,7 @@ function RestaurantMenuRow({menuRow}: RestaurantMenuRowProps) {
      | List(recipes)
      |--------------------------------------------------
      */
-    const [recipeSnapshot, loadingForRecipes] = useCollectionOnce<IFBRecipe>(
+    const [recipeSnapshot, loadingForRecipes] = useCollection<IFBRecipe>(
         FirebaseQuery.queryEventOrMenuInRestaurant({
             path: FBCollections.Recipes,
             restaurantId,

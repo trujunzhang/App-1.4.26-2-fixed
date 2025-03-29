@@ -4,8 +4,9 @@
 
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 import React from 'react';
+import type {Locale, PreferredTheme} from '@src/types/onyx';
 
-type PreferredTheme = 'light' | 'dark' | 'system';
+// type PreferredTheme = 'light' | 'dark' | 'system';
 
 export interface IFBUser {
     // Base(3)
@@ -24,7 +25,7 @@ export interface IFBUser {
     // This can be either "light", "dark" or "system"
     preferredTheme: PreferredTheme;
     /** Indicates which locale should be used */
-    preferredLocale: string;
+    preferredLocale: Locale;
     // Property(3)
     loginType: string;
     originalUrl?: string;

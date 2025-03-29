@@ -11,7 +11,7 @@ function EDIT_app_routes() {
         "import appRoutes"       \
         "import type CONST from './CONST';"               \
         "import appRoutes from './appConfig/appRoutes';"  \
-        "check"
+        
 
 
     add_lines_in_file            \
@@ -19,7 +19,18 @@ function EDIT_app_routes() {
         "appRoutes,"             \
         "const ROUTES = {"       \
         "    ...appRoutes,"      \
-        "check"
+        
 
+    check_replace_lines_in_file                 \
+        "$routes_js"                             \
+        "'exp_settings"   \
+        "'settings"  \
+        "'exp_settings"  
+
+    check_replace_lines_in_file                 \
+        "$routes_js"                             \
+        "\`exp_settings"   \
+        "\`settings"  \
+        "\`exp_settings"  
 
 }

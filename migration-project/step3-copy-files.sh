@@ -28,20 +28,22 @@ source "./project/appConfig/app_constant.sh"
 source "./project/appConfig/app_onyxkeys.sh"
 source "./project/appConfig/app_routes.sh"
 source "./project/appConfig/app_screens.sh"
+source "./project/appConfig/app_api.sh"
 source "./project/appConfig/person_details_types.sh"
 source "./project/appConfig/app_languages.sh"
-source "./project/appConfig/navigation/central_panel_screen.sh"
-source "./project/appConfig/navigation/modal_stack_navigator.sh"
+source "./project/appConfig/navigation/reports_split_navigator.sh"
 source "./project/appConfig/navigation/right_modal_navigator.sh"
+source "./project/appConfig/navigation/modal_stack_navigator.sh"
 source "./project/appConfig/navigation/navigation_file.sh"
 source "./project/appConfig/navigation/navigation_types.sh"
-source "./project/appConfig/navigation/navigation_utils.sh"
 source "./project/appConfig/navigation/linking_config.sh"
 source "./project/appConfig/navigation/auth_screen.sh"
 source "./project/appConfig/navigation/link_to.sh"
+source "./project/appConfig/navigation/home_split_navigator.sh"
 source "./project/appConfig/navigation/public_screen.sh"
 # import project(sources)
 source "./project/sources/edit_app.sh"
+source "./project/sources/edit_quick_books_online.sh"
 source "./project/sources/edit_expensify.sh"
 source "./project/sources/edit_button.sh"
 source "./project/sources/edit_header.sh"
@@ -70,19 +72,23 @@ function step1_copy_project() {
     EDIT_app_onyxkeys
     EDIT_app_routes
     EDIT_app_screens
-    EDIT_app_modal_stack_navigator
+    EDIT_app_api
+}
+
+function step2_edit_navigate() {
     EDIT_app_right_modal_navigator
-    EDIT_central_panel_screen
+    EDIT_home_split_navigator
+    EDIT_app_modal_stack_navigator
     EDIT_app_navigation_types
-    EDIT_app_navigation_utils
     EDIT_app_navigation_file
     EDIT_app_linking_config
     EDIT_link_to
     EDIT_app_auth_screen
     EDIT_app_public_screen
+    EDIT_reports_split_navigator
 }
 
-function step2_copy_src() {
+function step3_copy_src() {
     info "Start copying src"
 
     PROJECT_ieatta_lib_firebase
@@ -91,10 +97,11 @@ function step2_copy_src() {
     PROJECT_ieatta_lib_pages
 }
 
-function step3_edit_src() {
+function step4_edit_src() {
     info "Start Editing src"
 
     EDIT_app_js
+    EDIT_quick_books_online
     EDIT_expensify_js
     EDIT_button_js
     EDIT_header_js
@@ -111,12 +118,22 @@ function test_project() {
 
     # EDIT_webpack_common
     # EDIT_link_to
-    PROJECT_ieatta_project
+    # PROJECT_ieatta_project
+    # EDIT_app_navigation_types
+    # EDIT_quick_books_online
+
+    # EDIT_reports_split_navigator
+    # EDIT_app_auth_screen
+    # EDIT_app_navigation_types
+    EDIT_app_routes
+    # EDIT_app_linking_config
+    # EDIT_app_api
 }
 
 step1_copy_project
-step2_copy_src
-step3_edit_src
+step2_edit_navigate
+step3_copy_src
+step4_edit_src
 
 # test_project
 

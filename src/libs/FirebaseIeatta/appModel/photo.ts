@@ -9,7 +9,7 @@ import {FBCollections, PhotoType} from '../constant';
 import {documentIdFromCurrentDate} from '../utils/md5_utils';
 import {getDateStringForCreatedOrUpdatedDate} from '../utils/timeago_helper';
 
-type ParseModelPhotosEmptyPhotoParams = {authUserModel: IAuthUser; photoUniqueId?: string; relatedId: string; photoType: string; filePath: string};
+type ParseModelPhotosEmptyPhotoParams = {authUserModel: IAuthUser; photoUniqueId?: string; relatedId: string; photoType: string; filePath?: string};
 
 // eslint-disable-next-line import/prefer-default-export,rulesdir/no-inline-named-export
 export class ParseModelPhotos {
@@ -29,11 +29,11 @@ export class ParseModelPhotos {
             thumbnailUrl: '',
             // point(4)
             photoType,
-            restaurantId: photoType === PhotoType.Restaurant ? relatedId : '',
+            restaurantId: photoType === PhotoType.Restaurant || photoType === PhotoType.Waiter ? relatedId : '',
             recipeId: photoType === PhotoType.Recipe ? relatedId : '',
             userId: photoType === PhotoType.User ? relatedId : '',
             // offline(1)
-            offlinePath: filePath,
+            offlinePath: filePath ?? '',
             // extra(1)
             extraNote: '',
         };

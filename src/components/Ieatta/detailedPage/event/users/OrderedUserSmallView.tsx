@@ -9,7 +9,6 @@ import type {OrderedUserViewProps} from './types';
 function OrderedUserSmallView({pageRow, rowData}: OrderedUserViewProps) {
     const {peopleInEvent, user, recipes, showDivide} = rowData;
     const styles = useThemeStyles();
-    const {isSmallScreenWidth} = useResponsiveLayout();
 
     return (
         <View style={[styles.flexColumn]}>

@@ -1,3 +1,4 @@
+import BankConnection from '@expPages/workspace/companyCards/BankConnection';
 import withPolicyAndFullscreenLoading from '@expPages/workspace/withPolicyAndFullscreenLoading';
 import type {WithPolicyAndFullscreenLoadingProps} from '@expPages/workspace/withPolicyAndFullscreenLoading';
 import React from 'react';
@@ -7,7 +8,6 @@ import ScreenWrapper from '@components/ScreenWrapper';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import AmexCustomFeed from './AmexCustomFeed';
-import BankConnection from './BankConnection';
 import CardInstructionsStep from './CardInstructionsStep';
 import CardNameStep from './CardNameStep';
 import CardTypeStep from './CardTypeStep';
@@ -47,7 +47,7 @@ function AddNewCardPage({policy}: WithPolicyAndFullscreenLoadingProps) {
         case CONST.COMPANY_CARDS.STEP.CARD_NAME:
             return <CardNameStep />;
         case CONST.COMPANY_CARDS.STEP.CARD_DETAILS:
-            return <DetailsStep policyID={policy?.id ?? '-1'} />;
+            return <DetailsStep policyID={policyID} />;
         case CONST.COMPANY_CARDS.STEP.AMEX_CUSTOM_FEED:
             return <AmexCustomFeed />;
         default:

@@ -18,7 +18,7 @@ function WaitersRowInEvent({waiterRow}: WaitersRowInEventProps) {
      | Waiters in the restaurant
      |--------------------------------------------------
      */
-    const [photoSnapshot, loader] = useCollection(
+    const [photoSnapshot, loading, error] = useCollection(
         FirebaseQuery.queryForPhotos({
             relatedId: restaurantId,
             photoType: PhotoType.Waiter,

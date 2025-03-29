@@ -5,12 +5,12 @@ import type {GestureResponderEvent, Role, Text, View} from 'react-native';
 import {Platform} from 'react-native';
 import Animated, {createAnimatedPropAdapter, Easing, interpolateColor, processColor, useAnimatedProps, useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
 import Svg, {Path} from 'react-native-svg';
+import {PressableWithoutFeedback} from '@components/Pressable';
+import Tooltip from '@components/Tooltip/PopoverAnchorTooltip';
 import useLocalize from '@hooks/useLocalize';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import variables from '@styles/variables';
-import {PressableWithoutFeedback} from '../../Pressable';
-import Tooltip from '../../Tooltip/PopoverAnchorTooltip';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 AnimatedPath.displayName = 'AnimatedPath';
@@ -107,7 +107,7 @@ function AddRestaurantActionButton({onPress, isActive, accessibilityLabel, role}
                         buttonRef.current = el ?? null;
                     }
                 }}
-                style={[styles.floatingActionButtonContainer]}
+                style={[styles.floatingActionButtonContainer, styles.mb2]}
                 accessibilityLabel={accessibilityLabel}
                 onPress={toggleFabAction}
                 onLongPress={() => {}}

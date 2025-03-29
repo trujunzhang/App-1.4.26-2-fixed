@@ -1,5 +1,6 @@
 import * as Expensicons from '@components/Icon/Expensicons';
 import * as Illustrations from '@components/Icon/Illustrations';
+// eslint-disable-next-line no-restricted-syntax
 import type * as SubscriptionUtils from '@libs/SubscriptionUtils';
 import {PAYMENT_STATUS} from '@libs/SubscriptionUtils';
 import type {BillingStatusResult} from '@src/expPages/settings/Subscription/CardSection/utils';
@@ -108,6 +109,7 @@ describe('CardSectionUtils', () => {
             title: 'subscription.billingBanner.policyOwnerAmountOwedOverdue.title',
             subtitle: 'subscription.billingBanner.policyOwnerAmountOwedOverdue.subtitle',
             isError: true,
+            isRetryAvailable: true,
         });
     });
 

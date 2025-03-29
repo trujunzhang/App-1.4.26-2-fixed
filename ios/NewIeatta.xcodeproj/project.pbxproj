@@ -11,7 +11,6 @@
 		083353EC2B5AB22A00C603C0 /* done.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 083353E82B5AB22900C603C0 /* done.mp3 */; };
 		083353ED2B5AB22A00C603C0 /* receive.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 083353E92B5AB22900C603C0 /* receive.mp3 */; };
 		083353EE2B5AB22A00C603C0 /* success.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 083353EA2B5AB22900C603C0 /* success.mp3 */; };
-		0A44D3AC692CE3025D5E1A94 /* Pods_NotificationServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C54D34A512109F20240815AA /* Pods_NotificationServiceExtension.framework */; };
 		0C7C65547D7346EB923BE808 /* ExpensifyMono-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = E704648954784DDFBAADF568 /* ExpensifyMono-Regular.otf */; };
 		0CDA8E34287DD650004ECBEC /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0CDA8E33287DD650004ECBEC /* AppDelegate.mm */; };
 		0CDA8E35287DD650004ECBEC /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0CDA8E33287DD650004ECBEC /* AppDelegate.mm */; };
@@ -21,6 +20,7 @@
 		0DFC45952C884E0A00B56C91 /* RCTShortcutManagerModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DFC45932C884E0A00B56C91 /* RCTShortcutManagerModule.m */; };
 		0F5E5350263B73FD004CA14F /* EnvironmentChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F5E534F263B73FD004CA14F /* EnvironmentChecker.m */; };
 		0F5E5351263B73FD004CA14F /* EnvironmentChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F5E534F263B73FD004CA14F /* EnvironmentChecker.m */; };
+		0F749C2B3B8F4562B816DEAB /* ExpensifyMono-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = ED64768FC6254E4D8FCD12BC /* ExpensifyMono-Italic.otf */; };
 		1246A3EF20E54E7A9494C8B9 /* ExpensifyNeue-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F4F8A052A22040339996324B /* ExpensifyNeue-Regular.otf */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		18D050E0262400AF000D658B /* BridgingFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D050DF262400AF000D658B /* BridgingFile.swift */; };
@@ -29,9 +29,11 @@
 		30581EA8AAFD4FCE88C5D191 /* ExpensifyNeue-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = BF6A4C5167244B9FB8E4D4E3 /* ExpensifyNeue-Italic.otf */; };
 		374FB8D728A133FE000D84EF /* OriginImageRequestHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 374FB8D628A133FE000D84EF /* OriginImageRequestHandler.mm */; };
 		383643682B6D4AE2005BB9AE /* DeviceCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 383643672B6D4AE2005BB9AE /* DeviceCheck.framework */; };
+		524F95D57E75496EBD14B0AA /* ExpensifyMono-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = A96F65C6624044318D21DAB1 /* ExpensifyMono-BoldItalic.otf */; };
 		7041848526A8E47D00E09F4D /* RCTStartupTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7041848426A8E47D00E09F4D /* RCTStartupTimer.m */; };
 		7041848626A8E47D00E09F4D /* RCTStartupTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7041848426A8E47D00E09F4D /* RCTStartupTimer.m */; };
 		70CF6E82262E297300711ADC /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 70CF6E81262E297300711ADC /* BootSplash.storyboard */; };
+		7B571C28847AF36394741CAC /* Pods_NewIeatta_NewIeattaTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CEA0F813F1C891C82C8EE18 /* Pods_NewIeatta_NewIeattaTests.framework */; };
 		7F5E81F06BCCF61AD02CEA06 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD444BEDDB0AF1745B39049 /* ExpoModulesProvider.swift */; };
 		7F9DD8DA2B2A445B005E3AFA /* ExpError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9DD8D92B2A445B005E3AFA /* ExpError.swift */; };
 		7FB680AE2CC94EDA006693CF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7FB680AD2CC94EDA006693CF /* GoogleService-Info.plist */; };
@@ -39,11 +41,11 @@
 		7FB680B02CC94EDA006693CF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7FB680AD2CC94EDA006693CF /* GoogleService-Info.plist */; };
 		7FD73C9E2B23CE9500420AF3 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD73C9D2B23CE9500420AF3 /* NotificationService.swift */; };
 		7FD73CA22B23CE9500420AF3 /* NotificationServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 7FD73C9B2B23CE9500420AF3 /* NotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		8A81A18D7D4ECB6C529CA24A /* Pods_NewIeatta_NewIeattaTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8682CF809E37AE085BBB2C0 /* Pods_NewIeatta_NewIeattaTests.framework */; };
 		AC131FBB2CF634F20010CE80 /* BackgroundTasks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC131FBA2CF634F20010CE80 /* BackgroundTasks.framework */; };
 		BDB853621F354EBB84E619C2 /* ExpensifyNewKansas-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = D2AFB39EC1D44BF9B91D3227 /* ExpensifyNewKansas-MediumItalic.otf */; };
-		C804D05CB41AE81EB0D1BF40 /* Pods_NewIeatta.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA9C94ACA8407B58D8E2200D /* Pods_NewIeatta.framework */; };
+		C765789F8BD43DDDA40280D4 /* Pods_NewIeatta.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65696ADD417841600C77A79A /* Pods_NewIeatta.framework */; };
 		D27CE6B77196EF3EF450EEAC /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0D3F9E814828D91464DF9D35 /* PrivacyInfo.xcprivacy */; };
+		D9C32BD8974D3D0F26932387 /* Pods_NotificationServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08DB48322AEE330FEFF176C3 /* Pods_NotificationServiceExtension.framework */; };
 		DD79042B2792E76D004484B4 /* RCTBootSplash.mm in Sources */ = {isa = PBXBuildFile; fileRef = DD79042A2792E76D004484B4 /* RCTBootSplash.mm */; };
 		DDCB2E57F334C143AC462B43 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D20D83B0E39BA6D21761E72 /* ExpoModulesProvider.swift */; };
 		E9DF872D2525201700607FDC /* AirshipConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9DF872C2525201700607FDC /* AirshipConfig.plist */; };
@@ -91,6 +93,7 @@
 		083353E82B5AB22900C603C0 /* done.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = done.mp3; path = ../assets/sounds/done.mp3; sourceTree = "<group>"; };
 		083353E92B5AB22900C603C0 /* receive.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = receive.mp3; path = ../assets/sounds/receive.mp3; sourceTree = "<group>"; };
 		083353EA2B5AB22900C603C0 /* success.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = success.mp3; path = ../assets/sounds/success.mp3; sourceTree = "<group>"; };
+		08DB48322AEE330FEFF176C3 /* Pods_NotificationServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NotificationServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CDA8E33287DD650004ECBEC /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = NewIeatta/AppDelegate.mm; sourceTree = "<group>"; };
 		0CDA8E36287DD6A0004ECBEC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = NewIeatta/Images.xcassets; sourceTree = "<group>"; };
 		0D3F9E814828D91464DF9D35 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = NewIeatta/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -120,6 +123,7 @@
 		4A39BBFB1A6AA6A0EB08878C /* Pods-NotificationServiceExtension.debugproduction.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotificationServiceExtension.debugproduction.xcconfig"; path = "Target Support Files/Pods-NotificationServiceExtension/Pods-NotificationServiceExtension.debugproduction.xcconfig"; sourceTree = "<group>"; };
 		4D20D83B0E39BA6D21761E72 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-NewIeatta/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		52796131E6554494B2DDB056 /* ExpensifyNeue-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ExpensifyNeue-Bold.otf"; path = "../assets/fonts/native/ExpensifyNeue-Bold.otf"; sourceTree = "<group>"; };
+		65696ADD417841600C77A79A /* Pods_NewIeatta.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NewIeatta.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		687A6DD50C2B5D0DC530C207 /* Pods-NewIeatta-NewIeattaTests.releasedevelopment.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewIeatta-NewIeattaTests.releasedevelopment.xcconfig"; path = "Target Support Files/Pods-NewIeatta-NewIeattaTests/Pods-NewIeatta-NewIeattaTests.releasedevelopment.xcconfig"; sourceTree = "<group>"; };
 		7041848326A8E40900E09F4D /* RCTStartupTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RCTStartupTimer.h; path = NewIeatta/RCTStartupTimer.h; sourceTree = "<group>"; };
 		7041848426A8E47D00E09F4D /* RCTStartupTimer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RCTStartupTimer.m; path = NewIeatta/RCTStartupTimer.m; sourceTree = "<group>"; };
@@ -138,15 +142,14 @@
 		7FD73C9D2B23CE9500420AF3 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		7FD73C9F2B23CE9500420AF3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8B28D84EF339436DBD42A203 /* ExpensifyNeue-BoldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ExpensifyNeue-BoldItalic.otf"; path = "../assets/fonts/native/ExpensifyNeue-BoldItalic.otf"; sourceTree = "<group>"; };
+		8CEA0F813F1C891C82C8EE18 /* Pods_NewIeatta_NewIeattaTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NewIeatta_NewIeattaTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EFE0319D586C1078DB926FD /* Pods-NewIeatta.releaseadhoc.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewIeatta.releaseadhoc.xcconfig"; path = "Target Support Files/Pods-NewIeatta/Pods-NewIeatta.releaseadhoc.xcconfig"; sourceTree = "<group>"; };
+		A96F65C6624044318D21DAB1 /* ExpensifyMono-BoldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ExpensifyMono-BoldItalic.otf"; path = "../assets/fonts/native/ExpensifyMono-BoldItalic.otf"; sourceTree = "<group>"; };
 		AC131FBA2CF634F20010CE80 /* BackgroundTasks.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BackgroundTasks.framework; path = System/Library/Frameworks/BackgroundTasks.framework; sourceTree = SDKROOT; };
-		BA9C94ACA8407B58D8E2200D /* Pods_NewIeatta.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NewIeatta.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBE493797E97F2995E627244 /* Pods-NotificationServiceExtension.debugadhoc.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotificationServiceExtension.debugadhoc.xcconfig"; path = "Target Support Files/Pods-NotificationServiceExtension/Pods-NotificationServiceExtension.debugadhoc.xcconfig"; sourceTree = "<group>"; };
 		BCD444BEDDB0AF1745B39049 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-NewIeatta-NewIeattaTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		BF6A4C5167244B9FB8E4D4E3 /* ExpensifyNeue-Italic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ExpensifyNeue-Italic.otf"; path = "../assets/fonts/native/ExpensifyNeue-Italic.otf"; sourceTree = "<group>"; };
 		C0417E996D1C834CDF0BF0F7 /* Pods-NewIeatta-NewIeattaTests.debugadhoc.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewIeatta-NewIeattaTests.debugadhoc.xcconfig"; path = "Target Support Files/Pods-NewIeatta-NewIeattaTests/Pods-NewIeatta-NewIeattaTests.debugadhoc.xcconfig"; sourceTree = "<group>"; };
-		C54D34A512109F20240815AA /* Pods_NotificationServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NotificationServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C8682CF809E37AE085BBB2C0 /* Pods_NewIeatta_NewIeattaTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NewIeatta_NewIeattaTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA5677EEAC9784567B912881 /* Pods-NewIeatta-NewIeattaTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewIeatta-NewIeattaTests.debug.xcconfig"; path = "Target Support Files/Pods-NewIeatta-NewIeattaTests/Pods-NewIeatta-NewIeattaTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D2AFB39EC1D44BF9B91D3227 /* ExpensifyNewKansas-MediumItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ExpensifyNewKansas-MediumItalic.otf"; path = "../assets/fonts/native/ExpensifyNewKansas-MediumItalic.otf"; sourceTree = "<group>"; };
 		D7C206AC464C89FB4899E0AD /* Pods-NotificationServiceExtension.releasedevelopment.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotificationServiceExtension.releasedevelopment.xcconfig"; path = "Target Support Files/Pods-NotificationServiceExtension/Pods-NotificationServiceExtension.releasedevelopment.xcconfig"; sourceTree = "<group>"; };
@@ -159,6 +162,7 @@
 		E9DF872C2525201700607FDC /* AirshipConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AirshipConfig.plist; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		ED64768FC6254E4D8FCD12BC /* ExpensifyMono-Italic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ExpensifyMono-Italic.otf"; path = "../assets/fonts/native/ExpensifyMono-Italic.otf"; sourceTree = "<group>"; };
 		EFA5CA89CC675CA3370CF89E /* Pods-NewIeatta.debugproduction.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewIeatta.debugproduction.xcconfig"; path = "Target Support Files/Pods-NewIeatta/Pods-NewIeatta.debugproduction.xcconfig"; sourceTree = "<group>"; };
 		F0C450E92705020500FD2970 /* colors.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = colors.json; path = ../colors.json; sourceTree = "<group>"; };
 		F4F8A052A22040339996324B /* ExpensifyNeue-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ExpensifyNeue-Regular.otf"; path = "../assets/fonts/native/ExpensifyNeue-Regular.otf"; sourceTree = "<group>"; };
@@ -170,7 +174,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A81A18D7D4ECB6C529CA24A /* Pods_NewIeatta_NewIeattaTests.framework in Frameworks */,
+				7B571C28847AF36394741CAC /* Pods_NewIeatta_NewIeattaTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -180,7 +184,7 @@
 			files = (
 				383643682B6D4AE2005BB9AE /* DeviceCheck.framework in Frameworks */,
 				AC131FBB2CF634F20010CE80 /* BackgroundTasks.framework in Frameworks */,
-				C804D05CB41AE81EB0D1BF40 /* Pods_NewIeatta.framework in Frameworks */,
+				C765789F8BD43DDDA40280D4 /* Pods_NewIeatta.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,7 +192,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A44D3AC692CE3025D5E1A94 /* Pods_NotificationServiceExtension.framework in Frameworks */,
+				D9C32BD8974D3D0F26932387 /* Pods_NotificationServiceExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,9 +247,9 @@
 				383643672B6D4AE2005BB9AE /* DeviceCheck.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				BA9C94ACA8407B58D8E2200D /* Pods_NewIeatta.framework */,
-				C8682CF809E37AE085BBB2C0 /* Pods_NewIeatta_NewIeattaTests.framework */,
-				C54D34A512109F20240815AA /* Pods_NotificationServiceExtension.framework */,
+				65696ADD417841600C77A79A /* Pods_NewIeatta.framework */,
+				8CEA0F813F1C891C82C8EE18 /* Pods_NewIeatta_NewIeattaTests.framework */,
+				08DB48322AEE330FEFF176C3 /* Pods_NotificationServiceExtension.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -342,6 +346,8 @@
 				44BF435285B94E5B95F90994 /* ExpensifyNewKansas-Medium.otf */,
 				D2AFB39EC1D44BF9B91D3227 /* ExpensifyNewKansas-MediumItalic.otf */,
 				DCF33E34FFEC48128CDD41D4 /* ExpensifyMono-Bold.otf */,
+				A96F65C6624044318D21DAB1 /* ExpensifyMono-BoldItalic.otf */,
+				ED64768FC6254E4D8FCD12BC /* ExpensifyMono-Italic.otf */,
 				E704648954784DDFBAADF568 /* ExpensifyMono-Regular.otf */,
 				52796131E6554494B2DDB056 /* ExpensifyNeue-Bold.otf */,
 				8B28D84EF339436DBD42A203 /* ExpensifyNeue-BoldItalic.otf */,
@@ -421,6 +427,7 @@
 				9FF963998EFF771D82D473D2 /* [CP-User] [RNFB] Core Configuration */,
 				A2BE84E8C8EFD6C81A2B41F1 /* [CP-User] [RNFB] Crashlytics Configuration */,
 				498240F82C49553900C15857 /* Run Fullstory Asset Uploader */,
+				C2F7D90A103740F286F72CB1 /* Upload Debug Symbols to Sentry */,
 			);
 			buildRules = (
 			);
@@ -529,6 +536,8 @@
 				30581EA8AAFD4FCE88C5D191 /* ExpensifyNeue-Italic.otf in Resources */,
 				1246A3EF20E54E7A9494C8B9 /* ExpensifyNeue-Regular.otf in Resources */,
 				D27CE6B77196EF3EF450EEAC /* PrivacyInfo.xcprivacy in Resources */,
+				524F95D57E75496EBD14B0AA /* ExpensifyMono-BoldItalic.otf in Resources */,
+				0F749C2B3B8F4562B816DEAB /* ExpensifyMono-Italic.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -555,7 +564,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n# The project root by default is one level up from the ios directory\nexport PROJECT_ROOT=\"$PROJECT_DIR\"/..\n\nif [[ \"$CONFIGURATION\" = *Debug* ]]; then\n  export SKIP_BUNDLING=1\nfi\nif [[ -z \"$ENTRY_FILE\" ]]; then\n  # Set the entry JS file using the bundler's entry resolution.\n  export ENTRY_FILE=\"$(\"$NODE_BINARY\" -e \"require('expo/scripts/resolveAppEntry')\" \"$PROJECT_ROOT\" ios relative | tail -n 1)\"\nfi\n\nif [[ -z \"$CLI_PATH\" ]]; then\n  # Use Expo CLI\n  export CLI_PATH=\"$(\"$NODE_BINARY\" --print \"require.resolve('@expo/cli')\")\"\nfi\nif [[ -z \"$BUNDLE_COMMAND\" ]]; then\n  # Default Expo CLI command for bundling\n  export BUNDLE_COMMAND=\"export:embed\"\nfi\n\n`\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'\"`\n";
+			shellScript = "if [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n# The project root by default is one level up from the ios directory\nexport PROJECT_ROOT=\"$PROJECT_DIR\"/..\n\nif [[ \"$CONFIGURATION\" = *Debug* ]]; then\n  export SKIP_BUNDLING=1\nfi\nif [[ -z \"$ENTRY_FILE\" ]]; then\n  # Set the entry JS file using the bundler's entry resolution.\n  export ENTRY_FILE=\"$(\"$NODE_BINARY\" -e \"require('expo/scripts/resolveAppEntry')\" \"$PROJECT_ROOT\" ios relative | tail -n 1)\"\nfi\n\nif [[ -z \"$CLI_PATH\" ]]; then\n  # Use Expo CLI\n  export CLI_PATH=\"$(\"$NODE_BINARY\" --print \"require.resolve('@expo/cli')\")\"\nfi\nif [[ -z \"$BUNDLE_COMMAND\" ]]; then\n  # Default Expo CLI command for bundling\n  export BUNDLE_COMMAND=\"export:embed\"\nfi\n\n/bin/sh `\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('@sentry/react-native/package.json')) + '/scripts/sentry-xcode.sh'\"` `\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'\"`\n";
 		};
 		04B99F6AA578E2A877802F05 /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -658,6 +667,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RealmJS/RealmJS.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Sentry/Sentry.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/abseil/xcprivacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/boost/boost_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/gRPC-C++/gRPCCertificates-Cpp.bundle",
@@ -700,6 +710,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RealmJS.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SDWebImage.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Sentry.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/xcprivacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/boost_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gRPCCertificates-Cpp.bundle",
@@ -864,6 +875,20 @@
 			shellPath = /bin/sh;
 			shellScript = "#!/usr/bin/env bash\n#\n# Copyright (c) 2016-present Invertase Limited & Contributors\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this library except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#   http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\nset -e\n\nif [[ ${PODS_ROOT} ]]; then\n  echo \"info: Exec FirebaseCrashlytics Run from Pods\"\n  \"${PODS_ROOT}/FirebaseCrashlytics/run\"\nelse\n  echo \"info: Exec FirebaseCrashlytics Run from framework\"\n  \"${PROJECT_DIR}/FirebaseCrashlytics.framework/run\"\nfi\n";
 		};
+		C2F7D90A103740F286F72CB1 /* Upload Debug Symbols to Sentry */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Upload Debug Symbols to Sentry";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/sh ../node_modules/@sentry/react-native/scripts/sentry-xcode-debug-files.sh";
+		};
 		FBC7D704E4E9CC08E91D7919 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -902,6 +927,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RealmJS/RealmJS.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Sentry/Sentry.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/abseil/xcprivacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/boost/boost_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/gRPC-C++/gRPCCertificates-Cpp.bundle",
@@ -944,6 +970,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RealmJS.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SDWebImage.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Sentry.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/xcprivacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/boost_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gRPCCertificates-Cpp.bundle",
