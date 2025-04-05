@@ -13,7 +13,10 @@ export interface IAuthUser {
     photoURL: string;
 }
 
-export const getAuthUserFromPersonalDetails = (personalDetails: PersonalDetails): IAuthUser => {
+export const getAuthUserFromPersonalDetails = (personalDetails: PersonalDetails | null): IAuthUser | null => {
+    if (personalDetails === null || personalDetails === undefined) {
+        return null;
+    }
     return {
         // uid: personalDetails.userID,
         uid: lodashGet(personalDetails, 'userID', ''),

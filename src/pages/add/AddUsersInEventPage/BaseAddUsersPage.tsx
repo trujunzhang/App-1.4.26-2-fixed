@@ -1,3 +1,5 @@
+// eslint-disable-next-line lodash/import-scope
+import _ from 'lodash';
 import React, {useMemo, useState} from 'react';
 import FullPageNotFoundView from '@components/BlockingViews/FullPageNotFoundView';
 import FullScreenLoadingIndicator from '@components/FullscreenLoadingIndicator';
@@ -12,6 +14,7 @@ import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import {ParseModelPeopleInEvent} from '@libs/FirebaseIeatta/appModel';
 import {FBCollections} from '@libs/FirebaseIeatta/constant';
+import type {IAuthUser} from '@libs/FirebaseIeatta/models/auth_user_model';
 import {getAuthUserFromPersonalDetails} from '@libs/FirebaseIeatta/models/auth_user_model';
 import FirebaseHelper from '@libs/FirebaseIeatta/services/firebase-helper';
 import {convertToRadioItemForUsers} from '@libs/ieatta/userUtils';
@@ -38,8 +41,15 @@ function BaseAddUsersPage({restaurantId, eventId, userIdsInPeopleInEvents, userD
     const shouldShowNotFoundView = false;
     const shouldShowLoading = false;
     const selectUser = (item: ChoiceOrderedUserItem) => {
-        const {userId} = item;
-        const authUserModel = getAuthUserFromPersonalDetails(personalData);
+        const {userId, isSelected} = item;
+        if (isSelected) {
+            return;
+        }
+        const authUserModel: IAuthUser | null = getAuthUserFromPersonalDetails(personalData);
+
+        if (_.isUndefined(authUserModel) || _.isNull(authUserModel)) {
+            return;
+        }
 
         const newPeopleInEvent = ParseModelPeopleInEvent.emptyPeopleInEvent({authUserModel});
         const nextModel = ParseModelPeopleInEvent.updatePeopleInEvent({

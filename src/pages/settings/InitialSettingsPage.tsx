@@ -185,16 +185,6 @@ function InitialSettingsPage({currentUserPersonalDetails, shouldShowLeftBackArro
             },
             sectionTranslationKey: 'initialSettingsPage.general',
             items: [
-                // {
-                //     translationKey: 'initialSettingsPage.help',
-                //     icon: Expensicons.QuestionMark,
-                //     iconRight: Expensicons.NewWindow,
-                //     shouldShowRightIcon: true,
-                //     link: CONST.NEWHELP_URL,
-                //     action: () => {
-                //         openExternalLink(CONST.NEWHELP_URL);
-                //     },
-                // },
                 {
                     translationKey: 'initialSettingsPage.about',
                     icon: Expensicons.Info,
@@ -207,12 +197,6 @@ function InitialSettingsPage({currentUserPersonalDetails, shouldShowLeftBackArro
                     screenName: SCREENS.RIGHT_IEATTA.SETTINGS_TROUBLESHOOT_RIGHT,
                     action: () => beforeNavigateTo(() => Navigation.navigate(ROUTES.SETTINGS_TROUBLESHOOT_RIGHT)),
                 },
-                // {
-                //     translationKey: 'sidebarScreen.saveTheWorld',
-                //     icon: Expensicons.Heart,
-                //     screenName: SCREENS.SETTINGS.SAVE_THE_WORLD,
-                //     action: () => Navigation.navigate(ROUTES.SETTINGS_SAVE_THE_WORLD),
-                // },
                 {
                     translationKey: signOutTranslationKey,
                     icon: Expensicons.Exit,
@@ -238,11 +222,11 @@ function InitialSettingsPage({currentUserPersonalDetails, shouldShowLeftBackArro
             const getWalletBalance = (isPaymentItem: boolean): string | undefined => (isPaymentItem ? convertToDisplayString(userWallet?.currentBalance) : undefined);
 
             const openPopover = (link: string | (() => Promise<string>) | undefined, event: GestureResponderEvent | MouseEvent) => {
-                if (typeof link === 'function') {
-                    link?.()?.then((url) => ReportActionContextMenu.showContextMenu(CONST.CONTEXT_MENU_TYPES.LINK, event, url, popoverAnchor.current));
-                } else if (link) {
-                    ReportActionContextMenu.showContextMenu(CONST.CONTEXT_MENU_TYPES.LINK, event, link, popoverAnchor.current);
-                }
+                // if (typeof link === 'function') {
+                //     link?.()?.then((url) => ReportActionContextMenu.showContextMenu(CONST.CONTEXT_MENU_TYPES.LINK, event, url, popoverAnchor.current));
+                // } else if (link) {
+                //     ReportActionContextMenu.showContextMenu(CONST.CONTEXT_MENU_TYPES.LINK, event, link, popoverAnchor.current);
+                // }
             };
 
             return (

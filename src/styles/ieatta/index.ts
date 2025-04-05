@@ -78,6 +78,12 @@ export default {
     // background: theme.componentBG,
     // },
 
+    searchRestaurantInputStyle: {
+        // color: theme.textSupporting,
+        fontSize: variables.fontSizeNormal,
+        lineHeight: variables.fontSizeNormalHeight,
+    },
+
     sectionTitleMobileStrong: {
         ...FontUtils.fontFamily.platform.EXP_NEUE,
         fontSize: variables.fontSizeSectionMobileTitle,

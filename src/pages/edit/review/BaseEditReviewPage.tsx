@@ -20,6 +20,7 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import {setIsLoading} from '@libs/actions/FormActions';
 import {ParseModelReviews} from '@libs/FirebaseIeatta/appModel';
 import {FBCollections} from '@libs/FirebaseIeatta/constant';
+import type {IAuthUser} from '@libs/FirebaseIeatta/models/auth_user_model';
 import {getAuthUserFromPersonalDetails} from '@libs/FirebaseIeatta/models/auth_user_model';
 import FirebaseHelper from '@libs/FirebaseIeatta/services/firebase-helper';
 import ReviewHelper, {ReviewHookType} from '@libs/FirebaseIeatta/services/help/review-helper';
@@ -63,8 +64,8 @@ function BaseEditReviewPage({review, relatedId, reviewType, isNewModel}: BaseEdi
         const {reviewRating: rate, reviewNote: note} = values;
         let lastModel = review;
         if (isNewModel) {
-            const authUserModel = getAuthUserFromPersonalDetails(personalData);
-            if (_.isUndefined(authUserModel)) {
+            const authUserModel: IAuthUser | null = getAuthUserFromPersonalDetails(personalData);
+            if (_.isUndefined(authUserModel) || _.isNull(authUserModel)) {
                 ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.auth.unAuthed')});
                 return;
             }

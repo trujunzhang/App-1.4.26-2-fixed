@@ -111,7 +111,7 @@ target 'NewIeatta' do
       installer,
       config[:reactNativePath],
       :mac_catalyst_enabled => false,
-      :ccache_enabled => true
+      :ccache_enabled => false
     )
     __apply_Xcode_14_3_RC_post_install_workaround(installer)
 

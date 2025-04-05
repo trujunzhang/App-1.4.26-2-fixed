@@ -55,7 +55,7 @@ function SearchWithLabel({onPress, placeholder, tooltip, style, containerStyle}:
                                     fill={theme.icon}
                                 />
                                 <Text
-                                    style={styles.searchInputStyle}
+                                    style={[styles.searchRestaurantInputStyle, styles.colorTextSupporting]}
                                     numberOfLines={1}
                                 >
                                     {placeholder ?? translate('common.searchWithThreeDots')}

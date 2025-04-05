@@ -35,15 +35,14 @@ function ieatta_ios_podfile() {
         "$boringssl_end_lines"
     )
     join_by boringssl_strings "\n" "${boringssl_lines[@]}"
-    # if  grep "BoringSSL-GRPC"  "$DEST_PROJECT/ios/Podfile"; then
-    #     error "  BoringSSL already exists in Podfile"
-    # else
-    #     replace_lines_in_file \
-    #         'ios/Podfile' \
-    #         "$boringssl_end_lines" \
-    #         "$boringssl_strings" 
-    # fi
-
+    if  grep "BoringSSL-GRPC"  "$DEST_PROJECT/ios/Podfile"; then
+        error "  BoringSSL already exists in Podfile"
+    else
+        replace_lines_in_file \
+            'ios/Podfile' \
+            "$boringssl_end_lines" \
+            "$boringssl_strings" 
+    fi
 }
 
 function ieatta_ios_google_login() {

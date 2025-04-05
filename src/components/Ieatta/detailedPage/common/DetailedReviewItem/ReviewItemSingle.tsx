@@ -38,9 +38,21 @@ const showWorkspaceDetails = (reportID: string) => {
 
 function ReviewItemSingle({review, children, isHovered = false}: ReportActionItemSingleProps) {
     const styles = useThemeStyles();
+
+    const createdUserId = review.creatorId;
+
     const personalDetails: Record<string, any> = usePersonalDetails() ?? CONST.EMPTY_OBJECT;
-    const reviewCreatedUser: PersonalDetails | null = personalDetails[review.creatorId];
-    const displayName = review.username;
+    const reviewCreatedUser: PersonalDetails | null = personalDetails[createdUserId];
+
+    // const created = new Date(review.createdAt).toString()
+    // const created = '2023-12-22 09:24:08.810'
+    // const created = '2023-12-22 09:24:08.810';
+    // const created = new Date().toString()
+    const created = moment(review.createdAt).format('YYYY-MM-DD hh:mm');
+
+    // const displayName = review.username;
+    const displayName = reviewCreatedUser?.displayName ?? review.username;
+
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const actorHint = displayName.replace(CONST.REGEX.MERGED_ACCOUNT_PREFIX, '');
 
@@ -49,7 +61,7 @@ function ReviewItemSingle({review, children, isHovered = false}: ReportActionIte
     // we should stop referring to the report history items entirely for this information.
     const personArray = [
         {
-            key: review.creatorId,
+            key: createdUserId,
             type: 'TEXT',
             text: displayName,
         },
@@ -57,31 +69,25 @@ function ReviewItemSingle({review, children, isHovered = false}: ReportActionIte
 
     const showActorDetails = useCallback(() => {
         // TODO: djzhang
-        showUserDetails(Number(review.creatorId));
-        // showUserDetails(review.creatorId);
-    }, [review.creatorId]);
+        showUserDetails(Number(createdUserId));
+        // showUserDetails(createdUserId);
+    }, [createdUserId]);
 
     const getAvatar = () => {
         return (
-            <IeattaUserDetailsTooltip userId={review.creatorId}>
+            <IeattaUserDetailsTooltip userId={createdUserId}>
                 <View>
                     <Avatar
                         containerStyles={[styles.actionAvatar]}
                         shouldShowAsAvatar
                         avatarUrl={reviewCreatedUser?.avatarThumbnail}
                         type={CONST.ICON_TYPE_AVATAR}
-                        name={reviewCreatedUser?.displayName}
+                        name={displayName}
                     />
                 </View>
             </IeattaUserDetailsTooltip>
         );
     };
-
-    // const created = new Date(review.createdAt).toString()
-    // const created = '2023-12-22 09:24:08.810'
-    // const created = '2023-12-22 09:24:08.810';
-    // const created = new Date().toString()
-    const created = moment(review.createdAt).format('YYYY-MM-DD hh:mm');
 
     // Log.info('');
     // Log.info('================================');
@@ -118,7 +124,7 @@ function ReviewItemSingle({review, children, isHovered = false}: ReportActionIte
                             <ReviewItemFragment
                                 // eslint-disable-next-line react/no-array-index-key
                                 key={`person-${fragment.key}-${index}`}
-                                userId={review.creatorId}
+                                userId={createdUserId}
                                 fragment={fragment}
                                 isSingleLine
                             />

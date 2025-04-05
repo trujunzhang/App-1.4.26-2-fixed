@@ -31,7 +31,10 @@ function edit_git_ignore() {
 
      webpack_array_string=(
         "!my-upload-key.keystore"
+        ".kotlin"
         ".obsidian"
+        ".js"
+        ".jsx"
         "${sed_exception_tmp_file}"
         "*-E"
      )
@@ -187,7 +190,7 @@ function rename_Xcode_Project() {
         fi
     done
 
-   replace_lines_in_file "ios/Podfile" "# :ccache_enabled => true"     ":ccache_enabled => true" 
+   # replace_lines_in_file "ios/Podfile" "# :ccache_enabled => true"     ":ccache_enabled => true" 
 
    check_and_copy_files  "ios/GoogleService-Info.plist"
 }

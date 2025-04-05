@@ -17,7 +17,8 @@ import ROUTES from '@src/ROUTES';
 import type {IFBPhoto, IFBRestaurant} from '@src/types/firebase';
 import ActionBarInInfoPanel from './ActionBarInInfoPanel';
 
-type RestaurantWithPhotosInfoPanelProps = {
+// eslint-disable-next-line rulesdir/no-inline-named-export
+export type RestaurantWithPhotosInfoPanelProps = {
     restaurant: IFBRestaurant;
     photos: IFBPhoto[];
 };

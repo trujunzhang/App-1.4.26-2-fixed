@@ -22,7 +22,8 @@ import ROUTES from '@src/ROUTES';
 import type {IFBRestaurant} from '@src/types/firebase';
 import HeaderActionItem from './HeaderActionItem';
 
-type RestaurantInfoPanelProps = {
+// eslint-disable-next-line rulesdir/no-inline-named-export
+export type RestaurantInfoPanelProps = {
     /** The ID of the report that the option is for */
     restaurant: IFBRestaurant;
 };

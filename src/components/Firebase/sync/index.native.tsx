@@ -33,6 +33,7 @@ import * as RealmQuery from '@libs/Realm/services/realm-query';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import type {IFBRecipe, IFBRestaurant, IFBSqlPhoto} from '@src/types/firebase';
+import type {PersonalDetails} from '@src/types/onyx';
 import type FirebaseSyncProps from './types';
 
 const deleteLocalImage = async (fileUri: string) => {
@@ -45,7 +46,7 @@ const setRealm = (realm: Realm) => {
 };
 
 let authUserModel: IAuthUser | null = null;
-const setAuthUserModel = (model: IAuthUser) => {
+const setAuthUserModel = (model: IAuthUser | null) => {
     authUserModel = model;
 };
 
@@ -120,11 +121,11 @@ setInterval(syncPhotos, CONST.FIREBASE_SYNC_MS);
 function FirebaseSync(props: FirebaseSyncProps) {
     const realm = useRealm();
 
-    const personalData = useCurrentUserPersonalDetails();
+    const personalData: PersonalDetails | null = useCurrentUserPersonalDetails();
 
     const sqlPhotos = useQuery<IFBSqlPhoto>(RealmCollections.SqlPhotos, RealmQuery.queryForRealmSqlPhotos(CONST.IEATTA_LOCAL_PHOTOS_SHOW_ALL));
     const localSqlPhotosArray: IFBSqlPhoto[] = toRealmModelList<IFBSqlPhoto>(sqlPhotos);
-    const authUserModelInstance = getAuthUserFromPersonalDetails(personalData);
+    const authUserModelInstance: IAuthUser | null = getAuthUserFromPersonalDetails(personalData);
 
     setRealm(realm);
     setAuthUserModel(authUserModelInstance);

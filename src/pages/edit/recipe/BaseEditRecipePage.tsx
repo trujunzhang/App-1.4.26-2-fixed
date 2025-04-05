@@ -24,6 +24,7 @@ import {FBCollections} from '@libs/FirebaseIeatta/constant';
 import {PageSection, RowPressableType} from '@libs/FirebaseIeatta/list/constant';
 import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
 import type {IPhotoCarouselItemRow, OnCarouselItemPressed} from '@libs/FirebaseIeatta/list/types/rows/photo';
+import type {IAuthUser} from '@libs/FirebaseIeatta/models/auth_user_model';
 import {getAuthUserFromPersonalDetails} from '@libs/FirebaseIeatta/models/auth_user_model';
 import FirebaseHelper from '@libs/FirebaseIeatta/services/firebase-helper';
 import {clearDraftValuesByDraftId} from '@libs/ieatta/editFormUtils';
@@ -70,8 +71,8 @@ function BaseEditRecipePage({restaurantId, recipeId, recipe, photosInPage, isNew
         const {recipeDisplayName: displayName, recipePrice: price} = values;
         let lastModel = recipe;
         if (isNewModel) {
-            const authUserModel = getAuthUserFromPersonalDetails(personalData);
-            if (_.isUndefined(authUserModel)) {
+            const authUserModel: IAuthUser | null = getAuthUserFromPersonalDetails(personalData);
+            if (_.isUndefined(authUserModel) || _.isNull(authUserModel)) {
                 ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.auth.unAuthed')});
                 return;
             }

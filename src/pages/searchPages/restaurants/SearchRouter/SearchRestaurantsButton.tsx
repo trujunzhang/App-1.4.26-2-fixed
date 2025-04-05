@@ -53,7 +53,7 @@ function SearchRestaurantsButton({style, showAsButton = true}: SearchRestaurants
                                     fill={theme.icon}
                                 />
                                 <Text
-                                    style={styles.searchInputStyle}
+                                    style={[styles.searchRestaurantInputStyle, styles.colorTextSupporting]}
                                     numberOfLines={1}
                                 >
                                     {translate('headerPanel.search.buttonSearch')}

@@ -101,9 +101,9 @@ function AboutPage() {
             iconRight,
             onPress: action,
             shouldShowRightIcon: true,
-            onSecondaryInteraction: link
-                ? (event: GestureResponderEvent | MouseEvent) => ReportActionContextMenu.showContextMenu(CONST.CONTEXT_MENU_TYPES.LINK, event, link, popoverAnchor.current)
-                : undefined,
+            // onSecondaryInteraction: link
+            //     ? (event: GestureResponderEvent | MouseEvent) => ReportActionContextMenu.showContextMenu(CONST.CONTEXT_MENU_TYPES.LINK, event, link, popoverAnchor.current)
+            //     : undefined,
             ref: popoverAnchor,
             shouldBlockSelection: !!link,
             wrapperStyle: [styles.sectionMenuItemTopDescription],

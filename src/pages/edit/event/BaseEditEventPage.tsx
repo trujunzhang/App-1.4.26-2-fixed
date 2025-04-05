@@ -20,6 +20,7 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import {setIsLoading} from '@libs/actions/FormActions';
 import {ParseModelEvents} from '@libs/FirebaseIeatta/appModel';
 import {FBCollections} from '@libs/FirebaseIeatta/constant';
+import type {IAuthUser} from '@libs/FirebaseIeatta/models/auth_user_model';
 import {getAuthUserFromPersonalDetails} from '@libs/FirebaseIeatta/models/auth_user_model';
 import FirebaseHelper from '@libs/FirebaseIeatta/services/firebase-helper';
 import {clearDraftValuesByDraftId} from '@libs/ieatta/editFormUtils';
@@ -74,8 +75,8 @@ function BaseEditEventPage({restaurantId, eventId, event, isNewModel}: BaseEditE
         const {eventDisplayName: displayName, eventWhatWhy: want, eventStartDate: startString, eventEndDate: endString} = values;
         let lastModel = event;
         if (isNewModel) {
-            const authUserModel = getAuthUserFromPersonalDetails(personalData);
-            if (_.isUndefined(authUserModel)) {
+            const authUserModel: IAuthUser | null = getAuthUserFromPersonalDetails(personalData);
+            if (_.isUndefined(authUserModel) || _.isNull(authUserModel)) {
                 ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.auth.unAuthed')});
                 return;
             }

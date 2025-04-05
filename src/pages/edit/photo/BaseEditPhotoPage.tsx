@@ -22,6 +22,7 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import {setIsLoading} from '@libs/actions/FormActions';
 import {ParseModelPhotos} from '@libs/FirebaseIeatta/appModel';
 import {FBCollections} from '@libs/FirebaseIeatta/constant';
+import type {IAuthUser} from '@libs/FirebaseIeatta/models/auth_user_model';
 import {getAuthUserFromPersonalDetails} from '@libs/FirebaseIeatta/models/auth_user_model';
 import FirebaseHelper from '@libs/FirebaseIeatta/services/firebase-helper';
 import {clearDraftValuesByDraftId} from '@libs/ieatta/editFormUtils';
@@ -62,8 +63,8 @@ function BaseEditPhotoPage({photoId, photo, isNewModel}: BaseEditPhotoPageProps)
         const {photoNote} = values;
         const lastModel = photo;
         if (isNewModel) {
-            const authUserModel = getAuthUserFromPersonalDetails(personalData);
-            if (_.isUndefined(authUserModel)) {
+            const authUserModel: IAuthUser | null = getAuthUserFromPersonalDetails(personalData);
+            if (_.isUndefined(authUserModel) || _.isNull(authUserModel)) {
                 ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.auth.unAuthed')});
                 return;
             }

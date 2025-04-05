@@ -8,6 +8,8 @@ type HomeSplitNavigatorParamList = {
         reportID: string;
         openOnAdminRoom?: boolean;
         referrer?: string;
+        moneyRequestReportActionID?: string;
+        transactionID?: string;
     };
     [SCREENS.HOME]: undefined;
     [SCREENS.APP_SIDE_BAR]: undefined;

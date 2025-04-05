@@ -4,7 +4,8 @@ import type {IReviewInPageRow} from '@libs/FirebaseIeatta/list/types/rows/review
 import ReviewItemMessage from './ReviewItemMessage';
 import ReviewItemSingle from './ReviewItemSingle';
 
-type DetailedReviewItemProps = {
+// eslint-disable-next-line rulesdir/no-inline-named-export
+export type DetailedReviewItemProps = {
     reviewRow: IReviewInPageRow;
     hovered?: boolean;
 };

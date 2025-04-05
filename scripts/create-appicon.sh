@@ -1,18 +1,20 @@
-#!/bin/bash
+#!/bin/baehppsnrstart
 
+# https://apetools.webprofusion.com/#/tools/imagegorilla
 
 # Use functions and variables from the utils script
 source scripts/shellUtils.sh
 
 iosFolderName="NewIeatta"
+appIconsFold="./AppIconsSplash/appIcons"
 
 info "Android & iOS icon generator for React Native"
 
 createIcons() {
-    iconset create -d --flavor AdHoc ./assets/appIcons/icon-adHoc.png
-    iconset create -d --flavor Development ./assets/appIcons/icon-dev.png
-    iconset create -d --flavor Dev ./assets/appIcons/icon-dev.png
-    iconset create -d ./assets/appIcons/icon.png
+    npx iconset create -d --flavor AdHoc $appIconsFold/icon-adHoc.png
+    npx iconset create -d --flavor Development $appIconsFold/icon-dev.png
+    npx iconset create -d --flavor Dev $appIconsFold/icon-dev.png
+    npx iconset create -d $appIconsFold/icon.png
 }
 
 onPrefix() {
@@ -27,6 +29,15 @@ onPost() {
     rm -rf "ios/${iosFolderName}/Images.xcassets/AppIcon-Development.appiconset"
     mv "ios/${iosFolderName}/Images.xcassets/AppIcon-AdHoc.appiconset"     "ios/${iosFolderName}/Images.xcassets/AppIconAdHoc.appiconset"
     mv "ios/${iosFolderName}/Images.xcassets/AppIcon-Dev.appiconset"       "ios/${iosFolderName}/Images.xcassets/AppIconDev.appiconset"
+}
+
+onPostOnAndroid() {
+    rm -rf "android/app/src/main/res/drawable/ic_launcher.png"
+    cp "android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png" "android/app/src/main/res/drawable/ic_launcher.png"
+    rm -rf "android/app/src/main/res/drawable/ic_launcher_monochrome.png"
+    cp "AppIconsSplash/appIcons/ic_launcher_monochrome.png" "android/app/src/main/res/drawable/ic_launcher_monochrome.png"
+    rm -rf "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml"
+    cp "AppIconsSplash/appIcons/mipmap-anydpi-v26/ic_launcher.xml" "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml"
 }
 
 createAdaptiveIcons() {
@@ -59,10 +70,10 @@ createAdaptiveIcons() {
         info "ic_launcher_round_path is ${ic_launcher_round_path}"
         cp "${ic_launcher_round_path}" "${filePath}"
     done
-
 }
 
 onPrefix
 createIcons
 onPost
+onPostOnAndroid
 createAdaptiveIcons "adhoc" "ic_launcher_foreground.png"

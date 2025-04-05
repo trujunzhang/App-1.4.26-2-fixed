@@ -30,6 +30,8 @@ function PROJECT_ieatta_resources() {
     step=$((step + 1))
     info "Start copying ieatta resources"
 
+    copy_folder_from_source_to_dest "AppIconsSplash"
+
     copy_folder_from_source_to_dest "assets/ieatta"
     copy_folder_from_source_to_dest "assets/appIcons"
 

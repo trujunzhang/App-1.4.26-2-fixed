@@ -35,6 +35,7 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import * as FileUtils from '@libs/fileDownload/FileUtils';
 import {ParseModelSqlPhotos} from '@libs/FirebaseIeatta/appModel';
 import {PhotoType} from '@libs/FirebaseIeatta/constant';
+import type {IAuthUser} from '@libs/FirebaseIeatta/models/auth_user_model';
 import {getAuthUserFromPersonalDetails} from '@libs/FirebaseIeatta/models/auth_user_model';
 import FirebasePhoto from '@libs/FirebaseIeatta/services/firebase-photo';
 import {documentIdFromCurrentDate} from '@libs/FirebaseIeatta/utils/md5_utils';
@@ -179,8 +180,8 @@ function IEATTATakePhotoPage({route}: IEATTATakePhotoPageProps) {
 
         toastId.current = ShowNotify.initialAndShowNotify({isSmallScreenWidth, message: translate('notify.takePhoto.start'), autoClose: false});
 
-        const authUserModel = getAuthUserFromPersonalDetails(personalData);
-        if (_.isUndefined(authUserModel)) {
+        const authUserModel: IAuthUser | null = getAuthUserFromPersonalDetails(personalData);
+        if (_.isUndefined(authUserModel) || _.isNull(authUserModel)) {
             ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.auth.unAuthed')});
             return;
         }
@@ -245,8 +246,8 @@ function IEATTATakePhotoPage({route}: IEATTATakePhotoPageProps) {
                 Log.info('================================');
                 Log.info('');
 
-                const authUserModel = getAuthUserFromPersonalDetails(personalData);
-                if (_.isUndefined(authUserModel)) {
+                const authUserModel: IAuthUser | null = getAuthUserFromPersonalDetails(personalData);
+                if (_.isUndefined(authUserModel) || _.isNull(authUserModel)) {
                     ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.auth.unAuthed')});
                     return;
                 }

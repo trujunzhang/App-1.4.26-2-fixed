@@ -132,6 +132,7 @@ function actionDeleteNavigateTo({item, onSuccess, onFailure}: ActionDeleteNaviga
         case PageSection.EVENT_USER:
         case PageSection.EVENT_USER_WEB: {
             const {peopleInEvent, user, recipes, showDivide} = rowData as IUserInEventRow;
+            new FirebaseHelper().deleteData({path: FBCollections.PeopleInEvent, uniqueId: peopleInEvent.uniqueId}).then(onSuccess).catch(onFailure);
             break;
         }
         default: {
