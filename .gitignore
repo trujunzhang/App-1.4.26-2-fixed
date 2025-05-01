@@ -46,6 +46,9 @@ android/app/src/main/java/com/expensify/chat/generated/
 # Vscode
 .vscode
 
+# Fleet
+.fleet
+
 # node.js
 #
 node_modules/
@@ -61,9 +64,13 @@ buck-out/
 \.buckd/
 *.keystore
 !debug.keystore
+!my-upload-key.keystore
+.kotlin
+.obsidian
+.js
+.jsx
 .!*!*
 *-E
-!my-upload-key.keystore
 android/app/android-fastlane-json-key.json
 
 # fastlane
@@ -149,4 +156,3 @@ docs/.bundle
 react-compiler-output.txt
 
 .env.local
-.obsidian

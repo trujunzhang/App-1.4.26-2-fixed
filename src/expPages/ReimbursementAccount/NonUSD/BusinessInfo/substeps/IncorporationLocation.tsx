@@ -1,4 +1,4 @@
-import getSubstepValues from '@expPages/ReimbursementAccount/utils/getSubstepValues';
+import getSubStepValues from '@expPages/ReimbursementAccount/utils/getSubStepValues';
 import {CONST as COMMON_CONST} from 'expensify-common/dist/CONST';
 import React, {useCallback, useMemo, useState} from 'react';
 import {useOnyx} from 'react-native-onyx';
@@ -41,7 +41,7 @@ function IncorporationLocation({onNext, isEditing}: IncorporationLocationProps) 
     const [reimbursementAccountDraft] = useOnyx(ONYXKEYS.FORMS.REIMBURSEMENT_ACCOUNT_FORM_DRAFT);
     const onyxValues = useMemo(
         () =>
-            getSubstepValues(
+            getSubStepValues(
                 {FORMATION_INCORPORATION_COUNTRY_CODE, FORMATION_INCORPORATION_STATE, COMPANY_COUNTRY: COMPANY_COUNTRY_CODE, COMPANY_STATE},
                 reimbursementAccountDraft,
                 reimbursementAccount,
@@ -54,6 +54,7 @@ function IncorporationLocation({onNext, isEditing}: IncorporationLocationProps) 
     const incorporationStateInitialValue = onyxValues[FORMATION_INCORPORATION_STATE] !== '' ? onyxValues[FORMATION_INCORPORATION_STATE] : businessAddressStateDefaultValue;
 
     const [selectedCountry, setSelectedCountry] = useState<string>(incorporationCountryInitialValue);
+    const [selectedState, setSelectedState] = useState<string>(incorporationStateInitialValue);
     const shouldGatherState = isCountryWithSelectableState(selectedCountry);
 
     const validate = useCallback(
@@ -71,6 +72,11 @@ function IncorporationLocation({onNext, isEditing}: IncorporationLocationProps) 
 
     const handleSelectingCountry = (country: unknown) => {
         setSelectedCountry(typeof country === 'string' ? country : '');
+        setSelectedState('');
+    };
+
+    const handleSelectingState = (state: unknown) => {
+        setSelectedState(typeof state === 'string' ? state : '');
     };
 
     return (
@@ -81,6 +87,7 @@ function IncorporationLocation({onNext, isEditing}: IncorporationLocationProps) 
             validate={validate}
             style={[styles.flexGrow1]}
             submitButtonStyles={[styles.mh5]}
+            shouldHideFixErrorsAlert={!shouldGatherState}
         >
             <Text style={[styles.textHeadlineLineHeightXXL, styles.mh5, styles.mb3]}>{translate('businessInfoStep.whereWasTheBusinessIncorporated')}</Text>
             {shouldGatherState && (
@@ -92,7 +99,8 @@ function IncorporationLocation({onNext, isEditing}: IncorporationLocationProps) 
                     searchInputTitle={translate('businessInfoStep.findIncorporationState')}
                     inputID={FORMATION_INCORPORATION_STATE}
                     shouldSaveDraft={!isEditing}
-                    defaultValue={incorporationStateInitialValue}
+                    value={selectedState}
+                    onValueChange={handleSelectingState}
                 />
             )}
             <InputWrapper

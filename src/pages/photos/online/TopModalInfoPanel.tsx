@@ -24,8 +24,10 @@ import {PageSection, RowPressableType} from '@libs/FirebaseIeatta/list/constant'
 import type {IDisplayNameTitleRow} from '@libs/FirebaseIeatta/list/types/rows/common';
 import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
 import {calcRateForRestaurant} from '@libs/FirebaseIeatta/utils/rate_utils';
+import Navigation from '@libs/Navigation/Navigation';
 import Variables from '@styles/variables';
 import CONST from '@src/CONST';
+import ROUTES from '@src/ROUTES';
 import type {IFBEvent, IFBRecipe, IFBRestaurant} from '@src/types/firebase';
 import type {TopModalInfoPanelProps} from './types';
 
@@ -33,7 +35,9 @@ function TopModalInfoPanel({relatedId, photoType}: TopModalInfoPanelProps) {
     const styles = useThemeStyles();
     const theme = useTheme();
 
-    const addPhoto = useCallback(() => {}, []);
+    const addPhoto = useCallback(() => {
+        Navigation.navigate(ROUTES.TAKE_PHOTO.getRoute({relatedId, photoType}));
+    }, [photoType, relatedId]);
 
     const infoPrefix = photoType === PhotoType.Waiter ? 'Waiters' : 'Photos';
 

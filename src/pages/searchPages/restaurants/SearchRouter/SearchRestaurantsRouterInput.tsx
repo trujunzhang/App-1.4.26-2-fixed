@@ -9,7 +9,7 @@ import TextInput from '@components/TextInput';
 import useLocalize from '@hooks/useLocalize';
 import useNetwork from '@hooks/useNetwork';
 import useThemeStyles from '@hooks/useThemeStyles';
-import shouldDelayFocus from '@libs/shouldDelayFocus';
+// import shouldDelayFocus from '@libs/shouldDelayFocus';
 import variables from '@styles/variables';
 import CONST from '@src/CONST';
 
@@ -95,7 +95,7 @@ function SearchRestaurantsRouterInput({
                         value={value}
                         onChangeText={onChangeText}
                         autoFocus={autoFocus}
-                        shouldDelayFocus={shouldDelayFocus}
+                        // shouldDelayFocus={shouldDelayFocus}
                         loadingSpinnerStyle={[styles.mt0, styles.mr2]}
                         role={CONST.ROLE.PRESENTATION}
                         placeholder={translate('search.searchPlaceholder')}

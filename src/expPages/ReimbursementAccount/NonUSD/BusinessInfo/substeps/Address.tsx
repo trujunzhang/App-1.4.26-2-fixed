@@ -1,5 +1,5 @@
-import getSubstepValues from '@expPages/ReimbursementAccount/utils/getSubstepValues';
-import React, {useMemo, useState} from 'react';
+import getSubStepValues from '@expPages/ReimbursementAccount/utils/getSubStepValues';
+import React, {useMemo} from 'react';
 import {useOnyx} from 'react-native-onyx';
 import AddressStep from '@components/SubStepForms/AddressStep';
 import useLocalize from '@hooks/useLocalize';
@@ -29,34 +29,22 @@ function Address({onNext, onMove, isEditing}: AddressProps) {
     const [reimbursementAccount] = useOnyx(ONYXKEYS.REIMBURSEMENT_ACCOUNT);
     const [reimbursementAccountDraft] = useOnyx(ONYXKEYS.FORMS.REIMBURSEMENT_ACCOUNT_FORM_DRAFT);
 
-    const onyxValues = useMemo(() => getSubstepValues(INPUT_KEYS, reimbursementAccountDraft, reimbursementAccount), [reimbursementAccount, reimbursementAccountDraft]);
+    const onyxValues = useMemo(() => getSubStepValues(INPUT_KEYS, reimbursementAccountDraft, reimbursementAccount), [reimbursementAccount, reimbursementAccountDraft]);
 
-    const businessStepCountryDraftValue = onyxValues[COMPANY_COUNTRY_CODE];
-    const countryStepCountryDraftValue = reimbursementAccountDraft?.[INPUT_IDS.ADDITIONAL_DATA.COUNTRY] ?? '';
-    const countryInitialValue =
-        businessStepCountryDraftValue !== '' && businessStepCountryDraftValue !== countryStepCountryDraftValue ? businessStepCountryDraftValue : countryStepCountryDraftValue;
+    const businessStepCountryDefaultValue = onyxValues[COMPANY_COUNTRY_CODE] ?? '';
+    const countryStepCountryValue = reimbursementAccount?.achData?.[INPUT_IDS.ADDITIONAL_DATA.COUNTRY] ?? '';
+    const countryDefaultValue = businessStepCountryDefaultValue === '' ? countryStepCountryValue : businessStepCountryDefaultValue;
+    const shouldDisplayStateSelector = countryDefaultValue === CONST.COUNTRY.US || countryDefaultValue === CONST.COUNTRY.CA;
 
     const defaultValues = {
         street: onyxValues[COMPANY_STREET] ?? '',
         city: onyxValues[COMPANY_CITY] ?? '',
         state: onyxValues[COMPANY_STATE] ?? '',
         zipCode: onyxValues[COMPANY_POSTAL_CODE] ?? '',
-        country: businessStepCountryDraftValue ?? countryInitialValue,
+        country: countryDefaultValue,
     };
 
-    // Has to be stored in state and updated on country change due to the fact that we can't relay on onyxValues when user is editing the form (draft values are not being saved in that case)
-    const [shouldDisplayStateSelector, setShouldDisplayStateSelector] = useState<boolean>(
-        defaultValues.country === CONST.COUNTRY.US || defaultValues.country === CONST.COUNTRY.CA || defaultValues.country === '',
-    );
     const stepFields = shouldDisplayStateSelector ? STEP_FIELDS : STEP_FIELDS_WITHOUT_STATE;
-
-    const handleCountryChange = (country: unknown) => {
-        if (typeof country !== 'string' || country === '') {
-            return;
-        }
-
-        setShouldDisplayStateSelector(country === CONST.COUNTRY.US || country === CONST.COUNTRY.CA);
-    };
 
     const handleSubmit = useReimbursementAccountStepFormSubmit({
         fieldIds: stepFields,
@@ -76,9 +64,10 @@ function Address({onNext, onMove, isEditing}: AddressProps) {
             stepFields={stepFields}
             inputFieldsIDs={INPUT_KEYS}
             defaultValues={defaultValues}
-            onCountryChange={handleCountryChange}
             shouldDisplayStateSelector={shouldDisplayStateSelector}
             shouldDisplayCountrySelector
+            shouldAllowCountryChange={false}
+            shouldValidateZipCodeFormat={countryDefaultValue === CONST.COUNTRY.US}
         />
     );
 }

@@ -1,4 +1,4 @@
-import * as ReportActionContextMenu from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
+import {showContextMenu} from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
 import React, {useCallback, useMemo, useRef} from 'react';
 import {View} from 'react-native';
 // eslint-disable-next-line no-restricted-imports
@@ -102,7 +102,13 @@ function AboutPage() {
             onPress: action,
             shouldShowRightIcon: true,
             onSecondaryInteraction: link
-                ? (event: GestureResponderEvent | MouseEvent) => ReportActionContextMenu.showContextMenu(CONST.CONTEXT_MENU_TYPES.LINK, event, link, popoverAnchor.current)
+                ? (event: GestureResponderEvent | MouseEvent) =>
+                      showContextMenu({
+                          type: CONST.CONTEXT_MENU_TYPES.LINK,
+                          event,
+                          selection: link,
+                          contextMenuAnchor: popoverAnchor.current,
+                      })
                 : undefined,
             ref: popoverAnchor,
             shouldBlockSelection: !!link,

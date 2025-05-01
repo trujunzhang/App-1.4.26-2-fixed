@@ -68,7 +68,7 @@ function BaseEditEventPage({restaurantId, eventId, event, isNewModel}: BaseEditE
         setIsLoading(editFormID, true);
         toastId.current = ShowNotify.initialAndShowNotify({
             isSmallScreenWidth,
-            message: translate('notify.save.start', {modalName: 'Restaurant'}),
+            message: translate('notify.save.start', {modalName: FBCollections.Events}),
             autoClose: false,
         });
 
@@ -107,11 +107,11 @@ function BaseEditEventPage({restaurantId, eventId, event, isNewModel}: BaseEditE
                 clearDraftValuesByDraftId(editFormID);
             })
             .then(() => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: 'Event'})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: FBCollections.Events})});
                 Navigation.goBack();
             })
             .catch((error) => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: 'Event'})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: FBCollections.Events})});
                 console.log(error);
             })
             .finally(() => {

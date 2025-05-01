@@ -1,6 +1,8 @@
 import type {BankInfoSubStepProps} from '@expPages/ReimbursementAccount/NonUSD/BankInfo/types';
+import {getBankInfoStepValues} from '@expPages/ReimbursementAccount/NonUSD/utils/getBankInfoStepValues';
 import React, {useCallback, useMemo} from 'react';
 import {ActivityIndicator, View} from 'react-native';
+import {useOnyx} from 'react-native-onyx';
 import FormProvider from '@components/Form/FormProvider';
 import InputWrapper from '@components/Form/InputWrapper';
 import type {FormInputErrors, FormOnyxKeys, FormOnyxValues} from '@components/Form/types';
@@ -12,15 +14,28 @@ import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
+import type {ReimbursementAccountForm} from '@src/types/form';
 
 function BankAccountDetails({onNext, isEditing, corpayFields}: BankInfoSubStepProps) {
     const {translate} = useLocalize();
     const styles = useThemeStyles();
     const theme = useTheme();
+    const [reimbursementAccount] = useOnyx(ONYXKEYS.REIMBURSEMENT_ACCOUNT);
+    const [reimbursementAccountDraft] = useOnyx(ONYXKEYS.FORMS.REIMBURSEMENT_ACCOUNT_FORM_DRAFT);
 
     const bankAccountDetailsFields = useMemo(() => {
         return corpayFields?.formFields?.filter((field) => !field.id.includes(CONST.NON_USD_BANK_ACCOUNT.BANK_INFO_STEP_ACCOUNT_HOLDER_KEY_PREFIX));
     }, [corpayFields]);
+
+    const subStepKeys = bankAccountDetailsFields?.reduce((acc, field) => {
+        acc[field.id as keyof ReimbursementAccountForm] = field.id as keyof ReimbursementAccountForm;
+        return acc;
+    }, {} as Record<keyof ReimbursementAccountForm, keyof ReimbursementAccountForm>);
+
+    const defaultValues = useMemo(
+        () => getBankInfoStepValues(subStepKeys ?? {}, reimbursementAccountDraft, reimbursementAccount),
+        [reimbursementAccount, reimbursementAccountDraft, subStepKeys],
+    );
 
     const fieldIds = bankAccountDetailsFields?.map((field) => field.id);
 
@@ -73,11 +88,12 @@ function BankAccountDetails({onNext, isEditing, corpayFields}: BankInfoSubStepPr
                         aria-label={field.label}
                         role={CONST.ROLE.PRESENTATION}
                         shouldSaveDraft={!isEditing}
+                        defaultValue={String(defaultValues[field.id as keyof typeof defaultValues]) ?? ''}
                     />
                 </View>
             );
         });
-    }, [bankAccountDetailsFields, styles.mb6, isEditing]);
+    }, [bankAccountDetailsFields, styles.mb6, isEditing, defaultValues]);
 
     return (
         <FormProvider
@@ -87,18 +103,20 @@ function BankAccountDetails({onNext, isEditing, corpayFields}: BankInfoSubStepPr
             validate={validate}
             style={[styles.mh5, styles.flexGrow1]}
             isSubmitDisabled={!inputs}
+            shouldHideFixErrorsAlert={(bankAccountDetailsFields?.length ?? 0) <= 1}
         >
             <>
                 <Text style={[styles.textHeadlineLineHeightXXL, styles.mb6]}>{translate('bankInfoStep.whatAreYour')}</Text>
-                {inputs}
-                {!inputs && (
-                    <View style={[styles.flexGrow1, styles.alignItemsCenter]}>
+                {corpayFields?.isLoading ? (
+                    <View style={[styles.flexGrow4, styles.alignItemsCenter]}>
                         <ActivityIndicator
                             size={CONST.ACTIVITY_INDICATOR_SIZE.LARGE}
                             color={theme.spinner}
                             style={styles.flexGrow1}
                         />
                     </View>
+                ) : (
+                    inputs
                 )}
             </>
         </FormProvider>

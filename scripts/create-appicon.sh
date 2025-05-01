@@ -1,4 +1,4 @@
-#!/bin/baehppsnrstart
+#!/bin/bash
 
 # https://apetools.webprofusion.com/#/tools/imagegorilla
 

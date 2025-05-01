@@ -54,7 +54,7 @@ const stopTrace: StopTrace = (customEventName) => {
 };
 
 const log: Log = (action: string) => {
-    crashlytics().log(action);
+    // crashlytics().log(action);
 };
 
 export default {

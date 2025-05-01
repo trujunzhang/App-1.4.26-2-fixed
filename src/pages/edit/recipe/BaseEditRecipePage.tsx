@@ -64,7 +64,7 @@ function BaseEditRecipePage({restaurantId, recipeId, recipe, photosInPage, isNew
         setIsLoading(editFormID, true);
         toastId.current = ShowNotify.initialAndShowNotify({
             isSmallScreenWidth,
-            message: translate('notify.save.start', {modalName: 'Restaurant'}),
+            message: translate('notify.save.start', {modalName: FBCollections.Recipes}),
             autoClose: false,
         });
 
@@ -101,11 +101,11 @@ function BaseEditRecipePage({restaurantId, recipeId, recipe, photosInPage, isNew
                 clearDraftValuesByDraftId(editFormID);
             })
             .then(() => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: 'Recipe'})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: FBCollections.Recipes})});
                 Navigation.goBack();
             })
             .catch((error) => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: 'Recipe'})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: FBCollections.Recipes})});
                 console.log(error);
             })
             .finally(() => {
@@ -227,7 +227,12 @@ function BaseEditRecipePage({restaurantId, recipeId, recipe, photosInPage, isNew
 
     const renderCoverTitle = () => {
         if (photosInPage.length > 0) {
-            return <SectionCommonTitle titleRow={{title: 'sections.titles.cover', isSmallScreenWidth, titleColor: TailwindColors.red500}} />;
+            return (
+                <SectionCommonTitle
+                    paddingLeft={{paddingLeft: 0}}
+                    titleRow={{title: 'sections.titles.cover', isSmallScreenWidth, titleColor: TailwindColors.red500}}
+                />
+            );
         }
         return null;
     };

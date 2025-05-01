@@ -8,6 +8,6 @@ function GoogleProvider(props: GoogleProviderProps) {
     return props.children;
 }
 
-GoogleProvider.displayName = 'HTMLEngineProvider';
+GoogleProvider.displayName = 'GoogleProvider';
 
 export default GoogleProvider;

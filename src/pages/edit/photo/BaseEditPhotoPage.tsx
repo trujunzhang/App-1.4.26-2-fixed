@@ -56,7 +56,7 @@ function BaseEditPhotoPage({photoId, photo, isNewModel}: BaseEditPhotoPageProps)
         setIsLoading(editFormID, true);
         toastId.current = ShowNotify.initialAndShowNotify({
             isSmallScreenWidth,
-            message: translate('notify.save.start', {modalName: 'photo'}),
+            message: translate('notify.save.start', {modalName: FBCollections.Photos}),
             autoClose: false,
         });
 
@@ -91,11 +91,11 @@ function BaseEditPhotoPage({photoId, photo, isNewModel}: BaseEditPhotoPageProps)
                 clearDraftValuesByDraftId(editFormID);
             })
             .then(() => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: 'Photo'})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: FBCollections.Photos})});
                 Navigation.goBack();
             })
             .catch((error) => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: 'Photo'})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: FBCollections.Photos})});
                 console.log(error);
             })
             .finally(() => {

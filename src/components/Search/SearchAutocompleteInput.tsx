@@ -13,12 +13,12 @@ import useActiveWorkspace from '@hooks/useActiveWorkspace';
 import useCurrentUserPersonalDetails from '@hooks/useCurrentUserPersonalDetails';
 import useLocalize from '@hooks/useLocalize';
 import useNetwork from '@hooks/useNetwork';
+import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import {parseFSAttributes} from '@libs/Fullstory';
 import runOnLiveMarkdownRuntime from '@libs/runOnLiveMarkdownRuntime';
 import {getAutocompleteCategories, getAutocompleteTags, parseForLiveMarkdown} from '@libs/SearchAutocompleteUtils';
-import handleKeyPress from '@libs/SearchInputOnKeyPress';
 import shouldDelayFocus from '@libs/shouldDelayFocus';
 import variables from '@styles/variables';
 import CONST from '@src/CONST';
@@ -104,9 +104,10 @@ function SearchAutocompleteInput(
     const {isOffline} = useNetwork();
     const {activeWorkspaceID} = useActiveWorkspace();
     const currentUserPersonalDetails = useCurrentUserPersonalDetails();
+    const {shouldUseNarrowLayout} = useResponsiveLayout();
 
     const [currencyList] = useOnyx(ONYXKEYS.CURRENCY_LIST);
-    const currencyAutocompleteList = Object.keys(currencyList ?? {});
+    const currencyAutocompleteList = Object.keys(currencyList ?? {}).filter((currencyCode) => !currencyList?.[currencyCode]?.retired);
     const currencySharedValue = useSharedValue(currencyAutocompleteList);
 
     const [allPolicyCategories] = useOnyx(ONYXKEYS.COLLECTION.POLICY_CATEGORIES);
@@ -162,7 +163,7 @@ function SearchAutocompleteInput(
             'worklet';
 
             tagSharedValue.set(tagAutocompleteList);
-        });
+        })();
     }, [tagSharedValue, tagAutocompleteList]);
 
     const parser = useCallback(
@@ -183,7 +184,7 @@ function SearchAutocompleteInput(
         <View style={[outerWrapperStyle]}>
             <Animated.View
                 style={[styles.flexRow, styles.alignItemsCenter, wrapperStyle ?? styles.searchRouterTextInputContainer, wrapperAnimatedStyle]}
-                layout={LinearTransition}
+                layout={shouldUseNarrowLayout && rightComponent ? LinearTransition : undefined}
             >
                 <View
                     style={styles.flex1}
@@ -209,8 +210,8 @@ function SearchAutocompleteInput(
                         maxLength={CONST.SEARCH_QUERY_LIMIT}
                         onSubmitEditing={onSubmit}
                         shouldUseDisabledStyles={false}
-                        textInputContainerStyles={[styles.borderNone, styles.pb0]}
-                        inputStyle={[inputWidth, styles.pl3, {lineHeight: undefined}]}
+                        textInputContainerStyles={[styles.borderNone, styles.pb0, styles.pl3]}
+                        inputStyle={[inputWidth, {lineHeight: undefined}]}
                         placeholderTextColor={theme.textSupporting}
                         onFocus={() => {
                             onFocus?.();
@@ -222,9 +223,8 @@ function SearchAutocompleteInput(
                             focusedSharedValue.set(false);
                             onBlur?.();
                         }}
-                        isLoading={!!isSearchingForReports}
+                        isLoading={isSearchingForReports}
                         ref={ref}
-                        onKeyPress={handleKeyPress(onSubmit)}
                         type="markdown"
                         multiline={false}
                         parser={parser}

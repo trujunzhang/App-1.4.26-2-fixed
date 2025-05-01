@@ -199,7 +199,7 @@ function ReportListItem<TItem extends ListItem>({
                         </View>
                     </View>
                     {isLargeScreenWidth && (
-                        <View style={StyleUtils.getSearchTableColumnStyles(CONST.SEARCH.TABLE_COLUMNS.ACTION)}>
+                        <View style={StyleUtils.getReportTableColumnStyles(CONST.SEARCH.TABLE_COLUMNS.ACTION)}>
                             <ActionCell
                                 action={reportItem.action}
                                 shouldUseSuccessStyle={!hasHeldExpenses}

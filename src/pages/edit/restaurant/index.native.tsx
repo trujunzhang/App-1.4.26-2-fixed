@@ -5,17 +5,21 @@ import {useObject, useQuery, useRealm} from '@realm/react';
 // eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import lodashGet from 'lodash/get';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState} from 'react';
+import {useOnyx} from 'react-native-onyx';
 import useWindowDimensions from '@hooks/useWindowDimensions';
 import {FBCollections, PhotoType} from '@libs/FirebaseIeatta/constant';
-import getCurrentPosition from '@libs/getCurrentPosition';
+// import getCurrentPosition from '@libs/getCurrentPosition';
 import {emptyRestaurantTag} from '@libs/ieatta/editFormUtils';
+import {LocationContext} from '@libs/ieatta/reducer/locationProvider';
+import locationReducer from '@libs/ieatta/reducer/locationReducer';
 import type {RightIeattaNavigatorParamList} from '@libs/Navigation/types';
 import {RealmCollections} from '@libs/Realm/constant';
 import {toRealmModelList} from '@libs/Realm/helpers/realmTypeHelper';
 import RealmHelper from '@libs/Realm/services/realm-helper';
 import * as RealmQuery from '@libs/Realm/services/realm-query';
 import CONST from '@src/CONST';
+import ONYXKEYS from '@src/ONYXKEYS';
 import type SCREENS from '@src/SCREENS';
 import type {IFBPhoto, IFBRestaurant} from '@src/types/firebase';
 import BaseEditRestaurantPage from './BaseEditRestaurantPage';
@@ -31,8 +35,11 @@ function EditRestaurantPage(props: EditRestaurantPageProps) {
     const {windowWidth} = useWindowDimensions();
     const realm = useRealm();
 
-    const [currentPosition, setCurrentPosition] = useState<{latitude: number; longitude: number}>(CONST.DEFAULT_LOCATION);
-    const hasAskedForLocationPermission = useRef(false);
+    const {state, dispatch} = useContext(LocationContext);
+
+    // const [currentPosition, setCurrentPosition] = useState<{latitude: number; longitude: number}>(CONST.DEFAULT_LOCATION);
+    // const hasAskedForLocationPermission = useRef(false);
+
     /**
       |--------------------------------------------------
       | Single(Restaurant)
@@ -51,22 +58,22 @@ function EditRestaurantPage(props: EditRestaurantPageProps) {
     );
     const photosInPage: IFBPhoto[] = toRealmModelList<IFBPhoto>(photos);
 
-    useFocusEffect(
-        useCallback(() => {
-            if (hasAskedForLocationPermission.current) {
-                return;
-            }
-
-            hasAskedForLocationPermission.current = true;
-            getCurrentPosition(
-                (params) => {
-                    const currentCoords = {longitude: params.coords.longitude, latitude: params.coords.latitude};
-                    setCurrentPosition(currentCoords);
-                },
-                () => {},
-            );
-        }, []),
-    );
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         if (hasAskedForLocationPermission.current) {
+    //             return;
+    //         }
+    //
+    //         hasAskedForLocationPermission.current = true;
+    //         getCurrentPosition(
+    //             (params) => {
+    //                 const currentCoords = {longitude: params.coords.longitude, latitude: params.coords.latitude};
+    //                 setCurrentPosition(currentCoords);
+    //             },
+    //             () => {},
+    //         );
+    //     }, []),
+    // );
 
     // eslint-disable-next-line @lwc/lwc/no-async-await
     const onAfterSelectedCover = async (firebasePhotoId: string) => {
@@ -80,7 +87,7 @@ function EditRestaurantPage(props: EditRestaurantPageProps) {
             restaurantId={restaurantId}
             restaurant={restaurant}
             isNewModel={restaurantId === CONST.IEATTA_EDIT_MODEL_NEW}
-            userLocation={currentPosition}
+            userLocation={state.location}
             photosInPage={photosInPage}
             onAfterSelectedCover={onAfterSelectedCover}
         />

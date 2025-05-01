@@ -17,6 +17,7 @@ function SignInPageLayout(
 ) {
     const styles = useThemeStyles();
     const StyleUtils = useStyleUtils();
+    // eslint-disable-next-line rulesdir/prefer-shouldUseNarrowLayout-instead-of-isSmallScreenWidth
     const {isSmallScreenWidth, isMediumScreenWidth, isLargeScreenWidth} = useResponsiveLayout();
 
     const signFormContainerStyle = useMemo(

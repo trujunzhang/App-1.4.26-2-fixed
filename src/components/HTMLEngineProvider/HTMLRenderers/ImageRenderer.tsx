@@ -3,9 +3,9 @@ import {useOnyx} from 'react-native-onyx';
 import type {OnyxEntry} from 'react-native-onyx';
 import type {CustomRendererProps, TBlock} from 'react-native-render-html';
 import {AttachmentContext} from '@components/AttachmentContext';
-import {getButtonRole, getButtonStyle} from '@components/Button/utils';
+import {getButtonRole} from '@components/Button/utils';
 import {isDeletedNode} from '@components/HTMLEngineProvider/htmlEngineUtils';
-import * as Expensicons from '@components/Icon/Expensicons';
+import {Document, GalleryNotFound} from '@components/Icon/Expensicons';
 import PressableWithoutFocus from '@components/Pressable/PressableWithoutFocus';
 import {ShowContextMenuContext, showContextMenuForReport} from '@components/ShowContextMenuContext';
 import ThumbnailImage from '@components/ThumbnailImage';
@@ -57,6 +57,7 @@ function ImageRenderer({tnode}: ImageRendererProps) {
     const attachmentSourceAttribute =
         htmlAttribs[CONST.ATTACHMENT_SOURCE_ATTRIBUTE] ?? (new RegExp(CONST.ATTACHMENT_OR_RECEIPT_LOCAL_URL, 'i').test(htmlAttribs.src) ? htmlAttribs.src : null);
     const isAttachmentOrReceipt = !!attachmentSourceAttribute;
+    const attachmentID = htmlAttribs[CONST.ATTACHMENT_ID_ATTRIBUTE];
 
     // Files created/uploaded/hosted by App should resolve from API ROOT. Other URLs aren't modified
     const previewSource = tryResolveUrlFromApiRoot(htmlAttribs.src);
@@ -72,7 +73,7 @@ function ImageRenderer({tnode}: ImageRendererProps) {
     const imagePreviewModalDisabled = htmlAttribs['data-expensify-preview-modal-disabled'] === 'true';
 
     const fileType = getFileType(attachmentSourceAttribute);
-    const fallbackIcon = fileType === CONST.ATTACHMENT_FILE_TYPE.FILE ? Expensicons.Document : Expensicons.GalleryNotFound;
+    const fallbackIcon = fileType === CONST.ATTACHMENT_FILE_TYPE.FILE ? Document : GalleryNotFound;
     const theme = useTheme();
 
     let fileName = htmlAttribs[CONST.ATTACHMENT_ORIGINAL_FILENAME_ATTRIBUTE] || getFileName(`${isAttachmentOrReceipt ? attachmentSourceAttribute : htmlAttribs.src}`);
@@ -104,14 +105,14 @@ function ImageRenderer({tnode}: ImageRendererProps) {
                 <AttachmentContext.Consumer>
                     {({reportID, accountID, type}) => (
                         <PressableWithoutFocus
-                            style={[styles.noOutline, getButtonStyle(styles, true)]}
+                            style={[styles.noOutline]}
                             onPress={() => {
                                 if (!source || !type) {
                                     return;
                                 }
 
                                 const attachmentLink = tnode.parent?.attributes?.href;
-                                const route = ROUTES.ATTACHMENTS?.getRoute(reportID, type, source, accountID, isAttachmentOrReceipt, fileName, attachmentLink);
+                                const route = ROUTES.ATTACHMENTS?.getRoute(reportID, attachmentID, type, source, accountID, isAttachmentOrReceipt, fileName, attachmentLink);
                                 Navigation.navigate(route);
                             }}
                             onLongPress={(event) => {
@@ -120,6 +121,7 @@ function ImageRenderer({tnode}: ImageRendererProps) {
                                 }
                                 showContextMenuForReport(event, anchor, report?.reportID, action, checkIfContextMenuActive, isArchivedNonExpenseReport(report, reportNameValuePairs));
                             }}
+                            isNested
                             shouldUseHapticsOnLongPress
                             role={getButtonRole(true)}
                             accessibilityLabel={translate('accessibilityHints.viewAttachment')}

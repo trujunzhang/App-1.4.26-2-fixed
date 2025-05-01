@@ -1,4 +1,4 @@
-import getSubstepValues from '@expPages/ReimbursementAccount/utils/getSubstepValues';
+import getSubStepValues from '@expPages/ReimbursementAccount/utils/getSubStepValues';
 import React, {useMemo} from 'react';
 import {useOnyx} from 'react-native-onyx';
 import ConfirmationStep from '@components/SubStepForms/ConfirmationStep';
@@ -29,8 +29,8 @@ function Confirmation({onNext, onMove, isEditing, isSecondSigner}: ConfirmationP
 
     const [reimbursementAccount] = useOnyx(ONYXKEYS.REIMBURSEMENT_ACCOUNT);
     const [reimbursementAccountDraft] = useOnyx(ONYXKEYS.FORMS.REIMBURSEMENT_ACCOUNT_FORM_DRAFT);
-    const isUserOwner = reimbursementAccount?.achData?.additionalData?.corpay?.[OWNS_MORE_THAN_25_PERCENT] ?? reimbursementAccountDraft?.[OWNS_MORE_THAN_25_PERCENT] ?? false;
-    const values = useMemo(() => getSubstepValues(SINGER_INFO_STEP_KEYS, reimbursementAccountDraft, reimbursementAccount), [reimbursementAccount, reimbursementAccountDraft]);
+    const isUserOwner = reimbursementAccount?.achData?.corpay?.[OWNS_MORE_THAN_25_PERCENT] ?? reimbursementAccountDraft?.[OWNS_MORE_THAN_25_PERCENT] ?? false;
+    const values = useMemo(() => getSubStepValues(SINGER_INFO_STEP_KEYS, reimbursementAccountDraft, reimbursementAccount), [reimbursementAccount, reimbursementAccountDraft]);
 
     const IDs = values[isSecondSigner ? SECOND_SIGNER_COPY_OF_ID : SIGNER_COPY_OF_ID];
     const proofs = values[isSecondSigner ? SECOND_SIGNER_ADDRESS_PROOF : SIGNER_ADDRESS_PROOF];

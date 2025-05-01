@@ -1,5 +1,5 @@
 import * as ReportActionContextMenu from '@expPages/home/report/ContextMenu/ReportActionContextMenu';
-import React, {useCallback, useMemo, useRef} from 'react';
+import React, {useCallback, useContext, useMemo, useRef} from 'react';
 import {View} from 'react-native';
 // eslint-disable-next-line no-restricted-imports
 import type {GestureResponderEvent, StyleProp, ViewStyle} from 'react-native';
@@ -19,6 +19,7 @@ import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
 import useWaitForNavigation from '@hooks/useWaitForNavigation';
 import {isInternalTestBuild} from '@libs/Environment/Environment';
+import {LocationContext} from '@libs/ieatta/reducer/locationProvider';
 import Navigation from '@libs/Navigation/Navigation';
 import {openExternalLink} from '@userActions/Link';
 import {navigateToConciergeChat} from '@userActions/Report';
@@ -55,18 +56,20 @@ function AboutPage() {
     const waitForNavigate = useWaitForNavigation();
     const {shouldUseNarrowLayout} = useResponsiveLayout();
 
+    const {state, dispatch} = useContext(LocationContext);
+
     const menuItems = useMemo(() => {
         const baseMenuItems: MenuItem[] = [
-            {
-                translationKey: 'initialSettingsPage.aboutPage.appDownloadLinks',
-                icon: Expensicons.Link,
-                action: waitForNavigate(() => Navigation.navigate(ROUTES.SETTINGS_APP_DOWNLOAD_LINKS)),
-            },
-            {
-                translationKey: 'initialSettingsPage.aboutPage.viewKeyboardShortcuts',
-                icon: Expensicons.Keyboard,
-                action: waitForNavigate(() => Navigation.navigate(ROUTES.KEYBOARD_SHORTCUTS)),
-            },
+            // {
+            //     translationKey: 'initialSettingsPage.aboutPage.appDownloadLinks',
+            //     icon: Expensicons.Link,
+            //     action: waitForNavigate(() => Navigation.navigate(ROUTES.SETTINGS_APP_DOWNLOAD_LINKS)),
+            // },
+            // {
+            //     translationKey: 'initialSettingsPage.aboutPage.viewKeyboardShortcuts',
+            //     icon: Expensicons.Keyboard,
+            //     action: waitForNavigate(() => Navigation.navigate(ROUTES.KEYBOARD_SHORTCUTS)),
+            // },
             {
                 translationKey: 'initialSettingsPage.aboutPage.viewTheCode',
                 icon: Expensicons.Eye,

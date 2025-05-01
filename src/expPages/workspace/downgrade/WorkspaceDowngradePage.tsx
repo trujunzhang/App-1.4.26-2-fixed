@@ -4,6 +4,7 @@ import {useOnyx} from 'react-native-onyx';
 import ConfirmModal from '@components/ConfirmModal';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
 import ScreenWrapper from '@components/ScreenWrapper';
+import ScrollView from '@components/ScrollView';
 import Text from '@components/Text';
 import TextLink from '@components/TextLink';
 import useLocalize from '@hooks/useLocalize';
@@ -13,7 +14,8 @@ import {getCompanyFeeds} from '@libs/CardUtils';
 import Navigation from '@libs/Navigation/Navigation';
 import type {PlatformStackScreenProps} from '@libs/Navigation/PlatformStackNavigation/types';
 import type {SettingsNavigatorParamList} from '@libs/Navigation/types';
-import {canModifyPlan, getWorkspaceAccountID, isCollectPolicy} from '@libs/PolicyUtils';
+import {canModifyPlan, isCollectPolicy} from '@libs/PolicyUtils';
+import CONST from '@src/CONST';
 import {downgradeToTeam} from '@src/libs/actions/Policy/Policy';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
@@ -26,11 +28,11 @@ type WorkspaceDowngradePageProps = PlatformStackScreenProps<SettingsNavigatorPar
 function WorkspaceDowngradePage({route}: WorkspaceDowngradePageProps) {
     const styles = useThemeStyles();
     const policyID = route.params?.policyID;
-    const workspaceAccountID = getWorkspaceAccountID(policyID);
+    const [policy] = useOnyx(`${ONYXKEYS.COLLECTION.POLICY}${policyID}`);
+    const workspaceAccountID = policy?.workspaceAccountID ?? CONST.DEFAULT_NUMBER_ID;
     const [cardFeeds] = useOnyx(`${ONYXKEYS.COLLECTION.SHARED_NVP_PRIVATE_DOMAIN_MEMBER}${workspaceAccountID}`);
     const companyFeeds = getCompanyFeeds(cardFeeds);
     const {translate} = useLocalize();
-    const [policy] = useOnyx(`${ONYXKEYS.COLLECTION.POLICY}${policyID}`);
     const {isOffline} = useNetwork();
     const [isDowngradeWarningModalOpen, setIsDowngradeWarningModalOpen] = useState(false);
 
@@ -82,22 +84,25 @@ function WorkspaceDowngradePage({route}: WorkspaceDowngradePageProps) {
                     }
                 }}
             />
-            {isDowngraded && !!policyID && (
-                <DowngradeConfirmation
-                    onConfirmDowngrade={() => {
-                        Navigation.dismissModal();
-                    }}
-                    policyID={policyID}
-                />
-            )}
-            {!isDowngraded && (
-                <DowngradeIntro
-                    policyID={policyID}
-                    onDowngrade={onDowngradeToTeam}
-                    buttonDisabled={isOffline}
-                    loading={policy?.isPendingDowngrade}
-                />
-            )}
+            <ScrollView contentContainerStyle={styles.flexGrow1}>
+                {isDowngraded && !!policyID && (
+                    <DowngradeConfirmation
+                        onConfirmDowngrade={() => {
+                            Navigation.dismissModal();
+                        }}
+                        policyID={policyID}
+                    />
+                )}
+                {!isDowngraded && (
+                    <DowngradeIntro
+                        policyID={policyID}
+                        onDowngrade={onDowngradeToTeam}
+                        buttonDisabled={isOffline}
+                        loading={policy?.isPendingDowngrade}
+                        backTo={route.params.backTo}
+                    />
+                )}
+            </ScrollView>
             <ConfirmModal
                 title={translate('workspace.moreFeatures.companyCards.downgradeTitle')}
                 isVisible={isDowngradeWarningModalOpen}

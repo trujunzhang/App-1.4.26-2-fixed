@@ -1,3 +1,4 @@
+import ChangePolicyEducationalModal from '@expPages/ChangePolicyEducationalModal';
 import ProcessMoneyRequestHoldPage from '@expPages/ProcessMoneyRequestHoldPage';
 import TrackTrainingPage from '@expPages/TrackTrainingPage';
 import React from 'react';
@@ -22,6 +23,10 @@ function FeatureTrainingModalNavigator() {
                     <Stack.Screen
                         name={SCREENS.PROCESS_MONEY_REQUEST_HOLD_ROOT}
                         component={ProcessMoneyRequestHoldPage}
+                    />
+                    <Stack.Screen
+                        name={SCREENS.CHANGE_POLICY_EDUCATIONAL_ROOT}
+                        component={ChangePolicyEducationalModal}
                     />
                 </Stack.Navigator>
             </View>

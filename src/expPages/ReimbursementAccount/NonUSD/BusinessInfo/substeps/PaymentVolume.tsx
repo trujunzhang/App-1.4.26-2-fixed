@@ -22,7 +22,6 @@ function PaymentVolume({onNext, isEditing}: PaymentVolumeProps) {
     const {translate} = useLocalize();
     const styles = useThemeStyles();
     const [reimbursementAccount] = useOnyx(ONYXKEYS.REIMBURSEMENT_ACCOUNT);
-    const [reimbursementAccountDraft] = useOnyx(ONYXKEYS.FORMS.REIMBURSEMENT_ACCOUNT_FORM_DRAFT);
     const [corpayOnboardingFields] = useOnyx(ONYXKEYS.CORPAY_ONBOARDING_FIELDS);
     const policyID = reimbursementAccount?.achData?.policyID;
     const [policy] = useOnyx(`${ONYXKEYS.COLLECTION.POLICY}${policyID}`);
@@ -39,7 +38,7 @@ function PaymentVolume({onNext, isEditing}: PaymentVolumeProps) {
         }, {} as Record<string, string>);
     }, [corpayOnboardingFields]);
 
-    const annualVolumeDefaultValue = reimbursementAccount?.achData?.additionalData?.corpay?.[ANNUAL_VOLUME] ?? reimbursementAccountDraft?.[ANNUAL_VOLUME] ?? '';
+    const annualVolumeDefaultValue = reimbursementAccount?.achData?.corpay?.[ANNUAL_VOLUME] ?? '';
 
     const validate = useCallback((values: FormOnyxValues<typeof ONYXKEYS.FORMS.REIMBURSEMENT_ACCOUNT_FORM>): FormInputErrors<typeof ONYXKEYS.FORMS.REIMBURSEMENT_ACCOUNT_FORM> => {
         return getFieldRequiredErrors(values, STEP_FIELDS);
@@ -59,6 +58,7 @@ function PaymentVolume({onNext, isEditing}: PaymentVolumeProps) {
             validate={validate}
             style={[styles.flexGrow1]}
             submitButtonStyles={[styles.mh5]}
+            shouldHideFixErrorsAlert
         >
             <Text style={[styles.textHeadlineLineHeightXXL, styles.mh5, styles.mb3]}>{translate('businessInfoStep.whatsTheBusinessAnnualPayment')}</Text>
             <InputWrapper

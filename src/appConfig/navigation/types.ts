@@ -1,5 +1,6 @@
 import type {NavigatorScreenParams} from '@react-navigation/native';
 import type NAVIGATORS from '@src/NAVIGATORS';
+import type {Route as Routes} from '@src/ROUTES';
 import type SCREENS from '@src/SCREENS';
 
 type HomeSplitNavigatorParamList = {
@@ -8,6 +9,7 @@ type HomeSplitNavigatorParamList = {
         reportID: string;
         openOnAdminRoom?: boolean;
         referrer?: string;
+        backTo?: Routes;
         moneyRequestReportActionID?: string;
         transactionID?: string;
     };

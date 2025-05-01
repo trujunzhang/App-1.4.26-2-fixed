@@ -1,8 +1,10 @@
+/* eslint-disable no-else-return */
 // eslint-disable-next-line no-restricted-imports, lodash/import-scope
 import _ from 'lodash';
 import {ParseModelUsers} from '@libs/FirebaseIeatta/appModel';
 import Log from '@libs/Log';
 import {saveSession} from '@userActions/Firebase/UserFB';
+import CONST from '@src/CONST';
 import type {IFBUser} from '@src/types/firebase';
 import FirebaseHelper from './firebase-helper';
 
@@ -17,19 +19,25 @@ type CredentialUser = {
     photoURL: string | null;
 };
 
+type SaveUserParams = {
+    credentialUser: CredentialUser;
+    refreshToken?: string;
+};
+
 class FirebaseLogin {
-    saveUser(credentialUser: CredentialUser): Promise<void> {
+    saveUser({credentialUser, refreshToken = CONST.DEFAULT_SESSION_TOKEN}: SaveUserParams): Promise<void> {
         return new FirebaseHelper()
             .getUserByEmail(credentialUser.email ?? '')
-            .then((data) => {
-                if (_.isEmpty(data)) {
-                    const model: IFBUser = ParseModelUsers.getUserModel({
+            .then((data: IFBUser | null | undefined) => {
+                // If user is not exist, create it.
+                if (data === null || data === undefined) {
+                    const nextModal: IFBUser = ParseModelUsers.getUserModel({
                         uid: credentialUser.uid,
                         displayName: credentialUser.displayName ?? '',
                         email: credentialUser.email ?? '',
                         photoURL: credentialUser.photoURL ?? '',
                     });
-                    return new FirebaseHelper().saveUser(model);
+                    return new FirebaseHelper().saveUser(nextModal);
                 }
                 return Promise.resolve();
             })
@@ -38,7 +46,7 @@ class FirebaseLogin {
             })
             .then((data) => {
                 if (data !== null && data !== undefined) {
-                    saveSession(data);
+                    saveSession({user: data, refreshToken});
                 }
                 return Promise.resolve();
             })

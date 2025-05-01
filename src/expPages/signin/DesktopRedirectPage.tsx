@@ -1,5 +1,5 @@
 import React from 'react';
-import DeeplinkRedirectLoadingIndicator from '@components/DeeplinkWrapper/DeeplinkRedirectLoadingIndicator';
+import DeeplinkRedirectLoadingIndicator from '@components/Ieatta/components/DeeplinkWrapper/DeeplinkRedirectLoadingIndicator';
 import * as App from '@userActions/App';
 
 /**

@@ -50,6 +50,7 @@ project_files_extension=(
     "xcuserstat"
     "gpg"
     "jar"
+    "tgz"
 )
 
 project_files_name_contain=(

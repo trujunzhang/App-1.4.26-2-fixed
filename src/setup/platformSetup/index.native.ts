@@ -1,4 +1,5 @@
 import crashlytics from '@react-native-firebase/crashlytics';
+import {NativeModules} from 'react-native';
 import * as Metrics from '@libs/Metrics';
 import Performance from '@libs/Performance';
 import CONFIG from '@src/CONFIG';
@@ -8,8 +9,11 @@ export default function () {
     // Crashlytics is disabled by default for debug builds, but not local release builds so we are using
     // an environment variable to enable them in the staging & production apps and opt-out everywhere else.
     if (!CONFIG.SEND_CRASH_REPORTS) {
-        crashlytics().setCrashlyticsCollectionEnabled(false);
+        // crashlytics().setCrashlyticsCollectionEnabled(false);
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    NativeModules.DevSettings.setIsDebuggingRemotely(true);
 
     if (Metrics.canCapturePerformanceMetrics()) {
         Performance.enableMonitoring();

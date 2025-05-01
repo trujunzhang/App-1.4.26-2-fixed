@@ -35,6 +35,7 @@ function PROJECT_ieatta_lib_pages() {
         "src/components/AppHeader"
         "src/components/Debug"
         "src/libs/getRoutePathForDebug"
+        "src/libs/getWatchPosition"
         "src/components/ImagePlaceholder"
     )
 	copy_folders_with_array  "${lib_page_folders[@]}"

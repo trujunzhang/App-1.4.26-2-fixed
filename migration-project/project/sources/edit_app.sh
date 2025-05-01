@@ -11,6 +11,7 @@ function EDIT_app_js() {
         "import FirebaseSync from './components/Firebase/sync';"
         "import AppNotify from './components/Ieatta/components/Notify';"
         "import RealmLocalProvider from './components/Realm/provider';"
+        "import {LocationProvider} from './libs/ieatta/reducer/locationProvider';"
         "import {SearchRestaurantsRouterContextProvider} from './pages/searchPages/restaurants/SearchRouter/SearchRestaurantsRouterContext';"
     )
     join_by app_type_keys_strings "\n" "${app_type_keys_lines[@]}"
@@ -19,22 +20,19 @@ function EDIT_app_js() {
          "$app_js" \
          "import FirebaseSync" \
          "$keys_type_line" \
-         "$app_type_keys_strings"  \
+         "$app_type_keys_strings"  
          
-
-
     add_lines_in_file \
          "$app_js" \
          "Require cycle" \
          "'Setting a timer for a long period of time',"  \
-         "'Require cycle:',"  \
-         
-
+         "'Require cycle:',"  
 
     components_line="HTMLEngineProvider,"
     components_add_lines=(
         "                                SearchRestaurantsRouterContextProvider,"
         "                                RealmLocalProvider,"
+        "                                LocationProvider,"
     )
     join_by components_add_strings "\n" "${components_add_lines[@]}"
 
@@ -42,9 +40,7 @@ function EDIT_app_js() {
          "$app_js" \
          "RealmLocalProvider," \
          "$components_line" \
-         "$components_add_strings "  \
-         
-
+         "$components_add_strings "  
 
     views_line="</ErrorBoundary>"
     views_add_lines=(
@@ -57,6 +53,5 @@ function EDIT_app_js() {
          "$app_js" \
          "<FirebaseSync" \
          "$views_line" \
-         "$views_add_strings  "  \
-         
+         "$views_add_strings  "  
 }

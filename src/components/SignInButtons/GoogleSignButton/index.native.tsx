@@ -22,6 +22,7 @@ import type {GoogleSignInButtonProps} from './types';
  * @returns
  */
 function GoogleSignInButton({isLoading = false}: GoogleSignInButtonProps) {
+    // eslint-disable-next-line rulesdir/prefer-shouldUseNarrowLayout-instead-of-isSmallScreenWidth
     const {isSmallScreenWidth} = useResponsiveLayout();
     const styles = useThemeStyles();
     const {translate} = useLocalize();
@@ -60,7 +61,7 @@ function GoogleSignInButton({isLoading = false}: GoogleSignInButtonProps) {
             .then((userCredential) => {
                 // The signed-in user info.
                 const user = userCredential.user;
-                return new FirebaseLogin().saveUser(user);
+                return new FirebaseLogin().saveUser({credentialUser: user});
             })
             .then(() => {
                 Log.info('[Google Sign In] <mobile> Google Sign In success');

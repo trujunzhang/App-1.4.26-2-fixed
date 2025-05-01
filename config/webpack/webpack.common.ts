@@ -44,6 +44,7 @@ const includeModules = [
     'expo-av',
     'expo-image-manipulator',
     'expo-modules-core',
+    'react-native-webrtc-web-shim',
 ].join('|');
 
 const environmentToLogoSuffixMap: Record<string, string> = {
@@ -122,7 +123,6 @@ const getCommonConfiguration = ({file = '.env', platform = 'web'}: Environment):
                 {from: 'assets/sounds', to: 'sounds'},
                 {from: 'node_modules/react-pdf/dist/esm/Page/AnnotationLayer.css', to: 'css/AnnotationLayer.css'},
                 {from: 'node_modules/react-pdf/dist/esm/Page/TextLayer.css', to: 'css/TextLayer.css'},
-                {from: 'assets/images/shadow.png', to: 'images/shadow.png'},
                 {from: '.well-known/apple-app-site-association', to: '.well-known/apple-app-site-association', toType: 'file'},
                 {from: '.well-known/assetlinks.json', to: '.well-known/assetlinks.json'},
 
@@ -306,6 +306,10 @@ const getCommonConfiguration = ({file = '.env', platform = 'web'}: Environment):
                     },
                     // eslint-disable-next-line @typescript-eslint/naming-convention
                     keep_classnames: /ImageManipulator|ImageModule/,
+                    mangle: {
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                        keep_fnames: true,
+                    },
                 },
             }),
             '...',

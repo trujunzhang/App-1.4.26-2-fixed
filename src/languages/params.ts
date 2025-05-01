@@ -208,6 +208,8 @@ type UserIsAlreadyMemberParams = {login: string; name: string};
 
 type GoToRoomParams = {roomName: string};
 
+type NewWorkspaceNameParams = {userName: string; workspaceNumber?: number};
+
 type RoomNameReservedErrorParams = {reservedName: string};
 
 type RenamedRoomActionParams = {oldName: string; newName: string};
@@ -271,6 +273,8 @@ type ViolationsRterParams = {
 
 type ViolationsTagOutOfPolicyParams = {tagName?: string} | undefined;
 
+type ViolationsProhibitedExpenseParams = {prohibitedExpenseType: string};
+
 type ViolationsTaxOutOfPolicyParams = {taxName?: string} | undefined;
 
 type PaySomeoneParams = {name?: string} | undefined;
@@ -291,7 +295,7 @@ type HeldRequestParams = {comment: string};
 
 type ChangeFieldParams = {oldValue?: string; newValue: string; fieldName: string};
 
-type ChangePolicyParams = {fromPolicy: string; toPolicy: string};
+type ChangeReportPolicyParams = {fromPolicyName?: string; toPolicyName: string};
 
 type UpdatedPolicyDescriptionParams = {oldDescription: string; newDescription: string};
 
@@ -299,7 +303,7 @@ type UpdatedPolicyCurrencyParams = {oldCurrency: string; newCurrency: string};
 
 type UpdatedPolicyCategoryParams = {categoryName: string; oldValue?: boolean};
 
-type UpdatedPolicyTagParams = {tagListName: string; tagName: string; enabled?: boolean};
+type UpdatedPolicyTagParams = {tagListName: string; tagName?: string; enabled?: boolean};
 
 type UpdatedPolicyTagNameParams = {oldName: string; newName: string; tagListName: string};
 
@@ -576,7 +580,8 @@ type ImportedTagsMessageParams = {
 };
 
 type ImportMembersSuccessfullDescriptionParams = {
-    members: number;
+    added: number;
+    updated: number;
 };
 
 type ImportPerDiemRatesSuccessfullDescriptionParams = {
@@ -648,6 +653,14 @@ type SubmitsToParams = {
 
 type SettlementDateParams = {
     settlementDate: string;
+};
+
+type PolicyExpenseChatNameParams = {
+    displayName: string;
+};
+
+type ReviewParams = {
+    amount: string;
 };
 
 export type {
@@ -815,6 +828,7 @@ export type {
     ViolationsCustomRulesParams,
     ViolationsRterParams,
     ViolationsTagOutOfPolicyParams,
+    ViolationsProhibitedExpenseParams,
     ViolationsTaxOutOfPolicyParams,
     WaitingOnBankAccountParams,
     WalletProgramParams,
@@ -823,7 +837,7 @@ export type {
     WelcomeToRoomParams,
     ZipCodeExampleFormatParams,
     ChangeFieldParams,
-    ChangePolicyParams,
+    ChangeReportPolicyParams,
     ChangeTypeParams,
     ExportedToIntegrationParams,
     DelegateSubmitParams,
@@ -874,6 +888,7 @@ export type {
     UpdatedPolicyDescriptionParams,
     EditDestinationSubtitleParams,
     FlightLayoverParams,
+    NewWorkspaceNameParams,
     AddedOrDeletedPolicyReportFieldParams,
     AddedPolicyCustomUnitRateParams,
     UpdatedPolicyTagParams,
@@ -882,5 +897,7 @@ export type {
     UpdatedPolicyReportFieldDefaultValueParams,
     SubmitsToParams,
     SettlementDateParams,
+    PolicyExpenseChatNameParams,
     NeedCategoryForExportToIntegrationParams,
+    ReviewParams,
 };

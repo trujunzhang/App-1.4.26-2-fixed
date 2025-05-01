@@ -22,7 +22,7 @@ let timestampData: Record<string, TimestampData> = {};
  */
 function start(eventName: string, shouldUseFirebase = true) {
     if (shouldUseFirebase) {
-        Firebase.startTrace(eventName);
+        // Firebase.startTrace(eventName);
     }
 
     timestampData[eventName] = {startTime: performance.now(), shouldUseFirebase};
@@ -45,7 +45,7 @@ function end(eventName: string, secondaryName = '', maxExecutionTime = 0) {
     const eventTime = performance.now() - startTime;
 
     if (shouldUseFirebase) {
-        Firebase.stopTrace(eventName);
+        // Firebase.stopTrace(eventName);
     }
 
     Environment.getEnvironment().then((envName) => {

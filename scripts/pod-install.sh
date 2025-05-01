@@ -32,13 +32,13 @@ if ! bundle --version > /dev/null 2>&1; then
 fi
 
 # Check if jq is installed
-if ! jq --version > /dev/null 2>&1; then
+if [ $(uname -m) == 'arm64' ] && [ ! jq --version > /dev/null 2>&1]; then
   error 'jq is not installed. Please install jq and try again'
   cleanupAndExit 1
 fi
 
 # Check if yq is installed
-if ! yq --version > /dev/null 2>&1; then
+if [ $(uname -m) == 'arm64' ] && [ ! yq --version > /dev/null 2>&1]; then
   error 'yq is not installed. Please install yq and try again'
   cleanupAndExit 1
 fi

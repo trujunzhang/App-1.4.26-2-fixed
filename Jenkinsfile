@@ -12,7 +12,7 @@ pipeline {
         stage('Ready for node') { 
             steps {
                 nodejs('Node-v20.18.1') {
-                    sh 'npm install' 
+                    sh "npm run install-standalone"
                 }
             }
         }

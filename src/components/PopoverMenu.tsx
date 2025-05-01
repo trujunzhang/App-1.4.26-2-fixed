@@ -1,10 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import lodashIsEqual from 'lodash/isEqual';
 import type {ReactNode, RefObject} from 'react';
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useCallback, useLayoutEffect, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import type {StyleProp, TextStyle, ViewStyle} from 'react-native';
+import type {GestureResponderEvent, StyleProp, TextStyle, ViewStyle} from 'react-native';
 import type {ModalProps} from 'react-native-modal';
+import type {SvgProps} from 'react-native-svg';
 import useArrowKeyFocusManager from '@hooks/useArrowKeyFocusManager';
 import useKeyboardShortcut from '@hooks/useKeyboardShortcut';
 import useResponsiveLayout from '@hooks/useResponsiveLayout';
@@ -13,6 +14,7 @@ import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import useWindowDimensions from '@hooks/useWindowDimensions';
 import {isSafari} from '@libs/Browser';
+import getPlatform from '@libs/getPlatform';
 import {close} from '@userActions/Modal';
 import CONST from '@src/CONST';
 import type {AnchorPosition} from '@src/styles';
@@ -55,6 +57,10 @@ type PopoverMenuItem = MenuItemProps & {
     shouldCloseAllModals?: boolean;
 
     pendingAction?: PendingAction;
+
+    rightIcon?: React.FC<SvgProps>;
+
+    key?: string;
 };
 
 type PopoverModalProps = Pick<ModalProps, 'animationIn' | 'animationOut' | 'animationInTiming' | 'animationOutTiming'> &
@@ -130,11 +136,17 @@ type PopoverMenuProps = Partial<PopoverModalProps> & {
     /** Whether we should wrap the list item in a scroll view */
     shouldUseScrollView?: boolean;
 
+    /** Whether we should set a max height to the popover content */
+    shouldEnableMaxHeight?: boolean;
+
     /** Whether to update the focused index on a row select */
     shouldUpdateFocusedIndex?: boolean;
 
     /** Should we apply padding style in modal itself. If this value is false, we will handle it in ScreenWrapper */
     shouldUseModalPaddingStyle?: boolean;
+
+    /** Whether we want to avoid the safari exception of ignoring shouldCallAfterModalHide  */
+    shouldAvoidSafariException?: boolean;
 
     /** Used to locate the component in the tests */
     testID?: string;
@@ -182,10 +194,12 @@ function PopoverMenu({
     innerContainerStyle,
     scrollContainerStyle,
     shouldUseScrollView = false,
+    shouldEnableMaxHeight = true,
     shouldUpdateFocusedIndex = true,
     shouldUseModalPaddingStyle,
     shouldUseNewModal,
     testID,
+    shouldAvoidSafariException = false,
 }: PopoverMenuProps) {
     const styles = useThemeStyles();
     const theme = useTheme();
@@ -197,7 +211,8 @@ function PopoverMenu({
     const currentMenuItemsFocusedIndex = getSelectedItemIndex(currentMenuItems);
     const [enteredSubMenuIndexes, setEnteredSubMenuIndexes] = useState<readonly number[]>(CONST.EMPTY_ARRAY);
     const {windowHeight} = useWindowDimensions();
-
+    const platform = getPlatform();
+    const isWebOrDesktop = platform === CONST.PLATFORM.WEB || platform === CONST.PLATFORM.DESKTOP;
     const [focusedIndex, setFocusedIndex] = useArrowKeyFocusManager({initialFocusedIndex: currentMenuItemsFocusedIndex, maxIndex: currentMenuItems.length - 1, isActive: isVisible});
 
     const selectItem = (index: number) => {
@@ -210,7 +225,7 @@ function PopoverMenu({
             setEnteredSubMenuIndexes([...enteredSubMenuIndexes, index]);
             const selectedSubMenuItemIndex = selectedItem?.subMenuItems.findIndex((option) => option.isSelected);
             setFocusedIndex(selectedSubMenuItemIndex);
-        } else if (selectedItem.shouldCallAfterModalHide && !isSafari()) {
+        } else if (selectedItem.shouldCallAfterModalHide && (!isSafari() || shouldAvoidSafariException)) {
             onItemSelected?.(selectedItem, index);
             close(
                 () => {
@@ -263,22 +278,24 @@ function PopoverMenu({
     };
 
     const renderedMenuItems = currentMenuItems.map((item, menuIndex) => {
-        const {text, onSelected, subMenuItems, shouldCallAfterModalHide, ...menuItemProps} = item;
+        const {text, onSelected, subMenuItems, shouldCallAfterModalHide, key, ...menuItemProps} = item;
         return (
             <OfflineWithFeedback
                 // eslint-disable-next-line react/no-array-index-key
-                key={`${item.text}_${menuIndex}`}
+                key={key ?? `${item.text}_${menuIndex}`}
                 pendingAction={item.pendingAction}
             >
                 <FocusableMenuItem
                     // eslint-disable-next-line react/no-array-index-key
-                    key={`${item.text}_${menuIndex}`}
+                    key={key ?? `${item.text}_${menuIndex}`}
                     pressableTestID={`PopoverMenuItem-${item.text}`}
                     title={text}
                     onPress={() => selectItem(menuIndex)}
                     focused={focusedIndex === menuIndex}
                     shouldShowSelectedItemCheck={shouldShowSelectedItemCheck}
                     shouldCheckActionAllowedOnPress={false}
+                    iconRight={item.rightIcon}
+                    shouldShowRightIcon={!!item.rightIcon}
                     onFocus={() => {
                         if (!shouldUpdateFocusedIndex) {
                             return;
@@ -320,6 +337,21 @@ function PopoverMenu({
         {isActive: isVisible},
     );
 
+    const keyboardShortcutSpaceCallback = useCallback(
+        (e?: GestureResponderEvent | KeyboardEvent) => {
+            if (shouldUseScrollView) {
+                return;
+            }
+
+            e?.preventDefault();
+        },
+        [shouldUseScrollView],
+    );
+
+    // On web and desktop, pressing the space bar after interacting with the parent view
+    // can cause the parent view to scroll when the space bar is pressed.
+    useKeyboardShortcut(CONST.KEYBOARD_SHORTCUTS.SPACE, keyboardShortcutSpaceCallback, {isActive: isWebOrDesktop && isVisible, shouldPreventDefault: false});
+
     const onModalHide = () => {
         setFocusedIndex(currentMenuItemsFocusedIndex);
     };
@@ -344,6 +376,13 @@ function PopoverMenu({
 
         // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
     }, [menuItems, setFocusedIndex]);
+
+    const menuContainerStyle = useMemo(() => {
+        if (isSmallScreenWidth) {
+            return shouldEnableMaxHeight ? {maxHeight: windowHeight - 250} : {};
+        }
+        return styles.createMenuContainer;
+    }, [isSmallScreenWidth, shouldEnableMaxHeight, windowHeight, styles.createMenuContainer]);
 
     return (
         <PopoverWithMeasuredContent
@@ -376,7 +415,7 @@ function PopoverMenu({
             shouldUseNewModal={shouldUseNewModal}
         >
             <FocusTrapForModal active={isVisible}>
-                <View style={[isSmallScreenWidth ? {maxHeight: windowHeight - 250} : styles.createMenuContainer, containerStyles]}>
+                <View style={[menuContainerStyle, containerStyles]}>
                     {renderHeaderText()}
                     {enteredSubMenuIndexes.length > 0 && renderBackButtonItem()}
                     {renderWithConditionalWrapper(shouldUseScrollView, scrollContainerStyle, renderedMenuItems)}

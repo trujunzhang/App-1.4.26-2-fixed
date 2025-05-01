@@ -65,6 +65,7 @@ function BaseEditRestaurantPage({
 
     const personalData = useCurrentUserPersonalDetails();
 
+    // eslint-disable-next-line rulesdir/prefer-shouldUseNarrowLayout-instead-of-isSmallScreenWidth
     const {isSmallScreenWidth} = useResponsiveLayout();
     const toastId = React.useRef<number | string | null>(null);
 
@@ -74,14 +75,14 @@ function BaseEditRestaurantPage({
         setIsLoading(editFormID, true);
         toastId.current = ShowNotify.initialAndShowNotify({
             isSmallScreenWidth,
-            message: translate('notify.save.start', {modalName: 'Restaurant'}),
+            message: translate('notify.save.start', {modalName: FBCollections.Restaurants}),
             autoClose: false,
         });
 
         const {restaurantDisplayName, restaurantNote} = values;
         let lastModel = restaurant;
         if (isNewModel) {
-            if (_.isUndefined(userLocation)) {
+            if (userLocation === undefined || userLocation === null || userLocation === CONST.DEFAULT_LOCATION || userLocation.latitude === 0 || userLocation.longitude === 0) {
                 ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.location.disabled')});
                 return;
             }
@@ -118,10 +119,10 @@ function BaseEditRestaurantPage({
             })
             .then(() => {
                 Navigation.goBack();
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: 'Restaurant'})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: FBCollections.Restaurants})});
             })
             .catch((error) => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: 'Restaurant'})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: FBCollections.Restaurants})});
                 console.log(error);
             })
             .finally(() => {
@@ -238,7 +239,12 @@ function BaseEditRestaurantPage({
 
     const renderCoverTitle = () => {
         if (photosInPage.length > 0) {
-            return <SectionCommonTitle titleRow={{title: 'sections.titles.cover', isSmallScreenWidth, titleColor: TailwindColors.red500}} />;
+            return (
+                <SectionCommonTitle
+                    paddingLeft={{paddingLeft: 0}}
+                    titleRow={{title: 'sections.titles.cover', isSmallScreenWidth, titleColor: TailwindColors.red500}}
+                />
+            );
         }
         return null;
     };

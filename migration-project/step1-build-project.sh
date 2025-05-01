@@ -54,19 +54,20 @@ function replace_app_identifier() {
     walk_dir "$DEST_PROJECT" 
 
 	strings_array=(
-     "New Expensify"  "New Ieatta"
-     "new\.expensify\.com" "new\.ieatta\.com"
-     "new\.expensify\.desktop"  "new\.ieatta\.desktop"
+     "New Expensify"              "New Ieatta"
+     "new\.expensify\.com"        "new\.ieatta\.com"
+     "new\.expensify\.desktop"    "new\.ieatta\.desktop"
+     "new-expensify://"           "new-ieatta://"
      # >> .gitignore:
      # >>   android/app/src/main/java/com/expensify/chat/generated/
-     "com\.expensify\.chat" "com\.ieatta\.track"
-     "[[:<:]]NewExpensify[[:>:]]" "NewIeatta"
-     "NewExpensifyTests"      "NewIeattaTests"
-     "from '@pages/"  "from '@expPages/"
-     "@src/pages"  "@src/expPages"
-     "from './pages/home"  "from './expPages/home"
-     "/../pages/"  "/../expPages/"
-     "('@pages/" "('@expPages/"
+     "com\.expensify\.chat"         "com\.ieatta\.track"
+     "[[:<:]]NewExpensify[[:>:]]"   "NewIeatta"
+     "NewExpensifyTests"            "NewIeattaTests"
+     "from '@pages/"                "from '@expPages/"
+     "@src/pages"                   "@src/expPages"
+     "from './pages/home"           "from './expPages/home"
+     "/../pages/"                   "/../expPages/"
+     "('@pages/"                    "('@expPages/"
     )
 
     info "Start replacing strings"
@@ -83,7 +84,7 @@ function replace_app_identifier() {
             replace_string=${strings_array[$i + 1]}
 
             # info "  [Replacing] {${string_to_replace}} with {${replace_string}}"
-            # info "replaced file Path: $filePath, name: $NAME, extension: $EXTENSION"
+            # info "replaced file Path: $dest_filePath, name: $NAME, extension: $EXTENSION"
     
             replace_lines_in_file_with_dest_path "$dest_filePath" "${string_to_replace}" "${replace_string}" 
         done
@@ -224,9 +225,23 @@ function prepare_run_apps() {
 
    remove_keys_in_package_json "['devDependencies']['@kie/act-js']"
    remove_keys_in_package_json "['devDependencies']['shellcheck']"
+
+
+   check_replace_lines_in_file \
+         "scripts/pod-install.sh" \
+         "Podspecsxxx" \
+         "ios/Pods/Local Podspecs" \
+         "ios/Pods/Local Podspecsxxx"  
+
+   # npx rnef run:ios --device "iPhone 16 Plus" --verbose --configuration $IOS_MODE --scheme "$SCHEME"
+   check_replace_lines_in_file \
+         "scripts/run-build.sh" \
+         'run:ios --device "iPhone 16 Plus" --verbose' \
+         'run:ios --configuration'  \
+         'run:ios --device "iPhone 16 Plus" --verbose --configuration'  
             
-   sed -i '' -e "s|'ios/Pods/Local Podspecs'|'ios/Pods/Local Podspecs xxx'|gI" "${DEST_PROJECT}/scripts/pod-install.sh" 
-   sed -i '' -e "s|run-ios --list-devices|run-ios --simulator \"iPhone 16 Plus\"|gI" "${DEST_PROJECT}/scripts/run-build.sh" 
+   # sed -i '' -e "s|'ios/Pods/Local Podspecs'|'ios/Pods/Local Podspecs xxx'|gI" "${DEST_PROJECT}/scripts/pod-install.sh" 
+   # sed -i '' -e "s|run-ios --list-devices|run-ios --simulator \"iPhone 16 Plus\"|gI" "${DEST_PROJECT}/scripts/run-build.sh" 
 }
 
 function replace_all_in_dest_project() {

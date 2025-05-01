@@ -67,6 +67,10 @@ function PROJECT_ieatta_ios() {
     info "Start copying ieatta ios"
 
     rm -rf "$DEST_PROJECT/ios/Podfile.lock"
+
+    # ios/NewExpensify-Bridging-Header.h
+    mv "$DEST_PROJECT/ios/NewExpensify-Bridging-Header.h" "$DEST_PROJECT/ios/NewIeatta-Bridging-Header.h"
+
     ieatta_ios_podfile
     ieatta_ios_google_login
 }

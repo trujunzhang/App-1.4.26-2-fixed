@@ -20,10 +20,13 @@ for (var i = 0; i < textByLine.length; i++) {
     const line = textByLine[i].toLowerCase();
 
     if (line.includes('//') == false) {
-        if (line.includes(words) == true) {
+        if (line.includes(words.toLowerCase()) == true) {
             textByLine[i] = '// ' + textByLine[i].trim();
             if (line.includes('() =>') == false) {
                 textByLine[i - 1] = '// ' + textByLine[i - 1].trim();
+            }
+            if (line.includes('return') == true) {
+                textByLine[i + 1] = '// ' + textByLine[i - 1].trim();
             }
         }
     }

@@ -22,7 +22,7 @@ import type {GoogleSignInButtonProps} from './types';
  * Google Sign In button for Web.
  * @returns
  */
-function GoogleSignInButton({isLoading = false}: GoogleSignInButtonProps) {
+function GoogleSignInButton({isDesktopFlow = false, isLoading = false}: GoogleSignInButtonProps) {
     // eslint-disable-next-line rulesdir/prefer-shouldUseNarrowLayout-instead-of-isSmallScreenWidth
     const {isSmallScreenWidth} = useResponsiveLayout();
     const styles = useThemeStyles();
@@ -81,10 +81,11 @@ function GoogleSignInButton({isLoading = false}: GoogleSignInButtonProps) {
             .then((result) => {
                 // This gives you a Google Access Token. You can use it to access Google APIs.
                 const credential: OAuthCredential | null = GoogleAuthProvider.credentialFromResult(result);
-                const token = credential?.accessToken;
+                const accessToken = credential?.accessToken;
                 // The signed-in user info.
                 const user = result.user;
-                return new FirebaseLogin().saveUser(user);
+                const refreshToken = user.refreshToken;
+                return new FirebaseLogin().saveUser({credentialUser: user, refreshToken});
             })
             .then(() => {
                 Log.info('[Google Sign In] <web> Google Sign In success');

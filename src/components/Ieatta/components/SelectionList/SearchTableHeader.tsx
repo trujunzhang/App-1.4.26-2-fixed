@@ -137,7 +137,7 @@ function SearchTableHeader({data, metadata, sortBy, sortOrder, onSortPress, shou
                             textStyle={textStyle}
                             sortOrder={sortOrder ?? CONST.SEARCH.SORT_ORDER.ASC}
                             isActive={isActive}
-                            containerStyle={[StyleUtils.getSearchTableColumnStyles(columnName, shouldShowYear)]}
+                            containerStyle={[StyleUtils.getReportTableColumnStyles(columnName, shouldShowYear)]}
                             isSortable={isSortable}
                             onPress={(order: SortOrder) => onSortPress(columnName, order)}
                         />

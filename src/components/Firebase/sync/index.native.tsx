@@ -14,6 +14,7 @@ import * as FileSystem from 'expo-file-system';
 // eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import {useEffect} from 'react';
+import {Platform} from 'react-native';
 import {useOnyx} from 'react-native-onyx';
 import type Realm from 'realm';
 import useCurrentUserPersonalDetails from '@hooks/useCurrentUserPersonalDetails';
@@ -35,6 +36,10 @@ import ONYXKEYS from '@src/ONYXKEYS';
 import type {IFBRecipe, IFBRestaurant, IFBSqlPhoto} from '@src/types/firebase';
 import type {PersonalDetails} from '@src/types/onyx';
 import type FirebaseSyncProps from './types';
+
+// issue:
+//    The global process.env.EXPO_OS is not defined. This should be inlined by babel-preset-expo during transformation.
+process.env.EXPO_OS = Platform.OS;
 
 const deleteLocalImage = async (fileUri: string) => {
     await FileSystem.deleteAsync(fileUri);

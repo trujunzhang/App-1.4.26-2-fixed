@@ -20,8 +20,8 @@ import useKeyboardShortcut from '@hooks/useKeyboardShortcut';
 import useKeyboardState from '@hooks/useKeyboardState';
 import useLocalize from '@hooks/useLocalize';
 import usePrevious from '@hooks/usePrevious';
+import useSafeAreaPaddings from '@hooks/useSafeAreaPaddings';
 import useSingleExecution from '@hooks/useSingleExecution';
-import useStyledSafeAreaInsets from '@hooks/useStyledSafeAreaInsets';
 import useThemeStyles from '@hooks/useThemeStyles';
 import getSectionsWithIndexOffset from '@libs/getSectionsWithIndexOffset';
 import Log from '@libs/Log';
@@ -791,7 +791,7 @@ function BaseSelectionList<TItem extends ListItem>(
         },
     );
 
-    const {safeAreaPaddingBottomStyle} = useStyledSafeAreaInsets();
+    const {safeAreaPaddingBottomStyle} = useSafeAreaPaddings();
 
     // TODO: test _every_ component that uses SelectionList
     return (

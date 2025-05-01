@@ -19,4 +19,30 @@ function EDIT_react_native_background_task() {
 
    app_background="import './setup/backgroundTask';"
    check_replace_lines_in_file   "src/App.tsx" "// import './setup/backgroundTask" "$app_background" "// $app_background"
+
+   check_replace_lines_in_file \
+         "ios/AppDelegate.swift" \
+         "// RNBackgroundTaskManager" \
+         "RNBackgroundTaskManager\.setup()" \
+         "// RNBackgroundTaskManager\.setup()"  
+
+   react_native_background_task_bridging_header 'ios/NewIeatta-Bridging-Header.h'
+   react_native_background_task_bridging_header 'ios/NewExpensify-Bridging-Header.h'
+}
+
+function react_native_background_task_bridging_header() {
+    fileName=$1
+
+   check_replace_lines_in_file \
+         "$fileName" \
+         "// #import <BackgroundTasks" \
+         "#import <BackgroundTasks/BackgroundTasks\.h>" \
+         "// #import <BackgroundTasks/BackgroundTasks\.h>"  
+
+   check_replace_lines_in_file \
+         "$fileName" \
+         "// #import <expensify-react-native-background-task/RNBackgroundTaskManager" \
+         "#import <expensify-react-native-background-task/RNBackgroundTaskManager.h>" \
+         "// #import <expensify-react-native-background-task/RNBackgroundTaskManager.h>"  
+
 }

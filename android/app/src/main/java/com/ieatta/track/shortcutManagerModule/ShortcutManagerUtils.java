@@ -21,7 +21,7 @@ public class ShortcutManagerUtils {
 
     public static void addDynamicShortcut(Context context, long reportID, String name, String accountID, Bitmap personIcon, Person person) {
         Intent intent = new Intent(Intent.ACTION_VIEW,
-                Uri.parse("new-expensify://r/" + reportID));
+                Uri.parse("new-ieatta://r/" + reportID));
 
         ShortcutInfoCompat shortcutInfo = new ShortcutInfoCompat.Builder(context, accountID)
                 .setShortLabel(name)

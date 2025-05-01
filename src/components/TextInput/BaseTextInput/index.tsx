@@ -92,7 +92,7 @@ function BaseTextInput(
     const StyleUtils = useStyleUtils();
     const {translate} = useLocalize();
 
-    // Disabling this line for saftiness as nullish coalescing works only if value is undefined or null
+    // Disabling this line for safeness as nullish coalescing works only if value is undefined or null
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const initialValue = value || defaultValue || '';
     const initialActiveLabel = !!forceActiveLabel || initialValue.length > 0 || !!prefixCharacter || !!suffixCharacter;
@@ -418,11 +418,11 @@ function BaseTextInput(
                                     <TextInputClearButton onPressButton={() => setValue('')} />
                                 </View>
                             )}
-                            {!!inputProps.isLoading && (
+                            {inputProps.isLoading !== undefined && (
                                 <ActivityIndicator
                                     size="small"
                                     color={theme.iconSuccessFill}
-                                    style={[styles.mt4, styles.ml1, loadingSpinnerStyle]}
+                                    style={[styles.mt4, styles.ml1, loadingSpinnerStyle, StyleUtils.getOpacityStyle(inputProps.isLoading ? 1 : 0)]}
                                 />
                             )}
                             {!!inputProps.secureTextEntry && (

@@ -1,4 +1,4 @@
-import HelpLinks from '@expPages/ReimbursementAccount/PersonalInfo/HelpLinks';
+import HelpLinks from '@expPages/ReimbursementAccount/USD/Requestor/PersonalInfo/HelpLinks';
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import FormProvider from '@components/Form/FormProvider';

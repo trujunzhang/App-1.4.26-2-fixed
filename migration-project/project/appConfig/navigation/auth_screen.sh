@@ -54,6 +54,7 @@ function app_auth_screen_add_components() {
     function_export_lines=(
         "                {/* <SearchRouterModal /> */}"
         "                <SearchRestaurantsModal />"
+        "                <WatchPositionView />"
     )
     join_by function_export_strings "\n" "${function_export_lines[@]}"
 
@@ -116,6 +117,7 @@ function EDIT_app_auth_screen() {
 
     define_line="import CONFIG from '@src/CONFIG';" 
     define_rules_lines=(
+        "import WatchPositionView from '@components/Ieatta/Location/watchPositionView';"
         "import useEnvironment from '@hooks/useEnvironment';"
         "import DebugAndSwitchRouter from '@components/Debug/DebugAndSwitchRouter';"
         "import SearchRestaurantsModal from '@pages/searchPages/restaurants';"
@@ -128,7 +130,12 @@ function EDIT_app_auth_screen() {
          "import DebugAndSwitchRouter" \
          "$define_line" \
          "$define_rules_string"  \
-         
+
+    check_replace_lines_in_file \
+         "$auth_screen_js" \
+         "@pages/signin/DesktopSignInRedirectPage" \
+         "import DesktopSignInRedirectPage from '@expPages/signin/DesktopSignInRedirectPage';" \
+         "import DesktopSignInRedirectPage from '@pages/signin/DesktopSignInRedirectPage';"  
 
     add_lines_in_file \
          "$auth_screen_js" \

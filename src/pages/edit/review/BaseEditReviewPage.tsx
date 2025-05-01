@@ -57,7 +57,7 @@ function BaseEditReviewPage({review, relatedId, reviewType, isNewModel}: BaseEdi
         setIsLoading(editFormID, true);
         toastId.current = ShowNotify.initialAndShowNotify({
             isSmallScreenWidth,
-            message: translate('notify.save.start', {modalName: 'Restaurant'}),
+            message: translate('notify.save.start', {modalName: FBCollections.Reviews}),
             autoClose: false,
         });
 
@@ -103,11 +103,11 @@ function BaseEditReviewPage({review, relatedId, reviewType, isNewModel}: BaseEdi
                 clearDraftValuesByDraftId(editFormID);
             })
             .then(() => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: 'Restaurant'})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: FBCollections.Reviews})});
                 Navigation.goBack();
             })
             .catch((error) => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: 'Restaurant'})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: FBCollections.Reviews})});
                 console.log(error);
             })
             .finally(() => {

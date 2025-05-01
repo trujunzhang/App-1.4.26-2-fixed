@@ -1,71 +1,56 @@
 import type {BankInfoSubStepProps} from '@expPages/ReimbursementAccount/NonUSD/BankInfo/types';
-import getSubstepValues from '@expPages/ReimbursementAccount/utils/getSubstepValues';
+import {getBankInfoStepValues} from '@expPages/ReimbursementAccount/NonUSD/utils/getBankInfoStepValues';
+import getInputKeysForBankInfoStep from '@expPages/ReimbursementAccount/NonUSD/utils/getInputKeysForBankInfoStep';
 import React, {useMemo} from 'react';
-import {View} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import {useOnyx} from 'react-native-onyx';
 import FormProvider from '@components/Form/FormProvider';
 import MenuItemWithTopDescription from '@components/MenuItemWithTopDescription';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
+import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
-import type {ReimbursementAccountForm} from '@src/types/form/ReimbursementAccountForm';
 import INPUT_IDS from '@src/types/form/ReimbursementAccountForm';
 
 const {ACCOUNT_HOLDER_COUNTRY} = INPUT_IDS.ADDITIONAL_DATA.CORPAY;
 function Confirmation({onNext, onMove, corpayFields}: BankInfoSubStepProps) {
     const {translate} = useLocalize();
     const styles = useThemeStyles();
+    const theme = useTheme();
 
     const [reimbursementAccount] = useOnyx(ONYXKEYS.REIMBURSEMENT_ACCOUNT);
     const [reimbursementAccountDraft] = useOnyx(ONYXKEYS.FORMS.REIMBURSEMENT_ACCOUNT_FORM_DRAFT);
-    const inputKeys = useMemo(() => {
-        const keys: Record<string, keyof ReimbursementAccountForm> = {};
-        corpayFields?.formFields?.forEach((field) => {
-            keys[field.id] = field.id as keyof ReimbursementAccountForm;
-        });
-        return keys;
-    }, [corpayFields]);
-    const values = useMemo(() => getSubstepValues(inputKeys, reimbursementAccountDraft, reimbursementAccount), [inputKeys, reimbursementAccount, reimbursementAccountDraft]);
+    const inputKeys = getInputKeysForBankInfoStep(corpayFields);
+    const values = useMemo(() => getBankInfoStepValues(inputKeys, reimbursementAccountDraft, reimbursementAccount), [inputKeys, reimbursementAccount, reimbursementAccountDraft]);
 
     const items = useMemo(
-        () => (
-            <>
-                {corpayFields?.formFields?.map((field) => {
-                    let title = values[field.id as keyof typeof values] ? String(values[field.id as keyof typeof values]) : '';
+        () =>
+            corpayFields?.formFields?.map((field) => {
+                let title = values[field.id as keyof typeof values] ? String(values[field.id as keyof typeof values]) : '';
 
-                    if (field.id === ACCOUNT_HOLDER_COUNTRY) {
-                        title = CONST.ALL_COUNTRIES[title as keyof typeof CONST.ALL_COUNTRIES];
-                    }
+                if (field.id === ACCOUNT_HOLDER_COUNTRY) {
+                    title = CONST.ALL_COUNTRIES[title as keyof typeof CONST.ALL_COUNTRIES];
+                }
 
-                    return (
-                        <MenuItemWithTopDescription
-                            description={field.label}
-                            title={title}
-                            shouldShowRightIcon
-                            onPress={() => {
-                                if (!field.id.includes(CONST.NON_USD_BANK_ACCOUNT.BANK_INFO_STEP_ACCOUNT_HOLDER_KEY_PREFIX)) {
-                                    onMove(0);
-                                } else {
-                                    onMove(1);
-                                }
-                            }}
-                            key={field.id}
-                        />
-                    );
-                })}
-                {!!reimbursementAccountDraft?.[INPUT_IDS.ADDITIONAL_DATA.CORPAY.BANK_STATEMENT] && (
+                return (
                     <MenuItemWithTopDescription
-                        description={translate('bankInfoStep.bankStatement')}
-                        title={reimbursementAccountDraft[INPUT_IDS.ADDITIONAL_DATA.CORPAY.BANK_STATEMENT].map((file) => file.name).join(', ')}
+                        description={field.label}
+                        title={title}
                         shouldShowRightIcon
-                        onPress={() => onMove(2)}
+                        onPress={() => {
+                            if (!field.id.includes(CONST.NON_USD_BANK_ACCOUNT.BANK_INFO_STEP_ACCOUNT_HOLDER_KEY_PREFIX)) {
+                                onMove(0);
+                            } else {
+                                onMove(1);
+                            }
+                        }}
+                        key={field.id}
                     />
-                )}
-            </>
-        ),
-        [corpayFields, onMove, reimbursementAccountDraft, translate, values],
+                );
+            }),
+        [corpayFields, onMove, values],
     );
 
     return (
@@ -76,10 +61,18 @@ function Confirmation({onNext, onMove, corpayFields}: BankInfoSubStepProps) {
             style={[styles.flexGrow1]}
             submitButtonStyles={styles.mh5}
         >
-            <View>
+            <View style={styles.flexGrow4}>
                 <Text style={[styles.textHeadlineLineHeightXXL, styles.ph5, styles.mb3]}>{translate('bankInfoStep.letsDoubleCheck')}</Text>
                 <Text style={[styles.mutedTextLabel, styles.ph5, styles.mb5]}>{translate('bankInfoStep.thisBankAccount')}</Text>
-                {items}
+                {corpayFields?.isLoading ? (
+                    <ActivityIndicator
+                        size={CONST.ACTIVITY_INDICATOR_SIZE.LARGE}
+                        color={theme.spinner}
+                        style={styles.flexGrow1}
+                    />
+                ) : (
+                    items
+                )}
             </View>
         </FormProvider>
     );

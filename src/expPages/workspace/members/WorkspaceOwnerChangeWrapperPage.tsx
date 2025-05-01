@@ -5,7 +5,6 @@ import type {WithPolicyOnyxProps} from '@expPages/workspace/withPolicy';
 import React, {useEffect} from 'react';
 import {View} from 'react-native';
 import {useOnyx} from 'react-native-onyx';
-import type {ValueOf} from 'type-fest';
 import FullScreenLoadingIndicator from '@components/FullscreenLoadingIndicator';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
 import ScreenWrapper from '@components/ScreenWrapper';
@@ -14,7 +13,7 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import type {PlatformStackScreenProps} from '@libs/Navigation/PlatformStackNavigation/types';
 import Navigation from '@navigation/Navigation';
 import type {SettingsNavigatorParamList} from '@navigation/types';
-import * as MemberActions from '@userActions/Policy/Member';
+import {clearWorkspaceOwnerChangeFlow} from '@userActions/Policy/Member';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
@@ -56,7 +55,7 @@ function WorkspaceOwnerChangeWrapperPage({route, policy}: WorkspaceOwnerChangeWr
         const changeOwnerErrors = Object.keys(policy?.errorFields?.changeOwner ?? {});
 
         if (changeOwnerErrors && changeOwnerErrors.length > 0) {
-            Navigation.navigate(ROUTES.WORKSPACE_OWNER_CHANGE_CHECK.getRoute(policyID, accountID, changeOwnerErrors.at(0) as ValueOf<typeof CONST.POLICY.OWNERSHIP_ERRORS>));
+            Navigation.setParams({error: changeOwnerErrors.at(0)});
         }
     }, [accountID, policy, policy?.errorFields?.changeOwner, policyID]);
 
@@ -69,7 +68,7 @@ function WorkspaceOwnerChangeWrapperPage({route, policy}: WorkspaceOwnerChangeWr
                 <HeaderWithBackButton
                     title={translate('workspace.changeOwner.changeOwnerPageTitle')}
                     onBackButtonPress={() => {
-                        MemberActions.clearWorkspaceOwnerChangeFlow(policyID);
+                        clearWorkspaceOwnerChangeFlow(policyID);
                         Navigation.goBack();
                         Navigation.navigate(ROUTES.WORKSPACE_MEMBER_DETAILS.getRoute(policyID, accountID));
                     }}

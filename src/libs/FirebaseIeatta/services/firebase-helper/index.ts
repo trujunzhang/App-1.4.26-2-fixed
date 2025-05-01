@@ -2,7 +2,7 @@ import {collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where} from 
 import {db} from '@libs/FirebaseIeatta/config/firebase';
 import {FBCollections} from '@libs/FirebaseIeatta/constant';
 import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
-import type {IeattaModelsWithoutUser, IFBRestaurant, IFBUser} from '@src/types/firebase';
+import type {IeattaModelsWithoutUser, IeattaModelsWithUser, IFBRestaurant, IFBUser} from '@src/types/firebase';
 import type IFirebaseHelper from './types';
 import type {DeleteData, GetData, SetData, UpdateCover, UpdateUserProperties} from './types';
 
@@ -12,7 +12,8 @@ class FirebaseHelper implements IFirebaseHelper {
      | Get Data
      |--------------------------------------------------
      */
-    getData({path, id}: GetData): Promise<IeattaModelsWithoutUser> {
+    // getData({path, id}: GetData): Promise<IeattaModelsWithoutUser> {
+    getData({path, id}: GetData): Promise<IeattaModelsWithUser> {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         return getDoc(doc(db, path, id)).then((documentSnapshot) => {

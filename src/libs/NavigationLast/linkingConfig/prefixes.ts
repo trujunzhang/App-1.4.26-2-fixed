@@ -4,7 +4,7 @@ import CONST from '@src/CONST';
 
 const prefixes: LinkingOptions<RootNavigatorParamList>['prefixes'] = [
     'app://-/',
-    'new-expensify://',
+    'new-ieatta://',
     'https://www.expensify.cash',
     'https://staging.expensify.cash',
     'https://dev.new.ieatta.com',

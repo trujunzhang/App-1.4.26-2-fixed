@@ -12,7 +12,7 @@ import useLocalize from '@hooks/useLocalize';
 import useNetSuiteImportAddCustomSegmentFormSubmit from '@hooks/useNetSuiteImportAddCustomSegmentForm';
 import useThemeStyles from '@hooks/useThemeStyles';
 import Parser from '@libs/Parser';
-import * as ValidationUtils from '@libs/ValidationUtils';
+import {isRequiredFulfilled} from '@libs/ValidationUtils';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import INPUT_IDS from '@src/types/form/NetSuiteCustomFieldForm';
@@ -37,7 +37,7 @@ function CustomSegmentNameStep({customSegmentType, onNext, isEditing, customSegm
         (values: FormOnyxValues<typeof ONYXKEYS.FORMS.NETSUITE_CUSTOM_SEGMENT_ADD_FORM>): FormInputErrors<typeof ONYXKEYS.FORMS.NETSUITE_CUSTOM_SEGMENT_ADD_FORM> => {
             const errors: FormInputErrors<typeof ONYXKEYS.FORMS.NETSUITE_CUSTOM_SEGMENT_ADD_FORM> = {};
 
-            if (!ValidationUtils.isRequiredFulfilled(values[INPUT_IDS.SEGMENT_NAME])) {
+            if (!isRequiredFulfilled(values[INPUT_IDS.SEGMENT_NAME])) {
                 errors[INPUT_IDS.SEGMENT_NAME] = translate('workspace.netsuite.import.importCustomFields.requiredFieldError', {
                     fieldName: translate(`workspace.netsuite.import.importCustomFields.customSegments.addForm.${customSegmentRecordType}Name`),
                 });
@@ -60,6 +60,7 @@ function CustomSegmentNameStep({customSegmentType, onNext, isEditing, customSegm
             enabledWhenOffline
             submitFlexEnabled
             shouldUseScrollView
+            shouldHideFixErrorsAlert
         >
             <View style={styles.ph5}>
                 <Text style={[styles.mb3, styles.textHeadlineLineHeightXXL]}>

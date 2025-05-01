@@ -13,10 +13,13 @@ source "./project/ieatta-theme.sh"
 source "./project/ieatta-android.sh"
 source "./project/ieatta-resources.sh"
 source "./project/ieatta-lib-firebase.sh"
+source "./project/expensify-firebase.sh"
 source "./project/ieatta-lib-realm.sh"
 source "./project/ieatta-lib-ieatta.sh"
 source "./project/ieatta-pages.sh"
+source "./project/ieatta-desktop.sh"
 source "./project/ieatta-project.sh"
+source "./project/ieatta-scripts.sh"
 source "./project/ieatta-storybook.sh"
 source "./project/ieatta-iconset.sh"
 source "./project/eslint.sh"
@@ -28,6 +31,7 @@ source "./project/appConfig/app_constant.sh"
 source "./project/appConfig/app_onyxkeys.sh"
 source "./project/appConfig/app_routes.sh"
 source "./project/appConfig/app_screens.sh"
+source "./project/appConfig/app_pusher_api.sh"
 source "./project/appConfig/app_api.sh"
 source "./project/appConfig/person_details_types.sh"
 source "./project/appConfig/app_languages.sh"
@@ -39,7 +43,7 @@ source "./project/appConfig/navigation/navigation_types.sh"
 source "./project/appConfig/navigation/linking_config.sh"
 source "./project/appConfig/navigation/auth_screen.sh"
 source "./project/appConfig/navigation/link_to.sh"
-source "./project/appConfig/navigation/home_split_navigator.sh"
+source "./project/appConfig/navigation/tab_bar.sh"
 source "./project/appConfig/navigation/public_screen.sh"
 # import project(sources)
 source "./project/sources/edit_app.sh"
@@ -49,13 +53,14 @@ source "./project/sources/edit_button.sh"
 source "./project/sources/edit_header.sh"
 source "./project/sources/edit_modal.sh"
 source "./project/sources/edit_avatar.sh"
-source "./project/sources/edit_get_current_position.sh"
 source "./project/sources/edit_header_with_back_button.sh"
 
 function step1_copy_project() {
     info "Start copying ieatta project"
 
     PROJECT_ieatta_project
+    PROJECT_ieatta_desktop
+    PROJECT_ieatta_scripts
     PROJECT_ieatta_android
     PROJECT_ieatta_resources
     PROJECT_ieatta_theme
@@ -73,11 +78,12 @@ function step1_copy_project() {
     EDIT_app_routes
     EDIT_app_screens
     EDIT_app_api
+    EDIT_app_pusher_api
 }
 
 function step2_edit_navigate() {
     EDIT_app_right_modal_navigator
-    EDIT_home_split_navigator
+    EDIT_root_tab_bar
     EDIT_app_modal_stack_navigator
     EDIT_app_navigation_types
     EDIT_app_navigation_file
@@ -92,6 +98,7 @@ function step3_copy_src() {
     info "Start copying src"
 
     PROJECT_ieatta_lib_firebase
+    PROJECT_expensify_firebase
     PROJECT_ieatta_lib_realm
     PROJECT_ieatta_lib_ieatta
     PROJECT_ieatta_lib_pages
@@ -108,7 +115,6 @@ function step4_edit_src() {
     EDIT_header_with_back_button_js
     EDIT_modal_js
     EDIT_avatar_js
-    EDIT_get_current_position
 }
 
 function test_project() {
@@ -120,12 +126,13 @@ function test_project() {
     # EDIT_link_to
     # PROJECT_ieatta_project
     # EDIT_app_navigation_types
-    # EDIT_quick_books_online
+    EDIT_quick_books_online
 
+    # PROJECT_expensify_firebase
     # EDIT_reports_split_navigator
     # EDIT_app_auth_screen
     # EDIT_app_navigation_types
-    EDIT_app_routes
+    # EDIT_app_routes
     # EDIT_app_linking_config
     # EDIT_app_api
 }

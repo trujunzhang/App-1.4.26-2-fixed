@@ -1,5 +1,5 @@
 import type ConstantSelector from '@expPages/Debug/ConstantSelector';
-import type BusinessTypePicker from '@expPages/ReimbursementAccount/BusinessInfo/substeps/TypeBusiness/BusinessTypePicker';
+import type BusinessTypePicker from '@expPages/ReimbursementAccount/USD/BusinessInfo/subSteps/TypeBusiness/BusinessTypePicker';
 import type DimensionTypeSelector from '@expPages/workspace/accounting/intacct/import/DimensionTypeSelector';
 import type NetSuiteCustomFieldMappingPicker from '@expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldNew/NetSuiteCustomFieldMappingPicker';
 import type NetSuiteCustomListPicker from '@expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldNew/NetSuiteCustomListPicker';
@@ -163,6 +163,12 @@ type FormProps<TFormID extends OnyxFormKey = OnyxFormKey> = {
 
     /** Disable press on enter for submit button */
     disablePressOnEnter?: boolean;
+
+    /**
+     * Determines whether the form should automatically scroll to the end upon rendering or when the value changes.
+     * If `true`, the form will smoothly scroll to the bottom after interactions have completed.
+     */
+    shouldScrollToEnd?: boolean;
 };
 
 type FormRef<TFormID extends OnyxFormKey = OnyxFormKey> = {

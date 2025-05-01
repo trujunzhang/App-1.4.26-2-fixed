@@ -1,6 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 import {FBCollections} from '@libs/FirebaseIeatta/constant';
-import type {IeattaModelsWithoutUser, IFBRestaurant, IFBUser} from '@src/types/firebase';
+import type {IeattaModelsWithoutUser, IeattaModelsWithUser, IFBRestaurant, IFBUser} from '@src/types/firebase';
 import type IFirebaseHelper from './types';
 import type {DeleteData, GetData, SetData, UpdateCover, UpdateUserProperties} from './types';
 
@@ -10,7 +10,8 @@ class FirebaseHelper implements IFirebaseHelper {
      | Get Data
      |--------------------------------------------------
      */
-    getData({path, id}: GetData): Promise<IeattaModelsWithoutUser> {
+    // getData({path, id}: GetData): Promise<IeattaModelsWithoutUser> {
+    getData({path, id}: GetData): Promise<IeattaModelsWithUser> {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         return firestore()

@@ -1,5 +1,5 @@
 import type {BankInfoSubStepProps} from '@expPages/ReimbursementAccount/NonUSD/BankInfo/types';
-import getSubstepValues from '@expPages/ReimbursementAccount/utils/getSubstepValues';
+import {getBankInfoStepValues} from '@expPages/ReimbursementAccount/NonUSD/utils/getBankInfoStepValues';
 import React, {useCallback, useMemo} from 'react';
 import {View} from 'react-native';
 import {useOnyx} from 'react-native-onyx';
@@ -18,6 +18,7 @@ import type {ReimbursementAccountForm} from '@src/types/form/ReimbursementAccoun
 import INPUT_IDS from '@src/types/form/ReimbursementAccountForm';
 
 const {ACCOUNT_HOLDER_COUNTRY} = INPUT_IDS.ADDITIONAL_DATA.CORPAY;
+const {COUNTRY} = INPUT_IDS.ADDITIONAL_DATA;
 
 function AccountHolderDetails({onNext, isEditing, corpayFields}: BankInfoSubStepProps) {
     const {translate} = useLocalize();
@@ -35,12 +36,16 @@ function AccountHolderDetails({onNext, isEditing, corpayFields}: BankInfoSubStep
 
     const [reimbursementAccount] = useOnyx(ONYXKEYS.REIMBURSEMENT_ACCOUNT);
     const [reimbursementAccountDraft] = useOnyx(ONYXKEYS.FORMS.REIMBURSEMENT_ACCOUNT_FORM_DRAFT);
-    const defaultValues = useMemo(() => getSubstepValues(subStepKeys ?? {}, reimbursementAccountDraft, reimbursementAccount), [subStepKeys, reimbursementAccount, reimbursementAccountDraft]);
+    const defaultValues = useMemo(
+        () => getBankInfoStepValues(subStepKeys ?? {}, reimbursementAccountDraft, reimbursementAccount),
+        [subStepKeys, reimbursementAccount, reimbursementAccountDraft],
+    );
+    const defaultBankAccountCountry = reimbursementAccount?.achData?.[COUNTRY] ?? reimbursementAccountDraft?.[COUNTRY] ?? '';
 
     const handleSubmit = useReimbursementAccountStepFormSubmit({
         fieldIds: fieldIds as Array<FormOnyxKeys<typeof ONYXKEYS.FORMS.REIMBURSEMENT_ACCOUNT_FORM>>,
         onNext,
-        shouldSaveDraft: isEditing,
+        shouldSaveDraft: true,
     });
 
     const validate = useCallback(
@@ -85,7 +90,7 @@ function AccountHolderDetails({onNext, isEditing, corpayFields}: BankInfoSubStep
                             optionsList={CONST.ALL_COUNTRIES}
                             description={field.label}
                             shouldSaveDraft={!isEditing}
-                            defaultValue={String(defaultValues[field.id as keyof typeof defaultValues]) ?? ''}
+                            defaultValue={String(defaultValues[field.id] !== '' ? defaultValues[field.id] : defaultBankAccountCountry)}
                             modalHeaderTitle={translate('countryStep.selectCountry')}
                             searchInputTitle={translate('countryStep.findCountry')}
                             inputID={field.id}
@@ -111,7 +116,7 @@ function AccountHolderDetails({onNext, isEditing, corpayFields}: BankInfoSubStep
                 </View>
             );
         });
-    }, [accountHolderDetailsFields, styles.mb6, styles.mhn5, defaultValues, isEditing, translate]);
+    }, [accountHolderDetailsFields, styles.mb6, styles.mhn5, defaultValues, isEditing, defaultBankAccountCountry, translate]);
 
     return (
         <FormProvider
@@ -120,6 +125,7 @@ function AccountHolderDetails({onNext, isEditing, corpayFields}: BankInfoSubStep
             validate={validate}
             onSubmit={handleSubmit}
             style={[styles.mh5, styles.flexGrow1]}
+            shouldHideFixErrorsAlert={(accountHolderDetailsFields?.length ?? 0) <= 1}
         >
             <View>
                 <Text style={[styles.textHeadlineLineHeightXXL, styles.mb6]}>{translate('bankInfoStep.whatAreYour')}</Text>

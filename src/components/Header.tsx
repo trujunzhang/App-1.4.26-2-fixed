@@ -31,9 +31,22 @@ type HeaderProps = {
 
     /** The URL link associated with the attachment's subtitle, if available */
     subTitleLink?: string;
+
+    /** Line number for the title */
+    numberOfTitleLines?: number;
 };
 
-function Header({titleAnchor = 'middle', title = '', subtitle = '', textStyles = [], style, containerStyles = [], shouldShowEnvironmentBadge = false, subTitleLink = ''}: HeaderProps) {
+function Header({
+    titleAnchor = 'middle',
+    title = '',
+    subtitle = '',
+    textStyles = [],
+    style,
+    containerStyles = [],
+    shouldShowEnvironmentBadge = false,
+    subTitleLink = '',
+    numberOfTitleLines = 2,
+}: HeaderProps) {
     const styles = useThemeStyles();
     const renderedSubtitle = useMemo(
         () => (
@@ -79,7 +92,7 @@ function Header({titleAnchor = 'middle', title = '', subtitle = '', textStyles =
                 {typeof title === 'string'
                     ? !!title && (
                           <Text
-                              numberOfLines={2}
+                              numberOfLines={numberOfTitleLines}
                               style={[styles.headerText, styles.textLarge, textStyles]}
                           >
                               {title}

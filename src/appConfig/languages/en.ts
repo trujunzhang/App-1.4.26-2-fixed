@@ -25,7 +25,11 @@ export default {
     },
     notify: {
         login: {
-            google: {start: 'Start to login with Google.', success: 'Login with Google success.', error: {cancel: 'Login with Google canceled.', unknown: 'Login with Google failed.'}},
+            google: {
+                start: 'Start to login with Google.',
+                success: 'Login with Google success.',
+                error: {cancel: 'Login with Google canceled.', unknown: 'Login with Google failed.', token: 'Fetch Google token failed.'},
+            },
         },
         takePhoto: {
             start: 'Start to save the photo',

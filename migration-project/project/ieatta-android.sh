@@ -107,10 +107,21 @@ function ieatta_android_app() {
          "$function_export_strings"  
 }
 
+function ieatta_android_styles() {
+    colors_xml="android/app/src/main/res/values/colors.xml"
+
+    check_replace_lines_in_file \
+         "$colors_xml" \
+         '<color name="bootsplash_background">#ffffff</color>' \
+         '<color name="bootsplash_background">#03D47C</color>' \
+         '<color name="bootsplash_background">#ffffff</color>'  
+}
+
 function PROJECT_ieatta_android() {
     step=$((step + 1))
     info "Start copying ieatta android"
 
     ieatta_android_root
     ieatta_android_app
+    ieatta_android_styles
 }

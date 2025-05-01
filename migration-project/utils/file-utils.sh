@@ -34,6 +34,12 @@ function replace_lines_in_file_with_dest_path() {
     replace_string=$3
 
     sed -i '' -e "s|${oldLine}|${replace_string}|gI" "$dest_path" 
+
+    if [ $? -ne 0 ]; then
+      error "An error occurred during sed execution: $dest_path"
+    # else
+      # echo "sed command executed successfully."
+    fi
 }
 
 function replace_lines_in_file() {

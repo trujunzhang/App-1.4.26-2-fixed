@@ -1,7 +1,7 @@
+import type {IAuthUser} from '@libs/FirebaseIeatta/models/auth_user_model';
+import {slugifyToLower} from '@libs/FirebaseIeatta/utils/slug_helper';
+import {getDateStringForCreatedOrUpdatedDate} from '@libs/FirebaseIeatta/utils/timeago_helper';
 import type {IFBUser} from '@src/types/firebase';
-import type {IAuthUser} from '../models/auth_user_model';
-import {slugifyToLower} from '../utils/slug_helper';
-import {getDateStringForCreatedOrUpdatedDate} from '../utils/timeago_helper';
 
 type FirstAndLastName = {
     firstName: string;

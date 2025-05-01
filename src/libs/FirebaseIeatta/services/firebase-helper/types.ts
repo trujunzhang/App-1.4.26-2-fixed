@@ -1,5 +1,5 @@
 import type {FBCollections} from '@libs/FirebaseIeatta/constant';
-import type {IeattaModelsWithoutUser, IFBRestaurant, IFBUser} from '@src/types/firebase';
+import type {IeattaModelsWithoutUser, IeattaModelsWithUser, IFBRestaurant, IFBUser} from '@src/types/firebase';
 import type {PreferredTheme} from '@src/types/onyx';
 
 type GetData = {path: FBCollections; id: string};
@@ -20,6 +20,7 @@ type UpdateCover = {
 };
 
 type UserProperties = {
+    updatedAt?: string;
     originalUrl?: string;
     username?: string;
     /** First name of the current user from their personal details */
@@ -46,7 +47,8 @@ type IFirebaseHelper = {
      | Get Data
      |--------------------------------------------------
      */
-    getData({path, id}: GetData): Promise<IeattaModelsWithoutUser>;
+    // getData({path, id}: GetData): Promise<IeattaModelsWithoutUser>;
+    getData({path, id}: GetData): Promise<IeattaModelsWithUser>;
 
     /**
      |--------------------------------------------------

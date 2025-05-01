@@ -270,6 +270,7 @@ export default {
         // The bottom of the floating action button should align with the bottom of the compose box.
         // The value should be equal to the height + marginBottom + marginTop of chatItemComposeSecondaryRow
         bottom: variables.fabBottom,
+        // bottom: 35,
     },
 
     /**

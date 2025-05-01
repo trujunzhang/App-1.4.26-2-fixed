@@ -1,8 +1,10 @@
 import type {ParamListBase} from '@react-navigation/routers';
 import React from 'react';
 import createPlatformStackNavigator from '@libs/Navigation/PlatformStackNavigation/createPlatformStackNavigator';
+import Animations from '@libs/Navigation/PlatformStackNavigation/navigationOptions/animation';
 import type {
     AddPersonalBankAccountNavigatorParamList,
+    ConsoleNavigatorParamList,
     DebugParamList,
     EditRequestNavigatorParamList,
     EnablePaymentsNavigatorParamList,
@@ -10,12 +12,14 @@ import type {
     MissingPersonalDetailsParamList,
     MoneyRequestNavigatorParamList,
     NewChatNavigatorParamList,
+    NewReportWorkspaceSelectionNavigatorParamList,
     NewTaskNavigatorParamList,
     ParticipantsNavigatorParamList,
     PrivateNotesNavigatorParamList,
     ProfileNavigatorParamList,
     ReferralDetailsNavigatorParamList,
     ReimbursementAccountNavigatorParamList,
+    ReportChangeWorkspaceNavigatorParamList,
     ReportDescriptionNavigatorParamList,
     ReportDetailsNavigatorParamList,
     ReportSettingsNavigatorParamList,
@@ -24,6 +28,7 @@ import type {
     SearchReportParamList,
     SearchSavedSearchParamList,
     SettingsNavigatorParamList,
+    ShareNavigatorParamList,
     SignInNavigatorParamList,
     SplitDetailsNavigatorParamList,
     TaskDetailsNavigatorParamList,
@@ -87,8 +92,8 @@ const MoneyRequestModalStackNavigator = createModalStackNavigator<MoneyRequestNa
     [SCREENS.MONEY_REQUEST.STEP_DISTANCE_RATE]: () => require<ReactComponentModule>('@expPages/iou/request/step/IOURequestStepDistanceRate').default,
     [SCREENS.MONEY_REQUEST.STEP_MERCHANT]: () => require<ReactComponentModule>('../../../../expPages/iou/request/step/IOURequestStepMerchant').default,
     [SCREENS.MONEY_REQUEST.STEP_PARTICIPANTS]: () => require<ReactComponentModule>('../../../../expPages/iou/request/step/IOURequestStepParticipants').default,
-    [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORIES_ROOT]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/WorkspaceCategoriesPage').default,
-    [SCREENS.SETTINGS_TAGS.SETTINGS_TAGS_ROOT]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceTagsPage').default,
+    // [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORIES_ROOT]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/WorkspaceCategoriesPage').default,
+    // [SCREENS.SETTINGS_TAGS.SETTINGS_TAGS_ROOT]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceTagsPage').default,
     [SCREENS.MONEY_REQUEST.STEP_SCAN]: () => require<ReactComponentModule>('../../../../expPages/iou/request/step/IOURequestStepScan').default,
     [SCREENS.MONEY_REQUEST.STEP_TAG]: () => require<ReactComponentModule>('../../../../expPages/iou/request/step/IOURequestStepTag').default,
     [SCREENS.MONEY_REQUEST.STEP_WAYPOINT]: () => require<ReactComponentModule>('../../../../expPages/iou/request/step/IOURequestStepWaypoint').default,
@@ -119,6 +124,7 @@ const TravelModalStackNavigator = createModalStackNavigator<TravelNavigatorParam
     [SCREENS.TRAVEL.DOMAIN_SELECTOR]: () => require<ReactComponentModule>('../../../../expPages/Travel/DomainSelectorPage').default,
     [SCREENS.TRAVEL.DOMAIN_PERMISSION_INFO]: () => require<ReactComponentModule>('../../../../expPages/Travel/DomainPermissionInfoPage').default,
     [SCREENS.TRAVEL.PUBLIC_DOMAIN_ERROR]: () => require<ReactComponentModule>('../../../../expPages/Travel/PublicDomainErrorPage').default,
+    [SCREENS.TRAVEL.WORKSPACE_ADDRESS]: () => require<ReactComponentModule>('../../../../expPages/Travel/WorkspaceAddressForTravelPage').default,
 });
 
 const SplitDetailsModalStackNavigator = createModalStackNavigator<SplitDetailsNavigatorParamList>({
@@ -129,10 +135,18 @@ const ProfileModalStackNavigator = createModalStackNavigator<ProfileNavigatorPar
     [SCREENS.PROFILE_ROOT]: () => require<ReactComponentModule>('../../../../expPages/ProfilePage').default,
 });
 
+const NewReportWorkspaceSelectionModalStackNavigator = createModalStackNavigator<NewReportWorkspaceSelectionNavigatorParamList>({
+    [SCREENS.NEW_REPORT_WORKSPACE_SELECTION.ROOT]: () => require<ReactComponentModule>('../../../../expPages/NewReportWorkspaceSelectionPage').default,
+});
+
 const ReportDetailsModalStackNavigator = createModalStackNavigator<ReportDetailsNavigatorParamList>({
     [SCREENS.REPORT_DETAILS.ROOT]: () => require<ReactComponentModule>('../../../../expPages/ReportDetailsPage').default,
     [SCREENS.REPORT_DETAILS.SHARE_CODE]: () => require<ReactComponentModule>('../../../../expPages/home/report/ReportDetailsShareCodePage').default,
     [SCREENS.REPORT_DETAILS.EXPORT]: () => require<ReactComponentModule>('../../../../expPages/home/report/ReportDetailsExportPage').default,
+});
+
+const ReportChangeWorkspaceModalStackNavigator = createModalStackNavigator<ReportChangeWorkspaceNavigatorParamList>({
+    [SCREENS.REPORT_CHANGE_WORKSPACE.ROOT]: () => require<ReactComponentModule>('../../../../expPages/ReportChangeWorkspacePage').default,
 });
 
 const ReportSettingsModalStackNavigator = createModalStackNavigator<ReportSettingsNavigatorParamList>({
@@ -144,7 +158,7 @@ const ReportSettingsModalStackNavigator = createModalStackNavigator<ReportSettin
 });
 
 const WorkspaceConfirmationModalStackNavigator = createModalStackNavigator<WorkspaceConfirmationNavigatorParamList>({
-    [SCREENS.WORKSPACE_CONFIRMATION.ROOT]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceConfirmationPage').default,
+    // [SCREENS.WORKSPACE_CONFIRMATION.ROOT]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceConfirmationPage').default,
 });
 
 const TaskModalStackNavigator = createModalStackNavigator<TaskDetailsNavigatorParamList>({
@@ -157,34 +171,34 @@ const ReportDescriptionModalStackNavigator = createModalStackNavigator<ReportDes
 });
 
 const CategoriesModalStackNavigator = createModalStackNavigator({
-    [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORIES_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/WorkspaceCategoriesSettingsPage').default,
-    [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORY_CREATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CreateCategoryPage').default,
-    [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORY_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/EditCategoryPage').default,
-    [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORY_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategorySettingsPage').default,
-    [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORIES_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/ImportCategoriesPage').default,
-    [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORIES_IMPORTED]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/ImportedCategoriesPage').default,
-    [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORY_PAYROLL_CODE]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryPayrollCodePage').default,
-    [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORY_GL_CODE]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryGLCodePage').default,
+    // [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORIES_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/WorkspaceCategoriesSettingsPage').default,
+    // [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORY_CREATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CreateCategoryPage').default,
+    // [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORY_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/EditCategoryPage').default,
+    // [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORY_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategorySettingsPage').default,
+    // [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORIES_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/ImportCategoriesPage').default,
+    // [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORIES_IMPORTED]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/ImportedCategoriesPage').default,
+    // [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORY_PAYROLL_CODE]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryPayrollCodePage').default,
+    // [SCREENS.SETTINGS_CATEGORIES.SETTINGS_CATEGORY_GL_CODE]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryGLCodePage').default,
 });
 
 const TagsModalStackNavigator = createModalStackNavigator({
-    [SCREENS.SETTINGS_TAGS.SETTINGS_TAGS_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceTagsSettingsPage').default,
-    [SCREENS.SETTINGS_TAGS.SETTINGS_TAGS_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceEditTagsPage').default,
-    [SCREENS.SETTINGS_TAGS.SETTINGS_TAGS_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/ImportTagsPage').default,
-    [SCREENS.SETTINGS_TAGS.SETTINGS_TAGS_IMPORTED]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/ImportedTagsPage').default,
-    [SCREENS.SETTINGS_TAGS.SETTINGS_TAG_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/TagSettingsPage').default,
-    [SCREENS.SETTINGS_TAGS.SETTINGS_TAG_LIST_VIEW]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceViewTagsPage').default,
-    [SCREENS.SETTINGS_TAGS.SETTINGS_TAG_CREATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceCreateTagPage').default,
-    [SCREENS.SETTINGS_TAGS.SETTINGS_TAG_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/EditTagPage').default,
-    [SCREENS.SETTINGS_TAGS.SETTINGS_TAG_APPROVER]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/TagApproverPage').default,
-    [SCREENS.SETTINGS_TAGS.SETTINGS_TAG_GL_CODE]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/TagGLCodePage').default,
+    // [SCREENS.SETTINGS_TAGS.SETTINGS_TAGS_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceTagsSettingsPage').default,
+    // [SCREENS.SETTINGS_TAGS.SETTINGS_TAGS_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceEditTagsPage').default,
+    // [SCREENS.SETTINGS_TAGS.SETTINGS_TAGS_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/ImportTagsPage').default,
+    // [SCREENS.SETTINGS_TAGS.SETTINGS_TAGS_IMPORTED]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/ImportedTagsPage').default,
+    // [SCREENS.SETTINGS_TAGS.SETTINGS_TAG_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/TagSettingsPage').default,
+    // [SCREENS.SETTINGS_TAGS.SETTINGS_TAG_LIST_VIEW]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceViewTagsPage').default,
+    // [SCREENS.SETTINGS_TAGS.SETTINGS_TAG_CREATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceCreateTagPage').default,
+    // [SCREENS.SETTINGS_TAGS.SETTINGS_TAG_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/EditTagPage').default,
+    // [SCREENS.SETTINGS_TAGS.SETTINGS_TAG_APPROVER]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/TagApproverPage').default,
+    // [SCREENS.SETTINGS_TAGS.SETTINGS_TAG_GL_CODE]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/TagGLCodePage').default,
 });
 
 const ExpensifyCardModalStackNavigator = createModalStackNavigator({
-    [SCREENS.EXPENSIFY_CARD.EXPENSIFY_CARD_DETAILS]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceExpensifyCardDetailsPage').default,
-    [SCREENS.EXPENSIFY_CARD.EXPENSIFY_CARD_NAME]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceEditCardNamePage').default,
-    [SCREENS.EXPENSIFY_CARD.EXPENSIFY_CARD_LIMIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceEditCardLimitPage').default,
-    [SCREENS.EXPENSIFY_CARD.EXPENSIFY_CARD_LIMIT_TYPE]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceEditCardLimitTypePage').default,
+    // [SCREENS.EXPENSIFY_CARD.EXPENSIFY_CARD_DETAILS]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceExpensifyCardDetailsPage').default,
+    // [SCREENS.EXPENSIFY_CARD.EXPENSIFY_CARD_NAME]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceEditCardNamePage').default,
+    // [SCREENS.EXPENSIFY_CARD.EXPENSIFY_CARD_LIMIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceEditCardLimitPage').default,
+    // [SCREENS.EXPENSIFY_CARD.EXPENSIFY_CARD_LIMIT_TYPE]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceEditCardLimitTypePage').default,
 });
 
 const DomainCardModalStackNavigator = createModalStackNavigator({
@@ -227,6 +241,10 @@ const NewTeachersUniteNavigator = createModalStackNavigator<TeachersUniteNavigat
     [SCREENS.I_AM_A_TEACHER]: () => require<ReactComponentModule>('../../../../expPages/TeachersUnite/ImTeacherPage').default,
 });
 
+const ConsoleModalStackNavigator = createModalStackNavigator<ConsoleNavigatorParamList>({
+    [SCREENS.PUBLIC_CONSOLE_DEBUG]: () => require<ReactComponentModule>('../../../../expPages/settings/AboutPage/ConsolePage').default,
+});
+
 const SettingsModalStackNavigator = createModalStackNavigator<SettingsNavigatorParamList>({
     [SCREENS.SETTINGS.SHARE_CODE]: () => require<ReactComponentModule>('../../../../expPages/ShareCodePage').default,
     [SCREENS.SETTINGS.PROFILE.PRONOUNS]: () => require<ReactComponentModule>('../../../../expPages/settings/Profile/PronounsPage').default,
@@ -243,9 +261,10 @@ const SettingsModalStackNavigator = createModalStackNavigator<SettingsNavigatorP
     [SCREENS.SETTINGS.PROFILE.CONTACT_METHOD_DETAILS]: () => require<ReactComponentModule>('../../../../expPages/settings/Profile/Contacts/ContactMethodDetailsPage').default,
     [SCREENS.SETTINGS.PROFILE.NEW_CONTACT_METHOD]: () => require<ReactComponentModule>('../../../../expPages/settings/Profile/Contacts/NewContactMethodPage').default,
     [SCREENS.SETTINGS.PREFERENCES.PRIORITY_MODE]: () => require<ReactComponentModule>('../../../../expPages/settings/Preferences/PriorityModePage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.ROOT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/PolicyAccountingPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.ROOT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/PolicyAccountingPage').default,
     [SCREENS.SETTINGS.PREFERENCES.LANGUAGE]: () => require<ReactComponentModule>('../../../../expPages/settings/Preferences/LanguagePage').default,
     [SCREENS.SETTINGS.PREFERENCES.THEME]: () => require<ReactComponentModule>('../../../../expPages/settings/Preferences/ThemePage').default,
+    [SCREENS.SETTINGS.PREFERENCES.PAYMENT_CURRENCY]: () => require<ReactComponentModule>('../../../../expPages/settings/Preferences/PaymentCurrencyPage').default,
     [SCREENS.SETTINGS.CLOSE]: () => require<ReactComponentModule>('../../../../expPages/settings/Security/CloseAccountPage').default,
     [SCREENS.SETTINGS.APP_DOWNLOAD_LINKS]: () => require<ReactComponentModule>('../../../../expPages/settings/AppDownloadLinks').default,
     [SCREENS.SETTINGS.CONSOLE]: () => require<ReactComponentModule>('../../../../expPages/settings/AboutPage/ConsolePage').default,
@@ -270,65 +289,65 @@ const SettingsModalStackNavigator = createModalStackNavigator<SettingsNavigatorP
     [SCREENS.SETTINGS.SUBSCRIPTION.SIZE]: () => require<ReactComponentModule>('../../../../expPages/settings/Subscription/SubscriptionSize').default,
     [SCREENS.SETTINGS.SUBSCRIPTION.DISABLE_AUTO_RENEW_SURVEY]: () => require<ReactComponentModule>('../../../../expPages/settings/Subscription/DisableAutoRenewSurveyPage').default,
     [SCREENS.SETTINGS.SUBSCRIPTION.REQUEST_EARLY_CANCELLATION]: () => require<ReactComponentModule>('../../../../expPages/settings/Subscription/RequestEarlyCancellationPage').default,
-    [SCREENS.WORKSPACE.INVITE]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceInvitePage').default,
-    [SCREENS.WORKSPACE.MEMBERS_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/members/ImportMembersPage').default,
-    [SCREENS.WORKSPACE.MEMBERS_IMPORTED]: () => require<ReactComponentModule>('../../../../expPages/workspace/members/ImportedMembersPage').default,
-    [SCREENS.WORKSPACE.WORKFLOWS_APPROVALS_NEW]: () => require<ReactComponentModule>('../../../../expPages/workspace/workflows/approvals/WorkspaceWorkflowsApprovalsCreatePage').default,
-    [SCREENS.WORKSPACE.WORKFLOWS_APPROVALS_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/workflows/approvals/WorkspaceWorkflowsApprovalsEditPage').default,
-    [SCREENS.WORKSPACE.WORKFLOWS_APPROVALS_EXPENSES_FROM]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/workflows/approvals/WorkspaceWorkflowsApprovalsExpensesFromPage').default,
-    [SCREENS.WORKSPACE.WORKFLOWS_APPROVALS_APPROVER]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/workflows/approvals/WorkspaceWorkflowsApprovalsApproverPage').default,
-    [SCREENS.WORKSPACE.INVITE_MESSAGE]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceInviteMessagePage').default,
-    [SCREENS.WORKSPACE.WORKFLOWS_PAYER]: () => require<ReactComponentModule>('../../../../expPages/workspace/workflows/WorkspaceWorkflowsPayerPage').default,
-    [SCREENS.WORKSPACE.NAME]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceNamePage').default,
-    [SCREENS.WORKSPACE.DESCRIPTION]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceProfileDescriptionPage').default,
-    [SCREENS.WORKSPACE.SHARE]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceProfileSharePage').default,
-    [SCREENS.WORKSPACE.CURRENCY]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceProfileCurrencyPage').default,
-    [SCREENS.WORKSPACE.CATEGORY_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategorySettingsPage').default,
-    [SCREENS.WORKSPACE.ADDRESS]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceProfileAddressPage').default,
-    [SCREENS.WORKSPACE.PLAN]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceProfilePlanTypePage').default,
-    [SCREENS.WORKSPACE.CATEGORIES_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/WorkspaceCategoriesSettingsPage').default,
-    [SCREENS.WORKSPACE.CATEGORIES_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/ImportCategoriesPage').default,
-    [SCREENS.WORKSPACE.CATEGORIES_IMPORTED]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/ImportedCategoriesPage').default,
+    // [SCREENS.WORKSPACE.INVITE]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceInvitePage').default,
+    // [SCREENS.WORKSPACE.MEMBERS_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/members/ImportMembersPage').default,
+    // [SCREENS.WORKSPACE.MEMBERS_IMPORTED]: () => require<ReactComponentModule>('../../../../expPages/workspace/members/ImportedMembersPage').default,
+    // [SCREENS.WORKSPACE.WORKFLOWS_APPROVALS_NEW]: () => require<ReactComponentModule>('../../../../expPages/workspace/workflows/approvals/WorkspaceWorkflowsApprovalsCreatePage').default,
+    // [SCREENS.WORKSPACE.WORKFLOWS_APPROVALS_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/workflows/approvals/WorkspaceWorkflowsApprovalsEditPage').default,
+    // [SCREENS.WORKSPACE.WORKFLOWS_APPROVALS_EXPENSES_FROM]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/workflows/approvals/WorkspaceWorkflowsApprovalsExpensesFromPage').default,
+    // [SCREENS.WORKSPACE.WORKFLOWS_APPROVALS_APPROVER]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/workflows/approvals/WorkspaceWorkflowsApprovalsApproverPage').default,
+    // [SCREENS.WORKSPACE.INVITE_MESSAGE]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceInviteMessagePage').default,
+    // [SCREENS.WORKSPACE.WORKFLOWS_PAYER]: () => require<ReactComponentModule>('../../../../expPages/workspace/workflows/WorkspaceWorkflowsPayerPage').default,
+    // [SCREENS.WORKSPACE.NAME]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceNamePage').default,
+    // [SCREENS.WORKSPACE.DESCRIPTION]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceOverviewDescriptionPage').default,
+    // [SCREENS.WORKSPACE.SHARE]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceOverviewSharePage').default,
+    // [SCREENS.WORKSPACE.CURRENCY]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceOverviewCurrencyPage').default,
+    // [SCREENS.WORKSPACE.CATEGORY_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategorySettingsPage').default,
+    // [SCREENS.WORKSPACE.ADDRESS]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceOverviewAddressPage').default,
+    // [SCREENS.WORKSPACE.PLAN]: () => require<ReactComponentModule>('../../../../expPages/workspace/WorkspaceOverviewPlanTypePage').default,
+    // [SCREENS.WORKSPACE.CATEGORIES_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/WorkspaceCategoriesSettingsPage').default,
+    // [SCREENS.WORKSPACE.CATEGORIES_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/ImportCategoriesPage').default,
+    // [SCREENS.WORKSPACE.CATEGORIES_IMPORTED]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/ImportedCategoriesPage').default,
     // [SCREENS.WORKSPACE.UPGRADE]: () => require<ReactComponentModule>('../../../../expPages/workspace/upgrade/WorkspaceUpgradePage').default,
-    [SCREENS.WORKSPACE.DOWNGRADE]: () => require<ReactComponentModule>('../../../../expPages/workspace/downgrade/WorkspaceDowngradePage').default,
-    [SCREENS.WORKSPACE.MEMBER_DETAILS]: () => require<ReactComponentModule>('../../../../expPages/workspace/members/WorkspaceMemberDetailsPage').default,
-    [SCREENS.WORKSPACE.MEMBER_NEW_CARD]: () => require<ReactComponentModule>('../../../../expPages/workspace/members/WorkspaceMemberNewCardPage').default,
-    [SCREENS.WORKSPACE.OWNER_CHANGE_CHECK]: () => require<ReactComponentModule>('@expPages/workspace/members/WorkspaceOwnerChangeWrapperPage').default,
-    [SCREENS.WORKSPACE.OWNER_CHANGE_SUCCESS]: () => require<ReactComponentModule>('../../../../expPages/workspace/members/WorkspaceOwnerChangeSuccessPage').default,
-    [SCREENS.WORKSPACE.OWNER_CHANGE_ERROR]: () => require<ReactComponentModule>('../../../../expPages/workspace/members/WorkspaceOwnerChangeErrorPage').default,
-    [SCREENS.WORKSPACE.CATEGORY_CREATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CreateCategoryPage').default,
-    [SCREENS.WORKSPACE.CATEGORY_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/EditCategoryPage').default,
-    [SCREENS.WORKSPACE.CATEGORY_PAYROLL_CODE]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryPayrollCodePage').default,
-    [SCREENS.WORKSPACE.CATEGORY_GL_CODE]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryGLCodePage').default,
-    [SCREENS.WORKSPACE.CATEGORY_DEFAULT_TAX_RATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryDefaultTaxRatePage').default,
-    [SCREENS.WORKSPACE.CATEGORY_FLAG_AMOUNTS_OVER]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryFlagAmountsOverPage').default,
-    [SCREENS.WORKSPACE.CATEGORY_DESCRIPTION_HINT]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryDescriptionHintPage').default,
-    [SCREENS.WORKSPACE.CATEGORY_REQUIRE_RECEIPTS_OVER]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryRequireReceiptsOverPage').default,
-    [SCREENS.WORKSPACE.CATEGORY_APPROVER]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryApproverPage').default,
-    [SCREENS.WORKSPACE.CREATE_DISTANCE_RATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/distanceRates/CreateDistanceRatePage').default,
-    [SCREENS.WORKSPACE.DISTANCE_RATES_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/distanceRates/PolicyDistanceRatesSettingsPage').default,
-    [SCREENS.WORKSPACE.DISTANCE_RATE_DETAILS]: () => require<ReactComponentModule>('../../../../expPages/workspace/distanceRates/PolicyDistanceRateDetailsPage').default,
-    [SCREENS.WORKSPACE.DISTANCE_RATE_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/distanceRates/PolicyDistanceRateEditPage').default,
-    [SCREENS.WORKSPACE.DISTANCE_RATE_TAX_RECLAIMABLE_ON_EDIT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/distanceRates/PolicyDistanceRateTaxReclaimableEditPage').default,
-    [SCREENS.WORKSPACE.DISTANCE_RATE_TAX_RATE_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/distanceRates/PolicyDistanceRateTaxRateEditPage').default,
-    [SCREENS.WORKSPACE.TAGS_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/ImportTagsPage').default,
-    [SCREENS.WORKSPACE.TAGS_IMPORTED]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/ImportedTagsPage').default,
-    [SCREENS.WORKSPACE.TAGS_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceTagsSettingsPage').default,
-    [SCREENS.WORKSPACE.TAG_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/TagSettingsPage').default,
-    [SCREENS.WORKSPACE.TAG_LIST_VIEW]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceViewTagsPage').default,
-    [SCREENS.WORKSPACE.TAGS_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceEditTagsPage').default,
-    [SCREENS.WORKSPACE.TAG_CREATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceCreateTagPage').default,
-    [SCREENS.WORKSPACE.TAG_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/EditTagPage').default,
-    [SCREENS.WORKSPACE.TAG_APPROVER]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/TagApproverPage').default,
-    [SCREENS.WORKSPACE.TAG_GL_CODE]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/TagGLCodePage').default,
-    [SCREENS.WORKSPACE.TAXES_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/taxes/WorkspaceTaxesSettingsPage').default,
-    [SCREENS.WORKSPACE.TAXES_SETTINGS_CUSTOM_TAX_NAME]: () => require<ReactComponentModule>('../../../../expPages/workspace/taxes/WorkspaceTaxesSettingsCustomTaxName').default,
-    [SCREENS.WORKSPACE.TAXES_SETTINGS_FOREIGN_CURRENCY_DEFAULT]: () => require<ReactComponentModule>('../../../../expPages/workspace/taxes/WorkspaceTaxesSettingsForeignCurrency').default,
-    [SCREENS.WORKSPACE.TAXES_SETTINGS_WORKSPACE_CURRENCY_DEFAULT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/taxes/WorkspaceTaxesSettingsWorkspaceCurrency').default,
+    // [SCREENS.WORKSPACE.DOWNGRADE]: () => require<ReactComponentModule>('../../../../expPages/workspace/downgrade/WorkspaceDowngradePage').default,
+    // [SCREENS.WORKSPACE.MEMBER_DETAILS]: () => require<ReactComponentModule>('../../../../expPages/workspace/members/WorkspaceMemberDetailsPage').default,
+    // [SCREENS.WORKSPACE.MEMBER_NEW_CARD]: () => require<ReactComponentModule>('../../../../expPages/workspace/members/WorkspaceMemberNewCardPage').default,
+    // [SCREENS.WORKSPACE.OWNER_CHANGE_CHECK]: () => require<ReactComponentModule>('@expPages/workspace/members/WorkspaceOwnerChangeWrapperPage').default,
+    // [SCREENS.WORKSPACE.OWNER_CHANGE_SUCCESS]: () => require<ReactComponentModule>('../../../../expPages/workspace/members/WorkspaceOwnerChangeSuccessPage').default,
+    // [SCREENS.WORKSPACE.OWNER_CHANGE_ERROR]: () => require<ReactComponentModule>('../../../../expPages/workspace/members/WorkspaceOwnerChangeErrorPage').default,
+    // [SCREENS.WORKSPACE.CATEGORY_CREATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CreateCategoryPage').default,
+    // [SCREENS.WORKSPACE.CATEGORY_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/EditCategoryPage').default,
+    // [SCREENS.WORKSPACE.CATEGORY_PAYROLL_CODE]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryPayrollCodePage').default,
+    // [SCREENS.WORKSPACE.CATEGORY_GL_CODE]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryGLCodePage').default,
+    // [SCREENS.WORKSPACE.CATEGORY_DEFAULT_TAX_RATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryDefaultTaxRatePage').default,
+    // [SCREENS.WORKSPACE.CATEGORY_FLAG_AMOUNTS_OVER]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryFlagAmountsOverPage').default,
+    // [SCREENS.WORKSPACE.CATEGORY_DESCRIPTION_HINT]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryDescriptionHintPage').default,
+    // [SCREENS.WORKSPACE.CATEGORY_REQUIRE_RECEIPTS_OVER]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryRequireReceiptsOverPage').default,
+    // [SCREENS.WORKSPACE.CATEGORY_APPROVER]: () => require<ReactComponentModule>('../../../../expPages/workspace/categories/CategoryApproverPage').default,
+    // [SCREENS.WORKSPACE.CREATE_DISTANCE_RATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/distanceRates/CreateDistanceRatePage').default,
+    // [SCREENS.WORKSPACE.DISTANCE_RATES_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/distanceRates/PolicyDistanceRatesSettingsPage').default,
+    // [SCREENS.WORKSPACE.DISTANCE_RATE_DETAILS]: () => require<ReactComponentModule>('../../../../expPages/workspace/distanceRates/PolicyDistanceRateDetailsPage').default,
+    // [SCREENS.WORKSPACE.DISTANCE_RATE_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/distanceRates/PolicyDistanceRateEditPage').default,
+    // [SCREENS.WORKSPACE.DISTANCE_RATE_TAX_RECLAIMABLE_ON_EDIT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/distanceRates/PolicyDistanceRateTaxReclaimableEditPage').default,
+    // [SCREENS.WORKSPACE.DISTANCE_RATE_TAX_RATE_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/distanceRates/PolicyDistanceRateTaxRateEditPage').default,
+    // [SCREENS.WORKSPACE.TAGS_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/ImportTagsPage').default,
+    // [SCREENS.WORKSPACE.TAGS_IMPORTED]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/ImportedTagsPage').default,
+    // [SCREENS.WORKSPACE.TAGS_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceTagsSettingsPage').default,
+    // [SCREENS.WORKSPACE.TAG_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/TagSettingsPage').default,
+    // [SCREENS.WORKSPACE.TAG_LIST_VIEW]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceViewTagsPage').default,
+    // [SCREENS.WORKSPACE.TAGS_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceEditTagsPage').default,
+    // [SCREENS.WORKSPACE.TAG_CREATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/WorkspaceCreateTagPage').default,
+    // [SCREENS.WORKSPACE.TAG_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/EditTagPage').default,
+    // [SCREENS.WORKSPACE.TAG_APPROVER]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/TagApproverPage').default,
+    // [SCREENS.WORKSPACE.TAG_GL_CODE]: () => require<ReactComponentModule>('../../../../expPages/workspace/tags/TagGLCodePage').default,
+    // [SCREENS.WORKSPACE.TAXES_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/taxes/WorkspaceTaxesSettingsPage').default,
+    // [SCREENS.WORKSPACE.TAXES_SETTINGS_CUSTOM_TAX_NAME]: () => require<ReactComponentModule>('../../../../expPages/workspace/taxes/WorkspaceTaxesSettingsCustomTaxName').default,
+    // [SCREENS.WORKSPACE.TAXES_SETTINGS_FOREIGN_CURRENCY_DEFAULT]: () => require<ReactComponentModule>('../../../../expPages/workspace/taxes/WorkspaceTaxesSettingsForeignCurrency').default,
+    // [SCREENS.WORKSPACE.TAXES_SETTINGS_WORKSPACE_CURRENCY_DEFAULT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/taxes/WorkspaceTaxesSettingsWorkspaceCurrency').default,
     // [SCREENS.WORKSPACE.ACCOUNTING.QUICKBOOKS_ONLINE_EXPORT]: () =>
     // require<ReactComponentModule>('../../../../expPages/workspace/accounting/qbo/export/QuickbooksExportConfigurationPage').default,
     // [SCREENS.WORKSPACE.ACCOUNTING.QUICKBOOKS_ONLINE_EXPORT_DATE_SELECT]: () =>
@@ -370,13 +389,13 @@ const SettingsModalStackNavigator = createModalStackNavigator<SettingsNavigatorP
     // [SCREENS.WORKSPACE.ACCOUNTING.QUICKBOOKS_DESKTOP_EXPORT_OUT_OF_POCKET_EXPENSES_SELECT]: () =>
     // require<ReactComponentModule>('../../../../expPages/workspace/accounting/qbd/export/QuickbooksDesktopOutOfPocketExpenseEntitySelectPage').default,
     // [SCREENS.WORKSPACE.ACCOUNTING.QUICKBOOKS_DESKTOP_EXPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/qbd/export/QuickbooksDesktopExportPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.QUICKBOOKS_DESKTOP_ADVANCED]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/qbd/advanced/QuickbooksDesktopAdvancedPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.QUICKBOOKS_DESKTOP_SETUP_MODAL]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/qbd/QuickBooksDesktopSetupPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.QUICKBOOKS_DESKTOP_SETUP_REQUIRED_DEVICE_MODAL]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/qbd/RequireQuickBooksDesktopPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.QUICKBOOKS_DESKTOP_TRIGGER_FIRST_SYNC]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/qbd/QuickBooksDesktopSetupFlowSyncPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.QUICKBOOKS_DESKTOP_ADVANCED]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/qbd/advanced/QuickbooksDesktopAdvancedPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.QUICKBOOKS_DESKTOP_SETUP_MODAL]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/qbd/QuickBooksDesktopSetupPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.QUICKBOOKS_DESKTOP_SETUP_REQUIRED_DEVICE_MODAL]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/qbd/RequireQuickBooksDesktopPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.QUICKBOOKS_DESKTOP_TRIGGER_FIRST_SYNC]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/qbd/QuickBooksDesktopSetupFlowSyncPage').default,
     // [SCREENS.WORKSPACE.ACCOUNTING.QUICKBOOKS_DESKTOP_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/qbd/import/QuickbooksDesktopImportPage').default,
     // [SCREENS.WORKSPACE.ACCOUNTING.QUICKBOOKS_DESKTOP_CHART_OF_ACCOUNTS]: () =>
     // require<ReactComponentModule>('../../../../expPages/workspace/accounting/qbd/import/QuickbooksDesktopChartOfAccountsPage').default,
@@ -388,8 +407,7 @@ const SettingsModalStackNavigator = createModalStackNavigator<SettingsNavigatorP
     // [SCREENS.WORKSPACE.ACCOUNTING.QUICKBOOKS_DESKTOP_CUSTOMERS_DISPLAYED_AS]: () =>
     // require<ReactComponentModule>('../../../../expPages/workspace/accounting/qbd/import/QuickbooksDesktopCustomersDisplayedAsPage').default,
     // [SCREENS.WORKSPACE.ACCOUNTING.QUICKBOOKS_DESKTOP_ITEMS]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/qbd/import/QuickbooksDesktopItemsPage').default,
-    [SCREENS.REIMBURSEMENT_ACCOUNT]: () => require<ReactComponentModule>('../../../../expPages/ReimbursementAccount/ReimbursementAccountPage').default,
-    [SCREENS.GET_ASSISTANCE]: () => require<ReactComponentModule>('../../../../expPages/GetAssistancePage').default,
+    // [SCREENS.REIMBURSEMENT_ACCOUNT]: () => require<ReactComponentModule>('../../../../expPages/ReimbursementAccount/ReimbursementAccountPage').default,
     [SCREENS.SETTINGS.REPORT_CARD_LOST_OR_DAMAGED]: () => require<ReactComponentModule>('../../../../expPages/settings/Wallet/ReportCardLostPage').default,
     [SCREENS.KEYBOARD_SHORTCUTS]: () => require<ReactComponentModule>('../../../../expPages/KeyboardShortcutsPage').default,
     [SCREENS.SETTINGS.EXIT_SURVEY.REASON]: () => require<ReactComponentModule>('../../../../expPages/settings/ExitSurvey/ExitSurveyReasonPage').default,
@@ -415,211 +433,199 @@ const SettingsModalStackNavigator = createModalStackNavigator<SettingsNavigatorP
     // [SCREENS.WORKSPACE.ACCOUNTING.QUICKBOOKS_ONLINE_INVOICE_ACCOUNT_SELECTOR]: () =>
     // require<ReactComponentModule>('../../../../expPages/workspace/accounting/qbo/advanced/QuickbooksInvoiceAccountSelectPage').default,
 
-    [SCREENS.WORKSPACE.ACCOUNTING.XERO_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/XeroImportPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.XERO_ORGANIZATION]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/XeroOrganizationConfigurationPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.XERO_CHART_OF_ACCOUNTS]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/import/XeroChartOfAccountsPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.XERO_CUSTOMER]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/import/XeroCustomerConfigurationPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.XERO_TAXES]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/XeroTaxesConfigurationPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.XERO_TRACKING_CATEGORIES]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/XeroTrackingCategoryConfigurationPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.XERO_MAP_TRACKING_CATEGORY]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/XeroMapTrackingCategoryConfigurationPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.XERO_EXPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/export/XeroExportConfigurationPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.XERO_EXPORT_PURCHASE_BILL_DATE_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/export/XeroPurchaseBillDateSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.XERO_EXPORT_BANK_ACCOUNT_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/export/XeroBankAccountSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.XERO_ADVANCED]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/advanced/XeroAdvancedPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.XERO_BILL_STATUS_SELECTOR]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/export/XeroPurchaseBillStatusSelectorPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.XERO_INVOICE_ACCOUNT_SELECTOR]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/advanced/XeroInvoiceAccountSelectorPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.XERO_EXPORT_PREFERRED_EXPORTER_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/export/XeroPreferredExporterSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.XERO_BILL_PAYMENT_ACCOUNT_SELECTOR]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/advanced/XeroBillPaymentAccountSelectorPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.XERO_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/XeroImportPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.XERO_ORGANIZATION]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/XeroOrganizationConfigurationPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.XERO_CHART_OF_ACCOUNTS]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/import/XeroChartOfAccountsPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.XERO_CUSTOMER]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/import/XeroCustomerConfigurationPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.XERO_TAXES]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/XeroTaxesConfigurationPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.XERO_TRACKING_CATEGORIES]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/XeroTrackingCategoryConfigurationPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.XERO_MAP_TRACKING_CATEGORY]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/XeroMapTrackingCategoryConfigurationPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.XERO_EXPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/export/XeroExportConfigurationPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.XERO_EXPORT_PURCHASE_BILL_DATE_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/export/XeroPurchaseBillDateSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.XERO_EXPORT_BANK_ACCOUNT_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/export/XeroBankAccountSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.XERO_ADVANCED]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/advanced/XeroAdvancedPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.XERO_BILL_STATUS_SELECTOR]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/export/XeroPurchaseBillStatusSelectorPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.XERO_INVOICE_ACCOUNT_SELECTOR]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/advanced/XeroInvoiceAccountSelectorPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.XERO_EXPORT_PREFERRED_EXPORTER_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/export/XeroPreferredExporterSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.XERO_BILL_PAYMENT_ACCOUNT_SELECTOR]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/xero/advanced/XeroBillPaymentAccountSelectorPage').default,
 
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_SUBSIDIARY_SELECTOR]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/NetSuiteSubsidiarySelector').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_REUSE_EXISTING_CONNECTIONS]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/NetSuiteTokenInput/NetSuiteExistingConnectionsPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_TOKEN_INPUT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/NetSuiteTokenInput/NetSuiteTokenInputPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT_MAPPING]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportMappingPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT_CUSTOM_FIELD]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT_CUSTOM_FIELD_VIEW]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldView').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT_CUSTOM_FIELD_EDIT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldEdit').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT_CUSTOM_LIST_ADD]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldNew/NetSuiteImportAddCustomListPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT_CUSTOM_SEGMENT_ADD]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldNew/NetSuiteImportAddCustomSegmentPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT_CUSTOMERS_OR_PROJECTS]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomersOrProjectsPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT_CUSTOMERS_OR_PROJECTS_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomersOrProjectSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_EXPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteExportConfigurationPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_PREFERRED_EXPORTER_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuitePreferredExporterSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_DATE_SELECT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteDateSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_EXPORT_EXPENSES]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteExportExpensesPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_EXPORT_EXPENSES_DESTINATION_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteExportExpensesDestinationSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_EXPORT_EXPENSES_VENDOR_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteExportExpensesVendorSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_EXPORT_EXPENSES_PAYABLE_ACCOUNT_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteExportExpensesPayableAccountSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_EXPORT_EXPENSES_JOURNAL_POSTING_PREFERENCE_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteExportExpensesJournalPostingPreferenceSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_RECEIVABLE_ACCOUNT_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteReceivableAccountSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_INVOICE_ITEM_PREFERENCE_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteInvoiceItemPreferenceSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_INVOICE_ITEM_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteInvoiceItemSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_TAX_POSTING_ACCOUNT_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteTaxPostingAccountSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_PROVINCIAL_TAX_POSTING_ACCOUNT_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteProvincialTaxPostingAccountSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_ADVANCED]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteAdvancedPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_REIMBURSEMENT_ACCOUNT_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteReimbursementAccountSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_COLLECTION_ACCOUNT_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteCollectionAccountSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_EXPENSE_REPORT_APPROVAL_LEVEL_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteExpenseReportApprovalLevelSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_VENDOR_BILL_APPROVAL_LEVEL_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteVendorBillApprovalLevelSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_JOURNAL_ENTRY_APPROVAL_LEVEL_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteJournalEntryApprovalLevelSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_APPROVAL_ACCOUNT_SELECT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteApprovalAccountSelectPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_CUSTOM_FORM_ID]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteCustomFormIDPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_AUTO_SYNC]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteAutoSyncPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_ACCOUNTING_METHOD]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteAccountingMethodPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NSQS_SETUP]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/nsqs/NSQSSetupPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NSQS_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/nsqs/import/NSQSImportPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NSQS_IMPORT_CUSTOMERS]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/nsqs/import/NSQSCustomersPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NSQS_IMPORT_CUSTOMERS_DISPLAYED_AS]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/nsqs/import/NSQSCustomersDisplayedAsPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NSQS_IMPORT_PROJECTS]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/nsqs/import/NSQSProjectsPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NSQS_IMPORT_PROJECTS_DISPLAYED_AS]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/nsqs/import/NSQSProjectsDisplayedAsPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NSQS_EXPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/nsqs/export/NSQSExportPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NSQS_EXPORT_PREFERRED_EXPORTER]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/nsqs/export/NSQSPreferredExporterPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NSQS_EXPORT_DATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/nsqs/export/NSQSDatePage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NSQS_EXPORT_PAYMENT_ACCOUNT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/nsqs/export/NSQSPaymentAccountPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.NSQS_ADVANCED]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/nsqs/advanced/NSQSAdvancedPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_PREREQUISITES]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/SageIntacctPrerequisitesPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.ENTER_SAGE_INTACCT_CREDENTIALS]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/EnterSageIntacctCredentialsPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.EXISTING_SAGE_INTACCT_CONNECTIONS]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/ExistingConnectionsPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_ENTITY]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/SageIntacctEntityPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_EXPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctExportPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_PREFERRED_EXPORTER]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctPreferredExporterPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_EXPORT_DATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctDatePage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_REIMBURSABLE_EXPENSES]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctReimbursableExpensesPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_NON_REIMBURSABLE_EXPENSES]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctNonReimbursableExpensesPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_REIMBURSABLE_DESTINATION]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctReimbursableExpensesDestinationPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_NON_REIMBURSABLE_DESTINATION]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctNonReimbursableExpensesDestinationPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_DEFAULT_VENDOR]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctDefaultVendorPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_NON_REIMBURSABLE_CREDIT_CARD_ACCOUNT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctNonReimbursableCreditCardAccountPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_ADVANCED]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/advanced/SageIntacctAdvancedPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_PAYMENT_ACCOUNT]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/advanced/SageIntacctPaymentAccountPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.CARD_RECONCILIATION]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/reconciliation/CardReconciliationPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.RECONCILIATION_ACCOUNT_SETTINGS]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/reconciliation/ReconciliationAccountSettingsPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.MULTI_CONNECTION_SELECTOR]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/MultiConnectionSelectorPage').default,
-    [SCREENS.WORKSPACE.WORKFLOWS_AUTO_REPORTING_FREQUENCY]: () => require<ReactComponentModule>('../../../../expPages/workspace/workflows/WorkspaceAutoReportingFrequencyPage').default,
-    [SCREENS.WORKSPACE.WORKFLOWS_AUTO_REPORTING_MONTHLY_OFFSET]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/workflows/WorkspaceAutoReportingMonthlyOffsetPage').default,
-    [SCREENS.WORKSPACE.TAX_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/taxes/WorkspaceEditTaxPage').default,
-    [SCREENS.WORKSPACE.TAX_NAME]: () => require<ReactComponentModule>('../../../../expPages/workspace/taxes/NamePage').default,
-    [SCREENS.WORKSPACE.TAX_VALUE]: () => require<ReactComponentModule>('../../../../expPages/workspace/taxes/ValuePage').default,
-    [SCREENS.WORKSPACE.TAX_CREATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/taxes/WorkspaceCreateTaxPage').default,
-    [SCREENS.WORKSPACE.TAX_CODE]: () => require<ReactComponentModule>('../../../../expPages/workspace/taxes/WorkspaceTaxCodePage').default,
-    [SCREENS.WORKSPACE.INVOICES_COMPANY_NAME]: () => require<ReactComponentModule>('../../../../expPages/workspace/invoices/WorkspaceInvoicingDetailsName').default,
-    [SCREENS.WORKSPACE.INVOICES_COMPANY_WEBSITE]: () => require<ReactComponentModule>('../../../../expPages/workspace/invoices/WorkspaceInvoicingDetailsWebsite').default,
-    [SCREENS.WORKSPACE.COMPANY_CARDS_ASSIGN_CARD]: () => require<ReactComponentModule>('../../../../expPages/workspace/companyCards/assignCard/AssignCardFeedPage').default,
-    [SCREENS.WORKSPACE.COMPANY_CARDS_SELECT_FEED]: () => require<ReactComponentModule>('../../../../expPages/workspace/companyCards/WorkspaceCompanyCardFeedSelectorPage').default,
-    [SCREENS.WORKSPACE.COMPANY_CARDS_BANK_CONNECTION]: () => require<ReactComponentModule>('../../../../expPages/workspace/companyCards/BankConnection').default,
-    [SCREENS.WORKSPACE.COMPANY_CARDS_ADD_NEW]: () => require<ReactComponentModule>('../../../../expPages/workspace/companyCards/addNew/AddNewCardPage').default,
-    [SCREENS.WORKSPACE.COMPANY_CARD_DETAILS]: () => require<ReactComponentModule>('../../../../expPages/workspace/companyCards/WorkspaceCompanyCardDetailsPage').default,
-    [SCREENS.WORKSPACE.COMPANY_CARD_NAME]: () => require<ReactComponentModule>('../../../../expPages/workspace/companyCards/WorkspaceCompanyCardEditCardNamePage').default,
-    [SCREENS.WORKSPACE.COMPANY_CARD_EXPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/companyCards/WorkspaceCompanyCardAccountSelectCardPage').default,
-    [SCREENS.WORKSPACE.EXPENSIFY_CARD_ISSUE_NEW]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/issueNew/IssueNewCardPage').default,
-    [SCREENS.WORKSPACE.EXPENSIFY_CARD_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceCardSettingsPage').default,
-    [SCREENS.WORKSPACE.EXPENSIFY_CARD_SETTINGS_ACCOUNT]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceSettlementAccountPage').default,
-    [SCREENS.WORKSPACE.EXPENSIFY_CARD_SETTINGS_FREQUENCY]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceSettlementFrequencyPage').default,
-    [SCREENS.WORKSPACE.EXPENSIFY_CARD_BANK_ACCOUNT]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceExpensifyCardBankAccounts').default,
-    [SCREENS.WORKSPACE.EXPENSIFY_CARD_DETAILS]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceExpensifyCardDetailsPage').default,
-    [SCREENS.WORKSPACE.EXPENSIFY_CARD_NAME]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceEditCardNamePage').default,
-    [SCREENS.WORKSPACE.EXPENSIFY_CARD_LIMIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceEditCardLimitPage').default,
-    [SCREENS.WORKSPACE.EXPENSIFY_CARD_LIMIT_TYPE]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceEditCardLimitTypePage').default,
-    [SCREENS.WORKSPACE.COMPANY_CARDS_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/companyCards/WorkspaceCompanyCardsSettingsPage').default,
-    [SCREENS.WORKSPACE.COMPANY_CARDS_SETTINGS_FEED_NAME]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/companyCards/WorkspaceCompanyCardsSettingsFeedNamePage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_SUBSIDIARY_SELECTOR]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/NetSuiteSubsidiarySelector').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_REUSE_EXISTING_CONNECTIONS]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/NetSuiteTokenInput/NetSuiteExistingConnectionsPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_TOKEN_INPUT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/NetSuiteTokenInput/NetSuiteTokenInputPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT_MAPPING]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportMappingPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT_CUSTOM_FIELD]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT_CUSTOM_FIELD_VIEW]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldView').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT_CUSTOM_FIELD_EDIT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldEdit').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT_CUSTOM_LIST_ADD]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldNew/NetSuiteImportAddCustomListPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT_CUSTOM_SEGMENT_ADD]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomFieldNew/NetSuiteImportAddCustomSegmentPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT_CUSTOMERS_OR_PROJECTS]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomersOrProjectsPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_IMPORT_CUSTOMERS_OR_PROJECTS_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/import/NetSuiteImportCustomersOrProjectSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_EXPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteExportConfigurationPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_PREFERRED_EXPORTER_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuitePreferredExporterSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_DATE_SELECT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteDateSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_EXPORT_EXPENSES]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteExportExpensesPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_EXPORT_EXPENSES_DESTINATION_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteExportExpensesDestinationSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_EXPORT_EXPENSES_VENDOR_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteExportExpensesVendorSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_EXPORT_EXPENSES_PAYABLE_ACCOUNT_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteExportExpensesPayableAccountSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_EXPORT_EXPENSES_JOURNAL_POSTING_PREFERENCE_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteExportExpensesJournalPostingPreferenceSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_RECEIVABLE_ACCOUNT_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteReceivableAccountSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_INVOICE_ITEM_PREFERENCE_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteInvoiceItemPreferenceSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_INVOICE_ITEM_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteInvoiceItemSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_TAX_POSTING_ACCOUNT_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteTaxPostingAccountSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_PROVINCIAL_TAX_POSTING_ACCOUNT_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/export/NetSuiteProvincialTaxPostingAccountSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_ADVANCED]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteAdvancedPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_REIMBURSEMENT_ACCOUNT_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteReimbursementAccountSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_COLLECTION_ACCOUNT_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteCollectionAccountSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_EXPENSE_REPORT_APPROVAL_LEVEL_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteExpenseReportApprovalLevelSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_VENDOR_BILL_APPROVAL_LEVEL_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteVendorBillApprovalLevelSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_JOURNAL_ENTRY_APPROVAL_LEVEL_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteJournalEntryApprovalLevelSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_APPROVAL_ACCOUNT_SELECT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteApprovalAccountSelectPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_CUSTOM_FORM_ID]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteCustomFormIDPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_AUTO_SYNC]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteAutoSyncPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.NETSUITE_ACCOUNTING_METHOD]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/netsuite/advanced/NetSuiteAccountingMethodPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_PREREQUISITES]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/SageIntacctPrerequisitesPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.ENTER_SAGE_INTACCT_CREDENTIALS]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/EnterSageIntacctCredentialsPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.EXISTING_SAGE_INTACCT_CONNECTIONS]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/ExistingConnectionsPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_ENTITY]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/SageIntacctEntityPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_EXPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctExportPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_PREFERRED_EXPORTER]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctPreferredExporterPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_EXPORT_DATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctDatePage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_REIMBURSABLE_EXPENSES]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctReimbursableExpensesPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_NON_REIMBURSABLE_EXPENSES]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctNonReimbursableExpensesPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_REIMBURSABLE_DESTINATION]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctReimbursableExpensesDestinationPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_NON_REIMBURSABLE_DESTINATION]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctNonReimbursableExpensesDestinationPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_DEFAULT_VENDOR]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctDefaultVendorPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_NON_REIMBURSABLE_CREDIT_CARD_ACCOUNT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/export/SageIntacctNonReimbursableCreditCardAccountPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_ADVANCED]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/advanced/SageIntacctAdvancedPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_PAYMENT_ACCOUNT]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/advanced/SageIntacctPaymentAccountPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.CARD_RECONCILIATION]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/reconciliation/CardReconciliationPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.RECONCILIATION_ACCOUNT_SETTINGS]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/reconciliation/ReconciliationAccountSettingsPage').default,
+    // [SCREENS.WORKSPACE.WORKFLOWS_AUTO_REPORTING_FREQUENCY]: () => require<ReactComponentModule>('../../../../expPages/workspace/workflows/WorkspaceAutoReportingFrequencyPage').default,
+    // [SCREENS.WORKSPACE.WORKFLOWS_AUTO_REPORTING_MONTHLY_OFFSET]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/workflows/WorkspaceAutoReportingMonthlyOffsetPage').default,
+    // [SCREENS.WORKSPACE.TAX_EDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/taxes/WorkspaceEditTaxPage').default,
+    // [SCREENS.WORKSPACE.TAX_NAME]: () => require<ReactComponentModule>('../../../../expPages/workspace/taxes/NamePage').default,
+    // [SCREENS.WORKSPACE.TAX_VALUE]: () => require<ReactComponentModule>('../../../../expPages/workspace/taxes/ValuePage').default,
+    // [SCREENS.WORKSPACE.TAX_CREATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/taxes/WorkspaceCreateTaxPage').default,
+    // [SCREENS.WORKSPACE.TAX_CODE]: () => require<ReactComponentModule>('../../../../expPages/workspace/taxes/WorkspaceTaxCodePage').default,
+    // [SCREENS.WORKSPACE.INVOICES_COMPANY_NAME]: () => require<ReactComponentModule>('../../../../expPages/workspace/invoices/WorkspaceInvoicingDetailsName').default,
+    // [SCREENS.WORKSPACE.INVOICES_COMPANY_WEBSITE]: () => require<ReactComponentModule>('../../../../expPages/workspace/invoices/WorkspaceInvoicingDetailsWebsite').default,
+    // [SCREENS.WORKSPACE.COMPANY_CARDS_ASSIGN_CARD]: () => require<ReactComponentModule>('../../../../expPages/workspace/companyCards/assignCard/AssignCardFeedPage').default,
+    // [SCREENS.WORKSPACE.COMPANY_CARDS_SELECT_FEED]: () => require<ReactComponentModule>('../../../../expPages/workspace/companyCards/WorkspaceCompanyCardFeedSelectorPage').default,
+    // [SCREENS.WORKSPACE.COMPANY_CARDS_BANK_CONNECTION]: () => require<ReactComponentModule>('../../../../expPages/workspace/companyCards/BankConnection').default,
+    // [SCREENS.WORKSPACE.COMPANY_CARDS_ADD_NEW]: () => require<ReactComponentModule>('../../../../expPages/workspace/companyCards/addNew/AddNewCardPage').default,
+    // [SCREENS.WORKSPACE.COMPANY_CARDS_TRANSACTION_START_DATE]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/companyCards/assignCard/TransactionStartDateSelectorPage').default,
+    // [SCREENS.WORKSPACE.COMPANY_CARD_DETAILS]: () => require<ReactComponentModule>('../../../../expPages/workspace/companyCards/WorkspaceCompanyCardDetailsPage').default,
+    // [SCREENS.WORKSPACE.COMPANY_CARD_NAME]: () => require<ReactComponentModule>('../../../../expPages/workspace/companyCards/WorkspaceCompanyCardEditCardNamePage').default,
+    // [SCREENS.WORKSPACE.COMPANY_CARD_EXPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/companyCards/WorkspaceCompanyCardAccountSelectCardPage').default,
+    // [SCREENS.WORKSPACE.EXPENSIFY_CARD_ISSUE_NEW]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/issueNew/IssueNewCardPage').default,
+    // [SCREENS.WORKSPACE.EXPENSIFY_CARD_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceCardSettingsPage').default,
+    // [SCREENS.WORKSPACE.EXPENSIFY_CARD_SETTINGS_ACCOUNT]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceSettlementAccountPage').default,
+    // [SCREENS.WORKSPACE.EXPENSIFY_CARD_SETTINGS_FREQUENCY]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceSettlementFrequencyPage').default,
+    // [SCREENS.WORKSPACE.EXPENSIFY_CARD_BANK_ACCOUNT]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceExpensifyCardBankAccounts').default,
+    // [SCREENS.WORKSPACE.EXPENSIFY_CARD_DETAILS]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceExpensifyCardDetailsPage').default,
+    // [SCREENS.WORKSPACE.EXPENSIFY_CARD_NAME]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceEditCardNamePage').default,
+    // [SCREENS.WORKSPACE.EXPENSIFY_CARD_LIMIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceEditCardLimitPage').default,
+    // [SCREENS.WORKSPACE.EXPENSIFY_CARD_LIMIT_TYPE]: () => require<ReactComponentModule>('../../../../expPages/workspace/expensifyCard/WorkspaceEditCardLimitTypePage').default,
+    // [SCREENS.WORKSPACE.COMPANY_CARDS_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/companyCards/WorkspaceCompanyCardsSettingsPage').default,
+    // [SCREENS.WORKSPACE.COMPANY_CARDS_SETTINGS_FEED_NAME]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/companyCards/WorkspaceCompanyCardsSettingsFeedNamePage').default,
     [SCREENS.SETTINGS.SAVE_THE_WORLD]: () => require<ReactComponentModule>('../../../../expPages/TeachersUnite/SaveTheWorldPage').default,
     [SCREENS.SETTINGS.SUBSCRIPTION.CHANGE_PAYMENT_CURRENCY]: () => require<ReactComponentModule>('../../../../expPages/settings/PaymentCard/ChangeCurrency').default,
     [SCREENS.SETTINGS.SUBSCRIPTION.CHANGE_BILLING_CURRENCY]: () => require<ReactComponentModule>('../../../../expPages/settings/Subscription/PaymentCard/ChangeBillingCurrency').default,
     [SCREENS.SETTINGS.SUBSCRIPTION.ADD_PAYMENT_CARD]: () => require<ReactComponentModule>('../../../../expPages/settings/Subscription/PaymentCard').default,
     [SCREENS.SETTINGS.ADD_PAYMENT_CARD_CHANGE_CURRENCY]: () => require<ReactComponentModule>('../../../../expPages/settings/PaymentCard/ChangeCurrency').default,
-    [SCREENS.WORKSPACE.REPORT_FIELDS_CREATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/reportFields/CreateReportFieldsPage').default,
-    [SCREENS.WORKSPACE.REPORT_FIELDS_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/reportFields/ReportFieldsSettingsPage').default,
-    [SCREENS.WORKSPACE.REPORT_FIELDS_LIST_VALUES]: () => require<ReactComponentModule>('../../../../expPages/workspace/reportFields/ReportFieldsListValuesPage').default,
-    [SCREENS.WORKSPACE.REPORT_FIELDS_ADD_VALUE]: () => require<ReactComponentModule>('../../../../expPages/workspace/reportFields/ReportFieldsAddListValuePage').default,
-    [SCREENS.WORKSPACE.REPORT_FIELDS_VALUE_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/reportFields/ReportFieldsValueSettingsPage').default,
-    [SCREENS.WORKSPACE.REPORT_FIELDS_EDIT_INITIAL_VALUE]: () => require<ReactComponentModule>('../../../../expPages/workspace/reportFields/ReportFieldsInitialValuePage').default,
-    [SCREENS.WORKSPACE.REPORT_FIELDS_EDIT_VALUE]: () => require<ReactComponentModule>('../../../../expPages/workspace/reportFields/ReportFieldsEditValuePage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/import/SageIntacctImportPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_TOGGLE_MAPPING]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/import/SageIntacctToggleMappingsPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_MAPPING_TYPE]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/import/SageIntacctMappingsTypePage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_USER_DIMENSIONS]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/import/SageIntacctUserDimensionsPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_ADD_USER_DIMENSION]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/import/SageIntacctAddUserDimensionPage').default,
-    [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_EDIT_USER_DIMENSION]: () =>
-        require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/import/SageIntacctEditUserDimensionsPage').default,
+    // [SCREENS.WORKSPACE.REPORT_FIELDS_CREATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/reportFields/CreateReportFieldsPage').default,
+    // [SCREENS.WORKSPACE.REPORT_FIELDS_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/reportFields/ReportFieldsSettingsPage').default,
+    // [SCREENS.WORKSPACE.REPORT_FIELDS_LIST_VALUES]: () => require<ReactComponentModule>('../../../../expPages/workspace/reportFields/ReportFieldsListValuesPage').default,
+    // [SCREENS.WORKSPACE.REPORT_FIELDS_ADD_VALUE]: () => require<ReactComponentModule>('../../../../expPages/workspace/reportFields/ReportFieldsAddListValuePage').default,
+    // [SCREENS.WORKSPACE.REPORT_FIELDS_VALUE_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/reportFields/ReportFieldsValueSettingsPage').default,
+    // [SCREENS.WORKSPACE.REPORT_FIELDS_EDIT_INITIAL_VALUE]: () => require<ReactComponentModule>('../../../../expPages/workspace/reportFields/ReportFieldsInitialValuePage').default,
+    // [SCREENS.WORKSPACE.REPORT_FIELDS_EDIT_VALUE]: () => require<ReactComponentModule>('../../../../expPages/workspace/reportFields/ReportFieldsEditValuePage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/import/SageIntacctImportPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_TOGGLE_MAPPING]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/import/SageIntacctToggleMappingsPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_MAPPING_TYPE]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/import/SageIntacctMappingsTypePage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_USER_DIMENSIONS]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/import/SageIntacctUserDimensionsPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_ADD_USER_DIMENSION]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/import/SageIntacctAddUserDimensionPage').default,
+    // [SCREENS.WORKSPACE.ACCOUNTING.SAGE_INTACCT_EDIT_USER_DIMENSION]: () =>
+    // require<ReactComponentModule>('../../../../expPages/workspace/accounting/intacct/import/SageIntacctEditUserDimensionsPage').default,
     [SCREENS.SETTINGS.DELEGATE.ADD_DELEGATE]: () => require<ReactComponentModule>('../../../../expPages/settings/Security/AddDelegate/AddDelegatePage').default,
     [SCREENS.SETTINGS.DELEGATE.DELEGATE_ROLE]: () => require<ReactComponentModule>('../../../../expPages/settings/Security/AddDelegate/SelectDelegateRolePage').default,
     [SCREENS.SETTINGS.DELEGATE.UPDATE_DELEGATE_ROLE]: () =>
         require<ReactComponentModule>('../../../../expPages/settings/Security/AddDelegate/UpdateDelegateRole/UpdateDelegateRolePage').default,
     [SCREENS.SETTINGS.DELEGATE.DELEGATE_CONFIRM]: () => require<ReactComponentModule>('../../../../expPages/settings/Security/AddDelegate/ConfirmDelegatePage').default,
-    [SCREENS.WORKSPACE.RULES_CUSTOM_NAME]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesCustomNamePage').default,
-    [SCREENS.WORKSPACE.RULES_AUTO_APPROVE_REPORTS_UNDER]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesAutoApproveReportsUnderPage').default,
-    [SCREENS.WORKSPACE.RULES_RANDOM_REPORT_AUDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesRandomReportAuditPage').default,
-    [SCREENS.WORKSPACE.RULES_AUTO_PAY_REPORTS_UNDER]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesAutoPayReportsUnderPage').default,
-    [SCREENS.WORKSPACE.RULES_RECEIPT_REQUIRED_AMOUNT]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesReceiptRequiredAmountPage').default,
-    [SCREENS.WORKSPACE.RULES_MAX_EXPENSE_AMOUNT]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesMaxExpenseAmountPage').default,
-    [SCREENS.WORKSPACE.RULES_MAX_EXPENSE_AGE]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesMaxExpenseAgePage').default,
-    [SCREENS.WORKSPACE.RULES_BILLABLE_DEFAULT]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesBillableDefaultPage').default,
-    [SCREENS.WORKSPACE.RULES_CUSTOM]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesCustomPage').default,
-    [SCREENS.WORKSPACE.PER_DIEM_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/perDiem/ImportPerDiemPage').default,
-    [SCREENS.WORKSPACE.PER_DIEM_IMPORTED]: () => require<ReactComponentModule>('../../../../expPages/workspace/perDiem/ImportedPerDiemPage').default,
-    [SCREENS.WORKSPACE.PER_DIEM_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/perDiem/WorkspacePerDiemSettingsPage').default,
-    [SCREENS.WORKSPACE.PER_DIEM_DETAILS]: () => require<ReactComponentModule>('../../../../expPages/workspace/perDiem/WorkspacePerDiemDetailsPage').default,
-    [SCREENS.WORKSPACE.PER_DIEM_EDIT_DESTINATION]: () => require<ReactComponentModule>('../../../../expPages/workspace/perDiem/EditPerDiemDestinationPage').default,
-    [SCREENS.WORKSPACE.PER_DIEM_EDIT_SUBRATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/perDiem/EditPerDiemSubratePage').default,
-    [SCREENS.WORKSPACE.PER_DIEM_EDIT_AMOUNT]: () => require<ReactComponentModule>('../../../../expPages/workspace/perDiem/EditPerDiemAmountPage').default,
-    [SCREENS.WORKSPACE.PER_DIEM_EDIT_CURRENCY]: () => require<ReactComponentModule>('../../../../expPages/workspace/perDiem/EditPerDiemCurrencyPage').default,
+    // [SCREENS.WORKSPACE.RULES_CUSTOM_NAME]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesCustomNamePage').default,
+    // [SCREENS.WORKSPACE.RULES_AUTO_APPROVE_REPORTS_UNDER]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesAutoApproveReportsUnderPage').default,
+    // [SCREENS.WORKSPACE.RULES_RANDOM_REPORT_AUDIT]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesRandomReportAuditPage').default,
+    // [SCREENS.WORKSPACE.RULES_AUTO_PAY_REPORTS_UNDER]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesAutoPayReportsUnderPage').default,
+    // [SCREENS.WORKSPACE.RULES_RECEIPT_REQUIRED_AMOUNT]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesReceiptRequiredAmountPage').default,
+    // [SCREENS.WORKSPACE.RULES_MAX_EXPENSE_AMOUNT]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesMaxExpenseAmountPage').default,
+    // [SCREENS.WORKSPACE.RULES_MAX_EXPENSE_AGE]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesMaxExpenseAgePage').default,
+    // [SCREENS.WORKSPACE.RULES_BILLABLE_DEFAULT]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesBillableDefaultPage').default,
+    // [SCREENS.WORKSPACE.RULES_CUSTOM]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesCustomPage').default,
+    // [SCREENS.WORKSPACE.RULES_PROHIBITED_DEFAULT]: () => require<ReactComponentModule>('../../../../expPages/workspace/rules/RulesProhibitedDefaultPage').default,
+    // [SCREENS.WORKSPACE.PER_DIEM_IMPORT]: () => require<ReactComponentModule>('../../../../expPages/workspace/perDiem/ImportPerDiemPage').default,
+    // [SCREENS.WORKSPACE.PER_DIEM_IMPORTED]: () => require<ReactComponentModule>('../../../../expPages/workspace/perDiem/ImportedPerDiemPage').default,
+    // [SCREENS.WORKSPACE.PER_DIEM_SETTINGS]: () => require<ReactComponentModule>('../../../../expPages/workspace/perDiem/WorkspacePerDiemSettingsPage').default,
+    // [SCREENS.WORKSPACE.PER_DIEM_DETAILS]: () => require<ReactComponentModule>('../../../../expPages/workspace/perDiem/WorkspacePerDiemDetailsPage').default,
+    // [SCREENS.WORKSPACE.PER_DIEM_EDIT_DESTINATION]: () => require<ReactComponentModule>('../../../../expPages/workspace/perDiem/EditPerDiemDestinationPage').default,
+    // [SCREENS.WORKSPACE.PER_DIEM_EDIT_SUBRATE]: () => require<ReactComponentModule>('../../../../expPages/workspace/perDiem/EditPerDiemSubratePage').default,
+    // [SCREENS.WORKSPACE.PER_DIEM_EDIT_AMOUNT]: () => require<ReactComponentModule>('../../../../expPages/workspace/perDiem/EditPerDiemAmountPage').default,
+    // [SCREENS.WORKSPACE.PER_DIEM_EDIT_CURRENCY]: () => require<ReactComponentModule>('../../../../expPages/workspace/perDiem/EditPerDiemCurrencyPage').default,
 });
 
 const TwoFactorAuthenticatorStackNavigator = createModalStackNavigator<EnablePaymentsNavigatorParamList>({
@@ -639,7 +645,7 @@ const AddPersonalBankAccountModalStackNavigator = createModalStackNavigator<AddP
 });
 
 const ReimbursementAccountModalStackNavigator = createModalStackNavigator<ReimbursementAccountNavigatorParamList>({
-    [SCREENS.REIMBURSEMENT_ACCOUNT_ROOT]: () => require<ReactComponentModule>('../../../../expPages/ReimbursementAccount/ReimbursementAccountPage').default,
+    // [SCREENS.REIMBURSEMENT_ACCOUNT_ROOT]: () => require<ReactComponentModule>('../../../../expPages/ReimbursementAccount/ReimbursementAccountPage').default,
 });
 
 const WalletStatementStackNavigator = createModalStackNavigator<WalletStatementNavigatorParamList>({
@@ -670,6 +676,10 @@ const ProcessMoneyRequestHoldStackNavigator = createModalStackNavigator({
     [SCREENS.PROCESS_MONEY_REQUEST_HOLD_ROOT]: () => require<ReactComponentModule>('../../../../expPages/ProcessMoneyRequestHoldPage').default,
 });
 
+const ChangePolicyEducationalStackNavigator = createModalStackNavigator({
+    [SCREENS.CHANGE_POLICY_EDUCATIONAL_ROOT]: () => require<ReactComponentModule>('../../../../expPages/ChangePolicyEducationalModal').default,
+});
+
 const TransactionDuplicateStackNavigator = createModalStackNavigator<TransactionDuplicateNavigatorParamList>({
     [SCREENS.TRANSACTION_DUPLICATE.REVIEW]: () => require<ReactComponentModule>('../../../../expPages/TransactionDuplicate/Review').default,
     [SCREENS.TRANSACTION_DUPLICATE.MERCHANT]: () => require<ReactComponentModule>('../../../../expPages/TransactionDuplicate/ReviewMerchant').default,
@@ -682,10 +692,15 @@ const TransactionDuplicateStackNavigator = createModalStackNavigator<Transaction
     [SCREENS.TRANSACTION_DUPLICATE.CONFIRMATION]: () => require<ReactComponentModule>('../../../../expPages/TransactionDuplicate/Confirmation').default,
 });
 
-const SearchReportModalStackNavigator = createModalStackNavigator<SearchReportParamList>({
-    [SCREENS.SEARCH.REPORT_RHP]: () => require<ReactComponentModule>('../../../../expPages/home/ReportScreen').default,
-    [SCREENS.SEARCH.TRANSACTION_HOLD_REASON_RHP]: () => require<ReactComponentModule>('../../../../expPages/Search/SearchHoldReasonPage').default,
-});
+const SearchReportModalStackNavigator = createModalStackNavigator<SearchReportParamList>(
+    {
+        [SCREENS.SEARCH.REPORT_RHP]: () => require<ReactComponentModule>('../../../../expPages/home/ReportScreen').default,
+        [SCREENS.SEARCH.TRANSACTION_HOLD_REASON_RHP]: () => require<ReactComponentModule>('../../../../expPages/Search/SearchHoldReasonPage').default,
+    },
+    () => ({
+        animation: Animations.NONE,
+    }),
+);
 
 const SearchAdvancedFiltersModalStackNavigator = createModalStackNavigator<SearchAdvancedFiltersParamList>({
     [SCREENS.SEARCH.ADVANCED_FILTERS_RHP]: () => require<ReactComponentModule>('../../../../expPages/Search/SearchAdvancedFiltersPage').default,
@@ -719,6 +734,12 @@ const RestrictedActionModalStackNavigator = createModalStackNavigator<SearchRepo
     [SCREENS.RESTRICTED_ACTION_ROOT]: () => require<ReactComponentModule>('../../../../expPages/RestrictedAction/Workspace/WorkspaceRestrictedActionPage').default,
 });
 
+const ShareModalStackNavigator = createModalStackNavigator<ShareNavigatorParamList>({
+    [SCREENS.SHARE.ROOT]: () => require<ReactComponentModule>('@expPages/Share/ShareRootPage').default,
+    [SCREENS.SHARE.SHARE_DETAILS]: () => require<ReactComponentModule>('@expPages/Share/ShareDetailsPage').default,
+    [SCREENS.SHARE.SUBMIT_DETAILS]: () => require<ReactComponentModule>('@expPages/Share/SubmitDetailsPage').default,
+});
+
 const MissingPersonalDetailsModalStackNavigator = createModalStackNavigator<MissingPersonalDetailsParamList>({
     [SCREENS.MISSING_PERSONAL_DETAILS_ROOT]: () => require<ReactComponentModule>('../../../../expPages/MissingPersonalDetails').default,
 });
@@ -745,12 +766,15 @@ export {
     NewTeachersUniteNavigator,
     PrivateNotesModalStackNavigator,
     ProcessMoneyRequestHoldStackNavigator,
+    ChangePolicyEducationalStackNavigator,
     ProfileModalStackNavigator,
     ReferralModalStackNavigator,
     TravelModalStackNavigator,
     ReimbursementAccountModalStackNavigator,
+    NewReportWorkspaceSelectionModalStackNavigator,
     ReportDescriptionModalStackNavigator,
     ReportDetailsModalStackNavigator,
+    ReportChangeWorkspaceModalStackNavigator,
     ReportParticipantsModalStackNavigator,
     ReportSettingsModalStackNavigator,
     RoomMembersModalStackNavigator,
@@ -768,8 +792,10 @@ export {
     SearchReportModalStackNavigator,
     RestrictedActionModalStackNavigator,
     SearchAdvancedFiltersModalStackNavigator,
+    ShareModalStackNavigator,
     SearchSavedSearchModalStackNavigator,
     MissingPersonalDetailsModalStackNavigator,
     DebugModalStackNavigator,
     WorkspaceConfirmationModalStackNavigator,
+    ConsoleModalStackNavigator,
 };

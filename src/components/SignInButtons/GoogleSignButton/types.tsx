@@ -1,4 +1,5 @@
 type GoogleSignInButtonProps = {
+    isDesktopFlow?: boolean;
     isLoading?: boolean;
 };
 

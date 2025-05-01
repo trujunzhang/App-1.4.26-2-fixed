@@ -1,4 +1,5 @@
 import React from 'react';
+import type {ViewStyle} from 'react-native';
 import {View} from 'react-native';
 import * as Expensicons from '@components/Icon/Expensicons';
 import IconWithTooltip from '@components/Ieatta/components/IconWithTooltip';
@@ -15,6 +16,8 @@ import type {TranslationPaths} from '@src/languages/types';
 type SectionCommonTitleProps = {
     /** The title row of the section. */
     titleRow: ISectionTitleRow;
+
+    paddingLeft?: ViewStyle;
 
     /** The right content of the section. */
     rightContent?: React.ReactNode;
@@ -39,6 +42,9 @@ type SectionCommonTitleProps = {
 
 function SectionCommonTitle({
     titleRow,
+    paddingLeft = {
+        paddingLeft: 16,
+    },
     rightContent = null,
     iconWidth = variables.iconSizeNormal,
     iconHeight = variables.iconSizeNormal,
@@ -50,7 +56,7 @@ function SectionCommonTitle({
     cameraIconToolTip = 'photos.takePhoto.button.recipe',
     onCameraIconPressed = () => {},
 }: SectionCommonTitleProps) {
-    const {isSmallScreenWidth} = useResponsiveLayout();
+    const {shouldUseNarrowLayout} = useResponsiveLayout();
     const styles = useThemeStyles();
     const theme = useTheme();
     const {translate} = useLocalize();
@@ -82,10 +88,10 @@ function SectionCommonTitle({
         );
     };
 
-    const innerStyle = isSmallScreenWidth ? [styles.justifyContentBetween] : [styles.gap2];
+    const innerStyle = shouldUseNarrowLayout ? [styles.justifyContentBetween] : [styles.gap2];
 
     return (
-        <View style={[styles.flexRow, styles.pl4, styles.pr4, styles.pt8, styles.pb4, innerStyle]}>
+        <View style={[styles.flexRow, paddingLeft, styles.pr4, styles.pt8, styles.pb4, innerStyle]}>
             {/* Left Container */}
             <Text
                 style={[

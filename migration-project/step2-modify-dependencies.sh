@@ -29,6 +29,8 @@ function modify_package_json() {
     check_and_remove_keys_in_package_json '"engines"' '["engines"]'
    
     overrides_keys_in_package_json "['dependencies']['react-native-svg']" "['overrides']['react-native-svg']"
+    overrides_keys_in_package_json "['dependencies']['react']" "['overrides']['react']"
+    overrides_keys_in_package_json "['dependencies']['react-dom']" "['overrides']['react-dom']"
 }
 
 function step1_build_project() {
