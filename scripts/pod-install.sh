@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script ensures pod installs respect Podfile.lock as the source of truth.
-# Specifically, the podspecs for pods listed under the 'EXTERNAL SOURCES' key in the Podfile.lock are cached in the `ios/Pods/Local Podspecs` directory.
+# Specifically, the podspecs for pods listed under the 'EXTERNAL SOURCES' key in the Podfile.lock are cached in the `ios/Pods/Local Podspecsxxx` directory.
 # While caching results in significantly faster installs, if a cached podspec doesn't match the version in Podfile.lock, pod install will fail.
 # To prevent this, this script will find and delete any mismatched cached podspecs before running pod install
 
@@ -26,22 +26,22 @@ function cleanupAndExit {
 source scripts/shellUtils.sh
 
 # Check if bundle is installed
-if ! bundle --version > /dev/null 2>&1; then
-  error 'bundle is not installed. Please install bundle and try again'
-  cleanupAndExit 1
-fi
+# if ! bundle --version > /dev/null 2>&1; then
+#   error 'bundle is not installed. Please install bundle and try again'
+#   cleanupAndExit 1
+# fi
 
 # Check if jq is installed
-if [ $(uname -m) == 'arm64' ] && [ ! jq --version > /dev/null 2>&1]; then
-  error 'jq is not installed. Please install jq and try again'
-  cleanupAndExit 1
-fi
+# if ! jq --version > /dev/null 2>&1; then
+#   error 'jq is not installed. Please install jq and try again'
+#   cleanupAndExit 1
+# fi
 
 # Check if yq is installed
-if [ $(uname -m) == 'arm64' ] && [ ! yq --version > /dev/null 2>&1]; then
-  error 'yq is not installed. Please install yq and try again'
-  cleanupAndExit 1
-fi
+# if ! yq --version > /dev/null 2>&1; then
+#   error 'yq is not installed. Please install yq and try again'
+#   cleanupAndExit 1
+# fi
 
 # See if we're in the HybridApp repo
 IS_HYBRID_APP_REPO=$(scripts/is-hybrid-app.sh)
@@ -60,7 +60,7 @@ fi
 
 echo -e "${BLUE}Executing npm run pod-install for standalone NewDot...${NC}"
 
-CACHED_PODSPEC_DIR='ios/Pods/Local Podspecs xxx'
+CACHED_PODSPEC_DIR='ios/Pods/Local Podspecsxxx'
 if [ -d "$CACHED_PODSPEC_DIR" ]; then
   info "Verifying pods from Podfile.lock match local podspecs..."
 
@@ -77,7 +77,7 @@ if [ -d "$CACHED_PODSPEC_DIR" ]; then
   for CACHED_PODSPEC_PATH in "$CACHED_PODSPEC_DIR"/*; do
     if [ -f "$CACHED_PODSPEC_PATH" ]; then
       # The next two lines use bash parameter expansion to get just the pod name from the path
-      # i.e: `ios/Pods/Local Podspecs/hermes-engine.podspec.json` to just `hermes-engine`
+      # i.e: `ios/Pods/Local Podspecsxxx/hermes-engine.podspec.json` to just `hermes-engine`
       # It extracts the part of the string between the last `/` and the first `.`
       CACHED_POD_NAME="${CACHED_PODSPEC_PATH##*/}"
       CACHED_POD_NAME="${CACHED_POD_NAME%%.*}"

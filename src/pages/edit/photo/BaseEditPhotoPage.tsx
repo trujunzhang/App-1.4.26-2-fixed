@@ -21,7 +21,7 @@ import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
 import {setIsLoading} from '@libs/actions/FormActions';
 import {ParseModelPhotos} from '@libs/FirebaseIeatta/appModel';
-import {FBCollections} from '@libs/FirebaseIeatta/constant';
+import {FBCollections, FBModelNames} from '@libs/FirebaseIeatta/constant';
 import type {IAuthUser} from '@libs/FirebaseIeatta/models/auth_user_model';
 import {getAuthUserFromPersonalDetails} from '@libs/FirebaseIeatta/models/auth_user_model';
 import FirebaseHelper from '@libs/FirebaseIeatta/services/firebase-helper';
@@ -56,7 +56,7 @@ function BaseEditPhotoPage({photoId, photo, isNewModel}: BaseEditPhotoPageProps)
         setIsLoading(editFormID, true);
         toastId.current = ShowNotify.initialAndShowNotify({
             isSmallScreenWidth,
-            message: translate('notify.save.start', {modalName: FBCollections.Photos}),
+            message: translate('notify.save.start', {modalName: FBModelNames.Photos}),
             autoClose: false,
         });
 
@@ -91,11 +91,11 @@ function BaseEditPhotoPage({photoId, photo, isNewModel}: BaseEditPhotoPageProps)
                 clearDraftValuesByDraftId(editFormID);
             })
             .then(() => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: FBCollections.Photos})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: FBModelNames.Photos})});
                 Navigation.goBack();
             })
             .catch((error) => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: FBCollections.Photos})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: FBModelNames.Photos})});
                 console.log(error);
             })
             .finally(() => {

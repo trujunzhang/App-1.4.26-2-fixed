@@ -8,6 +8,7 @@ import RestaurantWithPhotosInfoPanel from '@components/Ieatta/detailedPage/heade
 import RestaurantMenuNativeView from '@components/Ieatta/detailedPage/restaurant/menu/RestaurantMenuNativeView';
 import type {MenuViewProps} from '@components/Ieatta/detailedPage/restaurant/menu/RestaurantMenuRow/types';
 import RestaurantMenuWebView from '@components/Ieatta/detailedPage/restaurant/menu/RestaurantMenuWebView';
+import {PhotoType} from '@libs/FirebaseIeatta/constant';
 import {photos} from '@libs/FirebaseIeatta/data/Photos';
 import {recipes} from '@libs/FirebaseIeatta/data/Recipes';
 import {restaurants} from '@libs/FirebaseIeatta/data/Restaurants';
@@ -159,7 +160,10 @@ function EmptyMenuView() {
                 height: isSmallScreenWidth ? variables.menuInRestaurantMobileItemHeight : variables.menuInRestaurantWebItemHeight,
             }}
         >
-            <SectionMenuEmptyView />
+            <SectionMenuEmptyView
+                relatedId={restaurant?.uniqueId ?? ''}
+                photoType={PhotoType.Restaurant}
+            />
         </div>
     );
 }

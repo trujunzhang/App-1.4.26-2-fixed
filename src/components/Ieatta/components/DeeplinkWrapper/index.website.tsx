@@ -80,7 +80,7 @@ function DeeplinkWrapper({children, isAuthenticated, autoAuthState, initialUrl}:
         const isConnectionCompleteRoute = route === ROUTES.CONNECTION_COMPLETE || route === ROUTES.BANK_CONNECTION_COMPLETE;
 
         // const notLinkAppRoute = route === ROUTES.GOOGLE_SIGN_IN || route === ROUTES.DESKTOP_SIGN_IN_REDIRECT;
-        const isDesktopLinkAppRoute = route === ROUTES.DESKTOP_SIGN_IN_REDIRECT;
+        // const isDesktopLinkAppRoute = route === ROUTES.DESKTOP_SIGN_IN_REDIRECT;
 
         // Making a few checks to exit early before checking authentication status
         if (
@@ -88,7 +88,7 @@ function DeeplinkWrapper({children, isAuthenticated, autoAuthState, initialUrl}:
             isUnsupportedDeeplinkRoute ||
             hasShownPrompt ||
             isConnectionCompleteRoute ||
-            !isDesktopLinkAppRoute ||
+            // !isDesktopLinkAppRoute ||
             // CONFIG.ENVIRONMENT === CONST.ENVIRONMENT.DEV ||
             autoAuthState === CONST.AUTO_AUTH_STATE.NOT_STARTED ||
             isAnonymousUser()

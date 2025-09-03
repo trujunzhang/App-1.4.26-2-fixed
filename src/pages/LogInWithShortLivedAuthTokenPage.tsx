@@ -51,6 +51,7 @@ function LogInWithShortLivedAuthTokenPage({route}: LogInWithShortLivedAuthTokenP
 
         const loggedUser: IFBUser | null = null;
 
+        setIsLoading(true);
         fetchIdToken(refreshToken)
             .then((response) => {
                 if (response.ok) {

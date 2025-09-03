@@ -12,6 +12,7 @@ import type {SectionListDataType, SelectionListHandle, UserListItemProps} from '
 import useLocalize from '@hooks/useLocalize';
 import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
+import {FBModelNames} from '@libs/FirebaseIeatta/constant';
 import {PageSection, RowPressableType, SkeletonViewType} from '@libs/FirebaseIeatta/list/constant';
 import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
 import type {IRestaurantSidebarRow} from '@libs/FirebaseIeatta/list/types/rows/restaurant';
@@ -214,7 +215,7 @@ function SearchRestaurantsRouterList(
                     rowType: PageSection.RESTAURANT_SEARCH_ROW,
                     rowData,
                     rowKey: 'PageSection.RESTAURANT_SEARCH_ROW',
-                    modalName: 'restaurant',
+                    modalName: FBModelNames.Restaurants,
                     pressType: RowPressableType.SINGLE_PRESS,
                 };
                 pageItemNavigateTo(pageRow);

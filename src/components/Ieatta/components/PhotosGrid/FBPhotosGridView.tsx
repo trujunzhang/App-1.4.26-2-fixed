@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react';
 import PageFlashListItemWithEvent from '@components/Ieatta/detailedPage/PageFlashListItemWithEvent';
+import {FBModelNames} from '@libs/FirebaseIeatta/constant';
 import {PageSection, RowPressableType} from '@libs/FirebaseIeatta/list/constant';
 import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
 import type {IPhotoCarouselItemRow} from '@libs/FirebaseIeatta/list/types/rows/photo';
@@ -22,7 +23,7 @@ function FBPhotosGridView({relatedId, photoType, photos, ...otherProps}: FBPhoto
             rowType: PageSection.PHOTO_GRID_ITEM_WITH_EVENT,
             rowData: carouselItem,
             rowKey: 'PageSection.PHOTO_GRID_ITEM_WITH_EVENT<Photo-Grid>',
-            modalName: 'photo',
+            modalName: FBModelNames.Photos,
             pressType: RowPressableType.SECONDARY_PRESS,
         };
     };

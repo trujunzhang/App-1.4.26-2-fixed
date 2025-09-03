@@ -42,6 +42,7 @@ const includeModules = [
     '@react-native/assets',
     'expo',
     'expo-av',
+    'expo-file-system',
     'expo-image-manipulator',
     'expo-modules-core',
     'react-native-webrtc-web-shim',

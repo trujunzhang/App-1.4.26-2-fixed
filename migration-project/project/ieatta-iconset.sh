@@ -3,10 +3,7 @@
 function PROJECT_ieatta_iconset() {
     step=$((step + 1))
     info "Start copying ieatta icon set for ios and android"
-
-    copy_file_from_source_to_dest "scripts/create-appicon.sh"
-    copy_file_from_source_to_dest "scripts/splash-generate.sh"
-    
+  
     check_and_add_keys_in_package_json      \
            "scripts/create-appicon.sh"      \
            '["scripts"]["create-appicon"]'  \

@@ -13,7 +13,7 @@ import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
 import type {PlatformStackNavigationProp} from '@libs/Navigation/PlatformStackNavigation/types';
 import type {AuthScreensParamList, ReportsSplitNavigatorParamList, RightIeattaNavigatorParamList, RootNavigatorParamList} from '@libs/Navigation/types';
 import Navigation from '@navigation/Navigation';
-import {HomeSplitNavigatorParamList} from '@src/appConfig/navigation/types';
+import type {HomeSplitNavigatorParamList} from '@src/appConfig/navigation/types';
 import PageFlashListItemWithEvent from './PageFlashListItemWithEvent';
 
 type DetailedPageLayoutProps = ViewportOffsetTopProps & {
@@ -39,6 +39,7 @@ type DetailedPageLayoutProps = ViewportOffsetTopProps & {
 const keyExtractor = (item: IPageRow) => `row_${item.rowKey}`;
 
 function DetailedPageLayout({rowsData, fetchMoreReviews, shouldShowNotFoundPage, navigation, shouldShowLoading, loadingContent = null, viewportOffsetTop}: DetailedPageLayoutProps) {
+    // eslint-disable-next-line rulesdir/prefer-shouldUseNarrowLayout-instead-of-isSmallScreenWidth
     const {isSmallScreenWidth} = useResponsiveLayout();
 
     const styles = useThemeStyles();

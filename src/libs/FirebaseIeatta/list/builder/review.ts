@@ -1,6 +1,7 @@
 // eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import type {ReviewType} from '@libs/FirebaseIeatta/constant';
+import {FBModelNames} from '@libs/FirebaseIeatta/constant';
 import {PageSection, RowPressableType} from '@libs/FirebaseIeatta/list/constant';
 import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
 import type {ISectionEmptyRow, ISectionTitleRow} from '@libs/FirebaseIeatta/list/types/rows/common';
@@ -38,7 +39,7 @@ const buildReviewRows = (isSmallScreenWidth: boolean, reviews: IFBReview[]): IPa
             rowType: PageSection.SECTION_REVIEW,
             rowData,
             rowKey: `${review?.uniqueId}`,
-            modalName: 'review',
+            modalName: FBModelNames.Reviews,
             pressType: RowPressableType.SECONDARY_PRESS,
         };
     };

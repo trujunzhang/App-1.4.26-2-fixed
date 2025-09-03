@@ -14,6 +14,7 @@ import CustomStatusBarAndBackgroundContextProvider from './components/CustomStat
 import ErrorBoundary from './components/ErrorBoundary';
 import FirebaseSync from './components/Firebase/sync';
 import FullScreenBlockingViewContextProvider from './components/FullScreenBlockingViewContextProvider';
+import FullScreenLoaderContextProvider from './components/FullScreenLoaderContext';
 import HTMLEngineProvider from './components/HTMLEngineProvider';
 import AppNotify from './components/Ieatta/components/Notify';
 import InitialURLContextProvider from './components/InitialURLContextProvider';
@@ -51,6 +52,11 @@ import {SplashScreenStateContextProvider} from './SplashScreenStateContext';
 
 Sentry.init({
     dsn: 'https://ada799335a52a22f58e7783475f9e9fe@o76508.ingest.us.sentry.io/4508392789377024',
+
+    // Configure Session Replay
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1,
+    integrations: [Sentry.mobileReplayIntegration()],
 
     // uncomment the line below to enable Spotlight (https://spotlightjs.com)
     // spotlight: __DEV__,
@@ -108,8 +114,8 @@ function App({url, hybridAppSettings, timestamp}: AppProps) {
                                 LocaleContextProvider,
                                 HTMLEngineProvider,
                                 SearchRestaurantsRouterContextProvider,
-                                LocationProvider,
                                 RealmLocalProvider,
+                                LocationProvider,
                                 PopoverContextProvider,
                                 CurrentReportIDContextProvider,
                                 ScrollOffsetContextProvider,
@@ -128,6 +134,7 @@ function App({url, hybridAppSettings, timestamp}: AppProps) {
                                 ProductTrainingContextProvider,
                                 InputBlurContextProvider,
                                 FullScreenBlockingViewContextProvider,
+                                FullScreenLoaderContextProvider,
                             ]}
                         >
                             <CustomStatusBarAndBackground />

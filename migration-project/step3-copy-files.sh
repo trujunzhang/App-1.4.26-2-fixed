@@ -10,6 +10,7 @@ source "./utils/scan-folder-utils.sh"
 
 # import project
 source "./project/ieatta-theme.sh"
+source "./project/ieatta-expo.sh"
 source "./project/ieatta-android.sh"
 source "./project/ieatta-resources.sh"
 source "./project/ieatta-lib-firebase.sh"
@@ -64,6 +65,7 @@ function step1_copy_project() {
     PROJECT_ieatta_android
     PROJECT_ieatta_resources
     PROJECT_ieatta_theme
+    PROJECT_ieatta_expo
     PROJECT_ieatta_storybook
     PROJECT_ieatta_iconset
     EDIT_eslint_js

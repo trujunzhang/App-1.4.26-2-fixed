@@ -1,3 +1,4 @@
+import NotFoundPage from '@expPages/ErrorPage/NotFoundPage';
 import React, {useCallback, useState} from 'react';
 import {useOnyx} from 'react-native-onyx';
 import ConfirmModal from '@components/ConfirmModal';
@@ -16,15 +17,17 @@ import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
 import type SCREENS from '@src/SCREENS';
+import isLoadingOnyxValue from '@src/types/utils/isLoadingOnyxValue';
 
 type ImportedMembersPageProps = PlatformStackScreenProps<SettingsNavigatorParamList, typeof SCREENS.WORKSPACE.MEMBERS_IMPORTED>;
 
 function ImportedMembersPage({route}: ImportedMembersPageProps) {
     const {translate} = useLocalize();
-    const [spreadsheet] = useOnyx(ONYXKEYS.IMPORTED_SPREADSHEET);
+    const [spreadsheet, spreadsheetMetadata] = useOnyx(ONYXKEYS.IMPORTED_SPREADSHEET);
     const [isImporting, setIsImporting] = useState(false);
     const [isValidationEnabled, setIsValidationEnabled] = useState(false);
     const policyID = route.params.policyID;
+
     const columnNames = generateColumnNames(spreadsheet?.data?.length ?? 0);
     const {containsHeader = true} = spreadsheet ?? {};
 
@@ -92,9 +95,13 @@ function ImportedMembersPage({route}: ImportedMembersPageProps) {
         }
     }, [validate, spreadsheet, containsHeader, policyID]);
 
+    if (!spreadsheet && isLoadingOnyxValue(spreadsheetMetadata)) {
+        return;
+    }
+
     const spreadsheetColumns = spreadsheet?.data;
     if (!spreadsheetColumns) {
-        return;
+        return <NotFoundPage />;
     }
 
     const closeImportPageAndModal = () => {
@@ -106,7 +113,7 @@ function ImportedMembersPage({route}: ImportedMembersPageProps) {
     return (
         <ScreenWrapper
             testID={ImportedMembersPage.displayName}
-            includeSafeAreaPaddingBottom
+            enableEdgeToEdgeBottomSafeAreaPadding
         >
             <HeaderWithBackButton
                 title={translate('workspace.people.importMembers')}
@@ -130,6 +137,7 @@ function ImportedMembersPage({route}: ImportedMembersPageProps) {
                 onCancel={closeImportPageAndModal}
                 confirmText={translate('common.buttonConfirm')}
                 shouldShowCancelButton={false}
+                shouldHandleNavigationBack
             />
         </ScreenWrapper>
     );

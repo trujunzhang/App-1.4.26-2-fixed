@@ -19,7 +19,7 @@ import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
 import {setIsLoading} from '@libs/actions/FormActions';
 import {ParseModelReviews} from '@libs/FirebaseIeatta/appModel';
-import {FBCollections} from '@libs/FirebaseIeatta/constant';
+import {FBCollections, FBModelNames} from '@libs/FirebaseIeatta/constant';
 import type {IAuthUser} from '@libs/FirebaseIeatta/models/auth_user_model';
 import {getAuthUserFromPersonalDetails} from '@libs/FirebaseIeatta/models/auth_user_model';
 import FirebaseHelper from '@libs/FirebaseIeatta/services/firebase-helper';
@@ -57,7 +57,7 @@ function BaseEditReviewPage({review, relatedId, reviewType, isNewModel}: BaseEdi
         setIsLoading(editFormID, true);
         toastId.current = ShowNotify.initialAndShowNotify({
             isSmallScreenWidth,
-            message: translate('notify.save.start', {modalName: FBCollections.Reviews}),
+            message: translate('notify.save.start', {modalName: FBModelNames.Reviews}),
             autoClose: false,
         });
 
@@ -103,11 +103,11 @@ function BaseEditReviewPage({review, relatedId, reviewType, isNewModel}: BaseEdi
                 clearDraftValuesByDraftId(editFormID);
             })
             .then(() => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: FBCollections.Reviews})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: FBModelNames.Reviews})});
                 Navigation.goBack();
             })
             .catch((error) => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: FBCollections.Reviews})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: FBModelNames.Reviews})});
                 console.log(error);
             })
             .finally(() => {
@@ -123,7 +123,7 @@ function BaseEditReviewPage({review, relatedId, reviewType, isNewModel}: BaseEdi
     const validate = (values: FormOnyxValues<typeof editFormID>) => {
         const errors: FormInputErrors<typeof editFormID> = {};
         if (values.reviewNote === '') {
-            errors.reviewNote = 'edit.review.form.displayName.error';
+            errors.reviewNote = translate('edit.review.form.note.error');
         }
         return errors;
     };

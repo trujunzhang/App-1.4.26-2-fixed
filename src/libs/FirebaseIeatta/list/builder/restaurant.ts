@@ -1,7 +1,7 @@
 /* eslint-disable @dword-design/import-alias/prefer-alias */
 // eslint-disable-next-line no-restricted-imports, lodash/import-scope
 import _ from 'lodash';
-import {PhotoType, ReviewType} from '@libs/FirebaseIeatta/constant';
+import {FBModelNames, PhotoType, ReviewType} from '@libs/FirebaseIeatta/constant';
 import {PageSection, RowPressableType, SkeletonViewType} from '@libs/FirebaseIeatta/list/constant';
 import TailwindColors from '@styles/tailwindcss/colors';
 import type {IFBEvent, IFBRestaurant, IFBReview} from '@src/types/firebase';
@@ -83,7 +83,7 @@ const buildEvents = (isSmallScreenWidth: boolean, eventsInRestaurant: BuildEvent
             rowType: isSmallScreenWidth ? PageSection.RESTAURANT_EVENT : PageSection.RESTAURANT_EVENT_WEB,
             rowData,
             rowKey: `${item?.uniqueId}` ?? 'PageSection.RESTAURANT_EVENT',
-            modalName: 'event',
+            modalName: FBModelNames.Events,
             pressType: RowPressableType.SECONDARY_PRESS,
         };
     };
@@ -143,7 +143,7 @@ const buildMenus = (isSmallScreenWidth: boolean, restaurantId: string): IPageRow
             rowType: PageSection.RESTAURANT_MENU_ROW,
             rowData: menuRow,
             rowKey: 'PageSection.RESTAURANT_MENU_ROW',
-            modalName: 'recipe',
+            modalName: FBModelNames.Recipes,
             pressType: RowPressableType.NO_EVENT,
         },
     ];
@@ -159,7 +159,7 @@ const buildRestaurantSidebar = (isSmallScreenWidth: boolean, {restaurants, curre
             rowType: isSmallScreenWidth ? PageSection.SIDEBAR_RESTAURANT_CARD : PageSection.SIDEBAR_RESTAURANT_ROW,
             rowData,
             rowKey: `${item?.uniqueId}` ?? 'PageSection.SIDEBAR_RESTAURANT_ROW',
-            modalName: 'restaurant',
+            modalName: FBModelNames.Restaurants,
             pressType: RowPressableType.SECONDARY_PRESS,
         };
     };

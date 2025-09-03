@@ -18,15 +18,9 @@ type BaseSidebarScreenProps = {
 function BaseSidebarScreen({children}: BaseSidebarScreenProps) {
     const styles = useThemeStyles();
 
-    const shouldEnableEdgeToEdgeBottomSafeAreaPadding = isIos;
-
-    // ios:
-    //    enableEdgeToEdgeBottomSafeAreaPadding=true
-    // android:
-    //    enableEdgeToEdgeBottomSafeAreaPadding=false
     return (
         <ScreenWrapper
-            enableEdgeToEdgeBottomSafeAreaPadding={shouldEnableEdgeToEdgeBottomSafeAreaPadding}
+            includeSafeAreaPaddingBottom
             shouldEnableKeyboardAvoidingView={false}
             style={[styles.sidebar, Browser.isMobile() ? styles.userSelectNone : {}]}
             testID={BaseSidebarScreen.displayName}

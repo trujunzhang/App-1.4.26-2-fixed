@@ -7,6 +7,7 @@
 /* eslint-disable import/prefer-default-export */
 
 /* eslint-disable rulesdir/no-inline-named-export */
+import * as FileSystem from 'expo-file-system';
 import Log from '@libs/Log';
 import Config from '@src/CONFIG';
 import type ICloudinaryUtils from './types';
@@ -26,11 +27,18 @@ class CloudinaryUtils implements ICloudinaryUtils {
         });
     }
 
-    readAsBase64FromExpoFileSystem(fileUri: string): Promise<string> {
-        return Promise.resolve('');
+    async readAsBase64FromExpoFileSystem(fileUri: string): Promise<string> {
+        const base64 = await FileSystem.readAsStringAsync(fileUri, {
+            encoding: 'base64',
+        });
+        const base64Img = `data:image/jpg;base64,${base64}`;
+        return base64Img;
     }
 
     readAsBase64(fileUriOrBlobHttps: string): Promise<string | undefined> {
+        if (fileUriOrBlobHttps.startsWith('file://')) {
+            return this.readAsBase64FromExpoFileSystem(fileUriOrBlobHttps);
+        }
         return this.readAsBase64FromBlob(fileUriOrBlobHttps);
     }
 

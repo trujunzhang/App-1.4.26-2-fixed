@@ -12,8 +12,9 @@ import TestNavigationContainer from '../utils/TestNavigationContainer';
 jest.mock('@hooks/useResponsiveLayout', () => jest.fn());
 jest.mock('@libs/getIsNarrowLayout', () => jest.fn());
 
-jest.mock('@expPages/home/sidebar/BottomTabAvatar');
-jest.mock('@src/components/Navigation/TopLevelBottomTabBar');
+jest.mock('@expPages/home/sidebar/NavigationTabBarAvatar');
+jest.mock('@src/components/Navigation/TopLevelNavigationTabBar');
+jest.mock('@components/ConfirmedRoute.tsx');
 
 const mockedGetIsNarrowLayout = getIsNarrowLayout as jest.MockedFunction<typeof getIsNarrowLayout>;
 const mockedUseResponsiveLayout = useResponsiveLayout as jest.MockedFunction<typeof useResponsiveLayout>;

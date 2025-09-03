@@ -1,3 +1,19 @@
+Install NDK (Side by side) 27.1.12297006 v.27.1.12297006
+Install NDK (Side by side) 27.1.12297006 v.27.1.12297006
+Checking the license for package NDK (Side by side) 27.0.12077973 in /Volumes/MacUser/djzhang/Library/Android/sdk/licenses
+Checking the license for package NDK (Side by side) 27.0.12077973 in /Volumes/MacUser/djzhang/Library/Android/sdk/licenses
+
+> Failed to install the following SDK components:
+      build-tools;35.0.0 Android SDK Build-Tools 35
+      platforms;android-35 Android SDK Platform 35
+  Install the missing components using the SDK manager in Android Studio.
+
+> Failed to install the following SDK components:
+      build-tools;35.0.0 Android SDK Build-Tools 35
+      platforms;android-35 Android SDK Platform 35
+  Install the missing components using the SDK manager in Android Studio.
+
+
 AvatarCropModal
 
 
@@ -65,4 +81,41 @@ new-expensify://
 
 new-expensify://
 
+
+    "icon-set-creator": "^1.2.6",
+
+
+    "icon-set-creator": "^1.2.6",
+
+executing @electron/rebuild  electronVersion=33.4.8 arch=x64 buildFromSource=false appDir=desktop
+
+executing @electron/rebuild  electronVersion=33.4.8 arch=x64 buildFromSource=false appDir=desktop
+
+github.com/electron/electron/releases/download
+
+github.com/electron/electron/releases/download
+
+github.com/electron/electron/releases/download
+
+ url=https://github.com/electron/electron/releases/download/v33.4.8/electron-v33.4.8-darwin-x64.zip duration=18.718s
+
+ url=https://github.com/electron/electron/releases/download/v33.4.8/electron-v33.4.8-darwin-x64.zip duration=18.718s
+
+ url=https://github.com/electron/electron/releases/download/v33.4.8/electron-v33.4.8-darwin-x64.zip duration=18.718s
+
+
+https://github.com/electron/electron/releases/download/v33.4.8/electron-v33.4.8-darwin-x64.zip 
+https://github.com/electron/electron/releases/download/v33.4.8/electron-v33.4.8-darwin-arm64.zip
+
+https://github.com/electron/electron/releases/download/v33.4.8/electron-v33.4.8-darwin-x64.zip 
+https://github.com/electron/electron/releases/download/v33.4.8/electron-v33.4.8-darwin-arm64.zip
+
+
+https://github.com/electron/electron/releases/download/v33.4.8/electron-v33.4.8-darwin-x64.zip 
+https://github.com/electron/electron/releases/download/v33.4.8/electron-v33.4.8-darwin-arm64.zip
+
+
+IEATTA - Eating Restaurant Tracker!
+
+IEATTA - Eating Restaurant Tracker!
 

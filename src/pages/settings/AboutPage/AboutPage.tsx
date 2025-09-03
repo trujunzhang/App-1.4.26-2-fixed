@@ -28,6 +28,7 @@ import type {TranslationPaths} from '@src/languages/types';
 import ROUTES from '@src/ROUTES';
 import type IconAsset from '@src/types/utils/IconAsset';
 import pkg from '../../../../package.json';
+import LocationInfo from './locationInfo';
 
 function getFlavor(): string {
     const bundleId = DeviceInfo.getBundleId();
@@ -155,6 +156,7 @@ function AboutPage() {
                         overlayContent={overlayContent}
                     >
                         <View style={[styles.flex1, styles.mt5]}>
+                            <LocationInfo />
                             <MenuItemList
                                 menuItems={menuItems}
                                 shouldUseSingleExecution

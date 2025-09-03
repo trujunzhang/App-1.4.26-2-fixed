@@ -1,3 +1,4 @@
+import NotFoundPage from '@expPages/ErrorPage/NotFoundPage';
 import React, {useCallback, useMemo, useState} from 'react';
 import {useOnyx} from 'react-native-onyx';
 import ConfirmModal from '@components/ConfirmModal';
@@ -19,12 +20,13 @@ import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
 import type SCREENS from '@src/SCREENS';
 import type {Errors} from '@src/types/onyx/OnyxCommon';
+import isLoadingOnyxValue from '@src/types/utils/isLoadingOnyxValue';
 
 type ImportedTagsPageProps = PlatformStackScreenProps<SettingsNavigatorParamList, typeof SCREENS.WORKSPACE.TAGS_IMPORTED>;
 
 function ImportedTagsPage({route}: ImportedTagsPageProps) {
     const {translate} = useLocalize();
-    const [spreadsheet] = useOnyx(ONYXKEYS.IMPORTED_SPREADSHEET);
+    const [spreadsheet, spreadsheetMetadata] = useOnyx(ONYXKEYS.IMPORTED_SPREADSHEET);
     const [isImportingTags, setIsImportingTags] = useState(false);
     const {containsHeader = true} = spreadsheet ?? {};
     const [isValidationEnabled, setIsValidationEnabled] = useState(false);
@@ -109,9 +111,13 @@ function ImportedTagsPage({route}: ImportedTagsPageProps) {
         }
     }, [validate, spreadsheet, containsHeader, policyTagLists, policyID]);
 
+    if (!spreadsheet && isLoadingOnyxValue(spreadsheetMetadata)) {
+        return;
+    }
+
     const spreadsheetColumns = spreadsheet?.data;
     if (!spreadsheetColumns) {
-        return;
+        return <NotFoundPage />;
     }
 
     const closeImportPageAndModal = () => {
@@ -123,7 +129,7 @@ function ImportedTagsPage({route}: ImportedTagsPageProps) {
     return (
         <ScreenWrapper
             testID={ImportedTagsPage.displayName}
-            includeSafeAreaPaddingBottom
+            enableEdgeToEdgeBottomSafeAreaPadding
         >
             <HeaderWithBackButton
                 title={translate('workspace.tags.importTags')}
@@ -147,6 +153,7 @@ function ImportedTagsPage({route}: ImportedTagsPageProps) {
                 onCancel={closeImportPageAndModal}
                 confirmText={translate('common.buttonConfirm')}
                 shouldShowCancelButton={false}
+                shouldHandleNavigationBack
             />
         </ScreenWrapper>
     );

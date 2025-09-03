@@ -8,22 +8,22 @@ const get = (config: NativeConfig, key: string, defaultValue: string): string =>
 
 const newIeattaURL = Url.addTrailingForwardSlash(get(Config, 'NEW_IEATTA_URL', 'https://new-ieatta.vercel.app/'));
 
-const firebaseAPIKey = get(Config, 'NEXT_PUBLIC_FIREBASE_API_KEY', '');
+const firebaseAPIKey = get(Config, 'NEXT_PUBLIC_FIREBASE_API_KEY', 'AIzaSyBJ1Hcdu4G5H0N-rj7AF-N2SrJbvDxIqQo');
 const firebaseAuthDomain = get(Config, 'NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN', 'new-ieatta.firebaseapp.com');
 const firebaseDatabaseUrl = get(Config, 'NEXT_PUBLIC_FIREBASE_DATABASE_URL', 'https://new-ieatta.firebaseio.com');
 const firebaseProjectId = get(Config, 'NEXT_PUBLIC_FIREBASE_PROJECT_ID', 'new-ieatta');
 const firebaseStorageBucket = get(Config, 'NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET', 'new-ieatta.appspot.com');
-const firebaseMessagingSenderId = get(Config, 'NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID', '');
-const firebaseAppId = get(Config, 'NEXT_PUBLIC_FIREBASE_APP_ID', '');
+const firebaseMessagingSenderId = get(Config, 'NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID', '229321919225');
+const firebaseAppId = get(Config, 'NEXT_PUBLIC_FIREBASE_APP_ID', '1:229321919225:web:a33c8895c8e3cd6e9f3028');
 
 const cloudinaryCloudName = get(Config, 'NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME', 'di3fvexj8');
 const cloudinaryCloudUploadPreset = get(Config, 'NEXT_PUBLIC_CLOUDINARY_CLOUD_UPLOAD_PRESET', 'ieatta');
 
-const googleClientIdAndroid = get(Config, 'NEXT_PUBLIC_GOOGLE_CLIENT_ID_ANDROID', '');
-const googleClientIdAndroidDebug = get(Config, 'NEXT_PUBLIC_GOOGLE_CLIENT_ID_ANDROID_DEBUG', '');
-const googleClientIdIos = get(Config, 'NEXT_PUBLIC_GOOGLE_CLIENT_ID_IOS', '');
-const googleClientIdWeb = get(Config, 'NEXT_PUBLIC_GOOGLE_CLIENT_ID_WEB', '');
-const googleSecretIdWeb = get(Config, 'NEXT_PUBLIC_GOOGLE_CLIENT_SECRET_WEB', '');
+const googleClientIdAndroid = get(Config, 'NEXT_PUBLIC_GOOGLE_CLIENT_ID_ANDROID', '229321919225-5kuhq3vq7og1pakg52ata091b0uiu3tt.apps.googleusercontent.com');
+const googleClientIdAndroidDebug = get(Config, 'NEXT_PUBLIC_GOOGLE_CLIENT_ID_ANDROID_DEBUG', '229321919225-6kog6st2nn7m384tem009fgg68fv4fr9.apps.googleusercontent.com');
+const googleClientIdIos = get(Config, 'NEXT_PUBLIC_GOOGLE_CLIENT_ID_IOS', '229321919225-bvhcakm216dta1p0tb1fb5m4cp8pqse5.apps.googleusercontent.com');
+const googleClientIdWeb = get(Config, 'NEXT_PUBLIC_GOOGLE_CLIENT_ID_WEB', '229321919225-b8p6bdbjn11pokqmkj934dkkoniur67o.apps.googleusercontent.com');
+const googleSecretIdWeb = get(Config, 'NEXT_PUBLIC_GOOGLE_CLIENT_SECRET_WEB', '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');
 
 export default {
     IEATTA: {

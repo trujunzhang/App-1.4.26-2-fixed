@@ -9,6 +9,7 @@
 import _ from 'lodash';
 import lodashGet from 'lodash/get';
 import {ReviewType} from '@libs/FirebaseIeatta/constant';
+import type {FBModelNames} from '@libs/FirebaseIeatta/constant';
 import {PageSection, RowPressableType} from '@libs/FirebaseIeatta/list/constant';
 import {filterRecipes} from '@libs/ieatta/eventUtils';
 import type {IFBEvent, IFBPeopleInEvent, IFBRecipe, IFBRestaurant, IFBReview} from '@src/types/firebase';

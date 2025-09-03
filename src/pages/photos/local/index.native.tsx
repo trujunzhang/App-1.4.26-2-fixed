@@ -9,6 +9,7 @@ import ScreenWrapper from '@components/ScreenWrapper';
 import Text from '@components/Text';
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
+import {FBModelNames} from '@libs/FirebaseIeatta/constant';
 import {PageSection, RowPressableType} from '@libs/FirebaseIeatta/list/constant';
 import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
 import type {IPhotoLocalItemRow} from '@libs/FirebaseIeatta/list/types/rows/photo';
@@ -38,7 +39,7 @@ function IEATTALocalPhotosPage({route}: IEATTALocalPhotosPageProps) {
             rowType: PageSection.PHOTO_GRID_LOCAL_ITEM,
             rowData: localItem,
             rowKey: 'PageSection.PHOTO_GRID_LOCAL_ITEM<Photo-Grid>',
-            modalName: 'photo',
+            modalName: FBModelNames.Photos,
             pressType: RowPressableType.NO_EVENT,
         };
     };

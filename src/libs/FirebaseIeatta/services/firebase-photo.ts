@@ -36,12 +36,14 @@ class FirebasePhoto {
         let photoUrl: string | undefined = `${fileUri}`;
         let uploadToCloudinarySucess = false;
         try {
-            const base64 = await new CloudinaryUtils().readAsBase64FromExpoFileSystem(fileUri);
-            const url: string | undefined = await new CloudinaryUtils().uploadToCloudinary(base64);
-            photoUrl = url;
-            uploadToCloudinarySucess = true;
+            const base64: string | undefined = await new CloudinaryUtils().readAsBase64(fileUri);
+            if (base64 !== undefined) {
+                const url: string | undefined = await new CloudinaryUtils().uploadToCloudinary(base64);
+                photoUrl = url;
+                uploadToCloudinarySucess = true;
 
-            Log.info(`get cloudinary url after taking photo: ${url}`);
+                Log.info(`get cloudinary url after taking photo: ${url}`);
+            }
         } catch (error: any) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             Log.warn('Error saving photo to cloudinary', error);
@@ -112,7 +114,10 @@ class FirebasePhoto {
         try {
             let base64: string | undefined = imageBase64;
             if (base64 === undefined && blobHttps !== undefined) {
-                base64 = await new CloudinaryUtils().readAsBase64FromBlob(blobHttps);
+                // blobHttps is the local path of the taken photo,
+                // with 'blob://', if the photo is taken on the web.
+                // without 'file://', if the photo is taken on the desktop app.
+                base64 = await new CloudinaryUtils().readAsBase64(blobHttps);
             }
             if (base64 !== undefined) {
                 const url: string | undefined = await new CloudinaryUtils().uploadToCloudinary(base64);

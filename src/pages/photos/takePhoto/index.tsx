@@ -464,7 +464,7 @@ function IEATTATakePhotoPage({route}: Omit<IEATTATakePhotoPageProps, 'user'>) {
                 <Text style={[styles.subTextReceiptUpload]}>
                     {isSmallScreenWidth ? translate('receipt.chooseReceipt') : translate('receipt.dragReceiptBeforeEmail')}
                     <CopyTextToClipboard
-                        text={CONST.EMAIL.RECEIPTS}
+                        text={CONST.DEFAULT_APP_EMAIL}
                         textStyles={[styles.textBlue]}
                     />
                     {isSmallScreenWidth ? null : translate('receipt.dragReceiptAfterEmail')}

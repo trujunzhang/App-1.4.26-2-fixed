@@ -4,7 +4,7 @@ import _ from 'lodash';
 import React from 'react';
 import {useCollection} from 'react-firebase-hooks/firestore';
 import DetailedPhotosList from '@components/Ieatta/detailedPage/common/photoAndWaiter/DetailedPhotosList';
-import {PhotoType} from '@libs/FirebaseIeatta/constant';
+import {FBModelNames, PhotoType} from '@libs/FirebaseIeatta/constant';
 import * as FirebaseQuery from '@libs/FirebaseIeatta/services/firebase-query';
 import {filterWaiters} from '@libs/ieatta/eventUtils';
 import type {IFBPhoto} from '@src/types/firebase';
@@ -34,7 +34,7 @@ function WaitersRowInEvent({waiterRow}: WaitersRowInEventProps) {
             photoType={PhotoType.Waiter}
             isSmallScreen
             photos={waitersInEvent}
-            modalName="waiter"
+            modalName={FBModelNames.Waiters}
         />
     );
 }

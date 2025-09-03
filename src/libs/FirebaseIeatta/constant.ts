@@ -11,6 +11,18 @@ export enum FBCollections {
 }
 
 // eslint-disable-next-line no-restricted-syntax,rulesdir/no-inline-named-export
+export enum FBModelNames {
+    Profiles = 'user',
+    Restaurants = 'restaurant',
+    Events = 'event',
+    PeopleInEvent = 'peopleinevent',
+    Recipes = 'recipe',
+    Waiters = 'waiter',
+    Photos = 'photo',
+    Reviews = 'review',
+}
+
+// eslint-disable-next-line no-restricted-syntax,rulesdir/no-inline-named-export
 export enum FBRemoveType {
     Restaurants = 'restaurants',
     Events = 'events',

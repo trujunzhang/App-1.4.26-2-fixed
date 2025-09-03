@@ -1,5 +1,6 @@
 import type {BankInfoSubStepProps} from '@expPages/ReimbursementAccount/NonUSD/BankInfo/types';
 import {getBankInfoStepValues} from '@expPages/ReimbursementAccount/NonUSD/utils/getBankInfoStepValues';
+import getInputForValueSet from '@expPages/ReimbursementAccount/NonUSD/utils/getInputForValueSet';
 import React, {useCallback, useMemo} from 'react';
 import {ActivityIndicator, View} from 'react-native';
 import {useOnyx} from 'react-native-onyx';
@@ -76,6 +77,10 @@ function BankAccountDetails({onNext, isEditing, corpayFields}: BankInfoSubStepPr
 
     const inputs = useMemo(() => {
         return bankAccountDetailsFields?.map((field) => {
+            if (field.valueSet !== undefined) {
+                return getInputForValueSet(field, String(defaultValues[field.id as keyof typeof defaultValues]), isEditing, styles);
+            }
+
             return (
                 <View
                     style={styles.mb6}
@@ -93,7 +98,7 @@ function BankAccountDetails({onNext, isEditing, corpayFields}: BankInfoSubStepPr
                 </View>
             );
         });
-    }, [bankAccountDetailsFields, styles.mb6, isEditing, defaultValues]);
+    }, [bankAccountDetailsFields, styles, isEditing, defaultValues]);
 
     return (
         <FormProvider

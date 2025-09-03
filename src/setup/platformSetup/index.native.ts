@@ -1,6 +1,5 @@
 import crashlytics from '@react-native-firebase/crashlytics';
-import {NativeModules} from 'react-native';
-import * as Metrics from '@libs/Metrics';
+import canCapturePerformanceMetrics from '@libs/Metrics';
 import Performance from '@libs/Performance';
 import CONFIG from '@src/CONFIG';
 
@@ -12,10 +11,7 @@ export default function () {
         // crashlytics().setCrashlyticsCollectionEnabled(false);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    NativeModules.DevSettings.setIsDebuggingRemotely(true);
-
-    if (Metrics.canCapturePerformanceMetrics()) {
+    if (canCapturePerformanceMetrics()) {
         Performance.enableMonitoring();
     }
 }

@@ -1,0 +1,54 @@
+# This folder is cached between builds
+# https://docs.gitlab.com/ee/ci/yaml/#cache
+
+cache:
+  paths:
+    - node_modules/
+    - vendor/
+    - package-lock.json
+
+stages:
+  # - build_apk_stage
+  - build_dmg_stage
+
+# build_apk:
+#   stage: build_apk_stage
+#   tags:
+#     - saas-macos-medium-m1
+#   before_script:
+#     - bundle install
+#     - npm run install-standalone
+#   script:
+#       - "java --version"
+#       - "node --version"
+#       - "ruby --version"
+#       - "bundle --version"
+#       - 'export NODE_OPTIONS="--max-old-space-size=4096"'
+#       - npm run android-build 
+#       - "sh './scripts/jenkins-stage.sh' apk"
+#   artifacts:
+#     expire_in: never
+#     paths:
+#       - 'dist-apps/*.apk'
+
+
+build_dmg:
+  stage: build_dmg_stage
+  tags:
+    - saas-macos-medium-m1
+  before_script:
+    - bundle install
+    - npm run install-standalone
+  script:
+      - "java --version"
+      - "node --version"
+      - "ruby --version"
+      - "bundle --version"
+      - 'export NODE_OPTIONS="--max-old-space-size=4096"'
+      - npm run desktop-build 
+      - "sh './scripts/jenkins-stage.sh' dmg"
+  artifacts:
+    expire_in: never
+    paths:
+      - 'dist-apps/*.dmg'
+

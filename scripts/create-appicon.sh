@@ -17,6 +17,16 @@ createIcons() {
     npx iconset create -d $appIconsFold/icon.png
 }
 
+createMacAppIcon() {
+    cp "AppIconsSplash/appIcons/mac-icon.png" "desktop/icon.png"
+}
+
+createWebAppIcon() {
+    cp "AppIconsSplash/appIcons/webapp/favicon.png" "web/favicon.png"
+    cp "AppIconsSplash/appIcons/webapp/favicon.png" "web/favicon-unread.png"
+    cp "AppIconsSplash/appIcons/webapp/apple-touch-icon.png" "web/apple-touch-icon.png"
+}
+
 onPrefix() {
     rm -rf "ios/${iosFolderName}/Images.xcassets/AppIcon.appiconset"
     rm -rf "ios/${iosFolderName}/Images.xcassets/AppIconAdHoc.appiconset"
@@ -73,7 +83,12 @@ createAdaptiveIcons() {
 }
 
 onPrefix
+
 createIcons
+createMacAppIcon
+createWebAppIcon
+
 onPost
 onPostOnAndroid
 createAdaptiveIcons "adhoc" "ic_launcher_foreground.png"
+

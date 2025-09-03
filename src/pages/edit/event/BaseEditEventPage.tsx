@@ -19,7 +19,7 @@ import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
 import {setIsLoading} from '@libs/actions/FormActions';
 import {ParseModelEvents} from '@libs/FirebaseIeatta/appModel';
-import {FBCollections} from '@libs/FirebaseIeatta/constant';
+import {FBCollections, FBModelNames} from '@libs/FirebaseIeatta/constant';
 import type {IAuthUser} from '@libs/FirebaseIeatta/models/auth_user_model';
 import {getAuthUserFromPersonalDetails} from '@libs/FirebaseIeatta/models/auth_user_model';
 import FirebaseHelper from '@libs/FirebaseIeatta/services/firebase-helper';
@@ -49,6 +49,7 @@ function BaseEditEventPage({restaurantId, eventId, event, isNewModel}: BaseEditE
 
     const personalData = useCurrentUserPersonalDetails();
 
+    // eslint-disable-next-line rulesdir/prefer-shouldUseNarrowLayout-instead-of-isSmallScreenWidth
     const {isSmallScreenWidth} = useResponsiveLayout();
     const toastId = React.useRef<number | string | null>(null);
 
@@ -68,7 +69,7 @@ function BaseEditEventPage({restaurantId, eventId, event, isNewModel}: BaseEditE
         setIsLoading(editFormID, true);
         toastId.current = ShowNotify.initialAndShowNotify({
             isSmallScreenWidth,
-            message: translate('notify.save.start', {modalName: FBCollections.Events}),
+            message: translate('notify.save.start', {modalName: FBModelNames.Events}),
             autoClose: false,
         });
 
@@ -107,11 +108,11 @@ function BaseEditEventPage({restaurantId, eventId, event, isNewModel}: BaseEditE
                 clearDraftValuesByDraftId(editFormID);
             })
             .then(() => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: FBCollections.Events})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: FBModelNames.Events})});
                 Navigation.goBack();
             })
             .catch((error) => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: FBCollections.Events})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: FBModelNames.Events})});
                 console.log(error);
             })
             .finally(() => {
@@ -127,7 +128,7 @@ function BaseEditEventPage({restaurantId, eventId, event, isNewModel}: BaseEditE
     const validate = (values: FormOnyxValues<typeof editFormID>) => {
         const errors: FormInputErrors<typeof editFormID> = {};
         if (values.eventDisplayName === '') {
-            errors.eventDisplayName = 'edit.event.form.displayName.error';
+            errors.eventDisplayName = translate('edit.event.form.displayName.error');
         }
         return errors;
     };

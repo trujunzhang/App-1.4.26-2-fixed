@@ -1,3 +1,4 @@
+import NotFoundPage from '@expPages/ErrorPage/NotFoundPage';
 import React, {useCallback, useState} from 'react';
 import {useOnyx} from 'react-native-onyx';
 import ConfirmModal from '@components/ConfirmModal';
@@ -21,6 +22,7 @@ import ROUTES from '@src/ROUTES';
 import type SCREENS from '@src/SCREENS';
 import type {Errors} from '@src/types/onyx/OnyxCommon';
 import type {Rate} from '@src/types/onyx/Policy';
+import isLoadingOnyxValue from '@src/types/utils/isLoadingOnyxValue';
 
 function generatePerDiemUnits(perDiemDestination: string[], perDiemSubRate: string[], perDiemCurrency: string[], perDiemAmount: string[]) {
     const perDiemUnits: Record<string, Rate> = {};
@@ -46,7 +48,7 @@ function generatePerDiemUnits(perDiemDestination: string[], perDiemSubRate: stri
 type ImportedPerDiemPageProps = PlatformStackScreenProps<SettingsNavigatorParamList, typeof SCREENS.WORKSPACE.PER_DIEM_IMPORTED>;
 function ImportedPerDiemPage({route}: ImportedPerDiemPageProps) {
     const {translate} = useLocalize();
-    const [spreadsheet] = useOnyx(ONYXKEYS.IMPORTED_SPREADSHEET);
+    const [spreadsheet, spreadsheetMetadata] = useOnyx(ONYXKEYS.IMPORTED_SPREADSHEET);
     const [isImportingPerDiemRates, setIsImportingPerDiemRates] = useState(false);
     const {containsHeader = true} = spreadsheet ?? {};
     const [isValidationEnabled, setIsValidationEnabled] = useState(false);
@@ -126,9 +128,13 @@ function ImportedPerDiemPage({route}: ImportedPerDiemPageProps) {
         }
     }, [validate, spreadsheet?.columns, spreadsheet?.data, containsHeader, policyID, perDiemCustomUnit?.customUnitID]);
 
+    if (!spreadsheet && isLoadingOnyxValue(spreadsheetMetadata)) {
+        return;
+    }
+
     const spreadsheetColumns = spreadsheet?.data;
     if (!spreadsheetColumns) {
-        return;
+        return <NotFoundPage />;
     }
 
     const closeImportPageAndModal = () => {
@@ -140,7 +146,7 @@ function ImportedPerDiemPage({route}: ImportedPerDiemPageProps) {
     return (
         <ScreenWrapper
             testID={ImportedPerDiemPage.displayName}
-            includeSafeAreaPaddingBottom
+            enableEdgeToEdgeBottomSafeAreaPadding
         >
             <HeaderWithBackButton
                 title={translate('workspace.perDiem.importPerDiemRates')}

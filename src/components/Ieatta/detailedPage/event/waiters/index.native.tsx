@@ -2,7 +2,7 @@
 import {useQuery} from '@realm/react';
 import React from 'react';
 import DetailedPhotosList from '@components/Ieatta/detailedPage/common/photoAndWaiter/DetailedPhotosList';
-import {PhotoType} from '@libs/FirebaseIeatta/constant';
+import {FBModelNames, PhotoType} from '@libs/FirebaseIeatta/constant';
 import {filterWaiters} from '@libs/ieatta/eventUtils';
 import {RealmCollections} from '@libs/Realm/constant';
 import {toRealmModelList} from '@libs/Realm/helpers/realmTypeHelper';
@@ -36,7 +36,7 @@ function WaitersRowInEvent({waiterRow}: WaitersRowInEventProps) {
             photoType={PhotoType.Waiter}
             isSmallScreen
             photos={waitersInEvent}
-            modalName="waiter"
+            modalName={FBModelNames.Waiters}
         />
     );
 }

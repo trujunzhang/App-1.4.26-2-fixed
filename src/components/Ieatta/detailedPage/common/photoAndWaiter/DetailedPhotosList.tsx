@@ -84,10 +84,14 @@ function DetailedPhotosList({relatedId, photoType, photos, isSmallScreen, isLoad
                     renderItem={renderItem}
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={StyleSheet.flatten([styles.ph4])}
+                    // eslint-disable-next-line react/no-unstable-nested-components
                     ItemSeparatorComponent={() => <View style={{width: 10}} />}
                 />
             ) : (
-                <SectionPhotoEmptyView />
+                <SectionPhotoEmptyView
+                    relatedId={relatedId}
+                    photoType={photoType}
+                />
             )}
         </View>
     );

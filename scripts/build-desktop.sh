@@ -39,4 +39,4 @@ ts-node scripts/combine-web-sourcemaps.ts --path="desktop/dist/www"
 title "Building Desktop App Archive Using Electron"
 info ""
 shift 1
-npx electron-builder --config config/electronBuilder.config.js --publish always "$@"
+npx electron-builder --config config/electronBuilder.config.js "$@"

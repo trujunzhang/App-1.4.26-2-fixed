@@ -9,7 +9,6 @@ import createPlatformStackNavigator from '@libs/Navigation/PlatformStackNavigati
 import type {PublicScreensParamList} from '@navigation/types';
 import LogInWithShortLivedAuthTokenPage from '@pages/LogInWithShortLivedAuthTokenPage';
 import GoogleSignInDesktopPage from '@pages/signin/GoogleSignInDesktopPage';
-// import SignInPage from '@expPages/signin/SignInPage';
 import SignInPage from '@pages/signin/SignInPage';
 import CONFIG from '@src/CONFIG';
 import NAVIGATORS from '@src/NAVIGATORS';

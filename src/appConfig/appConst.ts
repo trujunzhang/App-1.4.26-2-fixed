@@ -20,4 +20,6 @@ export default {
     FBAVATAR_MAX_HEIGHT_PX: 6096,
 
     DEFAULT_SESSION_TOKEN: 'logged',
+
+    DEFAULT_APP_EMAIL: 'warren.razzaboni@hotmail.com',
 };

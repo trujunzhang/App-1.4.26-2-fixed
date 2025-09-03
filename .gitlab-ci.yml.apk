@@ -1,0 +1,30 @@
+
+# This folder is cached between builds
+# https://docs.gitlab.com/ee/ci/yaml/#cache
+# cache:
+#   paths:
+#     - node_modules/
+#     - vendor/
+#     - package-lock.json
+
+stages:
+  - build_android_stage
+
+# variables:
+#   LC_ALL: "en_US.UTF-8"
+#   LANG: "en_US.UTF-8"
+
+build_android_apk:
+  stage: build_android_stage
+  image: trujunzhang/new_ieatta_react_native_android:5.0.0
+  before_script:
+    - gem install bundler --user-install -v 2.4.19
+    - bundle install
+    - npm run install-standalone
+  script:
+      - "java --version"
+      - "node --version"
+      - "ruby --version"
+      - "bundle --version"
+      - npm run android-build 
+

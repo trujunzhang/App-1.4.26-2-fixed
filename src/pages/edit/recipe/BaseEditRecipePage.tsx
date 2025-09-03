@@ -20,7 +20,7 @@ import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
 import {setIsLoading} from '@libs/actions/FormActions';
 import {ParseModelRecipes} from '@libs/FirebaseIeatta/appModel';
-import {FBCollections} from '@libs/FirebaseIeatta/constant';
+import {FBCollections, FBModelNames} from '@libs/FirebaseIeatta/constant';
 import {PageSection, RowPressableType} from '@libs/FirebaseIeatta/list/constant';
 import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
 import type {IPhotoCarouselItemRow, OnCarouselItemPressed} from '@libs/FirebaseIeatta/list/types/rows/photo';
@@ -64,7 +64,7 @@ function BaseEditRecipePage({restaurantId, recipeId, recipe, photosInPage, isNew
         setIsLoading(editFormID, true);
         toastId.current = ShowNotify.initialAndShowNotify({
             isSmallScreenWidth,
-            message: translate('notify.save.start', {modalName: FBCollections.Recipes}),
+            message: translate('notify.save.start', {modalName: FBModelNames.Recipes}),
             autoClose: false,
         });
 
@@ -101,11 +101,11 @@ function BaseEditRecipePage({restaurantId, recipeId, recipe, photosInPage, isNew
                 clearDraftValuesByDraftId(editFormID);
             })
             .then(() => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: FBCollections.Recipes})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: FBModelNames.Recipes})});
                 Navigation.goBack();
             })
             .catch((error) => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: FBCollections.Recipes})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: FBModelNames.Recipes})});
                 console.log(error);
             })
             .finally(() => {
@@ -125,11 +125,11 @@ function BaseEditRecipePage({restaurantId, recipeId, recipe, photosInPage, isNew
     const validate = (values: FormOnyxValues<typeof editFormID>) => {
         const errors: FormInputErrors<typeof editFormID> = {};
         if (values.recipeDisplayName === '') {
-            errors.recipeDisplayName = 'edit.recipe.form.displayName.error';
+            errors.recipeDisplayName = translate('edit.recipe.form.displayName.error');
         } else if (values.recipePrice === '') {
-            errors.recipePrice = 'edit.recipe.form.price.error.empty';
+            errors.recipePrice = translate('edit.recipe.form.price.error.empty');
         } else if (!isNumeric(values.recipePrice)) {
-            errors.recipePrice = 'edit.recipe.form.price.error.number';
+            errors.recipePrice = translate('edit.recipe.form.price.error.number');
         }
         return errors;
     };
@@ -220,7 +220,7 @@ function BaseEditRecipePage({restaurantId, recipeId, recipe, photosInPage, isNew
             rowType: PageSection.PHOTO_SELECT_COVERR_FOR_RESTAURANT_AND_RECIPE,
             rowData: carouselItem,
             rowKey: 'PageSection.PHOTO_SELECT_COVERR_FOR_RESTAURANT_AND_RECIPE<Photo-Grid>',
-            modalName: 'restaurant',
+            modalName: FBModelNames.Restaurants,
             pressType: RowPressableType.SINGLE_PRESS,
         };
     };

@@ -27,7 +27,10 @@ class CloudinaryUtils implements ICloudinaryUtils {
     }
 
     readAsBase64(fileUriOrBlobHttps: string): Promise<string | undefined> {
-        return this.readAsBase64FromExpoFileSystem(fileUriOrBlobHttps);
+        if (fileUriOrBlobHttps.startsWith('file://')) {
+            return this.readAsBase64FromExpoFileSystem(fileUriOrBlobHttps);
+        }
+        return this.readAsBase64FromBlob(fileUriOrBlobHttps);
     }
 
     async uploadToCloudinary(base64: string): Promise<string | undefined> {

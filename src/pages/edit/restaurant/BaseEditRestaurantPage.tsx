@@ -22,7 +22,7 @@ import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
 import {setIsLoading} from '@libs/actions/FormActions';
 import {ParseModelRestaurants} from '@libs/FirebaseIeatta/appModel';
-import {FBCollections} from '@libs/FirebaseIeatta/constant';
+import {FBCollections, FBModelNames} from '@libs/FirebaseIeatta/constant';
 import {PageSection, RowPressableType} from '@libs/FirebaseIeatta/list/constant';
 import type {IPageRow} from '@libs/FirebaseIeatta/list/types/page-row';
 import type {IPhotoCarouselItemRow, OnCarouselItemPressed} from '@libs/FirebaseIeatta/list/types/rows/photo';
@@ -75,7 +75,7 @@ function BaseEditRestaurantPage({
         setIsLoading(editFormID, true);
         toastId.current = ShowNotify.initialAndShowNotify({
             isSmallScreenWidth,
-            message: translate('notify.save.start', {modalName: FBCollections.Restaurants}),
+            message: translate('notify.save.start', {modalName: FBModelNames.Restaurants}),
             autoClose: false,
         });
 
@@ -119,10 +119,10 @@ function BaseEditRestaurantPage({
             })
             .then(() => {
                 Navigation.goBack();
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: FBCollections.Restaurants})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, message: translate('notify.save.success', {modalName: FBModelNames.Restaurants})});
             })
             .catch((error) => {
-                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: FBCollections.Restaurants})});
+                ShowNotify.updateNotify({isSmallScreenWidth, id: toastId.current, type: 'error', message: translate('notify.save.failure', {modalName: FBModelNames.Restaurants})});
                 console.log(error);
             })
             .finally(() => {
@@ -138,7 +138,7 @@ function BaseEditRestaurantPage({
     const validate = (values: FormOnyxValues<typeof editFormID>) => {
         const errors: FormInputErrors<typeof editFormID> = {};
         if (values.restaurantDisplayName === '') {
-            errors.restaurantDisplayName = 'edit.restaurant.form.displayName.error';
+            errors.restaurantDisplayName = translate('edit.restaurant.form.displayName.error');
         }
         return errors;
     };
